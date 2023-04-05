@@ -24,6 +24,8 @@
 - Tailwind
 - tRPC
 - Prisma
+- Auth
+  - NextAuth
 - Testing
   - Vitest
   - Cypress
