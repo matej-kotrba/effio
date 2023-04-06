@@ -20,7 +20,9 @@
 
 ### Frontend
 - SvelteKit
-- TypeScript
+- Typesafety
+  - Typescript
+  - ts-reset
 - Tailwind
 - tRPC
 - Prisma
