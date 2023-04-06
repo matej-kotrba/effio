@@ -21,7 +21,7 @@
 ### Frontend
 - SvelteKit
 - Typesafety
-  - Typescript
+  - TypeScript
   - ts-reset
 - Tailwind
 - tRPC
@@ -45,8 +45,17 @@
 
 
 ## Timeline
-#### Currently empty
+#### January -> Now: Learning stack and testing it separatly
 
 
 ## Sources
-#### Currently empty
+- Youtube
+  - [Joy of Code](https://www.youtube.com/@JoyofCodeDev)
+  - [Theo Browne](https://www.youtube.com/@t3dotgg)
+  - [Huntabyte](https://www.youtube.com/@Huntabyte)
+  - [Matt Pocock](https://www.youtube.com/@mattpocockuk)
+- Docs
+  - [Svelte](https://svelte.dev/)
+  - [SvelteKit](https://kit.svelte.dev/)
+  - [tRPC](https://trpc.io/)
+  - [Prisma](https://www.prisma.io/)
