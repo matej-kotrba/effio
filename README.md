@@ -20,8 +20,8 @@
 
 ### Frontend
 - SvelteKit
-- Typesafety
-  - TypeScript
+  - tanstack/svelte-query
+- TypeScript
   - ts-reset
 - Tailwind
 - tRPC
@@ -40,7 +40,7 @@
 - MongoDB / SQL databases
 
 ### Backend
-- I want to keep project as serverless as possible, however in need of file creation, backend server will be needed
+- I want to keep project as serverless (on edge) as possible, however in need of file creation, backend server will be needed
 - FastAPI / NodeJS - Express, NestJS
 
 
