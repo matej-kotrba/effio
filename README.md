@@ -21,6 +21,7 @@
 ### Frontend
 - SvelteKit
   - tanstack/svelte-query
+  - Superforms
 - TypeScript
   - ts-reset
 - Tailwind
