@@ -26,6 +26,7 @@
   - ts-reset
 - Tailwind
 - tRPC
+  - trpc-sveltekit 
 - Zod
 - Prisma
 - Auth
