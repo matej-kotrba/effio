@@ -26,6 +26,7 @@
   - ts-reset
 - Tailwind
 - tRPC
+- Zod
 - Prisma
 - Auth
   - NextAuth
