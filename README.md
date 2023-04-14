@@ -30,7 +30,7 @@
 - Zod
 - Prisma
 - Auth
-  - NextAuth
+  - Auth.js
 - Testing
   - Vitest (Jest)
   - Cypress
