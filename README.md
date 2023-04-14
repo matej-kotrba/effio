@@ -14,11 +14,11 @@
 ### [Mgr. Marek Lučný](https://github.com/superucitelka), [Lukáš Sukeník](https://github.com/lukyncze)
 
 
-## Technologies
-#### About tech stack
-- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit
+## Techstack
+#### About techstack
+- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create web application using modern technologies with typesafety and for the most part without the need of the own server
 
-### Frontend
+### Used technologies:
 - SvelteKit
   - tanstack/svelte-query
   - Superforms
@@ -38,13 +38,11 @@
   - Vite
 - Package manager
   - pnpm
-  
-### Database
-- MongoDB / SQL databases
+- Database
+  - MongoDB / SQL databases
 
-### Backend
-- I want to keep project as serverless (on edge) as possible, however in need of file creation, backend server will be needed
-- FastAPI / NodeJS - Express, NestJS
+I want to keep project as serverless (on edge) as possible, however in need of file creation, backend server will be likely needed, in that case the
+FastAPI / NodeJS - Express, NestJS will be considered.
 
 
 ## Timeline
