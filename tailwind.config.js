@@ -4,18 +4,35 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: {
-					light_primary: '#6433F0',
-					light_secondary: '#646FD4',
-					light_terciary: '#9BA3EB',
-					light_quaternary: '#DBDFFD',
-					light_text_black: '#343540',
-					light_text_black_80: '#343540cc',
-					light_text_black_60: '#34354099',
-					light_text_black_40: '#34354066',
-					light_text_black_20: '#34354033',
-					light_white: '#EFEFEF'
-				}
+				light_primary: '#6433F0',
+				light_secondary: '#646FD4',
+				light_terciary: '#9BA3EB',
+				light_quaternary: '#DBDFFD',
+				light_text_black: '#343540',
+				light_text_black_80: '#343540cc',
+				light_text_black_60: '#34354099',
+				light_text_black_40: '#34354066',
+				light_text_black_20: '#34354033',
+				light_transparent_blue: '#242f9b26',
+				light_white: '#EFEFEF'
+			},
+			fontSize: {
+				h1: '85px',
+				h2: '55px',
+				h3: '44px',
+				h4: '35px',
+				h5: '28px',
+				h6: '23px',
+				body1: '18px'
+			},
+			fontWeight: {
+				thicker: 700,
+				thick: 600,
+				normal: 400,
+				light: 300
+			},
+			fontFamily: {
+				primary: ['"Poppins"', 'sans-serif']
 			}
 		}
 	},
