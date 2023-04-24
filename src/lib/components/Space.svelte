@@ -2,4 +2,4 @@
 	export let gap: number | undefined = 50;
 </script>
 
-<div class="pt-[{gap}px]" />
+<div style="padding-top: {gap}px;" />
