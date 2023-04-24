@@ -3,6 +3,6 @@
 	export let customStyles: string | undefined = undefined;
 </script>
 
-<button style="p-8 {customStyles}">
+<button class="px-24 py-6 bg-light_primary text-light_white rounded-2xl text-h4">
 	{title ?? 'Log In'}
 </button>
