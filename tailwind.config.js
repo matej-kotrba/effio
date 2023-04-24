@@ -33,6 +33,9 @@ export default {
 			},
 			fontFamily: {
 				primary: ['"Poppins"', 'sans-serif']
+			},
+			borderRadius: {
+				'4xl': '32px'
 			}
 		}
 	},
