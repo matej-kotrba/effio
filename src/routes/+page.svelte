@@ -1,9 +1,10 @@
 <script lang="ts">
 	import LogInButton from '../lib/components/LogInButton.svelte';
 	import Space from '../lib/components/Space.svelte';
+	import GridLayout from '../lib/components/GridLayout.svelte';
 </script>
 
-<main>
+<main class="bg-light_quaternary">
 	<div class="py-20 hero__section">
 		<div class="container flex w-full py-10 mx-auto h-fit">
 			<div class="rounded-3xl bg-light_transparent_blue w-[60%] container mx-auto p-8">
@@ -34,8 +35,12 @@
 			</div>
 		</div>
 	</div>
-	<img src="/imgs/layer2.svg" alt="Layer" />
-	<div class="container" />
+	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
+	<div class="container mx-auto">
+		<GridLayout>
+			<slot slot="a" class="bg-red-500">Explore what community created!</slot>
+		</GridLayout>
+	</div>
 </main>
 
 <style lang="postcss">
