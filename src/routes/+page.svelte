@@ -27,13 +27,14 @@
 				</div>
 				<div
 					class="absolute p-8 bg-light_text_black_20 text-body1 md:text-h6 xl:text-h5 text-light_white
-					 bottom-[100%] right-0 rounded-4xl pt-20 pr-40 lg:translate-y-[240%] 2xl:translate-y-[260%] translate-x-[-20%]"
+					 bottom-[100%] right-0 rounded-4xl pt-20 pr-40 lg:translate-y-[220%] xl:translate-y-[240%] xl:translate-x-[-10%] 2xl:translate-y-[260%] 2xl:translate-x-[-20%]"
 				>
 					<p>Create, share, explore</p>
 				</div>
 			</div>
 		</div>
 	</div>
+	<img src="/imgs/layer2.svg" alt="Layer" />
 	<div class="container" />
 </main>
 
