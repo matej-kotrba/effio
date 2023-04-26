@@ -5,7 +5,7 @@
 </script>
 
 <main class="bg-light_quaternary">
-	<div class="py-20 hero__section">
+	<div class="px-8 py-20 hero__section">
 		<div class="container flex w-full py-10 mx-auto h-fit">
 			<div class="rounded-3xl bg-light_transparent_blue w-[60%] container mx-auto p-8">
 				<h1 class="font-bold text-h3 md:text-h2 xl:text-h1 text-light_white">Effio</h1>
@@ -36,9 +36,9 @@
 		</div>
 	</div>
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
-	<div class="container mx-auto">
+	<div class="container px-20 mx-auto">
 		<GridLayout>
-			<slot slot="a" class="bg-red-500">Explore what community created!</slot>
+			<slot slot="a">Explore what community created! adasdas sadasdas asda sd</slot>
 		</GridLayout>
 	</div>
 </main>
