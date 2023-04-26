@@ -1,15 +1,16 @@
 <script lang="ts">
+	export let color: string = 'bg-light_secondary';
 </script>
 
 <section>
 	<div class="a">
-		<slot name="a" />
+		<slot name="a" class={color?.startsWith('bg-') ? color : `bg-[${color}]`} />
 	</div>
 	<div class="b">
-		<slot name="b" />
+		<slot name="b" class={color?.startsWith('bg-') ? color : `bg-[${color}]`} />
 	</div>
 	<div class="c">
-		<slot name="c" />
+		<slot name="c" class={color?.startsWith('bg-') ? color : `bg-[${color}]`} />
 	</div>
 </section>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LogInButton from '../lib/components/LogInButton.svelte';
+	import LogInButton from '../lib/components/buttons/LogInButton.svelte';
 	import Space from '../lib/components/Space.svelte';
 	import GridLayout from '../lib/components/GridLayout.svelte';
 </script>
@@ -38,7 +38,9 @@
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
 	<div class="container px-20 mx-auto">
 		<GridLayout>
-			<slot slot="a">Explore what community created! adasdas sadasdas asda sd</slot>
+			<slot slot="a"
+				><h3 class="font-light text-h4 text-light_white">Explore what community created!</h3></slot
+			>
 		</GridLayout>
 	</div>
 </main>
