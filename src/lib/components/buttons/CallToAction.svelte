@@ -2,7 +2,11 @@
 	export let text: string = 'Call to Action';
 </script>
 
-<button type="button">{text}</button>
+<button
+	type="button"
+	class="flex items-center gap-2 px-12 py-4 font-medium text-white rounded-full shadow-xl text-h3"
+	>{text}<slot /></button
+>
 
 <style>
 	button {
