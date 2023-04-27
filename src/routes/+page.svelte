@@ -1,7 +1,9 @@
-<script lang="ts">
+<script script lang="ts">
+	import Icon from '@iconify/svelte';
 	import LogInButton from '../lib/components/buttons/LogInButton.svelte';
 	import Space from '../lib/components/Space.svelte';
 	import GridLayout from '../lib/components/GridLayout.svelte';
+	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 </script>
 
 <main class="bg-light_quaternary">
@@ -38,9 +40,13 @@
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
 	<div class="container px-20 mx-auto">
 		<GridLayout>
-			<slot slot="a"
-				><h3 class="font-light text-h4 text-light_white">Explore what community created!</h3></slot
-			>
+			<slot slot="a">
+				<h3 class="font-light text-h4 text-light_white">Explore what community created!</h3>
+				<img src="/imgs/community_place.svg" alt="Community place" />
+				<CallToAction text={'Visit'}>
+					<Icon icon="material-symbols:arrow-right-alt-rounded" />
+				</CallToAction>
+			</slot>
 		</GridLayout>
 	</div>
 </main>
