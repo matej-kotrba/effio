@@ -41,14 +41,38 @@
 	<div class="container px-20 mx-auto">
 		<GridLayout>
 			<slot slot="a">
-				<h3 class="font-light text-h4 text-light_white">Explore what community created!</h3>
-				<img src="/imgs/community_place.svg" alt="Community place" />
-				<CallToAction text={'Visit'}>
-					<Icon icon="material-symbols:arrow-right-alt-rounded" />
-				</CallToAction>
+				<div class="flex flex-col justify-between h-full">
+					<h3 class="mb-auto font-light text-h4 text-light_white">
+						Explore what community created!
+					</h3>
+					<div>
+						<img src="/imgs/community_place.svg" alt="Community place" />
+						<Space gap={36} />
+						<CallToAction text={'Visit'} center="right">
+							<Icon icon="material-symbols:arrow-right-alt-rounded" />
+						</CallToAction>
+					</div>
+				</div>
+			</slot>
+			<slot slot="b">
+				<h3 class="max-w-[50%] text-light_white text-h5">
+					Read more about the community place and all its features.
+				</h3>
+			</slot>
+			<slot slot="c">
+				<div class="flex flex-col justify-between h-full">
+					<h3 class="text-light_white text-h5">
+						Want to create tests of you own?<br />All you need is to Log In using one of these
+						providers: GitHub, Google
+					</h3>
+					<div class="max-h-full mt-auto ml-auto w-fit">
+						<LogInButton />
+					</div>
+				</div>
 			</slot>
 		</GridLayout>
 	</div>
+	<Space gap={500} />
 </main>
 
 <style lang="postcss">
