@@ -4,6 +4,7 @@
 	import Space from '../lib/components/Space.svelte';
 	import GridLayout from '../lib/components/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
+	import Footer from '../lib/components/page-parts/Footer.svelte';
 </script>
 
 <main class="bg-light_quaternary">
@@ -73,6 +74,7 @@
 		</GridLayout>
 	</div>
 	<Space gap={500} />
+	<Footer />
 </main>
 
 <style lang="postcss">
