@@ -1,7 +1,7 @@
 <script script lang="ts">
 	import Icon from '@iconify/svelte';
 	import LogInButton from '../lib/components/buttons/LogInButton.svelte';
-	import Space from '../lib/components/Space.svelte';
+	import Space from '../lib/components/separators/Space.svelte';
 	import GridLayout from '../lib/components/layouts/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
