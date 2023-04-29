@@ -1,0 +1,38 @@
+<script lang="ts">
+	let card: HTMLDivElement | null = null;
+
+	function setRotate(event: MouseEvent) {
+		if (!card) return;
+		const { clientX, clientY } = event;
+		const rect = card.getBoundingClientRect();
+		const offset = [clientX - rect.left - rect.width / 2, clientY - rect.top - rect.height / 2];
+
+		card.style.transform = `rotateY(${(offset[0] * 1.5) / rect.width}deg) rotateX(${
+			(-offset[1] * 1.5) / rect.height
+		}deg)`;
+	}
+
+	function resetRotate() {
+		if (!card) return;
+		card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+	}
+</script>
+
+<div class="perspective" on:mousemove={setRotate} on:mouseleave={resetRotate}>
+	<div class="lean" bind:this={card}>
+		<slot />
+	</div>
+</div>
+
+<style>
+	.perspective {
+		height: 100%;
+		perspective: 100px;
+	}
+	.lean {
+		height: inherit;
+		transform-style: preserve-3d;
+		transform: rotateY(0deg) rotateX(0deg);
+		transition: transform 0.3s linear;
+	}
+</style>
