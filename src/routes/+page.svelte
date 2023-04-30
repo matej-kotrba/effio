@@ -5,6 +5,7 @@
 	import GridLayout from '../lib/components/layouts/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
+	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 </script>
 
 <main class="bg-light_quaternary">
@@ -40,6 +41,9 @@
 	</div>
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
 	<div class="container px-20 mx-auto">
+		<LineConnectorWithTitle>
+			<Icon icon="fluent:people-community-28-regular" class="text-4xl" />
+		</LineConnectorWithTitle>
 		<GridLayout>
 			<slot slot="a">
 				<div class="flex flex-col justify-between h-full">
