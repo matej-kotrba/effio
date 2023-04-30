@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--light-primary: #6433f0;
+	--light-terciary: #9ba3eb;
+	--light-secondary: #646fd4;
+	--light-quaternary: #dbdffd;
+	--light-text-black: #343540;
+	--light-text-black-80: #343540cc;
+	--light-text-black-60: #34354099;
+	--light-text-black-40: #34354066;
+	--light-text-black-20: #34354033;
+	--light-transparent-blue: #242f9b26;
+	--light-white: #efefef;
+	--light-grey: #999999;
+}
+
 body {
 	@apply font-normal font-primary text-body1;
 }

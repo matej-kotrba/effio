@@ -42,7 +42,10 @@
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
 	<div class="container px-20 mx-auto">
 		<LineConnectorWithTitle>
-			<Icon icon="fluent:people-community-28-regular" class="text-4xl" />
+			<h2 class="font-bold text-h1 text-light_primary">
+				CREATE<span class="text-light_text_black">,</span> SHARE
+				<span class="text-sm font-normal text-light_text_black">and</span> EXPLORE
+			</h2>
 		</LineConnectorWithTitle>
 		<GridLayout>
 			<slot slot="a">
