@@ -9,7 +9,7 @@
 </script>
 
 <main class="bg-light_quaternary">
-	<div class="px-8 py-20 hero__section">
+	<div class="px-2 py-20 xl:px-8 hero__section">
 		<div class="container flex w-full py-10 mx-auto h-fit">
 			<div class="rounded-3xl bg-light_transparent_blue w-[60%] container mx-auto p-8">
 				<h1 class="font-bold text-h3 md:text-h2 xl:text-h1 text-light_white">Effio</h1>
@@ -40,12 +40,15 @@
 		</div>
 	</div>
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
-	<div class="container px-20 mx-auto">
-		<LineConnectorWithTitle>
+	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20">
+		<LineConnectorWithTitle title="Community place">
 			<h2 class="font-bold text-h1 text-light_primary">
 				CREATE<span class="text-light_text_black">,</span> SHARE
 				<span class="text-sm font-normal text-light_text_black">and</span> EXPLORE
 			</h2>
+			<p class="pl-4 text-body1 text-light_text_black">
+				Browse and share your own created tests for all other users here
+			</p>
 		</LineConnectorWithTitle>
 		<GridLayout>
 			<slot slot="a">
@@ -79,6 +82,15 @@
 				</div>
 			</slot>
 		</GridLayout>
+		<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
+			<h2 class="font-bold text-h1 text-success">
+				<span class="font-normal text-light_text_black text-body1">The</span>
+				Ultimate Generator
+			</h2>
+			<p class="pl-4 text-body1 text-light_text_black">
+				Create tests using simple and user friendly enviroment with plenty of options
+			</p>
+		</LineConnectorWithTitle>
 	</div>
 	<Space gap={500} />
 	<Footer />

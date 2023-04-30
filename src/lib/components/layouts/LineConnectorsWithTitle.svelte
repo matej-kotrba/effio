@@ -22,7 +22,7 @@
 				style="box-shadow: 0 0 30px 25px {lineColor};"
 			/>
 			<div class="relative z-10">
-				<Icon {icon} class="text-4xl" />
+				<Icon {icon} class="text-4xl text-light_text_black" />
 			</div>
 		</div>
 		<div
