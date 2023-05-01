@@ -54,7 +54,7 @@
 			<slot slot="a">
 				<div class="flex flex-col justify-between h-full">
 					<h3 class="mb-auto font-light text-h4 text-light_white">
-						Explore what community created!
+						Explore what have community created!
 					</h3>
 					<div>
 						<img src="/imgs/community_place.svg" alt="Community place" />
@@ -91,6 +91,38 @@
 				Create tests using simple and user friendly enviroment with plenty of options
 			</p>
 		</LineConnectorWithTitle>
+		<GridLayout>
+			<slot slot="a">
+				<div class="flex flex-col justify-between h-full">
+					<h3 class="mb-auto font-light text-h4 text-light_white">
+						Create your own tests using simple enviroment!
+					</h3>
+					<div>
+						<img src="/imgs/online_test.svg" alt="Community place" />
+						<Space gap={36} />
+						<CallToAction text={'Visit'} center="right">
+							<Icon icon="material-symbols:arrow-right-alt-rounded" />
+						</CallToAction>
+					</div>
+				</div>
+			</slot>
+			<slot slot="b">
+				<h3 class="max-w-[50%] text-light_white text-h5">
+					Import and export in GIFT format compatible with other popular platforms like Moodle.
+				</h3>
+			</slot>
+			<slot slot="c">
+				<div class="flex flex-col justify-between h-full">
+					<h3 class="text-light_white text-h5">
+						Want to create tests of you own?<br />All you need is to Log In using one of these
+						providers: GitHub, Google
+					</h3>
+					<div class="max-h-full mt-auto ml-auto w-fit">
+						<LogInButton />
+					</div>
+				</div>
+			</slot>
+		</GridLayout>
 	</div>
 	<Space gap={500} />
 	<Footer />
