@@ -6,6 +6,7 @@
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
+	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
 </script>
 
 <main class="bg-light_quaternary">
@@ -21,7 +22,10 @@
 				<Space gap={80} />
 				<p class="text-light_white text-body1">All you need is Github or Google account!</p>
 				<Space gap={10} />
-				<LogInButton />
+				<div class="flex items-center gap-4">
+					<LogInButton />
+					<ReadMoreFancy />
+				</div>
 			</div>
 			<div class="translate-x-[-13%] translate-y-[15%] relative">
 				<img src="/imgs/test.svg" alt="Test" class="relative z-10 w-[1000px]" />
