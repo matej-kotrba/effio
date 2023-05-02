@@ -22,6 +22,7 @@
 
 body {
 	@apply font-normal font-primary text-body1;
+	box-sizing: border-box;
 }
 
 *::selection {
