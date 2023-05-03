@@ -6,7 +6,7 @@
 </script>
 
 <button
-	class="inline-block px-8 py-4 bg-transparent border-4 border-solid rounded-md h-fit text-light_white border-light_primary"
+	class="px-8 py-4 text-2xl duration-150 rounded-md shadow-lg bg-light_white h-fit text-light_primary hover:translate-y-1"
 	>{title}</button
 >
 
@@ -30,3 +30,9 @@
 		grid-template-columns: 1fr auto;
 	}
 </style> -->
+
+<style>
+	button:hover {
+		box-shadow: 0 0 20px rgba(255, 255, 255, 0.478);
+	}
+</style>
