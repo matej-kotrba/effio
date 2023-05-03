@@ -20,6 +20,10 @@
 	--success: #5cb85c;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	@apply font-normal font-primary text-body1;
 	box-sizing: border-box;

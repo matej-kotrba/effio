@@ -24,7 +24,7 @@
 				<Space gap={10} />
 				<div class="flex items-center gap-4">
 					<LogInButton />
-					<ReadMoreFancy />
+					<ReadMoreFancy link={'#content'} />
 				</div>
 			</div>
 			<div class="translate-x-[-13%] translate-y-[15%] relative">
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	<img src="/imgs/layer2.svg" alt="Layer" class="w-full" />
-	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20">
+	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">
 			<h2 class="font-bold text-h1 text-light_primary">
 				CREATE<span class="text-light_text_black">,</span> SHARE
