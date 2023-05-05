@@ -8,7 +8,7 @@
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
 
-	import { intersection } from '../lib/use/intersectionObserver';
+	import { intersection, onIntersect, onUnintersect } from '../lib/use/intersectionObserver';
 </script>
 
 <main class="bg-light_quaternary">
@@ -49,10 +49,10 @@
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">
 			<h2
-				class="font-bold text-h1 text-light_primary"
+				class="font-bold duration-500 opacity-0 text-h1 text-light_primary"
 				use:intersection
-				on:intersect={() => console.log('asdads')}
-				on:unintersect={() => console.log('unin')}
+				on:intersect={(event) => onIntersect(event, 'opacity-100')}
+				on:unintersect={(event) => onUnintersect(event, 'opacity-100')}
 			>
 				CREATE<span class="text-light_text_black">,</span> SHARE
 				<span class="text-sm font-normal text-light_text_black">and</span> EXPLORE

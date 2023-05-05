@@ -10,8 +10,8 @@ declare global {
 
 	declare namespace svelte.JSX {
 		interface HTMLProps<T> {
-			"on:intersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
-			"on:unintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+			"onintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+			"onunintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
 		}
 	}
 }

@@ -13,6 +13,9 @@ if (browser) {
         entry.target.dispatchEvent(new CustomEvent('unintersect'))
       }
     })
+  }, {
+    threshold: 0.1,
+    rootMargin: '-200px'
   })
 }
 
@@ -25,5 +28,17 @@ export const intersection: Action<HTMLElement> = (node: HTMLElement) => {
     destroy() {
       observer?.unobserve(node)
     }
+  }
+}
+
+export function onIntersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string) {
+  if (event.target) {
+    (event.target as HTMLElement).classList.add(classesToApply)
+  }
+}
+
+export function onUnintersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string) {
+  if (event.target) {
+    (event.target as HTMLElement).classList.remove(classesToApply)
   }
 }
