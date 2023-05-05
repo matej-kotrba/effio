@@ -1,19 +1,29 @@
 import type { Action } from "svelte/types/runtime/action/index"
+import { browser } from "$app/environment"
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.dispatchEvent(new CustomEvent('intersect'))
-    }
+let observer: IntersectionObserver | null = null
+
+if (browser) {
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.dispatchEvent(new CustomEvent('intersect'))
+      }
+      else {
+        entry.target.dispatchEvent(new CustomEvent('unintersect'))
+      }
+    })
   })
-})
+}
 
-export const addIntersectionObserver: Action<HTMLElement> = (node: HTMLElement) => {
-  observer.observe(node)
+// Adds intersection observer for provided element
+// On intersect observer will dispatch intersect event
+export const intersection: Action<HTMLElement> = (node: HTMLElement) => {
+  observer?.observe(node)
 
   return {
     destroy() {
-      observer.unobserve(node)
+      observer?.unobserve(node)
     }
   }
 }
