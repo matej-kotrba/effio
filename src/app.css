@@ -25,7 +25,7 @@ html {
 }
 
 body {
-	@apply font-normal font-primary text-body1;
+	@apply min-h-screen font-normal font-primary text-body1 bg-light_white;
 	box-sizing: border-box;
 }
 
