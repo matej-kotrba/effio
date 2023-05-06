@@ -7,7 +7,7 @@
 <main class="h-full grid__layout">
 	<aside class="px-2">
 		<div class="flex flex-col items-center">
-			<img src="./imgs/logo.png" alt="Effio logo" width="90" />
+			<img src="/imgs/logo.png" alt="Effio logo" width="90" />
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
@@ -39,7 +39,9 @@
 			</div>
 		</div>
 	</aside>
-	<slot />
+	<div class="content">
+		<slot />
+	</div>
 </main>
 
 <style>
