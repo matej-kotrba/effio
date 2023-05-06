@@ -1,14 +1,14 @@
 <script lang="ts">
 	let card: HTMLDivElement | null = null;
 
-	function setRotate(event: MouseEvent) {
+	function setRotate(event: MouseEvent): void {
 		if (!card) return;
 		const { clientX, clientY } = event;
 		const rect = card.getBoundingClientRect();
 		const offset = [clientX - rect.left - rect.width / 2, clientY - rect.top - rect.height / 2];
 
-		card.style.transform = `rotateY(${-offset[0] / rect.width}deg) rotateX(${
-			offset[1] / rect.height
+		card.style.transform = `rotateY(${(-offset[0] / rect.width) * 1.3}deg) rotateX(${
+			(offset[1] / rect.height) * 1.3
 		}deg)`;
 	}
 

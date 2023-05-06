@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { intersection, onIntersect, onUnintersect } from '../../../lib/use/intersectionObserver';
+	import { intersection, onIntersect } from '../../../lib/use/intersectionObserver';
 
 	export let height: number = 600;
 	export let lineColor: string = 'var(--light-secondary)';
