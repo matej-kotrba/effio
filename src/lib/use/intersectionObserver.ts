@@ -14,7 +14,7 @@ if (browser) {
       }
     })
   }, {
-    threshold: 0.1,
+    threshold: 0.25,
     rootMargin: '-200px'
   })
 }
@@ -31,14 +31,18 @@ export const intersection: Action<HTMLElement> = (node: HTMLElement) => {
   }
 }
 
-export function onIntersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string) {
+export function onIntersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string[]) {
   if (event.target) {
-    (event.target as HTMLElement).classList.add(classesToApply)
+    for (const item of classesToApply) {
+      (event.target as HTMLElement).classList.add(item)
+    }
   }
 }
 
-export function onUnintersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string) {
+export function onUnintersect(event: CustomEvent<IntersectionObserverEntry>, classesToApply: string[]) {
   if (event.target) {
-    (event.target as HTMLElement).classList.remove(classesToApply)
+    for (const item of classesToApply) {
+      (event.target as HTMLElement).classList.remove(item)
+    }
   }
 }

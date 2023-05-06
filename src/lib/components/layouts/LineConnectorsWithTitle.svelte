@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import { intersection, onIntersect, onUnintersect } from '../../../lib/use/intersectionObserver';
 
 	export let height: number = 600;
 	export let lineColor: string = 'var(--light-secondary)';
@@ -9,8 +10,14 @@
 	$: firstLineHeight = 0;
 </script>
 
-<div class="flex gap-6 px-12" style="min-height: {height}px; --line-color: {lineColor};">
-	<div class="grid__line">
+<div
+	class="flex gap-6 px-12 duration-500 opacity-0 box group"
+	style="min-height: {height}px; --line-color: {lineColor};"
+	use:intersection
+	on:intersect={(event) => onIntersect(event, ['opacity-100', 'active'])}
+	on:unintersect={(event) => onUnintersect(event, ['opacity-100', 'active'])}
+>
+	<div class="grid__line group-[.active]:bg-red-500">
 		<div
 			class="w-1 rounded-b-full"
 			style="background-image: linear-gradient(to bottom, transparent 5%, {lineColor});"
