@@ -33,6 +33,6 @@
 
 <style>
 	button:hover {
-		box-shadow: 0 0 20px rgba(255, 255, 255, 0.478);
+		box-shadow: 0 0 20px rgba(255, 255, 255, 0.304);
 	}
 </style>

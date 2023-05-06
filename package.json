@@ -38,6 +38,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@prisma/client": "^4.13.0",
 		"@trpc/client": "^10.19.1",
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1"
