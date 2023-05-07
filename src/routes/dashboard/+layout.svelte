@@ -5,7 +5,7 @@
 </script>
 
 <main class="h-full grid__layout">
-	<aside class="px-2">
+	<aside class="min-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20">
 		<div class="flex flex-col items-center">
 			<img src="/imgs/logo.png" alt="Effio logo" width="90" />
 			<div class="flex flex-col items-center gap-2">
@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</aside>
-	<div class="content">
+	<div class="px-4 pt-6 md:px-8 xl:px-16 content">
 		<slot />
 	</div>
 </main>
