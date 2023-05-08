@@ -25,6 +25,7 @@
 - TypeScript
   - ts-reset
 - Tailwind
+  - Daisy UI
 - tRPC
   - trpc-sveltekit 
 - Zod
@@ -46,8 +47,8 @@ FastAPI / NodeJS - Express, NestJS will be considered.
 
 
 ## Timeline
-#### January -> Now: Learning stack and testing it separatly
-
+#### January -> February - Learning stack and testing it separatly
+### February -> Now - Build frontend for Effio
 
 ## Sources
 - Youtube
