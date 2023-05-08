@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import Space from '~components/separators/Space.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import Card from '~components/containers/Card.svelte';
@@ -14,7 +13,11 @@
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
 <div class="flex gap-4">
-	<div class="w-full max-w-xs p-5 rounded-md shadow-lg aspect-[5/6] bg-light_white">asd</div>
+	<!-- <div class="w-full max-w-xs p-5 rounded-md shadow-lg aspect-[5/6] bg-light_white">
+		<div class="p-5 text-white rounded-md bg-light_text_black_40">
+			<Icon icon="ic:round-plus" class="text-6xl" />
+		</div>
+	</div> -->
 	<Card
 		redirectLink={'#'}
 		imageLink={'/imgs/content_imgs/liska.avif'}

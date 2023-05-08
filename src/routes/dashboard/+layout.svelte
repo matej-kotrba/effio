@@ -17,8 +17,9 @@
 					<Icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 				</a>
 				<a
-					href="#"
+					href="/dashboard/test-creator"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class:active={browser && $page.url.pathname === '/dashboard/test-creator'}
 				>
 					<Icon icon="material-symbols:edit-square-outline-rounded" class="text-2xl" /> Create a new
 					test
