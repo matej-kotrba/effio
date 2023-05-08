@@ -9,7 +9,7 @@
 	Here you can see all your tests which you have created
 </p>
 <Space />
-<h3 class="text-h4">Recent activity</h3>
+<h3 class="text-h4 text-light_text_black">Recent activity</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
 <div class="flex gap-4">
@@ -49,6 +49,10 @@
 		tags={['Nature', 'Animals', 'Plants']}
 	/>
 </div>
+<Space />
+<h3 class="text-h4 text-light_text_black">Collection</h3>
+<Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
+<Space />
 
 <style>
 	.card_bg {

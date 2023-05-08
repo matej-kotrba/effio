@@ -40,6 +40,15 @@ export default {
 			},
 			borderRadius: {
 				'4xl': '32px'
+			},
+			maxWidth: {
+				xxs: '16rem'
+			},
+			maxHeight: {
+				xxs: '16rem'
+			},
+			boxShadow: {
+				surrounding: '3px 1px 10px 2px var(--light-text-black-20)'
 			}
 		}
 	},

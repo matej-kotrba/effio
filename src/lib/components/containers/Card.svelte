@@ -13,7 +13,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg aspect-square card_bg"
+	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg aspect-square card_bg shadow-surrounding"
 >
 	<div>
 		<a href={redirectLink} class="relative block group">
@@ -64,6 +64,6 @@
 <style>
 	.card_bg {
 		background-image: url('/imgs/svgs/card_bg.svg');
-		box-shadow: 3px 1px 15px var(--light-text-black-40);
+		/* box-shadow: 3px 1px 15px var(--light-text-black-40); */
 	}
 </style>
