@@ -1,14 +1,20 @@
 <script lang="ts">
 	export let title: string;
 	export let imageSrc: string;
+	export let onClick: Function = () => {};
+	export let customClasses: string = '';
 </script>
 
-<div class="p-5 rounded-xl shadow-surrounding max-w-xxs aspect-square box">
+<button
+	class="w-full p-5 rounded-xl shadow-surrounding max-w-xxs aspect-square box duration-300
+	 {customClasses}"
+	on:click={(event) => onClick(event)}
+>
 	<h4 class="text-center text-h6 text-light_text_black">{title}</h4>
 	<div class="grid place-content-center">
 		<img src={imageSrc} alt="Tempalte" class="object-cover" width="150" />
 	</div>
-</div>
+</button>
 
 <style>
 	.box {

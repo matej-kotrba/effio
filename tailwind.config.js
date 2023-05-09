@@ -49,6 +49,9 @@ export default {
 			},
 			boxShadow: {
 				surrounding: '3px 1px 10px 2px var(--light-text-black-20)'
+			},
+			boxShadowColor: {
+				primary: '#6533f053'
 			}
 		}
 	},

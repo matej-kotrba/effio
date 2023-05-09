@@ -5,7 +5,7 @@
 	type Part = {
 		title: string;
 		onClick: Function;
-		buttonProps?: HTMLButtonAttributes;
+		buttonProps?: HTMLButtonAttributes & { completed?: boolean };
 	};
 
 	export let parts: Part[];
@@ -42,6 +42,7 @@
 		<button
 			{...part.buttonProps}
 			class:disabled={part?.buttonProps?.disabled}
+			class:completed={part?.buttonProps?.completed}
 			on:click={(event) => {
 				setToActive(event, index + 1);
 				part.onClick();
@@ -58,5 +59,8 @@
 <style>
 	.disabled {
 		color: var(--light-text-black-40);
+	}
+	.completed {
+		color: var(--light-primary);
 	}
 </style>
