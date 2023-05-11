@@ -4,7 +4,7 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	let templateDone: boolean = false;
 	let constructingDone: boolean = false;
@@ -14,6 +14,16 @@
 		{ title: 'Blank test', image: '/imgs/svgs/empty.svg' }
 	];
 	let templatesActive: number | undefined = undefined;
+
+	// type TestObject = {
+	// 	title: string;
+	// 	description: string;
+	// 	inputs: {
+	// 		type: string;
+	// 	}
+	// }
+
+	let testObjet = {};
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -43,56 +53,58 @@
 <h3 class="text-h4 text-light_text_black">Start with picking a template</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-{#if templateDone === false}
-	<div
-		in:fly={{ x: -300, duration: 500, delay: 500 }}
-		out:fly={{ x: -300, duration: 500 }}
-		class="overflow-hidden"
-	>
-		{#each templates as template, index}
-			<TemplateCard
-				title={template.title}
-				imageSrc={template.image}
-				onClick={() => (templatesActive = index)}
-				customClasses={index === templatesActive
-					? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
-					: ' border-transparent border-4 border-solid'}
-			/>
-		{/each}
-		<Space />
-
-		<BasicButton
-			title="Continue"
-			onClick={() => {
-				templateDone = true;
-			}}
-			buttonAttributes={{ disabled: templatesActive === undefined }}
+<div class="overflow-hidden">
+	{#if templateDone === false}
+		<div
+			in:fly={{ x: -300, duration: 500, delay: 500 }}
+			out:fly={{ x: -300, duration: 500 }}
+			class="overflow-hidden"
 		>
-			<Icon icon="bxs:right-arrow" class="text-md" />
-		</BasicButton>
-	</div>
-	<!-- Else if  -->
-{:else if constructingDone === false}
-	<div
-		in:fly={{ x: 300, duration: 500, delay: 500 }}
-		out:fly={{ x: -300, duration: 500 }}
-		class="overflow-hidden"
-	>
-		<Space />
+			{#each templates as template, index}
+				<TemplateCard
+					title={template.title}
+					imageSrc={template.image}
+					onClick={() => (templatesActive = index)}
+					customClasses={index === templatesActive
+						? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
+						: ' border-transparent border-4 border-solid'}
+				/>
+			{/each}
+			<Space />
 
-		<BasicButton
-			title="Continue"
-			onClick={() => {
-				templateDone = true;
-			}}
-			buttonAttributes={{ disabled: templatesActive === undefined }}
+			<BasicButton
+				title="Continue"
+				onClick={() => {
+					templateDone = true;
+				}}
+				buttonAttributes={{ disabled: templatesActive === undefined }}
+			>
+				<Icon icon="bxs:right-arrow" class="text-md" />
+			</BasicButton>
+		</div>
+		<!-- Else if  -->
+	{:else if constructingDone === false}
+		<div
+			in:fly={{ x: 300, duration: 500, delay: 500 }}
+			out:fly={{ x: -300, duration: 500 }}
+			class="overflow-hidden"
 		>
-			<Icon icon="bxs:right-arrow" class="text-md" />
-		</BasicButton>
-	</div>
-{:else}
-	asd
-{/if}
+			<Space />
+
+			<BasicButton
+				title="Continue"
+				onClick={() => {
+					templateDone = true;
+				}}
+				buttonAttributes={{ disabled: templatesActive === undefined }}
+			>
+				<Icon icon="bxs:right-arrow" class="text-md" />
+			</BasicButton>
+		</div>
+	{:else}
+		asd
+	{/if}
+</div>
 
 <style>
 	.done {
