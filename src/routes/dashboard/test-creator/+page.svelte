@@ -14,7 +14,7 @@
 	let templates: { title: string; image: string }[] = [
 		{ title: 'Blank test', image: '/imgs/svgs/empty.svg' }
 	];
-	let templatesActive: number | undefined = undefined;
+	let templatesActive: number;
 
 	// type TestObject = {
 	// 	title: string;
@@ -34,16 +34,14 @@
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>
-		<li
-			class="text-light_text_black_80 text-body2"
-			class:done={templateDone}
-			on:click={() => {
-				templateDone = false;
-				constructingDone = false;
-				detailsDone = false;
-			}}
-		>
-			Picking a template
+		<li class="text-light_text_black_80 text-body2" class:done={templateDone}>
+			<button
+				on:click={() => {
+					templateDone = false;
+					constructingDone = false;
+					detailsDone = false;
+				}}>Picking a template</button
+			>
 		</li>
 		<li class="text-light_text_black_80 text-body2" class:done={constructingDone}>
 			Constructing a test
@@ -86,7 +84,7 @@
 				onClick={() => {
 					templateDone = true;
 				}}
-				buttonAttributes={{ disabled: templatesActive === undefined }}
+				buttonAttributes={{ disabled: !Number.isInteger(templatesActive) }}
 			>
 				<Icon icon="bxs:right-arrow" class="text-md" />
 			</BasicButton>
@@ -105,7 +103,7 @@
 				onClick={() => {
 					templateDone = true;
 				}}
-				buttonAttributes={{ disabled: templatesActive === undefined }}
+				buttonAttributes={{ disabled: false }}
 			>
 				<Icon icon="bxs:right-arrow" class="text-md" />
 			</BasicButton>
