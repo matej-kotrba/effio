@@ -132,7 +132,7 @@
 	<Footer />
 </main>
 
-<style lang="postcss">
+<style>
 	.hero__section {
 		background: linear-gradient(103.97deg, #9ba3eb 0.9%, #c2a5ff 52.16%, #dbdffd 100%);
 	}

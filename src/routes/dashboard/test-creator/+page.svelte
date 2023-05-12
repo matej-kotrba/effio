@@ -5,6 +5,7 @@
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import { fly } from 'svelte/transition';
+	import { navigating } from '$app/stores';
 
 	let templateDone: boolean = false;
 	let constructingDone: boolean = false;
@@ -33,7 +34,15 @@
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>
-		<li class="text-light_text_black_80 text-body2" class:done={templateDone}>
+		<li
+			class="text-light_text_black_80 text-body2"
+			class:done={templateDone}
+			on:click={() => {
+				templateDone = false;
+				constructingDone = false;
+				detailsDone = false;
+			}}
+		>
 			Picking a template
 		</li>
 		<li class="text-light_text_black_80 text-body2" class:done={constructingDone}>
@@ -53,12 +62,12 @@
 <h3 class="text-h4 text-light_text_black">Start with picking a template</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="overflow-hidden">
+<div class="p-2 overflow-hidden">
 	{#if templateDone === false}
 		<div
 			in:fly={{ x: -300, duration: 500, delay: 500 }}
-			out:fly={{ x: -300, duration: 500 }}
-			class="overflow-hidden"
+			out:fly={{ x: -300, duration: $navigating === null ? 500 : 0 }}
+			class=""
 		>
 			{#each templates as template, index}
 				<TemplateCard
