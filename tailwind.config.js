@@ -15,6 +15,7 @@ export default {
 				light_text_black_20: '#34354033',
 				light_transparent_blue: '#242f9b26',
 				light_white: '#EFEFEF',
+				light_whiter: '#F5F5F5',
 				light_grey: '#999999',
 				success: '#5cb85c'
 			},
