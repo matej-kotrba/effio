@@ -4,8 +4,12 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Creator from '~components/testCreator/Creator.svelte';
 	import { fly } from 'svelte/transition';
 	import { navigating } from '$app/stores';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let templateDone: boolean = false;
 	let constructingDone: boolean = false;
@@ -67,10 +71,10 @@
 			out:fly={{ x: -300, duration: $navigating === null ? 500 : 0 }}
 			class=""
 		>
-			{#each templates as template, index}
+			{#each data.templates as template, index}
 				<TemplateCard
-					title={template.title}
-					imageSrc={template.image}
+					title={template.name}
+					imageSrc={templates[index].image}
 					onClick={() => (templatesActive = index)}
 					customClasses={index === templatesActive
 						? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
@@ -96,6 +100,7 @@
 			out:fly={{ x: -300, duration: 500 }}
 			class="overflow-hidden"
 		>
+			<Creator />
 			<Space />
 
 			<BasicButton

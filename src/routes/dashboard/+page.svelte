@@ -1,3 +1,9 @@
+<script lang="ts">
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+</script>
+
 <div class="text-primary">
 	Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti vero excepturi in explicabo. Nam
 	soluta molestias, odio quam architecto, tempora cumque inventore rem dolore, laborum iure quae
