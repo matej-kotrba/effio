@@ -11,7 +11,10 @@
 
 	export let data: PageData;
 
-	let templateDone: boolean = false;
+	const TRANSITION_DURATION = 400;
+
+	// TODO: Change this back to false
+	let templateDone: boolean = true;
 	let constructingDone: boolean = false;
 	let detailsDone: boolean = false;
 
@@ -64,11 +67,15 @@
 <h3 class="text-h4 text-light_text_black">Start with picking a template</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="p-2 overflow-hidden">
+<div class="p-2">
 	{#if templateDone === false}
 		<div
-			in:fly={{ x: -300, duration: 500, delay: 500 }}
-			out:fly={{ x: -300, duration: $navigating === null ? 500 : 0 }}
+			in:fly={{
+				x: 300,
+				duration: TRANSITION_DURATION,
+				delay: TRANSITION_DURATION
+			}}
+			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 			class=""
 		>
 			{#each data.templates as template, index}
@@ -96,9 +103,12 @@
 		<!-- Else if  -->
 	{:else if constructingDone === false}
 		<div
-			in:fly={{ x: 300, duration: 500, delay: 500 }}
-			out:fly={{ x: -300, duration: 500 }}
-			class="overflow-hidden"
+			in:fly={{
+				x: 300,
+				duration: TRANSITION_DURATION,
+				delay: TRANSITION_DURATION
+			}}
+			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
 			<Creator />
 			<Space />
