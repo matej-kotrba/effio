@@ -12,6 +12,7 @@ declare global {
 		interface HTMLProps<T> {
 			"onintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
 			"onunintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+			"onclickoutside"?: (event: CustomEvent<MouseEvent>) => void;
 		}
 	}
 }

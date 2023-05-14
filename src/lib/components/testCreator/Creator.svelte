@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Dropdown from '~components/effects/Dropdown.svelte';
+	import { clickOutside } from '~use/clickOutside';
 
 	const inputs = ['Pick one', 'True / False', 'Multiple choice', 'Short answer', 'Long answer'];
 
@@ -20,6 +20,8 @@
 				/>
 			</button>
 			<div
+				use:clickOutside
+				on:clickoutside={() => (openDropdown = false)}
 				class="absolute right-0 grid w-full grid-cols-8 gap-4 p-4 rounded-md shadow-lg bottom-full bg-light_whiter duration-200
 				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
 			>
