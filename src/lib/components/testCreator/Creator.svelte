@@ -51,37 +51,8 @@
 				{/each}
 			</div>
 		</div>
-		<Input
-			title="Pick the right answer"
-			content={{
-				inputType: 'pickOne',
-				correctAnswerIndex: 1,
-				questions: [
-					{
-						question: 'Is this ok ?'
-					},
-					{
-						question: 'Is this right ?'
-					}
-				]
-			}}
-		/>
-		<Input
-			title="Are these statements true or false ?"
-			content={{
-				inputType: 'true/false',
-				questions: [
-					{
-						question: 'Seals and sea lions are the best animals (the dogs are close tho)',
-						answer: true
-					},
-					{
-						question: 'Cats are awesome',
-						answer: false
-					}
-				]
-			}}
-		/>
+		<Input inputType="pickOne" displayType="Pick One" />
+		<Input inputType="true/false" displayType="True / False" />
 	</div>
 </div>
 
