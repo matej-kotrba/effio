@@ -2,21 +2,21 @@
 	import Icon from '@iconify/svelte';
 	import { clickOutside } from '~use/clickOutside';
 	import Input from '~components/testCreator/Input.svelte';
+	import { onMount } from 'svelte';
 
 	const inputs = ['Pick one', 'True / False', 'Multiple choice', 'Short answer', 'Long answer'];
 
-	const placedInputs: { title: string; templateName: string }[] = [
-		{
-			templateName: 'Pick one',
-			title: 'Pick one from these'
-		},
-		{
-			templateName: 'True / False',
-			title: 'Is this true or false?'
-		}
-	];
+	const usedInputsReferences: Input[] = [];
 
-	let openDropdown = true;
+	function checkTestResult() {
+		console.log(usedInputsReferences[0].$$.ctx[3]());
+	}
+
+	onMount(() => {
+		checkTestResult();
+	});
+
+	let openDropdown = false;
 </script>
 
 <div class="p-2 bg-light_white roudned-md text-light_text_black">
@@ -46,9 +46,38 @@
 				{/each}
 			</div>
 		</div>
-		{#each placedInputs as input}
-			<Input title={input.title} inputType={input.templateName} />
-		{/each}
+		<Input
+			bind:this={usedInputsReferences[usedInputsReferences.length]}
+			title="Pick the right answer"
+			content={{
+				inputType: 'pickOne',
+				correctAnswerId: 1,
+				questions: [
+					{
+						question: 'Is this ok ?'
+					},
+					{
+						question: 'Is this right ?'
+					}
+				]
+			}}
+		/>
+		<Input
+			title="Are these statements true or false ?"
+			content={{
+				inputType: 'true/false',
+				questions: [
+					{
+						question: 'Seals and sea lions are the best animals (the dogs are close tho)',
+						answer: true
+					},
+					{
+						question: 'Cats are awesome',
+						answer: false
+					}
+				]
+			}}
+		/>
 	</div>
 </div>
 

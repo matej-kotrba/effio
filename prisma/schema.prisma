@@ -12,9 +12,14 @@ datasource db {
 }
 
 model Template {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model QuestionType {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
 }
