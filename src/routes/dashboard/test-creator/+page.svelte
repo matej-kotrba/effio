@@ -22,16 +22,6 @@
 		{ title: 'Blank test', image: '/imgs/svgs/empty.svg' }
 	];
 	let templatesActive: number;
-
-	// type TestObject = {
-	// 	title: string;
-	// 	description: string;
-	// 	inputs: {
-	// 		type: string;
-	// 	}
-	// }
-
-	let testObjet = {};
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -110,7 +100,7 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
-			<Creator />
+			<Creator inputs={data.questionsTypes} />
 			<Space />
 
 			<BasicButton

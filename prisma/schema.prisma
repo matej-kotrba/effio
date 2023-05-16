@@ -19,7 +19,8 @@ model Template {
 }
 
 model QuestionType {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  name       String
+  createdAt  DateTime @default(now())
+  properties Json     @default("{}")
 }

@@ -8,6 +8,10 @@ export const router = t.router({
   getTemplates: t.procedure.query(async ({ ctx }) => {
     const templates = await ctx.prisma.template.findMany()
     return templates
+  }),
+  getQuestionsTypes: t.procedure.query(async ({ ctx }) => {
+    const questionsTypes = await ctx.prisma.questionType.findMany()
+    return questionsTypes
   })
 })
 

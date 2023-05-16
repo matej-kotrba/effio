@@ -1,28 +1,14 @@
+<!-- IMPORTANT: This is Input for Creator, both of them are for creating tests only, not for taking them -->
+
 <script lang="ts">
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
-
-	type QuestionContent =
-		| {
-				inputType: 'true/false';
-				questions: {
-					question: string;
-					answer: boolean;
-				}[];
-		  }
-		| {
-				inputType: 'pickOne';
-				questions: {
-					question: string;
-				}[];
-				correctAnswerId: number;
-		  };
 
 	export let title: string;
 	export let content: QuestionContent;
 
 	// This is optional reference to form element wrapping the inputs, usefull if radio buttons or other inputs are used
-	let formElement: HTMLFormElement | null = null;
+	let formRef: HTMLFormElement | null = null;
 
 	function displayTypeValue(content: QuestionContent) {
 		switch (content.inputType) {
@@ -33,17 +19,17 @@
 		}
 	}
 
-	export function checkResult() {
-		console.log('JESTLI TO JDE TAK JE TO SUPER');
-		switch (content.inputType) {
-			case 'true/false':
-				return content.questions[0].answer;
-			case 'pickOne':
-				if (!formElement) return false;
-				const inputs = formElement.querySelectorAll('input');
-				console.log(inputs);
-		}
-	}
+	// export function checkResult() {
+	// 	console.log('JESTLI TO JDE TAK JE TO SUPER');
+	// 	switch (content.inputType) {
+	// 		case 'true/false':
+	// 			return content.questions[0].answer;
+	// 		case 'pickOne':
+	// 			if (!formElement) return false;
+	// 			const inputs = formElement.querySelectorAll('input');
+	// 			console.log(inputs);
+	// 	}
+	// }
 </script>
 
 <div class="w-full p-4 rounded-lg bg-light_whiter">
@@ -53,7 +39,7 @@
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<div class="p-2 content">
 		{#if content.inputType === 'pickOne'}
-			<form bind:this={formElement}>
+			<form bind:this={formRef}>
 				{#each content.questions as { question }, i}
 					<div class="flex">
 						<label for="{question}{i}">{question}</label>
