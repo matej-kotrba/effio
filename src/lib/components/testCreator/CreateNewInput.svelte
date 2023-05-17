@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import Separator from '~components/separators/Separator.svelte';
 
@@ -25,4 +25,4 @@
 			<button>Add</button>
 		</form>
 	</dialog>
-{/if}
+{/if} -->

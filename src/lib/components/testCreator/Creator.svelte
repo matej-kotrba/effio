@@ -2,22 +2,11 @@
 	import Icon from '@iconify/svelte';
 	import { clickOutside } from '~use/clickOutside';
 	import Input from '~components/testCreator/Input.svelte';
-	import CreateNewInput from './CreateNewInput.svelte';
+	import type { QuestionTemplate } from '~/lib/trpc/router';
 
-	export let inputs: QuestionType[] = [];
-
-	// const usedInputsReferences: Input[] = [];
-
-	// function checkTestResult() {
-	// 	console.log(usedInputsReferences[0].checkResult());
-	// }
-
-	// onMount(() => {
-	// 	checkTestResult();
-	// });
+	export let inputs: QuestionTemplate[] = [];
 
 	let openDropdown = false;
-	let inputTypeCreation: QuestionContent['inputType'] | null = null;
 </script>
 
 <div class="p-2 bg-light_white roudned-md text-light_text_black">
@@ -41,7 +30,6 @@
 				{#each inputs as input}
 					<button
 						on:click={() => {
-							inputTypeCreation = input['properties']['inputType'];
 							openDropdown = false;
 						}}
 						class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"

@@ -4,15 +4,17 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
+	import type { QuestionTemplate } from '~/lib/trpc/router';
 
-	export let inputType: QuestionContent['inputType'];
-	export let displayType: QuestionType['name'];
+	export let inputType: Question['inputType'];
+	export let displayType: QuestionTemplate['name'];
 </script>
 
 <div class="w-full p-4 rounded-lg bg-light_whiter">
 	<p class="text-light_text_black_40 text-body2">{displayType}</p>
 	<Space gap={20} />
-	<h6 class="text-light_text_black"><TextInput /></h6>
+	<h6 class="text-light_text_black"><TextInput title="Title" titleName="title" /></h6>
+	<Space gap={20} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<!-- <div class="p-2 content">
 		{#if content.inputType === 'pickOne'}
