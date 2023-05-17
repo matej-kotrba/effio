@@ -1,7 +1,12 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+
 	export let title: string;
 	export let titleName: string;
 	export let customStyles: string = '';
+
+	export let inputValue: HTMLInputElement['value'] = '';
+	let inputRef: HTMLInputElement;
 </script>
 
 <div
@@ -10,11 +15,17 @@
 	 before:scale-0 before:focus-within:scale-100 before:duration-200 border-b-[0.125rem]
 	 border-light_text_black_20"
 >
-	<label for={titleName}>{title}</label>
+	<label
+		for={titleName}
+		class="absolute text-body1 -translate-y-1/2 left-2 text-light_text_black_20 top-1/2 duration-150 pointer-events-none
+	{inputValue ? 'text-xs text-[var(--light-text-black-60)] left-4 top-[0px]' : ''}">{title}</label
+	>
 	<input
+		bind:value={inputValue}
+		bind:this={inputRef}
 		name={titleName}
 		id={titleName}
 		type="text"
-		class="outline-none overflow-hidden overflow-ellipsis text-light_text_black p-2 {customStyles}"
+		class="outline-none overflow-hidden overflow-ellipsis text-light_text_black p-2 rounded-t-md shadow-lg {customStyles}"
 	/>
 </div>

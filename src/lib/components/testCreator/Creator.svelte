@@ -7,6 +7,13 @@
 	export let inputs: QuestionTemplate[] = [];
 
 	let openDropdown = false;
+
+	// This is the inputs which are used in the test creator
+	let testInputs: { title: string; content: Question }[] = [
+		{ title: null, content: null },
+		{ title: null, content: null }
+	];
+	$: console.log(testInputs);
 </script>
 
 <div class="p-2 bg-light_white roudned-md text-light_text_black">
@@ -39,8 +46,18 @@
 				{/each}
 			</div>
 		</div>
-		<Input inputType="pickOne" displayType="Pick One" />
-		<Input inputType="true/false" displayType="True / False" />
+		<Input
+			inputType="pickOne"
+			displayType="Pick One"
+			bind:exportedQuestion={testInputs[0]['content']}
+			bind:title={testInputs[0]['title']}
+		/>
+		<Input
+			inputType="true/false"
+			displayType="True / False"
+			bind:exportedQuestion={testInputs[1]['content']}
+			bind:title={testInputs[1]['title']}
+		/>
 	</div>
 </div>
 

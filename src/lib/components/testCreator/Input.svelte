@@ -5,29 +5,31 @@
 	import Space from '~components/separators/Space.svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
+	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
+	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 
 	export let inputType: Question['inputType'];
 	export let displayType: QuestionTemplate['name'];
+
+	export let exportedQuestion: Question;
+	export let title: string;
 </script>
 
 <div class="w-full p-4 rounded-lg bg-light_whiter">
 	<p class="text-light_text_black_40 text-body2">{displayType}</p>
 	<Space gap={20} />
-	<h6 class="text-light_text_black"><TextInput title="Title" titleName="title" /></h6>
+	<h6 class="text-light_text_black">
+		<TextInput title="Title" titleName="title" bind:inputValue={title} />
+	</h6>
 	<Space gap={20} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
-	<!-- <div class="p-2 content">
-		{#if content.inputType === 'pickOne'}
-			<form bind:this={formRef}>
-				{#each content.questions as { question }, i}
-					<div class="flex">
-						<label for="{question}{i}">{question}</label>
-						<input type="radio" id="{question}{i}" name={title} />
-					</div>
-				{/each}
-			</form>
+	<div class="p-2 content">
+		{#if inputType === 'pickOne'}
+			<PickOneInput bind:exportedQuestion />
+		{:else if inputType === 'true/false'}
+			<TrueFalseInput bind:exportedQuestion />
 		{/if}
-	</div> -->
+	</div>
 </div>
 
 <!-- <script lang="ts">
