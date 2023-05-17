@@ -26,7 +26,6 @@ export const router = t.router({
         result.push(validationResult.data)
       }
     }
-    console.log(result)
     return questionsTypes
   })
 })
