@@ -40,7 +40,7 @@
 </script>
 
 <div class="relative inline-block">
-	<button on:click={onClick} class="p-2">
+	<button type="button" on:click={onClick} class="p-2">
 		<slot name="title" />
 	</button>
 	<div

@@ -7,6 +7,7 @@
 </script>
 
 <button
+	type="button"
 	{...buttonAttributes}
 	on:click={(event) => onClick(event)}
 	class="flex items-center gap-2 text-white shadow-md btn bg-light_primary hover:bg-white hover:text-light_primary"

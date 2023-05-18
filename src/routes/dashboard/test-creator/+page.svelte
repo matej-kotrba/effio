@@ -33,6 +33,7 @@
 	<ul>
 		<li class="text-light_text_black_80 text-body2" class:done={templateDone}>
 			<button
+				type="button"
 				on:click={() => {
 					templateDone = false;
 					constructingDone = false;

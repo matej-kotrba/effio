@@ -40,6 +40,7 @@
 <section class="relative flex gap-4" bind:this={sectionElement}>
 	{#each parts as part, index}
 		<button
+			type="button"
 			{...part.buttonProps}
 			class:disabled={part?.buttonProps?.disabled}
 			class:completed={part?.buttonProps?.completed}

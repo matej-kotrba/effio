@@ -21,6 +21,7 @@
 		<div class="flex flex-row items-center w-full gap-4 px-4">
 			<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 			<button
+				type="button"
 				class="relative z-10 p-2 duration-200 rounded-lg bg-light_secondary text-whiter hover:bg-primary"
 				on:click={() => (openDropdown = !openDropdown)}
 			>
@@ -36,6 +37,7 @@
 			>
 				{#each inputs as input}
 					<button
+						type="button"
 						on:click={() => {
 							openDropdown = false;
 						}}

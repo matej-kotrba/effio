@@ -6,6 +6,7 @@
 </script>
 
 <button
+	type="button"
 	class="w-full p-5 rounded-xl shadow-surrounding max-w-xxs aspect-square box duration-300
 	 {customClasses}"
 	on:click={(event) => onClick(event)}
