@@ -1,7 +1,8 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
-	import { blur } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	export let exportedQuestion: Question;
 
@@ -21,21 +22,29 @@
 		correctAnswerIndex: 1
 	};
 
+	function newQuestionConditionCheck() {
+		return !(input.questions.length >= 10);
+	}
+
 	function onAddNew() {
-		input.questions.push({
-			question: ''
-		});
+		if (!newQuestionConditionCheck()) return;
+		input.questions = [...input.questions, { question: '' }];
 	}
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
 	{#each input['questions'] as { question }, index}
-		<div transition:blur>
+		<div transition:fade class="flex">
 			<TextInput
 				title="Option {index + 1}"
 				titleName="Option {index + 1}"
 				bind:inputValue={question}
 			/>
+			{#if input['questions'].length > 2}
+				<button type="button">
+					<Icon icon="material-symbols:close-rounded" />
+				</button>
+			{/if}
 		</div>
 	{/each}
 	<div class="flex justify-center">
