@@ -15,14 +15,15 @@
 	export let title: string;
 </script>
 
-<div class="w-full p-4 rounded-lg bg-light_whiter">
+<div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
 	<p class="text-light_text_black_40 text-body2">{displayType}</p>
 	<Space gap={20} />
 	<h6 class="text-light_text_black">
 		<TextInput title="Title" titleName="title" bind:inputValue={title} />
 	</h6>
-	<Space gap={20} />
+	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
+	<Space gap={10} />
 	<div class="p-2 content">
 		{#if inputType === 'pickOne'}
 			<PickOneInput bind:exportedQuestion />

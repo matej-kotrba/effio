@@ -16,7 +16,7 @@
 	$: console.log(testInputs);
 </script>
 
-<div class="p-2 bg-light_white roudned-md text-light_text_black">
+<div class="p-4 bg-light_white roudned-md text-light_text_black">
 	<div class="relative flex flex-col items-center justify-center gap-2">
 		<div class="flex flex-row items-center w-full gap-4 px-4">
 			<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
@@ -46,18 +46,20 @@
 				{/each}
 			</div>
 		</div>
-		<Input
-			inputType="pickOne"
-			displayType="Pick One"
-			bind:exportedQuestion={testInputs[0]['content']}
-			bind:title={testInputs[0]['title']}
-		/>
-		<Input
-			inputType="true/false"
-			displayType="True / False"
-			bind:exportedQuestion={testInputs[1]['content']}
-			bind:title={testInputs[1]['title']}
-		/>
+		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
+			<Input
+				inputType="pickOne"
+				displayType="Pick One"
+				bind:exportedQuestion={testInputs[0]['content']}
+				bind:title={testInputs[0]['title']}
+			/>
+			<Input
+				inputType="true/false"
+				displayType="True / False"
+				bind:exportedQuestion={testInputs[1]['content']}
+				bind:title={testInputs[1]['title']}
+			/>
+		</div>
 	</div>
 </div>
 
