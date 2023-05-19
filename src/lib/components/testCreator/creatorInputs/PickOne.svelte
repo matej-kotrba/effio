@@ -2,7 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
-	import { fade } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 
 	export let exportedQuestion: Question;
 
@@ -30,18 +30,28 @@
 		if (!newQuestionConditionCheck()) return;
 		input.questions = [...input.questions, { question: '' }];
 	}
+
+	function deleteQuestion(index: number) {
+		input.questions = input.questions.filter((_, i) => i !== index);
+	}
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
-	{#each input['questions'] as { question }, index}
-		<div transition:fade class="flex">
-			<TextInput
-				title="Option {index + 1}"
-				titleName="Option {index + 1}"
-				bind:inputValue={question}
-			/>
+	{#each input['questions'] as question, index (question)}
+		<div class="grid grid-cols-12 duration-200" animate:flip>
+			<div class="col-span-11">
+				<TextInput
+					title="Option {index + 1}"
+					titleName="Option {index + 1}"
+					bind:inputValue={question.question}
+				/>
+			</div>
 			{#if input['questions'].length > 2}
-				<button type="button">
+				<button
+					type="button"
+					class="grid col-span-1 place-content-center {input['questions'].length > 2}"
+					on:click={() => deleteQuestion(index)}
+				>
 					<Icon icon="material-symbols:close-rounded" />
 				</button>
 			{/if}
