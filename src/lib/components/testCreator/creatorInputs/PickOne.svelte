@@ -38,7 +38,7 @@
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
 	{#each input['questions'] as question, index (question)}
-		<div class="grid grid-cols-12 duration-200" animate:flip>
+		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
 			<div class="col-span-11">
 				<TextInput
 					title="Option {index + 1}"
@@ -46,15 +46,15 @@
 					bind:inputValue={question.question}
 				/>
 			</div>
-			{#if input['questions'].length > 2}
-				<button
-					type="button"
-					class="grid col-span-1 place-content-center {input['questions'].length > 2}"
-					on:click={() => deleteQuestion(index)}
-				>
-					<Icon icon="material-symbols:close-rounded" />
-				</button>
-			{/if}
+			<button
+				type="button"
+				class="grid col-span-1 place-content-center duration-150 {input['questions'].length > 2
+					? 'opacity-100 pointer-events-auto'
+					: 'opacity-0 pointer-events-none'}"
+				on:click={() => deleteQuestion(index)}
+			>
+				<Icon icon="material-symbols:close-rounded" class="text-2xl" />
+			</button>
 		</div>
 	{/each}
 	<div class="flex justify-center">
