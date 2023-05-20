@@ -3,9 +3,11 @@
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
-	import Notification from '~components/portals/Notification.svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
 
 	export let exportedQuestion: Question;
+
+	const QUESTION_LIMIT = 10;
 
 	let formRef: HTMLFormElement | null = null;
 
@@ -20,6 +22,24 @@
 				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
 			},
 			{
+				question: 'Cats are awesome animals 🐱'
+			},
+			{
+				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			},
+			{
+				question: 'Cats are awesome animals 🐱'
+			},
+			{
+				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			},
+			{
+				question: 'Cats are awesome animals 🐱'
+			},
+			{
+				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			},
+			{
 				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
 			}
 		],
@@ -27,11 +47,14 @@
 	};
 
 	function newQuestionConditionCheck() {
-		return !(input.questions.length >= 10);
+		return !(input.questions.length >= QUESTION_LIMIT);
 	}
 
 	function onAddNew() {
-		if (!newQuestionConditionCheck()) return;
+		if (!newQuestionConditionCheck()) {
+			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
+			return;
+		}
 		input.questions = [...input.questions, { question: '' }];
 	}
 
@@ -41,7 +64,6 @@
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
-	<Notification>Tady něco bude napsané</Notification>
 	{#each input['questions'] as q, index (q)}
 		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
 			<div class="col-span-11">
@@ -69,4 +91,5 @@
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>
+	<Toaster />
 </form>

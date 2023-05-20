@@ -43,6 +43,7 @@
 		"@trpc/client": "^10.19.1",
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1",
+		"svelte-french-toast": "1.0.4-beta.0",
 		"trpc-sveltekit": "^3.5.7",
 		"zod": "^3.21.4"
 	}
