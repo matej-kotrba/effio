@@ -17,6 +17,9 @@
 			},
 			{
 				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			},
+			{
+				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
 			}
 		],
 		correctAnswerIndex: 1
@@ -37,23 +40,27 @@
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
-	{#each input['questions'] as question, index (question)}
+	{#each input['questions'] as q, index (q)}
 		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
 			<div class="col-span-11">
 				<TextInput
 					title="Option {index + 1}"
 					titleName="Option {index + 1}"
-					bind:inputValue={question.question}
+					bind:inputValue={q.question}
 				/>
 			</div>
 			<button
 				type="button"
-				class="grid col-span-1 place-content-center duration-150 {input['questions'].length > 2
+				class="group grid col-span-1 place-content-center duration-150 bg-light_quaternary rounded-r-full
+				 {input['questions'].length > 2
 					? 'opacity-100 pointer-events-auto'
 					: 'opacity-0 pointer-events-none'}"
 				on:click={() => deleteQuestion(index)}
 			>
-				<Icon icon="material-symbols:close-rounded" class="text-2xl" />
+				<Icon
+					icon="material-symbols:close-rounded"
+					class="text-3xl duration-200 group-hover:rotate-90"
+				/>
 			</button>
 		</div>
 	{/each}

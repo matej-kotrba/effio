@@ -24,9 +24,8 @@
 	/>
 	<label
 		for={titleName}
-		class="absolute text-body1 -translate-y-1/2 left-2 text-light_text_black_20 top-1/2 duration-150 pointer-events-none
-		
-{inputValue
+		class="absolute text-body1 -translate-y-1/2 left-2 text-light_text_black_40 top-1/2 duration-150 pointer-events-none
+		{inputValue
 			? 'text-xs text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-primary'
 			: ''}">{title}</label
 	>
