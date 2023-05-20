@@ -7,7 +7,7 @@
 
 <button
 	type="button"
-	class="px-8 py-4 text-2xl duration-150 rounded-md shadow-lg bg-light_white h-fit text-light_primary hover:translate-y-1"
+	class="px-8 py-4 text-2xl duration-150 rounded-md shadow-lg bg-light_white h-fit text-light_primary"
 	>{title}</button
 >
 

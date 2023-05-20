@@ -4,7 +4,7 @@
 
 <a
 	href={link}
-	class="px-8 py-4 text-2xl duration-150 rounded-md shadow-lg bg-light_primary h-fit text-light_white hover:translate-y-1"
+	class="px-8 py-4 text-2xl duration-150 rounded-md shadow-lg bg-light_primary h-fit text-light_white"
 	>Read more</a
 >
 
