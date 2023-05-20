@@ -3,6 +3,7 @@
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
+	import Notification from '~components/portals/Notification.svelte';
 
 	export let exportedQuestion: Question;
 
@@ -40,6 +41,7 @@
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
+	<Notification>Tady něco bude napsané</Notification>
 	{#each input['questions'] as q, index (q)}
 		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
 			<div class="col-span-11">
