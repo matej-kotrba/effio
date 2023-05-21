@@ -6,46 +6,46 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 
-	export let exportedQuestion: Question;
-
 	const QUESTION_LIMIT = 10;
 
 	let formRef: HTMLFormElement | null = null;
 
 	// The important thing is the questions array which will be changed in here
-	let input: PickOneQuestion = {
+	export let input: PickOneQuestion = {
 		inputType: 'pickOne',
 		questions: [
-			{
-				question: 'Cats are awesome animals 🐱'
-			},
-			{
-				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			},
-			{
-				question: 'Cats are awesome animals 🐱'
-			},
-			{
-				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			},
-			{
-				question: 'Cats are awesome animals 🐱'
-			},
-			{
-				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			},
-			{
-				question: 'Cats are awesome animals 🐱'
-			},
-			{
-				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			},
-			{
-				question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			}
+			// {
+			// 	question: 'Cats are awesome animals 🐱'
+			// },
+			// {
+			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			// },
+			// {
+			// 	question: 'Cats are awesome animals 🐱'
+			// },
+			// {
+			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			// },
+			// {
+			// 	question: 'Cats are awesome animals 🐱'
+			// },
+			// {
+			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			// },
+			// {
+			// 	question: 'Cats are awesome animals 🐱'
+			// },
+			// {
+			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			// },
+			// {
+			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
+			// }
 		],
 		correctAnswerIndex: 1
 	};
+
+	console.log(input);
 
 	function newQuestionConditionCheck() {
 		return !(input.questions.length >= QUESTION_LIMIT);

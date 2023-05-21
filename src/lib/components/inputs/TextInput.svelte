@@ -1,8 +1,11 @@
 <script lang="ts">
+	import type { HTMLInputAttributes } from 'svelte/elements';
+
 	export let title: string;
 	export let titleName: string;
 	export let customStyles: string = '';
 	export let customContainerStyles: string = '';
+	export let inputProperties: HTMLInputAttributes = {};
 
 	export let inputValue: HTMLInputElement['value'] = '';
 	let inputRef: HTMLInputElement;
@@ -21,6 +24,7 @@
 		id={titleName}
 		type="text"
 		class="peer outline-none overflow-hidden overflow-ellipsis text-light_text_black px-2 py-4 rounded-t-md shadow-lg w-full {customStyles}"
+		{...inputProperties}
 	/>
 	<label
 		for={titleName}

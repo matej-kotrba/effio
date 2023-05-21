@@ -13,6 +13,8 @@
 
 	export let exportedQuestion: Question;
 	export let title: string;
+
+	// $: console.log(exportedQuestion);
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
@@ -26,9 +28,9 @@
 	<Space gap={10} />
 	<div class="p-2 content">
 		{#if inputType === 'pickOne'}
-			<PickOneInput bind:exportedQuestion />
+			<PickOneInput bind:input={exportedQuestion} />
 		{:else if inputType === 'true/false'}
-			<TrueFalseInput bind:exportedQuestion />
+			<TrueFalseInput bind:input={exportedQuestion} />
 		{/if}
 	</div>
 </div>

@@ -8,8 +8,13 @@
 
 	let openDropdown = false;
 
+	type Input = {
+		title: string | null;
+		content: Question | null;
+	};
+
 	// This is the inputs which are used in the test creator
-	let testInputs: { title: string; content: Question }[] = [
+	let testInputs: Input[] = [
 		{ title: null, content: null },
 		{ title: null, content: null }
 	];
