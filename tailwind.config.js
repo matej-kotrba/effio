@@ -17,7 +17,8 @@ export default {
 				light_white: '#EFEFEF',
 				light_whiter: '#F5F5F5',
 				light_grey: '#999999',
-				success: '#5cb85c'
+				success: '#5cb85c',
+				error: '#B00020'
 			},
 			fontSize: {
 				h1: '85px',

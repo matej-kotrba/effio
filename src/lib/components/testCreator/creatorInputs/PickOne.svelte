@@ -4,6 +4,7 @@
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import { fly } from 'svelte/transition';
 
 	export let exportedQuestion: Question;
 
@@ -64,6 +65,20 @@
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
+	<!-- Display a limit of the questions -->
+	<div class="flex justify-end">
+		<div class="flex gap-1">
+			{#key input['questions']}
+				<div
+					class={input['questions'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					in:fly={{ x: 0, y: -20 }}
+				>
+					{input['questions'].length}
+				</div>
+			{/key}
+			/ {QUESTION_LIMIT}
+		</div>
+	</div>
 	{#each input['questions'] as q, index (q)}
 		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
 			<div class="col-span-11">
