@@ -45,7 +45,7 @@
 		correctAnswerIndex: 1
 	};
 
-	console.log(input);
+	$: console.log(input);
 
 	function newQuestionConditionCheck() {
 		return !(input.questions.length >= QUESTION_LIMIT);

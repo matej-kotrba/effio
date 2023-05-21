@@ -9,14 +9,14 @@
 	let openDropdown = false;
 
 	type Input = {
-		title: string | null;
-		content: Question | null;
+		title: string | undefined;
+		content: Question | undefined;
 	};
 
 	// This is the inputs which are used in the test creator
 	let testInputs: Input[] = [
-		{ title: null, content: null },
-		{ title: null, content: null }
+		{ title: undefined, content: undefined },
+		{ title: undefined, content: undefined }
 	];
 </script>
 
