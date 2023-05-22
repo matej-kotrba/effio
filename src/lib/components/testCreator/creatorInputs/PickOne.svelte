@@ -15,7 +15,6 @@
 
 	// The important thing is the questions array which will be changed in here
 	let input: PickOneQuestion = {
-		inputType: 'pickOne',
 		questions: [
 			// {
 			// 	question: 'Cats are awesome animals 🐱'

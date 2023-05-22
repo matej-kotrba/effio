@@ -1,7 +1,6 @@
 // Content of the question, inputType determines the type of the question and questions is an array of questions and its structure
 // Apart from these two properties you can add any other properties you want for functionality of the question
 type TrueFalseQuestion = {
-  inputType: 'true/false';
   questions: {
     question: string;
     isTrue: boolean;
@@ -9,20 +8,23 @@ type TrueFalseQuestion = {
 }
 
 type PickOneQuestion = {
-  inputType: 'pickOne';
   questions: {
     question: string;
   }[];
   correctAnswerIndex: number;
 };
 
+type QuestionTypeMap = {
+  'true/false': TrueFalseQuestion;
+  'pickOne': PickOneQuestion;
+}
 
-type QuestionContent =
-  | PickOneQuestion
-  | TrueFalseQuestion;
+type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];
 
 type Question = {
   title: string;
+  displayType: string;
+  questionType: KeysFromObject<QuestionTypeMap>;
   content: QuestionContent;
 }
 
