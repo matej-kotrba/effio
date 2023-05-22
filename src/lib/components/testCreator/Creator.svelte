@@ -4,13 +4,18 @@
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 
+	type InputToShowObject = {
+		inputType: QuestionContent['inputType'];
+		displayType: string;
+	};
+
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
 	let openDropdown = false;
 
 	// Array containing the name of inputs used in the test creator to display them ❗
-	let inputsToShow: QuestionContent['inputType'][] = [];
+	let inputsToShow: InputToShowObject[] = [];
 
 	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	let questionsData: (
@@ -19,14 +24,23 @@
 				[key: string]: never;
 		  }
 	)[] = [];
-	function addNewQuestion(nameOfTheInput: QuestionContent['inputType']) {
+
+	function addNewQuestion(input: InputToShowObject) {
 		questionsData = [...questionsData, {}];
-		inputsToShow = [...inputsToShow, nameOfTheInput];
+		inputsToShow = [...inputsToShow, input];
 	}
 
 	function removeQuestion(index: number) {
 		questionsData = questionsData.filter((_, i) => i !== index);
 		inputsToShow = inputsToShow.filter((_, i) => i !== index);
+	}
+
+	function onDropdownInputClick(input: QuestionTemplate) {
+		addNewQuestion({
+			inputType: input.properties.inputType as QuestionContent['inputType'],
+			displayType: input.name
+		});
+		openDropdown = false;
 	}
 </script>
 
@@ -52,10 +66,7 @@
 				{#each inputTemplates as input}
 					<button
 						type="button"
-						on:click={() => {
-							addNewQuestion(input['properties']['inputType']);
-							openDropdown = false;
-						}}
+						on:click={() => onDropdownInputClick(input)}
 						class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
 					>
 						{input.name}
@@ -64,6 +75,18 @@
 			</div>
 		</div>
 		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
+			{#each inputsToShow as { displayType, inputType }, index}
+				<Input
+					{inputType}
+					{displayType}
+					on:questionDetails={({ detail }) => {
+						questionsData[index]['content'] = detail;
+					}}
+					on:titleDetails={({ detail }) => {
+						questionsData[index]['title'] = detail;
+					}}
+				/>
+			{/each}
 			<!-- <Input
 				inputType="pickOne"
 				displayType="Pick One"
