@@ -4,10 +4,19 @@
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 
-	type InputToShowObject = {
-		inputType: QuestionContent['inputType'];
-		displayType: string;
+	type NewQuestionInput = {
+		questionType: Question['questionType'];
+		displayType: QuestionTemplate['name'];
 	};
+
+	type QuestionsDataType =
+		| Question
+		| ({
+				[Key in keyof Question]?: Question[Key];
+		  } & {
+				displayType: Question['displayType'];
+				questionType: Question['questionType'];
+		  });
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -15,33 +24,30 @@
 	let openDropdown = false;
 
 	// Array containing the name of inputs used in the test creator to display them ❗
-	let inputsToShow: InputToShowObject[] = [];
+	// let inputsToShow: InputToShowObject[] = [];
+
+	// The questionsDataType can contain questions or blank object so its ready for input
 
 	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
-	let questionsData: (
-		| Question
-		| {
-				[key: string]: never;
-		  }
-	)[] = [];
+	let questionsData: QuestionsDataType[] = [];
 
-	function addNewQuestion(input: InputToShowObject) {
-		questionsData = [...questionsData, {}];
-		inputsToShow = [...inputsToShow, input];
+	function addNewQuestion(input: NewQuestionInput) {
+		questionsData = [...questionsData, input];
 	}
 
 	function removeQuestion(index: number) {
 		questionsData = questionsData.filter((_, i) => i !== index);
-		inputsToShow = inputsToShow.filter((_, i) => i !== index);
 	}
 
 	function onDropdownInputClick(input: QuestionTemplate) {
 		addNewQuestion({
-			inputType: input.properties.inputType as QuestionContent['inputType'],
+			questionType: input.properties.inputType as Question['questionType'],
 			displayType: input.name
 		});
 		openDropdown = false;
 	}
+
+	$: console.log(questionsData);
 </script>
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
@@ -75,9 +81,9 @@
 			</div>
 		</div>
 		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
-			{#each inputsToShow as { displayType, inputType }, index}
+			{#each questionsData as { displayType, questionType }, index}
 				<Input
-					{inputType}
+					inputType={questionType}
 					{displayType}
 					on:questionDetails={({ detail }) => {
 						questionsData[index]['content'] = detail;

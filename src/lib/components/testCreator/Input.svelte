@@ -13,7 +13,7 @@ will be used in the test creator -->
 
 	let dispatch = createEventDispatcher();
 
-	export let inputType: QuestionContent['inputType'];
+	export let inputType: Question['questionType'];
 	export let displayType: QuestionTemplate['name'];
 
 	let title: string;
