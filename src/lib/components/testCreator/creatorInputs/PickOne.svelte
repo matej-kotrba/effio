@@ -11,7 +11,7 @@
 	let formRef: HTMLFormElement | null = null;
 
 	// The important thing is the questions array which will be changed in here
-	export let input: PickOneQuestion = {
+	let input: PickOneQuestion = {
 		inputType: 'pickOne',
 		questions: [
 			// {
@@ -44,8 +44,6 @@
 		],
 		correctAnswerIndex: 1
 	};
-
-	$: console.log(input);
 
 	function newQuestionConditionCheck() {
 		return !(input.questions.length >= QUESTION_LIMIT);
