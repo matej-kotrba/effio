@@ -13,6 +13,8 @@ declare global {
 			"onintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
 			"onunintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
 			"onclickoutside"?: (event: CustomEvent<MouseEvent>) => void;
+			"onquestionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
+			"ontitleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
 		}
 	}
 }

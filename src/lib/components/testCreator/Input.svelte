@@ -1,4 +1,6 @@
 <!-- IMPORTANT: This is Input for Creator, both of them are for creating tests only, not for taking them -->
+<!-- Input will trigger an event called questionDetails, which will contain the details of the question, which
+will be used in the test creator -->
 
 <script lang="ts">
 	import Separator from '~components/separators/Separator.svelte';
@@ -7,14 +9,20 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
+	import { createEventDispatcher } from 'svelte';
 
-	export let inputType: Question['inputType'];
+	let dispatch = createEventDispatcher();
+
+	export let inputType: QuestionContent['inputType'];
 	export let displayType: QuestionTemplate['name'];
 
-	export let exportedQuestion: Question;
-	export let title: string;
+	let title: string;
 
-	// $: console.log(exportedQuestion);
+	function titleValueEvent() {
+		dispatch('titleDetails', title);
+	}
+
+	$: titleValueEvent(), title;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
@@ -28,9 +36,9 @@
 	<Space gap={10} />
 	<div class="p-2 content">
 		{#if inputType === 'pickOne'}
-			<PickOneInput bind:input={exportedQuestion} />
+			<PickOneInput on:questionDetails />
 		{:else if inputType === 'true/false'}
-			<TrueFalseInput bind:input={exportedQuestion} />
+			<TrueFalseInput on:questionDetails />
 		{/if}
 	</div>
 </div>

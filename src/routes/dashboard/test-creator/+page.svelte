@@ -101,7 +101,7 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
-			<Creator inputs={data.questionsTypes} />
+			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
 			<BasicButton
