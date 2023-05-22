@@ -11,25 +11,33 @@
 
 	type QuestionsDataType =
 		| Question
-		| ({
-				[Key in keyof Question]?: Question[Key];
-		  } & {
+		| {
 				displayType: Question['displayType'];
 				questionType: Question['questionType'];
-		  });
+		  };
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
 	let openDropdown = false;
 
-	// Array containing the name of inputs used in the test creator to display them ❗
-	// let inputsToShow: InputToShowObject[] = [];
-
-	// The questionsDataType can contain questions or blank object so its ready for input
-
 	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
-	let questionsData: QuestionsDataType[] = [];
+	// The questionsDataType can contain questions or blank object so its ready for input
+	let questionsData: QuestionsDataType[] = [
+		{
+			displayType: 'Pick one',
+			questionType: 'pickOne',
+			content: {
+				correctAnswerIndex: 1,
+				questions: [
+					{
+						question: 'What is the capital of France?',
+						isTrue: false
+					}
+				]
+			}
+		}
+	];
 
 	function addNewQuestion(input: NewQuestionInput) {
 		questionsData = [...questionsData, input];

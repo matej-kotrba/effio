@@ -22,11 +22,13 @@ type QuestionTypeMap = {
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];
 
 type Question = {
-  title: string;
-  displayType: string;
-  questionType: KeysFromObject<QuestionTypeMap>;
-  content: QuestionContent;
-}
+  [Key in keyof QuestionTypeMap]: {
+    title: string;
+    displayType: string;
+    questionType: Key;
+    content: QuestionTypeMap[Key];
+  };
+}[keyof QuestionTypeMap];
 
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field
