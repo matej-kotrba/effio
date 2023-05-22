@@ -17,9 +17,14 @@ type PickOneQuestion = {
 };
 
 
-type Question =
+type QuestionContent =
   | PickOneQuestion
   | TrueFalseQuestion;
+
+type Question = {
+  title: string;
+  content: QuestionContent;
+}
 
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field

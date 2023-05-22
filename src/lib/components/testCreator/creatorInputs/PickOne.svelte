@@ -5,8 +5,11 @@
 	import { flip } from 'svelte/animate';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
+	import { createEventDispatcher } from 'svelte';
 
 	const QUESTION_LIMIT = 10;
+
+	let dispatch = createEventDispatcher();
 
 	let formRef: HTMLFormElement | null = null;
 
@@ -60,13 +63,20 @@
 	function deleteQuestion(index: number) {
 		input.questions = input.questions.filter((_, i) => i !== index);
 	}
+
+	function sendQuestionDetailsToParent() {
+		dispatch('questionDetails', input);
+	}
+
+	// TODO: This should be better handled because of performace
+	$: sendQuestionDetailsToParent(), input;
 </script>
 
 <form bind:this={formRef} class="relative flex flex-col gap-4">
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
 		<div class="flex gap-1">
-			{#key input['questions']}
+			{#key input['questions'].length}
 				<div
 					class={input['questions'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
 					in:fly={{ x: 0, y: -20 }}
