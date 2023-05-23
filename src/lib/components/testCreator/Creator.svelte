@@ -7,14 +7,11 @@
 	type NewQuestionInput = {
 		questionType: Question['questionType'];
 		displayType: QuestionTemplate['name'];
+		content?: undefined;
+		title?: undefined;
 	};
 
-	type QuestionsDataType =
-		| Question
-		| {
-				displayType: Question['displayType'];
-				questionType: Question['questionType'];
-		  };
+	type QuestionsDataType = Question | NewQuestionInput;
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -25,14 +22,14 @@
 	// The questionsDataType can contain questions or blank object so its ready for input
 	let questionsData: QuestionsDataType[] = [
 		{
+			title: 'Question 1',
 			displayType: 'Pick one',
 			questionType: 'pickOne',
 			content: {
 				correctAnswerIndex: 1,
 				questions: [
 					{
-						question: 'What is the capital of France?',
-						isTrue: false
+						question: 'What is the capital of France?'
 					}
 				]
 			}
@@ -55,7 +52,7 @@
 		openDropdown = false;
 	}
 
-	$: console.log(questionsData);
+	// $: console.log(questionsData);
 </script>
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
@@ -99,28 +96,9 @@
 					on:titleDetails={({ detail }) => {
 						questionsData[index]['title'] = detail;
 					}}
+					on:deleteInput={() => removeQuestion(index)}
 				/>
 			{/each}
-			<!-- <Input
-				inputType="pickOne"
-				displayType="Pick One"
-				on:questionDetails={({ detail }) => {
-					testInputs[0]['content'] = detail;
-				}}
-				on:titleDetails={({ detail }) => {
-					testInputs[0]['title'] = detail;
-				}}
-			/>
-			<Input
-				inputType="true/false"
-				displayType="True / False"
-				on:questionDetails={({ detail }) => {
-					testInputs[1]['content'] = detail;
-				}}
-				on:titleDetails={({ detail }) => {
-					testInputs[1]['title'] = detail;
-				}}
-			/> -->
 		</div>
 	</div>
 </div>

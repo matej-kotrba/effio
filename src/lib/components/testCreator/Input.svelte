@@ -3,6 +3,7 @@
 will be used in the test creator -->
 
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
@@ -26,7 +27,19 @@ will be used in the test creator -->
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
-	<p class="text-light_text_black_40 text-body2">{displayType}</p>
+	<div class="flex justify-between">
+		<p class="text-light_text_black_40 text-body2">{displayType}</p>
+		<button
+			on:click={() => {
+				dispatch('deleteInput');
+			}}
+		>
+			<Icon
+				icon="material-symbols:close-rounded"
+				class="text-3xl duration-200 group-hover:rotate-90"
+			/>
+		</button>
+	</div>
 	<Space gap={20} />
 	<h6 class="text-light_text_black">
 		<TextInput title="Title" titleName="title" bind:inputValue={title} />

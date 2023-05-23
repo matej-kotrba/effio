@@ -15,6 +15,7 @@ declare global {
 			"onclickoutside"?: (event: CustomEvent<MouseEvent>) => void;
 			"onquestionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
 			"ontitleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
+			"ondeleteInput"?: (event: CustomEvent) => void;
 		}
 	}
 }
