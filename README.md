@@ -22,6 +22,7 @@
 - SvelteKit
   - tanstack/svelte-query
   - Superforms
+  - Svelte French Toast
 - TypeScript
   - ts-reset
 - Tailwind
