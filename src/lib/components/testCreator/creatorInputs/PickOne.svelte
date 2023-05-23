@@ -16,35 +16,14 @@
 	// The important thing is the questions array which will be changed in here
 	let input: PickOneQuestion = {
 		questions: [
-			// {
-			// 	question: 'Cats are awesome animals 🐱'
-			// },
-			// {
-			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			// },
-			// {
-			// 	question: 'Cats are awesome animals 🐱'
-			// },
-			// {
-			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			// },
-			// {
-			// 	question: 'Cats are awesome animals 🐱'
-			// },
-			// {
-			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			// },
-			// {
-			// 	question: 'Cats are awesome animals 🐱'
-			// },
-			// {
-			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			// },
-			// {
-			// 	question: 'Seals and sea lions are the best animals (dogs are close tho) 🦭🐶🦭'
-			// }
+			{
+				question: ''
+			},
+			{
+				question: ''
+			}
 		],
-		correctAnswerIndex: 1
+		correctAnswerIndex: 0
 	};
 
 	function newQuestionConditionCheck() {
@@ -61,6 +40,8 @@
 
 	function deleteQuestion(index: number) {
 		input.questions = input.questions.filter((_, i) => i !== index);
+		if (input['correctAnswerIndex'] === index) input['correctAnswerIndex'] = 0;
+		toast.success(`Question ${index + 1} deleted`);
 	}
 
 	function sendQuestionDetailsToParent() {
@@ -87,17 +68,10 @@
 		</div>
 	</div>
 	{#each input['questions'] as q, index (q)}
-		<div class="grid grid-cols-12 duration-200" animate:flip={{ duration: 200 }}>
-			<div class="col-span-11">
-				<TextInput
-					title="Option {index + 1}"
-					titleName="Option {index + 1}"
-					bind:inputValue={q.question}
-				/>
-			</div>
+		<div class="flex duration-200" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"
-				class="group grid col-span-1 place-content-center duration-150 bg-light_quaternary rounded-r-full
+				class="group grid place-content-center duration-150 bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
 				 {input['questions'].length > 2
 					? 'opacity-100 pointer-events-auto'
 					: 'opacity-0 pointer-events-none'}"
@@ -107,6 +81,26 @@
 					icon="material-symbols:close-rounded"
 					class="text-3xl duration-200 group-hover:rotate-90"
 				/>
+			</button>
+			<div class="relative grow-[1]">
+				<TextInput
+					title="Option {index + 1}"
+					titleName="Option {index + 1}"
+					bind:inputValue={q.question}
+				/>
+			</div>
+			<button
+				type="button"
+				data-tip="Mark this as a correct answer"
+				class={`px-2 grid tooltip place-content-center rounded-r-md`}
+				style={`${
+					index === input['correctAnswerIndex']
+						? 'background-color: var(--success); color: var(--light-white);'
+						: 'background-color: var(--light-white); color: var(--success);'
+				}}`}
+				on:click={() => (input['correctAnswerIndex'] = index)}
+			>
+				<Icon icon="charm:tick" class="text-3xl" />
 			</button>
 		</div>
 	{/each}
