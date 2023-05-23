@@ -33,6 +33,19 @@
 					}
 				]
 			}
+		},
+		{
+			title: '',
+			displayType: 'True/False',
+			questionType: 'true/false',
+			content: {
+				questions: [
+					{
+						isTrue: false,
+						question: 'Is the earth flat?'
+					}
+				]
+			}
 		}
 	];
 
@@ -88,8 +101,11 @@
 		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
 			{#each questionsData as { displayType, questionType }, index}
 				<Input
-					inputType={questionType}
-					{displayType}
+					input={{
+						questionType: questionType,
+						content: questionsData[index]['content'],
+						displayType: displayType
+					}}
 					on:questionDetails={({ detail }) => {
 						questionsData[index]['content'] = detail;
 					}}

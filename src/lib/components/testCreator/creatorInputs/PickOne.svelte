@@ -7,14 +7,7 @@
 	import { fly } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
 
-	const QUESTION_LIMIT = 10;
-
-	let dispatch = createEventDispatcher();
-
-	let formRef: HTMLFormElement | null = null;
-
-	// The important thing is the questions array which will be changed in here
-	let input: PickOneQuestion = {
+	export let defaultQuestionsData: PickOneQuestion = {
 		questions: [
 			{
 				question: ''
@@ -25,6 +18,15 @@
 		],
 		correctAnswerIndex: 0
 	};
+
+	const QUESTION_LIMIT = 10;
+
+	let dispatch = createEventDispatcher();
+
+	let formRef: HTMLFormElement | null = null;
+
+	// The important thing is the questions array which will be changed in here
+	let input: PickOneQuestion = defaultQuestionsData;
 
 	function newQuestionConditionCheck() {
 		return !(input.questions.length >= QUESTION_LIMIT);

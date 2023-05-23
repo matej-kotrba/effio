@@ -14,8 +14,10 @@ will be used in the test creator -->
 
 	let dispatch = createEventDispatcher();
 
-	export let inputType: Question['questionType'];
-	export let displayType: QuestionTemplate['name'];
+	export let input: PartialPick<
+		Pick<Question, 'content' | 'questionType' | 'displayType'>,
+		'content'
+	>;
 
 	let title: string;
 
@@ -23,20 +25,25 @@ will be used in the test creator -->
 		dispatch('titleDetails', title);
 	}
 
+	function sendDefaultValueToChild() {
+		return (input['content'] as any) || undefined;
+	}
+
 	$: titleValueEvent(), title;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
 	<div class="flex justify-between">
-		<p class="text-light_text_black_40 text-body2">{displayType}</p>
+		<p class="text-light_text_black_40 text-body2">{input.displayType}</p>
 		<button
 			on:click={() => {
 				dispatch('deleteInput');
 			}}
+			class="group"
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
-				class="text-3xl duration-200 group-hover:rotate-90"
+				class="text-3xl duration-200 group-hover:rotate-90 text-light_text_black group-hover:text-error"
 			/>
 		</button>
 	</div>
@@ -48,9 +55,9 @@ will be used in the test creator -->
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<Space gap={10} />
 	<div class="p-2 content">
-		{#if inputType === 'pickOne'}
-			<PickOneInput on:questionDetails />
-		{:else if inputType === 'true/false'}
+		{#if input['questionType'] === 'pickOne'}
+			<PickOneInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
+		{:else if input['questionType'] === 'true/false'}
 			<TrueFalseInput on:questionDetails />
 		{/if}
 	</div>
