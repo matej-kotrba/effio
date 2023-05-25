@@ -117,7 +117,7 @@
 					/>
 				</div>
 			{/each}
-			<div class="relative flex flex-row items-center w-full gap-4 px-4">
+			<!-- <div class="relative flex flex-row items-center w-full gap-4 px-4">
 				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 				<button
 					type="button"
@@ -144,7 +144,7 @@
 						</button>
 					{/each}
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>
