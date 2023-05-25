@@ -3,8 +3,11 @@
 	import { clickOutside } from '~use/clickOutside';
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
+	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 
 	type NewQuestionInput = {
+		id: string;
 		questionType: Question['questionType'];
 		displayType: QuestionTemplate['name'];
 		content?: undefined;
@@ -22,6 +25,7 @@
 	// The questionsDataType can contain questions or blank object so its ready for input
 	let questionsData: QuestionsDataType[] = [
 		{
+			id: crypto.randomUUID(),
 			title: 'What is the capital of France?',
 			displayType: 'Pick one',
 			questionType: 'pickOne',
@@ -41,6 +45,7 @@
 			}
 		},
 		{
+			id: crypto.randomUUID(),
 			title: 'What facts about Earh are true ?',
 			displayType: 'True/False',
 			questionType: 'true/false',
@@ -65,38 +70,54 @@
 
 	function onDropdownInputClick(input: QuestionTemplate) {
 		addNewQuestion({
+			id: crypto.randomUUID(),
 			questionType: input.properties.inputType as Question['questionType'],
 			displayType: input.name
 		});
 		openDropdown = false;
 	}
 
-	$: console.log(questionsData);
+	function onOrderChange(e: { detail: { items: QuestionsDataType[] } }) {
+		questionsData = e.detail.items;
+	}
+
+	function onOrderConsideration(e: { detail: { items: QuestionsDataType[] } }) {
+		questionsData = e.detail.items;
+	}
+
+	// $: console.log(questionsData);
 </script>
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
 	<div class="relative flex flex-col items-center justify-center gap-2">
-		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
+		<div
+			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
+			use:dndzone={{ items: questionsData, flipDurationMs: 300 }}
+			on:finalize={onOrderChange}
+			on:consider={onOrderConsideration}
+		>
 			<!-- Separator with add new input -->
-
-			{#each questionsData as { displayType, questionType }, index}
-				<Input
-					input={{
-						questionType: questionType,
-						title: questionsData[index]['title'],
-						content: questionsData[index]['content'],
-						displayType: displayType
-					}}
-					on:questionDetails={({ detail }) => {
-						questionsData[index]['content'] = detail;
-					}}
-					on:titleDetails={({ detail }) => {
-						questionsData[index]['title'] = detail;
-					}}
-					on:deleteInput={() => removeQuestion(index)}
-				/>
+			{#each questionsData as question, index (question['id'])}
+				<!-- Div which needs to be here for draggeble to be in creator and not in input -->
+				<div animate:flip={{ duration: 300 }}>
+					<Input
+						input={{
+							questionType: question.questionType,
+							title: questionsData[index]['title'],
+							content: questionsData[index]['content'],
+							displayType: question.displayType
+						}}
+						on:questionDetails={({ detail }) => {
+							questionsData[index]['content'] = detail;
+						}}
+						on:titleDetails={({ detail }) => {
+							questionsData[index]['title'] = detail;
+						}}
+						on:deleteInput={() => removeQuestion(index)}
+					/>
+				</div>
 			{/each}
-			<div class="flex flex-row items-center w-full gap-4 px-4">
+			<div class="relative flex flex-row items-center w-full gap-4 px-4">
 				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 				<button
 					type="button"

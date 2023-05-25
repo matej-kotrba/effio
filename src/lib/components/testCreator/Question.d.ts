@@ -23,6 +23,7 @@ type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];
 
 type Question = {
   [Key in keyof QuestionTypeMap]: {
+    id: string;
     title: string;
     displayType: string;
     questionType: Key;

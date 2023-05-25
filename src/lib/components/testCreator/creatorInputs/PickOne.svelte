@@ -23,8 +23,6 @@
 
 	let dispatch = createEventDispatcher();
 
-	let formRef: HTMLFormElement | null = null;
-
 	// The important thing is the questions array which will be changed in here
 	let input: PickOneQuestion = defaultQuestionsData;
 
@@ -54,7 +52,7 @@
 	$: sendQuestionDetailsToParent(), input;
 </script>
 
-<form bind:this={formRef} class="relative flex flex-col gap-4">
+<form class="relative flex flex-col gap-4">
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
 		<div class="flex gap-1">
