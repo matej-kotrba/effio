@@ -16,6 +16,8 @@ declare global {
 			"onquestionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
 			"ontitleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
 			"ondeleteInput"?: (event: CustomEvent) => void;
+			"onfinalize"?: (event: CustomEvent) => void;
+			"onconsider"?: (event: CustomEvent) => void;
 		}
 	}
 }

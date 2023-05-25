@@ -25,6 +25,9 @@ will be used in the test creator -->
 	}
 
 	function sendDefaultValueToChild() {
+		// Here we know that the type will be correct because we are using this component only in the creator
+		// and we typecheck it in there, but to persist Input general and reusable we can't explicitly say that
+		// this input is type of ... so we have to type it as any to make Typescript happy
 		return (input['content'] as any) || undefined;
 	}
 
@@ -57,7 +60,7 @@ will be used in the test creator -->
 		{#if input['questionType'] === 'pickOne'}
 			<PickOneInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
 		{:else if input['questionType'] === 'true/false'}
-			<TrueFalseInput on:questionDetails />
+			<TrueFalseInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
 		{/if}
 	</div>
 </div>

@@ -9,23 +9,25 @@
 
 	const QUESTION_LIMIT = 10;
 
+	export let defaultQuestionsData: TrueFalseQuestion = {
+		questions: [
+			{
+				question: '',
+				isTrue: true
+			},
+			{
+				question: '',
+				isTrue: false
+			}
+		]
+	};
+
 	let dispatch = createEventDispatcher();
 
 	let formRef: HTMLFormElement | null = null;
 
 	// The important thing is the questions array which will be changed in here
-	let input: TrueFalseQuestion = {
-		questions: [
-			{
-				question: 'Sea lions are a variety of seals',
-				isTrue: true
-			},
-			{
-				question: 'Dogs are a variety of cats',
-				isTrue: false
-			}
-		]
-	};
+	let input: TrueFalseQuestion = defaultQuestionsData;
 
 	function newQuestionConditionCheck() {
 		return !(input.questions.length >= QUESTION_LIMIT);
