@@ -22,20 +22,26 @@
 	// The questionsDataType can contain questions or blank object so its ready for input
 	let questionsData: QuestionsDataType[] = [
 		{
-			title: 'Question 1',
+			title: 'What is the capital of France?',
 			displayType: 'Pick one',
 			questionType: 'pickOne',
 			content: {
 				correctAnswerIndex: 1,
 				questions: [
 					{
-						question: 'What is the capital of France?'
+						question: 'Paris'
+					},
+					{
+						question: 'Paris'
+					},
+					{
+						question: 'Paris'
 					}
 				]
 			}
 		},
 		{
-			title: '',
+			title: 'What facts about Earh are true ?',
 			displayType: 'True/False',
 			questionType: 'true/false',
 			content: {
@@ -70,39 +76,14 @@
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
 	<div class="relative flex flex-col items-center justify-center gap-2">
-		<div class="flex flex-row items-center w-full gap-4 px-4">
-			<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-			<button
-				type="button"
-				class="relative z-10 p-2 duration-200 rounded-lg bg-light_secondary text-whiter hover:bg-primary"
-				on:click={() => (openDropdown = !openDropdown)}
-			>
-				<Icon icon="ic:round-plus" class="text-5xl rounded-lg text-light_white" />
-			</button>
-			<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-			<div
-				use:clickOutside
-				on:clickoutside={() => (openDropdown = false)}
-				class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-				rounded-md shadow-lg bottom-[calc(100%+10px)] bg-light_whiter duration-200
-				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
-			>
-				{#each inputTemplates as input}
-					<button
-						type="button"
-						on:click={() => onDropdownInputClick(input)}
-						class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
-					>
-						{input.name}
-					</button>
-				{/each}
-			</div>
-		</div>
 		<div class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3">
+			<!-- Separator with add new input -->
+
 			{#each questionsData as { displayType, questionType }, index}
 				<Input
 					input={{
 						questionType: questionType,
+						title: questionsData[index]['title'],
 						content: questionsData[index]['content'],
 						displayType: displayType
 					}}
@@ -115,6 +96,34 @@
 					on:deleteInput={() => removeQuestion(index)}
 				/>
 			{/each}
+			<div class="flex flex-row items-center w-full gap-4 px-4">
+				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+				<button
+					type="button"
+					class="relative z-10 p-2 duration-200 rounded-lg bg-light_secondary text-whiter hover:bg-primary"
+					on:click={() => (openDropdown = !openDropdown)}
+				>
+					<Icon icon="ic:round-plus" class="text-5xl rounded-lg text-light_white" />
+				</button>
+				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+				<div
+					use:clickOutside
+					on:clickoutside={() => (openDropdown = false)}
+					class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
+				rounded-md shadow-lg bottom-[calc(100%+10px)] bg-light_whiter duration-200
+				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
+				>
+					{#each inputTemplates as input}
+						<button
+							type="button"
+							on:click={() => onDropdownInputClick(input)}
+							class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+						>
+							{input.name}
+						</button>
+					{/each}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

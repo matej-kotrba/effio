@@ -7,7 +7,6 @@ will be used in the test creator -->
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import TextInput from '~components/inputs/TextInput.svelte';
-	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -15,11 +14,11 @@ will be used in the test creator -->
 	let dispatch = createEventDispatcher();
 
 	export let input: PartialPick<
-		Pick<Question, 'content' | 'questionType' | 'displayType'>,
-		'content'
+		Pick<Question, 'content' | 'questionType' | 'displayType' | 'title'>,
+		'content' | 'title'
 	>;
 
-	let title: string;
+	let title: string = input['title'] || '';
 
 	function titleValueEvent() {
 		dispatch('titleDetails', title);
