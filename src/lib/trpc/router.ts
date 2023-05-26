@@ -34,7 +34,7 @@ export const router = t.router({
     }
     // This needs to be converted to unkown because of the JSON field
     // But its 100% safe because of the manual check above
-    return questionsTypes as unknown as QuestionTemplate[]
+    return result
   })
 })
 

@@ -97,7 +97,7 @@
 		dragDisable = false;
 	}
 
-	$: console.log(questionsData);
+	// $: console.log(questionsData);
 </script>
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">

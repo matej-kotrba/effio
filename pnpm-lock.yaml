@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  '@lucia-auth/adapter-prisma':
+    specifier: ^2.0.0
+    version: 2.0.0(@prisma/client@4.14.0)(lucia-auth@1.7.0)
   '@prisma/client':
     specifier: ^4.14.0
     version: 4.14.0(prisma@4.14.0)
@@ -13,6 +16,9 @@ dependencies:
   '@trpc/server':
     specifier: ^10.19.1
     version: 10.19.1
+  lucia-auth:
+    specifier: ^1.7.0
+    version: 1.7.0
   svelte-french-toast:
     specifier: 1.0.4-beta.0
     version: 1.0.4-beta.0(svelte@3.58.0)
@@ -370,6 +376,16 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@lucia-auth/adapter-prisma@2.0.0(@prisma/client@4.14.0)(lucia-auth@1.7.0):
+    resolution: {integrity: sha512-8qxEcoVNJDbK8zXzyMK/4SHnLTaih0oNjTfp7l4ndRg5WI+eMgP3N0OUGQVaq3C5N0iIfkXxgj/ZGH8ZidwVeQ==}
+    peerDependencies:
+      '@prisma/client': ^4.2.0
+      lucia-auth: ^1.3.0
+    dependencies:
+      '@prisma/client': 4.14.0(prisma@4.14.0)
+      lucia-auth: 1.7.0
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1637,6 +1653,10 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lucia-auth@1.7.0:
+    resolution: {integrity: sha512-JisZE50dlvVdX726TSxUH0uoI/bwBrgSjO/+Ts/Yrk7TseKtcK8ezDNCAYUCI1XK3PHm37jgobklELpxeAmYLw==}
+    dev: false
 
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
