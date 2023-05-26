@@ -3,7 +3,7 @@
 	import { clickOutside } from '~use/clickOutside';
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 
 	type NewQuestionInput = {
@@ -19,7 +19,11 @@
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
+	// Dropdown state
 	let openDropdown = false;
+
+	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
+	let dragDisable: boolean = true;
 
 	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
@@ -77,12 +81,20 @@
 		openDropdown = false;
 	}
 
-	function onOrderChange(e: { detail: { items: QuestionsDataType[] } }) {
+	function onOrderChange(e: { detail: { items: QuestionsDataType[]; info: { source: any } } }) {
 		questionsData = e.detail.items;
+		if (e.detail.info.source === SOURCES.POINTER) {
+			dragDisable = true;
+		}
 	}
 
 	function onOrderConsideration(e: { detail: { items: QuestionsDataType[] } }) {
 		questionsData = e.detail.items;
+	}
+
+	function startDrag(e: Event) {
+		e.preventDefault();
+		dragDisable = false;
 	}
 
 	$: console.log(questionsData);
@@ -92,7 +104,7 @@
 	<div class="relative flex flex-col items-center justify-center gap-2">
 		<div
 			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
-			use:dndzone={{ items: questionsData, flipDurationMs: 300 }}
+			use:dndzone={{ items: questionsData, flipDurationMs: 300, dragDisabled: dragDisable }}
 			on:finalize={onOrderChange}
 			on:consider={onOrderConsideration}
 		>
@@ -114,6 +126,7 @@
 							questionsData[index]['title'] = detail;
 						}}
 						on:deleteInput={() => removeQuestion(index)}
+						on:dnddrag={startDrag}
 					/>
 				</div>
 			{/each}

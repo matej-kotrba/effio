@@ -18,6 +18,7 @@ declare global {
 			"ondeleteInput"?: (event: CustomEvent) => void;
 			"onfinalize"?: (event: CustomEvent) => void;
 			"onconsider"?: (event: CustomEvent) => void;
+			"ondnddrag"?: (event: CustomEvent) => void;
 		}
 	}
 }

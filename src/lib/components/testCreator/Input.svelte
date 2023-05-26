@@ -20,8 +20,12 @@ will be used in the test creator -->
 
 	let title: string = input['title'] || '';
 
-	function titleValueEvent() {
+	function dispatchTitleEvent() {
 		dispatch('titleDetails', title);
+	}
+
+	function dispatchDragEvent() {
+		dispatch('dnddrag');
 	}
 
 	function sendDefaultValueToChild() {
@@ -31,17 +35,25 @@ will be used in the test creator -->
 		return (input['content'] as any) || undefined;
 	}
 
-	$: titleValueEvent(), title;
+	$: dispatchTitleEvent(), title;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
-	<div class="flex justify-between">
-		<p class="text-light_text_black_40 text-body2">{input.displayType}</p>
+	<div class="grid grid-cols-3">
+		<p class="justify-self-start text-light_text_black_40 text-body2">{input.displayType}</p>
+		<div
+			class="justify-self-center hover:cursor-grab"
+			aria-label="drag-handle"
+			on:mousedown={dispatchDragEvent}
+			on:touchstart={dispatchDragEvent}
+		>
+			<Icon icon="akar-icons:drag-horizontal" class="text-3xl text-light_text_black_80" />
+		</div>
 		<button
 			on:click={() => {
 				dispatch('deleteInput');
 			}}
-			class="group"
+			class="justify-self-end group"
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
