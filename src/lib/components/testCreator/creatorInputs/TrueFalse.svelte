@@ -70,18 +70,20 @@
 		</div>
 	</div>
 	{#each input['questions'] as q, index (q)}
-		<div class="flex duration-200" animate:flip={{ duration: 200 }}>
+		<div class="flex" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"
-				class="group grid place-content-center duration-150 bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
+				class="group grid place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
 				 {input['questions'].length > 2
 					? 'opacity-100 pointer-events-auto'
 					: 'opacity-0 pointer-events-none'}"
 				on:click={() => deleteQuestion(index)}
+				style="transition: 200ms background-color, 200ms color;"
 			>
 				<Icon
 					icon="material-symbols:close-rounded"
-					class="text-3xl duration-200 group-hover:rotate-90"
+					class="text-3xl group-hover:rotate-90"
+					style="transition: 200ms transform;"
 				/>
 			</button>
 			<div class="relative grow-[1]">

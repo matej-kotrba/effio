@@ -45,7 +45,8 @@ will be used in the test creator -->
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
-				class="text-3xl duration-200 group-hover:rotate-90 text-light_text_black group-hover:text-error"
+				class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error"
+				style="transition: 200ms transform;"
 			/>
 		</button>
 	</div>
