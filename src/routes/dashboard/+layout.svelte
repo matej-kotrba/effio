@@ -39,6 +39,17 @@
 				>
 					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community place
 				</a>
+				<div
+					class="absolute bottom-0 left-0 w-full p-2 border-t-[1px] border-light_text_black_20 flex justify-center flex-col items-center"
+				>
+					<img
+						src="/imgs/content_imgs/liska.avif"
+						alt="Icon"
+						width="50"
+						class="object-cover rounded-full aspect-square"
+					/>
+					<span class="text-light_text_black"> Matěj Kotrba </span>
+				</div>
 			</div>
 		</div>
 	</aside>
