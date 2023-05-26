@@ -104,7 +104,15 @@
 	<div class="relative flex flex-col items-center justify-center gap-2">
 		<div
 			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
-			use:dndzone={{ items: questionsData, flipDurationMs: 300, dragDisabled: dragDisable }}
+			use:dndzone={{
+				items: questionsData,
+				flipDurationMs: 300,
+				dragDisabled: dragDisable,
+				dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
+				dropTargetStyle: {
+					outline: '2px dashed var(--light-primary)'
+				}
+			}}
 			on:finalize={onOrderChange}
 			on:consider={onOrderConsideration}
 		>
