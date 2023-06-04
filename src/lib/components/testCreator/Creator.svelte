@@ -136,36 +136,54 @@
 						on:deleteInput={() => removeQuestion(index)}
 						on:dnddrag={startDrag}
 					/>
-				</div>
-			{/each}
-			<!-- <div class="relative flex flex-row items-center w-full gap-4 px-4">
-				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-				<button
-					type="button"
-					class="relative z-10 p-2 duration-200 rounded-lg bg-light_secondary text-whiter hover:bg-primary"
-					on:click={() => (openDropdown = !openDropdown)}
-				>
-					<Icon icon="ic:round-plus" class="text-5xl rounded-lg text-light_white" />
-				</button>
-				<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-				<div
-					use:clickOutside
-					on:clickoutside={() => (openDropdown = false)}
-					class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-				rounded-md shadow-lg bottom-[calc(100%+10px)] bg-light_whiter duration-200
-				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
-				>
-					{#each inputTemplates as input}
+					<!-- The dropdown for new input -->
+					<div
+						class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 opacity-0 group hover:opacity-100"
+					>
+						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 						<button
 							type="button"
-							on:click={() => onDropdownInputClick(input)}
-							class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+							class="relative z-10 w-32 p-2 duration-200 rounded-full bg-light_terciary text-whiter hover:bg-light_secondary aspect-square"
+							on:click={() => (openDropdown = !openDropdown)}
 						>
-							{input.name}
+							<div
+								class="absolute w-8 h-1 duration-300 delay-100 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full opacity-0 group-hover:opacity-100 left-1/2 top-1/2"
+							/>
+							<div
+								class="absolute w-1 h-8 duration-300 delay-200 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full opacity-0 group-hover:opacity-100 left-1/2 top-1/2"
+							/>
+							<!-- <Icon
+								icon="octicon:dash-16"
+								class="absolute text-5xl -translate-x-1/2 -translate-y-1/2 text-light_white left-1/2 top-1/2"
+							/>
+							<Icon
+								icon="octicon:dash-16"
+								class="absolute text-5xl -translate-x-1/2 -translate-y-1/2 text-light_white left-1/2 top-1/2"
+								rotate={1}
+							/> -->
+							<!-- <Icon icon="ic:round-plus" class="text-5xl rounded-lg text-light_white" /> -->
 						</button>
-					{/each}
+						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+						<div
+							use:clickOutside
+							on:clickoutside={() => (openDropdown = false)}
+							class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
+				rounded-md shadow-lg bottom-[calc(100%+10px)] bg-light_whiter duration-200
+				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
+						>
+							{#each inputTemplates as input}
+								<button
+									type="button"
+									on:click={() => onDropdownInputClick(input)}
+									class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+								>
+									{input.name}
+								</button>
+							{/each}
+						</div>
+					</div>
 				</div>
-			</div> -->
+			{/each}
 		</div>
 	</div>
 </div>
