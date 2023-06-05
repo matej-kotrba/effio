@@ -40,12 +40,13 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@lucia-auth/adapter-prisma": "^2.0.0",
+		"@auth/core": "^0.8.2",
+		"@auth/prisma-adapter": "^1.0.0",
+		"@auth/sveltekit": "^0.3.1",
 		"@prisma/client": "^4.14.0",
 		"@trpc/client": "^10.19.1",
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1",
-		"lucia-auth": "^1.7.0",
 		"svelte-french-toast": "1.0.4-beta.0",
 		"trpc-sveltekit": "^3.5.7",
 		"zod": "^3.21.4"
