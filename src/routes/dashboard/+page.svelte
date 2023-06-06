@@ -1,13 +1,22 @@
 <script lang="ts">
+	import { trpc } from '~/lib/trpc/client';
 	import type { PageData } from './$types';
+	import type { QuestionTemplate } from '~/lib/trpc/router';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
+
+	let templates: QuestionTemplate[] = [];
+
+	async function getTemplates() {
+		templates = (await trpc($page).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
+	}
+
+	getTemplates();
 </script>
 
 <div class="text-primary">
-	Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti vero excepturi in explicabo. Nam
-	soluta molestias, odio quam architecto, tempora cumque inventore rem dolore, laborum iure quae
-	iste veritatis a. Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam aspernatur
-	delectus accusantium rerum dolore cupiditate odit officiis debitis blanditiis maiores, explicabo
-	ex? Quo incidunt dicta sed debitis modi qui quia.
+	{#each templates as template}
+		<p>{template.name}</p>
+	{/each}
 </div>
