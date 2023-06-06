@@ -41,7 +41,7 @@
 - Package manager
   - pnpm
 - Database
-  - MongoDB / SQL databases
+  - Planetscale (MySQL), connection via Prisma
 
 I want to keep project as serverless (on edge) as possible, however in need of file creation, backend server will be likely needed, in that case the
 FastAPI / NodeJS - Express, NestJS will be considered.
