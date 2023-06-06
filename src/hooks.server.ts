@@ -16,17 +16,13 @@ const handleTRPCContext: Handle = createTRPCHandle({
 
 const handleAuth: Handle = SvelteKitAuth({
   // Created PrismaAdapter with the Prisma client instance
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   adapter: PrismaAdapter(prisma),
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
   secret: AUTH_SECRET,
-  callbacks: {
-    async signIn({ account, user }) {
-      return true // Default behavior for other providers
-    },
-  },
-  pages: {
-    // signIn: "/logins"
-  }
 })
 
 export const handle = sequence(handleTRPCContext)
