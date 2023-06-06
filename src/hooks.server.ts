@@ -25,4 +25,4 @@ const handleAuth: Handle = SvelteKitAuth({
   secret: AUTH_SECRET,
 })
 
-export const handle = sequence(handleTRPCContext)
+export const handle = sequence(handleTRPCContext, handleAuth)
