@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { createContext } from "./lib/trpc/context";
 import { router } from "./lib/trpc/router"
-import type { Handle } from "@sveltejs/kit";
+import { redirect, type Handle } from "@sveltejs/kit";
 import { createTRPCHandle } from "trpc-sveltekit"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import prisma from "$lib/prisma";
@@ -25,4 +25,13 @@ const handleAuth: Handle = SvelteKitAuth({
   secret: AUTH_SECRET,
 })
 
-export const handle = sequence(handleTRPCContext, handleAuth)
+const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
+
+  if (event.url.pathname.startsWith("/dashboard") && !(await event.locals.getSession())?.user) {
+    throw redirect(303, "/")
+  }
+
+  return resolve(event)
+}
+
+export const handle = sequence(handleTRPCContext, handleAuth, handleRedirectBasedOnAuthStatus)

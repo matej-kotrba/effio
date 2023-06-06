@@ -10,8 +10,6 @@
 
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
-
-	$: console.log($page.data.session);
 </script>
 
 <main class="bg-light_quaternary">
