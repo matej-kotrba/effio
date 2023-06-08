@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { trpc } from '~/lib/trpc/client';
-	import type { PageData } from './$types';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { page } from '$app/stores';
-
-	export let data: PageData;
-
+	import { enhance } from '$app/forms';
+	import { signOut } from '@auth/sveltekit/client';
+	import { goto } from '$app/navigation';
 	let templates: QuestionTemplate[] = [];
 
 	async function getTemplates() {
@@ -16,6 +15,12 @@
 </script>
 
 <div class="text-primary">
+	<button
+		on:click={async () => {
+			signOut({ redirect: false, callbackUrl: '/?logout=true' });
+		}}
+		type="submit">Click to sign out</button
+	>
 	{#each templates as template}
 		<p>{template.name}</p>
 	{/each}

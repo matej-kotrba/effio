@@ -4,6 +4,9 @@
 	import Space from '~components/separators/Space.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { page } from '$app/stores';
+
+	// $: console.log($page.data.session);
 </script>
 
 <div class="py-2 bg">

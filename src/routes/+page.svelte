@@ -9,7 +9,7 @@
 	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
 	import { page } from '$app/stores';
 
-	$: console.log($page.data.session);
+	// $: console.log($page);
 </script>
 
 <main class="bg-light_quaternary">
