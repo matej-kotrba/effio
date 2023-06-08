@@ -29,7 +29,8 @@ export default {
 				h6: '23px',
 				body1: '18px',
 				body2: '14px',
-				body3: '11px'
+				body3: '11px',
+				body4: '9px'
 			},
 			fontWeight: {
 				thicker: 700,

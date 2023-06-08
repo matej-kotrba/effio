@@ -32,7 +32,7 @@
 			rotate={2}
 			class="{isOpen ? 'rotate-90' : 'rotate-0'} duration-300"
 		/>
-		<span class="text-body1">{title}</span></button
+		<span class="text-body3 md:text-body1">{title}</span></button
 	>
 	<div class="content" class:active={isOpen} bind:this={contentRef}>
 		<div class="px-4">
