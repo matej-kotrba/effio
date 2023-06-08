@@ -7,14 +7,12 @@
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
-
-	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
+
+	$: console.log($page.data.session);
 </script>
 
 <main class="bg-light_quaternary">
-	<button on:click={() => signIn('github')}>Sign In</button>
-	<button on:click={signOut}>Sign Out</button>
 	<div class="px-2 py-20 xl:px-8 hero__section">
 		<div class="container flex w-full py-10 mx-auto h-fit">
 			<div class="rounded-3xl bg-light_transparent_blue w-[60%] container mx-auto p-8">

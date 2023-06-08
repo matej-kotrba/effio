@@ -6,8 +6,9 @@ import { createTRPCHandle } from "trpc-sveltekit"
 import { SvelteKitAuth } from "@auth/sveltekit"
 import prisma from "$lib/prisma";
 import GitHub from "@auth/core/providers/github"
+import Google from "@auth/core/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET } from "$env/static/private"
+import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET, GOOGLE_ID, GOOGLE_SECRET } from "$env/static/private"
 
 const handleTRPCContext: Handle = createTRPCHandle({
   router: router,
@@ -19,9 +20,14 @@ const handleAuth: Handle = SvelteKitAuth({
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   adapter: PrismaAdapter(prisma),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  providers: [GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET })],
+  providers: [
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
+  ],
   secret: AUTH_SECRET,
 })
 

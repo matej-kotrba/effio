@@ -3,10 +3,11 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 </script>
 
 <div class="py-2 bg">
-	<div class="px-6 py-3 bg-white w-[100vw] max-w-[450px] rounded-md">
+	<div class="px-6 py-3 bg-white w-[95vw] max-w-[450px] rounded-md">
 		<h2 class="text-center uppercase text-h5">Login</h2>
 		<Separator w={'100%'} h={'2px'} color="var(--light-text-black-20)" />
 		<Space gap={10} />
@@ -35,12 +36,14 @@
 		<div class="flex flex-col items-center justify-center gap-2 sm:flex-row">
 			<button
 				type="button"
+				on:click={() => signIn('google')}
 				class="flex items-center gap-3 px-6 py-2 text-orange-400 duration-100 border-2 border-orange-400 border-solid rounded-md active:scale-90 hover:scale-105"
 				><Icon icon="devicon:google" /><span class="font-semibold text-body2">Google</span></button
 			>
 			<span class="text-light_text_black_40">or</span>
 			<button
 				type="button"
+				on:click={() => signIn('github')}
 				class="flex items-center gap-3 px-6 py-2 text-black duration-100 border-2 border-black border-solid rounded-md active:scale-90 hover:scale-105"
 				><Icon icon="mdi:github" /><span class="font-semibold text-body2">GitHub</span></button
 			>
