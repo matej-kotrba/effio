@@ -21,12 +21,12 @@ export default {
 				error: '#B00020'
 			},
 			fontSize: {
-				h1: '85px',
-				h2: '55px',
-				h3: '44px',
-				h4: '35px',
-				h5: '28px',
-				h6: '23px',
+				h1: '65px',
+				h2: '45px',
+				h3: '36px',
+				h4: '28px',
+				h5: '24px',
+				h6: '20px',
 				body1: '18px',
 				body2: '14px',
 				body3: '11px',

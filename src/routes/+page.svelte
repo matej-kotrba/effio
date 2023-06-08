@@ -1,12 +1,11 @@
 <script script lang="ts">
 	import Icon from '@iconify/svelte';
-	import LogInButton from '../lib/components/buttons/LogInButton.svelte';
+	import Button from '~components/buttons/BasicButton.svelte';
 	import Space from '../lib/components/separators/Space.svelte';
 	import GridLayout from '../lib/components/layouts/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import type { LayoutServerData } from './$types';
 
@@ -32,8 +31,16 @@
 				<p class="text-light_white text-body1">All you need is Github or Google account!</p>
 				<Space gap={10} />
 				<div class="flex items-center gap-4">
-					<LogInButton />
-					<ReadMoreFancy link={'#content'} />
+					<button
+						on:click={() => {}}
+						class="btn bg-light_primary text-light_white hover:bg-light_primary hover:brightness-125"
+						type="button">Log In</button
+					>
+					<button
+						on:click={() => {}}
+						class="btn bg-light_white text-light_primary hover:bg-light_white hover:brightness-125"
+						type="button">Read More</button
+					>
 				</div>
 			</div>
 			<div class="translate-x-[-13%] translate-y-[15%] relative">
@@ -90,7 +97,11 @@
 						providers: GitHub, Google
 					</h3>
 					<div class="max-h-full mt-auto ml-auto w-fit">
-						<LogInButton />
+						<button
+							on:click={() => {}}
+							class="btn bg-light_primary text-light_white hover:bg-light_primary"
+							type="button">Log In</button
+						>
 					</div>
 				</div>
 			</slot>
@@ -110,6 +121,7 @@
 					<h3 class="mb-auto font-light text-h4 text-light_white">
 						Create your own tests using simple enviroment!
 					</h3>
+					<Space gap={10} />
 					<div>
 						<img src="/imgs/online_test.svg" alt="Community place" />
 						<Space gap={36} />
@@ -131,7 +143,11 @@
 						providers: GitHub, Google
 					</h3>
 					<div class="max-h-full mt-auto ml-auto w-fit">
-						<LogInButton />
+						<button
+							on:click={() => {}}
+							class="btn bg-light_primary text-light_white hover:bg-light_primary"
+							type="button">Log In</button
+						>
 					</div>
 				</div>
 			</slot>

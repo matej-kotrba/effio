@@ -30,7 +30,7 @@
 
 <style>
 	section {
-		height: 700px;
+		max-height: 700px;
 		display: grid;
 		gap: 40px;
 		grid-template-columns: repeat(5, 1fr);
