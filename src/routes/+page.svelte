@@ -7,11 +7,17 @@
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 	import ReadMoreFancy from '../lib/components/buttons/ReadMore.svelte';
-	import { page } from '$app/stores';
+	import toast, { Toaster } from 'svelte-french-toast';
+	import type { LayoutServerData } from './$types';
 
-	// $: console.log($page);
+	export let data: LayoutServerData;
+
+	$: if (data.hasLoggedOut) {
+		toast.success('You were successfully logged out!');
+	}
 </script>
 
+<Toaster />
 <main class="bg-light_quaternary">
 	<div class="px-2 py-20 xl:px-8 hero__section">
 		<div class="container flex w-full py-10 mx-auto h-fit">
