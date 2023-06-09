@@ -2,6 +2,10 @@
 	import Icon from '@iconify/svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+	import type { PageData } from './$types';
+	import { signOut } from '@auth/sveltekit/client';
+
+	export let data: PageData;
 </script>
 
 <main class="h-full grid__layout">
@@ -39,22 +43,39 @@
 				>
 					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community place
 				</a>
-				<div
-					class="absolute bottom-0 left-0 w-full p-2 border-t-[1px] border-light_text_black_20 flex justify-center flex-col items-center"
-				>
-					<img
-						src="/imgs/content_imgs/liska.avif"
-						alt="Icon"
-						width="50"
-						class="object-cover rounded-full aspect-square"
-					/>
-					<span class="text-light_text_black"> Matěj Kotrba </span>
-				</div>
 			</div>
 		</div>
 	</aside>
-	<div class="px-4 pt-6 overflow-hidden md:px-8 xl:px-16 content">
-		<slot />
+	<div>
+		<nav
+			class="flex items-center justify-end gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
+		>
+			<img
+				src={data.session?.user?.image}
+				alt="Icon"
+				width="50"
+				referrerpolicy="no-referrer"
+				class="object-cover rounded-full aspect-square"
+			/>
+			<div class="flex flex-col">
+				<span class="font-semibold uppercase text-light_text_black">{data.session?.user?.name}</span
+				>
+				<span class="text-light_text_black_40 text-body3">{data.session?.user?.email}</span>
+			</div>
+			<button
+				class="ml-4"
+				type="button"
+				on:click={() => signOut({ redirect: false, callbackUrl: '/?logout=true' })}
+			>
+				<Icon
+					icon="iconamoon:exit-light"
+					class="text-4xl duration-150 hover:text-red-600 hover:scale-x-110"
+				/></button
+			>
+		</nav>
+		<div class="px-4 pt-6 overflow-hidden md:px-8 xl:px-16 content">
+			<slot />
+		</div>
 	</div>
 </main>
 

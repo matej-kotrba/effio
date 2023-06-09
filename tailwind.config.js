@@ -64,7 +64,7 @@ export default {
 		themes: false,
 		base: true,
 		utils: true,
-		logs: true,
+		logs: false,
 		rtl: false,
 		prefix: '',
 		darkTheme: 'dark'

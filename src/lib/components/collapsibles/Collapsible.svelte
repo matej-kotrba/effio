@@ -20,19 +20,19 @@
 	}
 </script>
 
-<div class="parent w-fit {positionsClasses[position]} rounded-md bg-base-200">
+<div class="parent w-fit {positionsClasses[position]} rounded-md bg-gray-100">
 	<button
 		on:click={toggleCollapsible}
 		type={'button'}
 		class="{positionsClasses[
 			position
-		]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-base-300"
+		]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200"
 		><Icon
 			icon="bxs:left-arrow"
 			rotate={2}
-			class="{isOpen ? 'rotate-90' : 'rotate-0'} duration-300"
+			class="{isOpen ? 'rotate-90' : 'rotate-0'} duration-300 text-light_text_black"
 		/>
-		<span class="text-body3 md:text-body1">{title}</span></button
+		<span class="text-body3 md:text-body1 text-light_text_black">{title}</span></button
 	>
 	<div class="content" class:active={isOpen} bind:this={contentRef}>
 		<div class="px-4">
