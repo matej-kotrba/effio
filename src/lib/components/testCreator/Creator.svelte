@@ -143,25 +143,10 @@
 						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 						<button
 							type="button"
-							class="relative z-10 w-32 p-2 duration-200 rounded-full bg-light_terciary text-whiter hover:bg-light_secondary aspect-square"
+							class="relative z-10 w-full p-2 duration-200 rounded-md bg-light_terciary text-whiter hover:bg-light_secondary"
 							on:click={() => (openDropdown = !openDropdown)}
 						>
-							<div
-								class="absolute w-8 h-1 duration-300 delay-100 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full opacity-0 group-hover:opacity-100 left-1/2 top-1/2"
-							/>
-							<div
-								class="absolute w-1 h-8 duration-300 delay-200 -translate-x-1/2 -translate-y-1/2 bg-white rounded-full opacity-0 group-hover:opacity-100 left-1/2 top-1/2"
-							/>
-							<!-- <Icon
-								icon="octicon:dash-16"
-								class="absolute text-5xl -translate-x-1/2 -translate-y-1/2 text-light_white left-1/2 top-1/2"
-							/>
-							<Icon
-								icon="octicon:dash-16"
-								class="absolute text-5xl -translate-x-1/2 -translate-y-1/2 text-light_white left-1/2 top-1/2"
-								rotate={1}
-							/> -->
-							<!-- <Icon icon="ic:round-plus" class="text-5xl rounded-lg text-light_white" /> -->
+							<Icon icon="ic:round-plus" class="mx-auto text-5xl rounded-lg text-light_white" />
 						</button>
 						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 						<div

@@ -62,7 +62,7 @@ export default {
 	daisyui: {
 		styled: true,
 		themes: false,
-		base: true,
+		base: false,
 		utils: true,
 		logs: false,
 		rtl: false,

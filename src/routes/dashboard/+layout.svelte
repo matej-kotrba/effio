@@ -65,7 +65,7 @@
 			<button
 				class="ml-4"
 				type="button"
-				on:click={() => signOut({ redirect: false, callbackUrl: '/?logout=true' })}
+				on:click={async () => await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
 			>
 				<Icon
 					icon="iconamoon:exit-light"

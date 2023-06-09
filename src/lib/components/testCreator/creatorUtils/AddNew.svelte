@@ -7,7 +7,7 @@
 <button
 	type="button"
 	on:click={onClick}
-	class="px-8 border-none shadow-lg btn bg-success hover:scale-105 hover:bg-white hover:text-success"
+	class="px-8 text-white border-none shadow-lg btn bg-success hover:scale-105 hover:bg-white hover:text-success"
 	>Add</button
 >
 <!-- <button
