@@ -67,8 +67,32 @@ model Template {
 }
 
 model QuestionType {
-  id         String   @id @default(uuid())
+  id         String     @id @default(uuid())
   name       String
-  createdAt  DateTime @default(now())
-  properties Json     @default("{}")
+  createdAt  DateTime   @default(now())
+  properties Json       @default("{}")
+  questions  Question[]
+}
+
+model Test {
+  id        String     @id @default(uuid())
+  title     String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  questions Question[]
+}
+
+model Question {
+  id        String       @id @default(uuid())
+  title     String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  type      QuestionType @relation(fields: [typeId], references: [id])
+  typeId    String
+  test      Test         @relation(fields: [testId], references: [id])
+  testId    String
+  content   Json         @default("{}")
+
+  @@index([typeId])
+  @@index([testId])
 }
