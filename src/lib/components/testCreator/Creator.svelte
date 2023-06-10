@@ -138,23 +138,24 @@
 					/>
 					<!-- The dropdown for new input -->
 					<div
-						class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 opacity-0 group hover:opacity-100"
+						class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
+						on:mouseleave={() => (openDropdown = false)}
 					>
 						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 						<button
 							type="button"
-							class="relative z-10 w-full p-2 duration-200 rounded-md bg-light_terciary text-whiter hover:bg-light_secondary"
+							class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
 							on:click={() => (openDropdown = !openDropdown)}
 						>
-							<Icon icon="ic:round-plus" class="mx-auto text-5xl rounded-lg text-light_white" />
+							<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
 						</button>
 						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 						<div
 							use:clickOutside
 							on:clickoutside={() => (openDropdown = false)}
 							class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-				rounded-md shadow-lg bottom-[calc(100%+10px)] bg-light_whiter duration-200
-				{openDropdown ? '' : 'opacity-0 pointer-events-none'}"
+				rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
+				{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0'}"
 						>
 							{#each inputTemplates as input}
 								<button

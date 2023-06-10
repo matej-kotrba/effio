@@ -69,7 +69,7 @@
 			>
 				<Icon
 					icon="iconamoon:exit-light"
-					class="text-4xl duration-150 hover:text-red-600 hover:scale-x-110"
+					class="text-4xl duration-150 text-slate-500 hover:text-red-600 hover:scale-x-110"
 				/></button
 			>
 		</nav>
