@@ -9,6 +9,8 @@
 	import { navigating } from '$app/stores';
 	import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
 	import type { PageData } from './$types';
+	import { page } from '$app/stores';
+	import { trpc } from '$lib/trpc/client';
 
 	export let data: PageData;
 
@@ -27,21 +29,35 @@
 	let templatesActive: number;
 
 	// This object will contain all information associated with the test and will be sent to the DB
-	let testObject = {
-		title: '',
-		description: '',
+
+	type TestObject = {
+		title: string;
+		description: string;
+		questions: QuestionsDataType[];
+	};
+
+	let testObject: TestObject = {
+		title: 'This is title',
+		description: 'This is description',
 		questions: []
 	};
 
 	const getQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
-		console.log('asdsd');
+		testObject.questions = data.detail;
 	};
+
+	async function postTestToDB() {
+		console.log('asdasdasd');
+		let data = await trpc($page).protected.saveTest.mutate();
+		console.log(data);
+	}
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
 <p class="text-body1 text-light_text_black_40">
 	Choose a template and make a new test using many prebuilt inputs.
 </p>
+<button class="p-2 bg-slate-600" on:click={postTestToDB}>Save to db</button>
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>

@@ -163,7 +163,7 @@
 							on:clickoutside={() => (openDropdown = false)}
 							class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
 				rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
-				{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0'}"
+				{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
 						>
 							{#each inputTemplates as input}
 								<button

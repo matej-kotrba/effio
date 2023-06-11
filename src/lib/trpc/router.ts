@@ -17,6 +17,21 @@ const schema = z.object({
 
 export type QuestionTemplate = z.infer<typeof schema>
 
+const isLoggedIn = t.middleware(async (data) => {
+  console.log("middleware")
+  console.log("end middleware")
+  return data.next()
+})
+
+const passwordProcedure = t.procedure.use(isLoggedIn)
+
+const protectedRouter = t.router({
+  saveTest: passwordProcedure.mutation(async ({ ctx, input }) => {
+    console.log("asdadasdasd")
+    return "ahoj"
+  })
+})
+
 export const router = t.router({
   getTemplates: t.procedure.query(async ({ ctx }) => {
     const templates = await ctx.prisma.template.findMany()
@@ -35,7 +50,30 @@ export const router = t.router({
     // This needs to be converted to unkown because of the JSON field
     // But its 100% safe because of the manual check above
     return result
-  })
+  }),
+  protected: protectedRouter
 })
 
 export type Router = typeof router
+
+// import type { RequestHandler } from "./$types"
+// import { json } from "@sveltejs/kit"
+// import { z } from "zod"
+
+// const schemas = z.object({
+//   title: z.string(),
+//   description: z.string(),
+//   questions: z.array(z.object({}).passthrough())
+// })
+
+// export const POST: RequestHandler = async ({ request, locals }) => {
+//   if (!locals.getSession()) return json({ status: 403, body: "Unauthorized" })
+//   const { body } = request
+//   try {
+//     schemas.parse(body)
+//   }
+//   catch (e) {
+//     return json({ status: 400, body: e })
+//   }
+//   return json({ status: 200, body: "Hello World!" })
+// }
