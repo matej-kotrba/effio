@@ -21,7 +21,7 @@ will be used in the test creator -->
 	let title: string = input['title'] || '';
 
 	function dispatchTitleEvent() {
-		dispatch('titleDetails', title);
+		dispatch('titleChange', title);
 	}
 
 	function dispatchDragEvent() {

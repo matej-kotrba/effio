@@ -1,11 +1,4 @@
-<script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { clickOutside } from '~use/clickOutside';
-	import Input from '~components/testCreator/Input.svelte';
-	import type { QuestionTemplate } from '~/lib/trpc/router';
-	import { dndzone, SOURCES, TRIGGERS } from 'svelte-dnd-action';
-	import { flip } from 'svelte/animate';
-
+<script lang="ts" context="module">
 	type NewQuestionInput = {
 		id: string;
 		questionType: Question['questionType'];
@@ -14,10 +7,22 @@
 		title?: undefined;
 	};
 
-	type QuestionsDataType = Question | NewQuestionInput;
+	export type QuestionsDataType = Question | NewQuestionInput;
+</script>
+
+<script lang="ts">
+	import Icon from '@iconify/svelte';
+	import { clickOutside } from '~use/clickOutside';
+	import Input from '~components/testCreator/Input.svelte';
+	import type { QuestionTemplate } from '~/lib/trpc/router';
+	import { dndzone, SOURCES } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
+	import { createEventDispatcher } from 'svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
+
+	const dispatch = createEventDispatcher();
 
 	// Dropdown state
 	let openDropdown = false;
@@ -97,6 +102,9 @@
 		dragDisable = false;
 	}
 
+	$: {
+		dispatch('questionsDataChange', questionsData);
+	}
 	// $: console.log(questionsData);
 </script>
 
@@ -130,7 +138,7 @@
 						on:questionDetails={({ detail }) => {
 							questionsData[index]['content'] = detail;
 						}}
-						on:titleDetails={({ detail }) => {
+						on:titleChange={({ detail }) => {
 							questionsData[index]['title'] = detail;
 						}}
 						on:deleteInput={() => removeQuestion(index)}

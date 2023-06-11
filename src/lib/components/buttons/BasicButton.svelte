@@ -12,6 +12,6 @@
 	type="button"
 	{...buttonAttributes}
 	on:click={(event) => onClick(event)}
-	class="flex items-center gap-2 shadow-md btn bg-light_primary hover:bg-white hover:text-light_primary {classes}"
+	class="flex items-center gap-2 shadow-md btn bg-light_primary text-white hover:bg-white hover:text-light_primary {classes}"
 	>{title}<slot /></button
 >

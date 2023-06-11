@@ -5,8 +5,9 @@
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
+	import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -14,14 +15,27 @@
 	const TRANSITION_DURATION = 400;
 
 	// TODO: Change this back to false
-	let templateDone: boolean = true;
-	let constructingDone: boolean = false;
-	let detailsDone: boolean = false;
+	let testCreationProgress = {
+		templateDone: true,
+		constructingDone: false,
+		detailsDone: false
+	};
 
 	let templates: { title: string; image: string }[] = [
 		{ title: 'Blank test', image: '/imgs/svgs/empty.svg' }
 	];
 	let templatesActive: number;
+
+	// This object will contain all information associated with the test and will be sent to the DB
+	let testObject = {
+		title: '',
+		description: '',
+		questions: []
+	};
+
+	const getQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
+		console.log('asdsd');
+	};
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -31,20 +45,25 @@
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>
-		<li class="text-light_text_black_80 text-body2" class:done={templateDone}>
+		<li class="text-light_text_black_80 text-body2" class:done={testCreationProgress.templateDone}>
 			<button
 				type="button"
 				on:click={() => {
-					templateDone = false;
-					constructingDone = false;
-					detailsDone = false;
+					testCreationProgress.templateDone = false;
+					testCreationProgress.constructingDone = false;
+					testCreationProgress.detailsDone = false;
 				}}>Picking a template</button
 			>
 		</li>
-		<li class="text-light_text_black_80 text-body2" class:done={constructingDone}>
+		<li
+			class="text-light_text_black_80 text-body2"
+			class:done={testCreationProgress.constructingDone}
+		>
 			Constructing a test
 		</li>
-		<li class="text-light_text_black_80 text-body2" class:done={detailsDone}>Details</li>
+		<li class="text-light_text_black_80 text-body2" class:done={testCreationProgress.detailsDone}>
+			Details
+		</li>
 	</ul>
 </div>
 <!-- <ProgressNavigation
@@ -55,11 +74,23 @@
 	]}
 	color={'var(--light-primary)'}
 /> -->
-<h3 class="text-h4 text-light_text_black">Start with picking a template</h3>
+<h3 class="text-h4 text-light_text_black">
+	{#if testCreationProgress.templateDone === false}
+		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
+			>Start with picking a template</span
+		>
+	{:else if testCreationProgress.constructingDone === false}
+		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
+			>Construct your test</span
+		>
+	{:else}
+		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>Details</span>
+	{/if}
+</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
 <div class="p-2">
-	{#if templateDone === false}
+	{#if testCreationProgress.templateDone === false}
 		<div
 			in:fly={{
 				x: 300,
@@ -84,7 +115,7 @@
 			<BasicButton
 				title="Continue"
 				onClick={() => {
-					templateDone = true;
+					testCreationProgress.templateDone = true;
 				}}
 				buttonAttributes={{ disabled: !Number.isInteger(templatesActive) }}
 			>
@@ -92,7 +123,7 @@
 			</BasicButton>
 		</div>
 		<!-- Else if  -->
-	{:else if constructingDone === false}
+	{:else if testCreationProgress.constructingDone === false}
 		<div
 			in:fly={{
 				x: 300,
@@ -101,13 +132,16 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
-			<Creator inputTemplates={data.questionsTypes} />
+			<Creator
+				inputTemplates={data.questionsTypes}
+				on:questionsDataChange={getQuestionsFromCreatorComponent}
+			/>
 			<Space />
 
 			<BasicButton
 				title="Continue"
 				onClick={() => {
-					templateDone = true;
+					testCreationProgress.templateDone = true;
 				}}
 				buttonAttributes={{ disabled: false }}
 			>
