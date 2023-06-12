@@ -11,7 +11,6 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
-	import type { TRPCError } from '@trpc/server';
 
 	export let data: PageData;
 
@@ -40,7 +39,44 @@
 	let testObject: TestObject = {
 		title: 'This is title',
 		description: 'This is description',
-		questions: []
+		questions: [
+			{
+				id: crypto.randomUUID(),
+				title: 'What is the capital of France?',
+				displayType: 'Pick one',
+				questionType: 'pickOne',
+				questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
+				content: {
+					correctAnswerIndex: 1,
+					questions: [
+						{
+							question: 'Paris'
+						},
+						{
+							question: 'Paris'
+						},
+						{
+							question: 'Paris'
+						}
+					]
+				}
+			},
+			{
+				id: crypto.randomUUID(),
+				title: 'What facts about Earh are true ?',
+				displayType: 'True/False',
+				questionType: 'true/false',
+				questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
+				content: {
+					questions: [
+						{
+							isTrue: false,
+							question: 'Is the earth flat?'
+						}
+					]
+				}
+			}
+		]
 	};
 
 	const setQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
@@ -49,12 +85,11 @@
 
 	async function postTestToDB() {
 		try {
-			let data = await trpc($page).protected.saveTest.mutate({
+			await trpc($page).protected.saveTest.mutate({
 				title: testObject.title,
 				description: testObject.description,
 				questionContent: JSON.stringify(testObject.questions)
 			});
-			console.log(data);
 		} catch (e) {
 			console.log(e);
 		}
@@ -65,7 +100,7 @@
 <p class="text-body1 text-light_text_black_40">
 	Choose a template and make a new test using many prebuilt inputs.
 </p>
-<button class="p-2 bg-slate-600" on:click={postTestToDB}>Save to db</button>
+<!-- <button class="p-2 bg-slate-600" on:click={postTestToDB}>Save to db</button> -->
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>
@@ -83,7 +118,14 @@
 			class="text-light_text_black_80 text-body2"
 			class:done={testCreationProgress.constructingDone}
 		>
-			Constructing a test
+			<button
+				type="button"
+				on:click={() => {
+					testCreationProgress.templateDone = true;
+					testCreationProgress.constructingDone = false;
+					testCreationProgress.detailsDone = false;
+				}}>Constructing a test</button
+			>
 		</li>
 		<li class="text-light_text_black_80 text-body2" class:done={testCreationProgress.detailsDone}>
 			Details
@@ -158,6 +200,7 @@
 		>
 			<Creator
 				inputTemplates={data.questionsTypes}
+				initialData={testObject.questions}
 				on:questionsDataChange={setQuestionsFromCreatorComponent}
 			/>
 			<Space />
@@ -165,7 +208,7 @@
 			<BasicButton
 				title="Continue"
 				onClick={() => {
-					testCreationProgress.templateDone = true;
+					testCreationProgress.constructingDone = true;
 				}}
 				buttonAttributes={{ disabled: false }}
 			>

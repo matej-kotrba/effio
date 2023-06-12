@@ -34,44 +34,9 @@
 
 	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
-	let questionsData: QuestionsDataType[] = [
-		{
-			id: crypto.randomUUID(),
-			title: 'What is the capital of France?',
-			displayType: 'Pick one',
-			questionType: 'pickOne',
-			questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
-			content: {
-				correctAnswerIndex: 1,
-				questions: [
-					{
-						question: 'Paris'
-					},
-					{
-						question: 'Paris'
-					},
-					{
-						question: 'Paris'
-					}
-				]
-			}
-		},
-		{
-			id: crypto.randomUUID(),
-			title: 'What facts about Earh are true ?',
-			displayType: 'True/False',
-			questionType: 'true/false',
-			questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
-			content: {
-				questions: [
-					{
-						isTrue: false,
-						question: 'Is the earth flat?'
-					}
-				]
-			}
-		}
-	];
+	export let initialData: QuestionsDataType[] = [];
+
+	let questionsData: QuestionsDataType[] = [];
 
 	function addNewQuestion(input: NewQuestionInput) {
 		questionsData = [...questionsData, input];
@@ -112,7 +77,7 @@
 	}
 
 	onMount(() => {
-		dispatch('questionsDataChange', questionsData);
+		questionsData = initialData;
 	});
 	// $: console.log(questionsData);
 </script>

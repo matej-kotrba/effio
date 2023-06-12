@@ -37,9 +37,10 @@ const protectedRouter = t.router({
     questionContent: z.string(),
   })).mutation(async ({ ctx, input }) => {
 
-    const test = await ctx.prisma.test.create({
+    const testData = await ctx.prisma.test.create({
       data: {
         title: input.title,
+        description: input.description,
         ownerId: ctx.userId,
       }
     })
@@ -52,14 +53,17 @@ const protectedRouter = t.router({
           title: question.title,
           content: question.content,
           typeId: question.questionTypeId,
-          testId: test.id,
+          testId: testData.id,
         }
       })
     })
 
-    await Promise.all(questionsPromise)
+    const questionsData = await Promise.all(questionsPromise)
 
-    return "ahoj"
+    return {
+      test: testData,
+      questions: questionsData
+    }
   })
 })
 
