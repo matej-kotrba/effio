@@ -1,4 +1,3 @@
-import type { Session } from "@auth/core/types";
 import prisma from "../prisma"
 import type { RequestEvent } from "@sveltejs/kit";
 import type { inferAsyncReturnType } from "@trpc/server";

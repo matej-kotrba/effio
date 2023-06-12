@@ -18,12 +18,12 @@ const schema = z.object({
 export type QuestionTemplate = z.infer<typeof schema>
 
 const isLoggedIn = t.middleware(async (opts) => {
-  if (!opts.ctx.user) {
+  if (!opts.ctx.user || !opts.ctx.user.id) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not logged in" })
   }
   return opts.next({
     ctx: {
-      user: opts.ctx.user
+      userId: opts.ctx.user.id as string
     }
   })
 })
@@ -31,12 +31,11 @@ const isLoggedIn = t.middleware(async (opts) => {
 const passwordProcedure = t.procedure.use(isLoggedIn)
 
 const protectedRouter = t.router({
-  saveTest: passwordProcedure.mutation(async ({ ctx }) => {
+  saveTest: passwordProcedure.mutation(async ({ ctx, input }) => {
     await ctx.prisma.test.create({
       data: {
         title: "AHOJ",
-        ownerId: ctx.user.id,
-
+        ownerId: ctx.userId,
       }
     })
     return "ahoj"
