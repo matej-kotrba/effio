@@ -17,10 +17,10 @@ const schema = z.object({
 
 export type QuestionTemplate = z.infer<typeof schema>
 
-const isLoggedIn = t.middleware(async (data) => {
+const isLoggedIn = t.middleware(async (opts) => {
   console.log("middleware")
   console.log("end middleware")
-  return data.next()
+  return opts.next()
 })
 
 const passwordProcedure = t.procedure.use(isLoggedIn)

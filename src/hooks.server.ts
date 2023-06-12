@@ -44,4 +44,4 @@ const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
   return resolve(event)
 }
 
-export const handle = sequence(handleTRPCContext, handleAuth, handleRedirectBasedOnAuthStatus)
+export const handle = sequence(handleAuth, handleTRPCContext, handleRedirectBasedOnAuthStatus)
