@@ -23,6 +23,7 @@
 		name={titleName}
 		id={titleName}
 		type="text"
+		autocomplete="off"
 		class="peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black px-2 py-4 rounded-t-md shadow-lg w-full {customStyles}"
 		{...inputProperties}
 	/>

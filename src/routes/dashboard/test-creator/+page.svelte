@@ -5,6 +5,8 @@
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
+	import TextInput from '~components/inputs/TextInput.svelte';
+	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
 	import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
@@ -19,7 +21,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: false,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -216,7 +218,19 @@
 			</BasicButton>
 		</div>
 	{:else}
-		asd
+		<div
+			in:fly={{
+				x: 300,
+				duration: TRANSITION_DURATION,
+				delay: TRANSITION_DURATION
+			}}
+			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
+		>
+			<div class="flex flex-col gap-3">
+				<TextInput title="What will be the name of your test?" titleName="name" />
+				<TextAreaInput title="Describe what will you test be about." titleName="name" />
+			</div>
+		</div>
 	{/if}
 </div>
 
