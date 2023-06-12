@@ -48,8 +48,9 @@ FastAPI / NodeJS - Express, NestJS will be considered.
 
 
 ## Timeline
-#### January -> February - Learning stack and testing it separatly
-### February -> Now - Build frontend for Effio
+#### January -> April - Learning stack and testing it separatly
+#### April -> May - Building frontend for Effio
+#### May -> Now - Building forentend, creating type definitions, routers, auth, DB and Prisma connection  
 
 ## Sources
 - Youtube
