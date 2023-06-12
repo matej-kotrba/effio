@@ -1,3 +1,4 @@
+import type { Session } from "@auth/core/types";
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -6,6 +7,12 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		// interface Platform {}
+	}
+
+	type UpdatedSession = Session & {
+		user?: {
+			id?: string | null
+		};
 	}
 
 	declare namespace svelte.JSX {
@@ -22,5 +29,6 @@ declare global {
 		}
 	}
 }
+
 
 export { };

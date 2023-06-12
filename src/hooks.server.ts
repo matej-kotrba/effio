@@ -9,6 +9,8 @@ import GitHub from "@auth/core/providers/github"
 import Google from "@auth/core/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET, GOOGLE_ID, GOOGLE_SECRET } from "$env/static/private"
+import type { DefaultSession, User } from "@auth/core/types";
+import type { AdapterUser } from "@auth/core/adapters";
 
 const handleTRPCContext: Handle = createTRPCHandle({
   router: router,
@@ -29,6 +31,17 @@ const handleAuth: Handle = SvelteKitAuth({
     Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
   ],
   secret: AUTH_SECRET,
+  callbacks: {
+    session: async ({ session, user }: { session: UpdatedSession, user: User | AdapterUser }) => {
+
+      if (session?.user && user) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        session.user!.id = user.id as string;
+      }
+
+      return session;
+    },
+  }
 })
 
 const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
