@@ -27,6 +27,7 @@ type Question = {
     title: string;
     displayType: string;
     questionType: Key;
+    questionTypeId: string;
     content: QuestionTypeMap[Key];
   };
 }[keyof QuestionTypeMap];

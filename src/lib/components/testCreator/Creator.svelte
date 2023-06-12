@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
 	type NewQuestionInput = {
 		id: string;
-		questionType: Question['questionType'];
 		displayType: QuestionTemplate['name'];
+		questionType: Question['questionType'];
+		questionTypeId: string;
 		content?: undefined;
 		title?: undefined;
 	};
@@ -18,6 +19,7 @@
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { createEventDispatcher } from 'svelte';
+	import { onMount } from 'svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -38,6 +40,7 @@
 			title: 'What is the capital of France?',
 			displayType: 'Pick one',
 			questionType: 'pickOne',
+			questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
 			content: {
 				correctAnswerIndex: 1,
 				questions: [
@@ -58,6 +61,7 @@
 			title: 'What facts about Earh are true ?',
 			displayType: 'True/False',
 			questionType: 'true/false',
+			questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
 			content: {
 				questions: [
 					{
@@ -81,7 +85,8 @@
 		addNewQuestion({
 			id: crypto.randomUUID(),
 			questionType: input.properties.inputType as Question['questionType'],
-			displayType: input.name
+			displayType: input.name,
+			questionTypeId: input.id
 		});
 		openDropdown = false;
 	}
@@ -105,6 +110,10 @@
 	$: {
 		dispatch('questionsDataChange', questionsData);
 	}
+
+	onMount(() => {
+		dispatch('questionsDataChange', questionsData);
+	});
 	// $: console.log(questionsData);
 </script>
 

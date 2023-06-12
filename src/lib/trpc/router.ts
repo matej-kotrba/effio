@@ -31,13 +31,34 @@ const isLoggedIn = t.middleware(async (opts) => {
 const passwordProcedure = t.procedure.use(isLoggedIn)
 
 const protectedRouter = t.router({
-  saveTest: passwordProcedure.mutation(async ({ ctx, input }) => {
-    await ctx.prisma.test.create({
+  saveTest: passwordProcedure.input(z.object({
+    title: z.string(),
+    description: z.string(),
+    questionContent: z.string(),
+  })).mutation(async ({ ctx, input }) => {
+
+    const test = await ctx.prisma.test.create({
       data: {
-        title: "AHOJ",
+        title: input.title,
         ownerId: ctx.userId,
       }
     })
+
+    const questions = JSON.parse(input.questionContent) as Question[]
+
+    const questionsPromise = questions.map(async (question) => {
+      return ctx.prisma.question.create({
+        data: {
+          title: question.title,
+          content: question.content,
+          typeId: question.questionTypeId,
+          testId: test.id,
+        }
+      })
+    })
+
+    await Promise.all(questionsPromise)
+
     return "ahoj"
   })
 })

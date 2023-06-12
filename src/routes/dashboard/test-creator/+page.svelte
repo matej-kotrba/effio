@@ -43,13 +43,18 @@
 		questions: []
 	};
 
-	const getQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
+	const setQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
 		testObject.questions = data.detail;
 	};
 
 	async function postTestToDB() {
 		try {
-			let data = await trpc($page).protected.saveTest.mutate();
+			let data = await trpc($page).protected.saveTest.mutate({
+				title: testObject.title,
+				description: testObject.description,
+				questionContent: JSON.stringify(testObject.questions)
+			});
+			console.log(data);
 		} catch (e) {
 			console.log(e);
 		}
@@ -153,7 +158,7 @@
 		>
 			<Creator
 				inputTemplates={data.questionsTypes}
-				on:questionsDataChange={getQuestionsFromCreatorComponent}
+				on:questionsDataChange={setQuestionsFromCreatorComponent}
 			/>
 			<Space />
 

@@ -92,9 +92,9 @@ model Question {
   title     String
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
-  type      QuestionType @relation(fields: [typeId], references: [id])
+  type      QuestionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId    String
-  test      Test         @relation(fields: [testId], references: [id])
+  test      Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
   testId    String
   content   Json         @default("{}")
 
