@@ -32,12 +32,13 @@ const passwordProcedure = t.procedure.use(isLoggedIn)
 
 const protectedRouter = t.router({
   saveTest: passwordProcedure.mutation(async ({ ctx }) => {
-    // await ctx.prisma.test.create({
-    //   data: {
-    //     title: "AHOJ",
-    //     ownerId: ctx.user.,
-    //   }
-    // })
+    await ctx.prisma.test.create({
+      data: {
+        title: "AHOJ",
+        ownerId: ctx.user.id,
+
+      }
+    })
     return "ahoj"
   })
 })

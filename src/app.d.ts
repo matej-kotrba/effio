@@ -8,6 +8,12 @@ declare global {
 		// interface Platform {}
 	}
 
+	type UpdatedSession = Session & {
+		user?: {
+			id?: string | null
+		};
+	}
+
 	declare namespace svelte.JSX {
 		interface HTMLProps<T> {
 			"onintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
@@ -22,5 +28,6 @@ declare global {
 		}
 	}
 }
+
 
 export { };
