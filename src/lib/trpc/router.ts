@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
 
@@ -18,16 +18,26 @@ const schema = z.object({
 export type QuestionTemplate = z.infer<typeof schema>
 
 const isLoggedIn = t.middleware(async (opts) => {
-  console.log("middleware")
-  console.log("end middleware")
-  return opts.next()
+  if (!opts.ctx.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not logged in" })
+  }
+  return opts.next({
+    ctx: {
+      user: opts.ctx.user
+    }
+  })
 })
 
 const passwordProcedure = t.procedure.use(isLoggedIn)
 
 const protectedRouter = t.router({
-  saveTest: passwordProcedure.mutation(async ({ ctx, input }) => {
-    console.log("asdadasdasd")
+  saveTest: passwordProcedure.mutation(async ({ ctx }) => {
+    // await ctx.prisma.test.create({
+    //   data: {
+    //     title: "AHOJ",
+    //     ownerId: ctx.user.,
+    //   }
+    // })
     return "ahoj"
   })
 })

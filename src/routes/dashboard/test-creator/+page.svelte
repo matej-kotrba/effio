@@ -11,6 +11,7 @@
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
+	import type { TRPCError } from '@trpc/server';
 
 	export let data: PageData;
 
@@ -47,9 +48,11 @@
 	};
 
 	async function postTestToDB() {
-		console.log('asdasdasd');
-		let data = await trpc($page).protected.saveTest.mutate();
-		console.log(data);
+		try {
+			let data = await trpc($page).protected.saveTest.mutate();
+		} catch (e) {
+			console.log(e);
+		}
 	}
 </script>
 
