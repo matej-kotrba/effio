@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import { createEventDispatcher } from 'svelte';
 
 	export let title: string;
 	export let titleName: string;
@@ -9,6 +10,12 @@
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 	let inputRef: HTMLInputElement;
+
+	const dispatch = createEventDispatcher();
+
+	function dispatchInputChange() {
+		dispatch('inputChange', inputRef.value);
+	}
 </script>
 
 <div class="group underline_effect w-full before:content-[''] relative {customContainerStyles}">
@@ -20,6 +27,7 @@
 	<input
 		bind:value={inputValue}
 		bind:this={inputRef}
+		on:input={dispatchInputChange}
 		name={titleName}
 		id={titleName}
 		type="text"

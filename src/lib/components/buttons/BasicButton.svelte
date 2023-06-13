@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { twMerge } from 'tailwind-merge';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	export let title: string;
@@ -12,6 +13,8 @@
 	type="button"
 	{...buttonAttributes}
 	on:click={(event) => onClick(event)}
-	class="flex items-center gap-2 shadow-md btn bg-light_primary text-white hover:bg-white hover:text-light_primary {classes}"
-	>{title}<slot /></button
+	class={twMerge(
+		'flex items-center gap-2 shadow-md btn bg-light_primary text-white hover:bg-white hover:text-light_primary',
+		classes
+	)}>{title}<slot /></button
 >

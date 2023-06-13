@@ -30,6 +30,8 @@
 	];
 	let templatesActive: number;
 
+	let finishModal: HTMLDialogElement;
+
 	// This object will contain all information associated with the test and will be sent to the DB
 
 	type TestObject = {
@@ -96,6 +98,8 @@
 			console.log(e);
 		}
 	}
+
+	$: console.log(testObject.title);
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -226,9 +230,46 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
-			<div class="flex flex-col gap-3">
-				<TextInput title="What will be the name of your test?" titleName="name" />
-				<TextAreaInput title="Describe what will you test be about." titleName="name" />
+			<div class="flex flex-col gap-4">
+				<TextInput
+					title="What will be the name of your test?"
+					titleName="name"
+					inputValue={testObject['title']}
+					on:inputChange={(data) => {
+						testObject['title'] = data.detail;
+					}}
+				/>
+				<TextAreaInput
+					title="Describe what will you test be about."
+					titleName="name"
+					inputValue={testObject['description']}
+					on:inputChange={(data) => {
+						testObject['description'] = data.detail;
+					}}
+				/>
+				<div class="flex justify-center gap-6 my-4">
+					<BasicButton
+						onClick={() => {}}
+						title={'Preview'}
+						class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
+					/>
+					<BasicButton
+						onClick={() => {
+							finishModal?.showModal();
+						}}
+						title={'Finish'}
+					/>
+				</div>
+				<dialog bind:this={finishModal} class="modal">
+					<form method="dialog" class="modal-box bg-light_whiter text-light_text_black">
+						<h3 class="text-lg font-bold">Finishing your test</h3>
+						<p class="py-4">Press ESC key or click the button below to close</p>
+						<div class="modal-action">
+							<!-- if there is a button in form, it will close the modal -->
+							<button class="btn">Close</button>
+						</div>
+					</form>
+				</dialog>
 			</div>
 		</div>
 	{/if}
