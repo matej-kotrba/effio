@@ -1,6 +1,7 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
+import type { Test } from "@prisma/client";
 
 export const t = initTRPC.context<Context>().create()
 
@@ -86,6 +87,26 @@ export const router = t.router({
     // This needs to be converted to unkown because of the JSON field
     // But its 100% safe because of the manual check above
     return result
+  }),
+  getTests: t.procedure.input(z.object({
+    isPublished: z.boolean().optional(),
+    limit: z.number(),
+  })).query(async ({ ctx, input }) => {
+    let tests: Test[] = []
+    if (input.isPublished) {
+      tests = await ctx.prisma.test.findMany({
+        where: {
+          published: input.isPublished,
+        },
+        take: input.limit,
+      })
+    }
+    else {
+      tests = await ctx.prisma.test.findMany({
+        take: input.limit,
+      })
+    }
+    return tests
   }),
   protected: protectedRouter
 })
