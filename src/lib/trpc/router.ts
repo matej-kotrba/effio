@@ -35,6 +35,7 @@ const protectedRouter = t.router({
     title: z.string(),
     description: z.string(),
     questionContent: z.string(),
+    isPublished: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
 
     const testData = await ctx.prisma.test.create({

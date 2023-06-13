@@ -4,11 +4,13 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Skewed from '~components/loaders/Skewed.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
 	import TextInput from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
@@ -31,6 +33,8 @@
 	let templatesActive: number;
 
 	let finishModal: HTMLDialogElement;
+
+	let isSubmitting = false;
 
 	// This object will contain all information associated with the test and will be sent to the DB
 
@@ -87,15 +91,20 @@
 		testObject.questions = data.detail;
 	};
 
-	async function postTestToDB() {
+	async function postTestToDB(isPublished: boolean) {
+		isSubmitting = true;
 		try {
 			await trpc($page).protected.saveTest.mutate({
 				title: testObject.title,
 				description: testObject.description,
-				questionContent: JSON.stringify(testObject.questions)
+				questionContent: JSON.stringify(testObject.questions),
+				isPublished
 			});
+			isSubmitting = false;
+			goto('/dashboard/test-collection');
 		} catch (e) {
 			console.log(e);
+			isSubmitting = false;
 		}
 	}
 
@@ -262,6 +271,13 @@
 				</div>
 				<dialog bind:this={finishModal} class="modal">
 					<form method="dialog" class="relative modal-box bg-light_whiter text-light_text_black">
+						<div
+							class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting
+								? 'opacity-100 pointer-events-auto'
+								: 'opacity-0 pointer-events-none'}"
+						>
+							<Skewed />
+						</div>
 						<div class="modal-action">
 							<button type="button" on:click={() => finishModal.close()}
 								><Icon icon="ic:round-close" class="absolute text-2xl top-4 right-4" /></button
@@ -278,13 +294,15 @@
 						<div class="flex justify-center gap-3">
 							<button
 								type="button"
+								disabled={isSubmitting}
 								class="btn btn-outline text-light_secondary outline-light_primary hover:text-light_primary hover:bg-gray-200"
-								>Saved as draft</button
+								on:click={() => postTestToDB(false)}>Saved as draft</button
 							>
 							<button
 								type="button"
+								disabled={isSubmitting}
 								class="btn bg-light_primary text-light_whiter hover:bg-light_secondary"
-								>Published</button
+								on:click={() => postTestToDB(true)}>Published</button
 							>
 						</div>
 					</form>
