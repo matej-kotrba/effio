@@ -5,7 +5,7 @@
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
-	import TextInput from '~components/inputs/TextInput.svelte';
+	import TextInput from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
