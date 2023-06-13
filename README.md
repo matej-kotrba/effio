@@ -27,6 +27,7 @@
   - ts-reset
 - Tailwind
   - Daisy UI
+  - tailwind-merge
 - tRPC
   - trpc-sveltekit 
 - Zod
