@@ -4,4 +4,7 @@
 	export let color: string = 'white';
 </script>
 
-<div class="bg-white rounded-full" style="width: {w}; height: {h}; background-color: {color};" />
+<div
+	class="mx-auto bg-white rounded-full"
+	style="width: {w}; height: {h}; background-color: {color};"
+/>

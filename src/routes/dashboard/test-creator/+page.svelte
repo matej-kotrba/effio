@@ -261,12 +261,31 @@
 					/>
 				</div>
 				<dialog bind:this={finishModal} class="modal">
-					<form method="dialog" class="modal-box bg-light_whiter text-light_text_black">
-						<h3 class="text-lg font-bold">Finishing your test</h3>
-						<p class="py-4">Press ESC key or click the button below to close</p>
+					<form method="dialog" class="relative modal-box bg-light_whiter text-light_text_black">
 						<div class="modal-action">
-							<!-- if there is a button in form, it will close the modal -->
-							<button class="btn">Close</button>
+							<button type="button" on:click={() => finishModal.close()}
+								><Icon icon="ic:round-close" class="absolute text-2xl top-4 right-4" /></button
+							>
+						</div>
+						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
+						<p class="py-4 text-center text-body1">
+							Your test named <span class="font-semibold">{testObject['title']}</span> with a
+							description:<br />
+							<span class="font-semibold">{testObject['description']}</span><br />
+							<Separator w={'50%'} h={'1px'} color={'var(--light-text-black-20)'} />
+							should be
+						</p>
+						<div class="flex justify-center gap-3">
+							<button
+								type="button"
+								class="btn btn-outline text-light_secondary outline-light_primary hover:text-light_primary hover:bg-gray-200"
+								>Saved as draft</button
+							>
+							<button
+								type="button"
+								class="btn bg-light_primary text-light_whiter hover:bg-light_secondary"
+								>Published</button
+							>
 						</div>
 					</form>
 				</dialog>
