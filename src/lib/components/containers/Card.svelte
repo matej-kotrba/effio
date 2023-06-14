@@ -8,7 +8,6 @@
 	export let title: string;
 	export let description: string;
 	export let stars: number | undefined = undefined;
-	export let views: number | undefined = undefined;
 	export let tags: string[] = [];
 </script>
 
@@ -46,11 +45,11 @@
 			{#if stars}
 				<span class="flex items-center gap-2"><Icon icon="ic:round-star-outline" /> {stars}</span>
 			{/if}
-			{#if views}
+			<!-- {#if views}
 				<span class="flex items-center gap-2"
 					><Icon icon="ic:outline-remove-red-eye" /> {views}</span
 				>
-			{/if}
+			{/if} -->
 		</div>
 		<Space gap={5} />
 	</div>

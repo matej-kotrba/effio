@@ -78,11 +78,13 @@ model QuestionType {
 model Test {
   id          String     @id @default(uuid())
   title       String
-  description String?    @default("")
+  description String     @default("")
   published   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   questions   Question[]
+  tags        Tag[]
+  starts      Int        @default(0)
   owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     String
 
@@ -102,4 +104,12 @@ model Question {
 
   @@index([typeId])
   @@index([testId])
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tests     Test[]
 }
