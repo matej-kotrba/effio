@@ -8,13 +8,17 @@
 	import { page } from '$app/stores';
 	import type { TestFullType } from '~/Prisma';
 
-	let recentTests: TestFullType[] = [];
+	let recentTests: { data: TestFullType[]; isLoading: boolean } = {
+		data: [],
+		isLoading: true
+	};
 
 	onMount(async () => {
 		const res = await trpc($page).getTests.query({
 			limit: 3
 		});
-		recentTests = res as unknown as TestFullType[];
+		recentTests.data = res as unknown as TestFullType[];
+		recentTests.isLoading = false;
 	});
 </script>
 
@@ -32,14 +36,20 @@
 			<Icon icon="ic:round-plus" class="text-6xl" />
 		</div>
 	</div> -->
-	{#each recentTests as test}
-		<Card
-			title={test.title}
-			description={test.description}
-			stars={test.stars}
-			tags={test.tags.map((tag) => tag.name)}
-		/>
-	{/each}
+	{#if recentTests.isLoading}
+		<CardSkeleton />
+		<CardSkeleton />
+		<CardSkeleton />
+	{:else}
+		{#each recentTests.data as test}
+			<Card
+				title={test.title}
+				description={test.description}
+				stars={test.stars}
+				tags={test.tags.map((tag) => tag.name)}
+			/>
+		{/each}
+	{/if}
 	<!-- <Card
 		redirectLink={'#'}
 		imageLink={'/imgs/content_imgs/liska.avif'}
@@ -51,7 +61,6 @@
 		tags={['Nature', 'Animals', 'Plants']}
 		/>-->
 </div>
-<CardSkeleton />
 
 <Space />
 <h3 class="text-h4 text-light_text_black">Collection</h3>

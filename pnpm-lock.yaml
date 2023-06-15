@@ -17,6 +17,9 @@ dependencies:
   '@prisma/client':
     specifier: ^4.15.0
     version: 4.15.0(prisma@4.15.0)
+  '@tanstack/svelte-query':
+    specifier: ^4.29.11
+    version: 4.29.11(svelte@3.58.0)
   '@trpc/client':
     specifier: ^10.19.1
     version: 10.19.1(@trpc/server@10.19.1)
@@ -32,6 +35,9 @@ dependencies:
   tailwind-merge:
     specifier: ^1.13.1
     version: 1.13.1
+  trpc-svelte-query-adapter:
+    specifier: ^2.1.0
+    version: 2.1.0
   trpc-sveltekit:
     specifier: ^3.5.7
     version: 3.5.7(@sveltejs/adapter-node@1.2.4)(@trpc/client@10.19.1)(@trpc/server@10.19.1)(@types/ws@8.5.4)(ws@8.13.0)
@@ -639,6 +645,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /@tanstack/query-core@4.29.11:
+    resolution: {integrity: sha512-8C+hF6SFAb/TlFZyS9FItgNwrw4PMa7YeX+KQYe2ZAiEz6uzg6yIr+QBzPkUwZ/L0bXvGd1sufTm3wotoz+GwQ==}
+    dev: false
+
   /@tanstack/query-core@4.29.7:
     resolution: {integrity: sha512-GXG4b5hV2Loir+h2G+RXhJdoZhJLnrBWsuLB2r0qBRyhWuXq9w/dWxzvpP89H0UARlH6Mr9DiVj4SMtpkF/aUA==}
     dev: false
@@ -659,6 +669,15 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/svelte-query@4.29.11(svelte@3.58.0):
+    resolution: {integrity: sha512-gfwnNocxLbipoT+MeyTeihybvirwgGAZXXhhqB+v/9Gr88xQ61fLp9vj3nZYQO7oS9jEmkkiWJXymOHHa78Nfg==}
+    peerDependencies:
+      svelte: ^3.54.0
+    dependencies:
+      '@tanstack/query-core': 4.29.11
+      svelte: 3.58.0
     dev: false
 
   /@total-typescript/ts-reset@0.4.2:
@@ -2034,6 +2053,10 @@ packages:
     dependencies:
       '@prisma/engines': 4.15.0
 
+  /proxy-deep@3.1.1:
+    resolution: {integrity: sha512-kppbvLUNJ4IOMZds9/4gz/rtT5OFiesy3XosLsgMKlF3vb6GA5Y3ptyDlzKLcOcUBW+zaY+RiMINTsgE+O6e+Q==}
+    dev: false
+
   /punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
@@ -2451,6 +2474,16 @@ packages:
   /totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
     engines: {node: '>=6'}
+
+  /trpc-svelte-query-adapter@2.1.0:
+    resolution: {integrity: sha512-PQP/OurS8Vr6NtZyk0SOXry4yQaQpz9PBvnBHNHT7TMASyUavHqe/x95QuUlMsa6+KXN2o2bz2Qcz6Qt2JDBvQ==}
+    dependencies:
+      '@tanstack/svelte-query': 4.29.11(svelte@3.58.0)
+      '@trpc/client': 10.19.1(@trpc/server@10.19.1)
+      '@trpc/server': 10.19.1
+      proxy-deep: 3.1.1
+      svelte: 3.58.0
+    dev: false
 
   /trpc-sveltekit@3.5.7(@sveltejs/adapter-node@1.2.4)(@trpc/client@10.19.1)(@trpc/server@10.19.1)(@types/ws@8.5.4)(ws@8.13.0):
     resolution: {integrity: sha512-Nj52sBNS81AkYtU4VmWTSTlSc4RG+TFNYZ+aLU2ngoNOwK6mFNrb28YV3b6QjSZLpZpbzc76buV1fp0RgR45AQ==}
