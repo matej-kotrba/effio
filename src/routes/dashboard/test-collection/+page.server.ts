@@ -1,6 +1,7 @@
 import type { ServerLoad } from "@sveltejs/kit";
 import { router } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context";
+import type { TestFullType } from "~/Prisma";
 
 export const load: ServerLoad = async (event) => {
   const publishedTestPromise = router.createCaller(await createContext(event)).getTests({
@@ -16,8 +17,8 @@ export const load: ServerLoad = async (event) => {
 
   return {
     tests: {
-      published: publishedTest,
-      drafts: draftTest
+      published: publishedTest as TestFullType[],
+      drafts: draftTest as TestFullType[]
     }
   }
 }

@@ -84,7 +84,7 @@ model Test {
   updatedAt   DateTime   @updatedAt
   questions   Question[]
   tags        Tag[]
-  starts      Int        @default(0)
+  stars       Int        @default(0)
   owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     String
 

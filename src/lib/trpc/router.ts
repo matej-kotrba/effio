@@ -93,19 +93,17 @@ export const router = t.router({
     limit: z.number(),
   })).query(async ({ ctx, input }) => {
     let tests: Test[] = []
-    if (input.isPublished) {
-      tests = await ctx.prisma.test.findMany({
-        where: {
-          published: input.isPublished,
-        },
-        take: input.limit,
-      })
-    }
-    else {
-      tests = await ctx.prisma.test.findMany({
-        take: input.limit,
-      })
-    }
+    tests = await ctx.prisma.test.findMany({
+      where: {
+        published: input.isPublished,
+      },
+      include: {
+        questions: true,
+        tags: true,
+        owner: true
+      },
+      take: input.limit,
+    })
     return tests
   }),
   protected: protectedRouter
