@@ -2,6 +2,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
 import type { Test } from "@prisma/client";
+import type { TestFullType } from "~/Prisma";
 
 export const t = initTRPC.context<Context>().create()
 
@@ -93,7 +94,7 @@ export const router = t.router({
     isPublished: z.boolean().optional(),
     limit: z.number(),
   })).query(async ({ ctx, input }) => {
-    let tests: Test[] = []
+    let tests: TestFullType[] = []
     tests = await ctx.prisma.test.findMany({
       where: {
         published: input.isPublished,

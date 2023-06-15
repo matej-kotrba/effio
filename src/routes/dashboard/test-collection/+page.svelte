@@ -1,11 +1,21 @@
 <script lang="ts">
+	import { trpc } from '~/lib/trpc/client';
 	import Space from '~components/separators/Space.svelte';
 	import Separator from '~components/separators/Separator.svelte';
-	import Card from '~components/containers/Card.svelte';
-	import type { PageServerData } from './$types';
+	import Card from '~components/containers/card/Card.svelte';
+	import CardSkeleton from '~components/containers/card/CardSkeleton.svelte';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import type { TestFullType } from '~/Prisma';
 
-	export let data: PageServerData;
-	console.log(data);
+	let recentTests: TestFullType[] = [];
+
+	onMount(async () => {
+		const res = await trpc($page).getTests.query({
+			limit: 3
+		});
+		recentTests = res as unknown as TestFullType[];
+	});
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
@@ -22,7 +32,7 @@
 			<Icon icon="ic:round-plus" class="text-6xl" />
 		</div>
 	</div> -->
-	{#each data.tests.recentTests as test}
+	{#each recentTests as test}
 		<Card
 			title={test.title}
 			description={test.description}
@@ -39,8 +49,9 @@
 		stars={152}
 		views={84201}
 		tags={['Nature', 'Animals', 'Plants']}
-	/>-->
+		/>-->
 </div>
+<CardSkeleton />
 
 <Space />
 <h3 class="text-h4 text-light_text_black">Collection</h3>

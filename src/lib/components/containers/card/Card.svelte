@@ -54,9 +54,6 @@
 		>
 			{description}
 		</p>
-		<Space gap={5} />
-		<div class="flex items-center justify-between px-4" />
-		<Space gap={5} />
 	</div>
 	<div class="flex gap-2">
 		{#each tags as tag}
