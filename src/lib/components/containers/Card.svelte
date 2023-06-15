@@ -12,7 +12,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg aspect-square card_bg shadow-surrounding"
+	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4]"
 >
 	<div>
 		<a href={redirectLink} class="relative block group">
@@ -26,7 +26,7 @@
 				{:else}
 					<div
 						class="rounded-lg w-[100%] aspect-[3/2] group-hover:blur-md overflow-hidden duration-200
-						grid place-content-center bg-zinc-200"
+						grid place-content-center bg-zinc-200 title-placeholder-container"
 					>
 						<div
 							class="-rotate-[12deg] text-transparent font-bold text-h4 title-placeholder"
@@ -55,16 +55,7 @@
 			{description}
 		</p>
 		<Space gap={5} />
-		<div class="flex items-center justify-between px-4">
-			{#if stars}
-				<span class="flex items-center gap-2"><Icon icon="ic:round-star-outline" /> {stars}</span>
-			{/if}
-			<!-- {#if views}
-				<span class="flex items-center gap-2"
-					><Icon icon="ic:outline-remove-red-eye" /> {views}</span
-				>
-			{/if} -->
-		</div>
+		<div class="flex items-center justify-between px-4" />
 		<Space gap={5} />
 	</div>
 	<div class="flex gap-2">
@@ -72,12 +63,32 @@
 			<div class="px-2 py-1 text-white rounded-full bg-success text-body2">{tag}</div>
 		{/each}
 	</div>
+	<div class="flex items-center justify-between">
+		{#if stars !== undefined}
+			<span class="flex items-center gap-2 text-light_text_black"
+				><Icon
+					icon="ic:round-star-outline"
+					class="text-3xl duration-100 hover:text-yellow-400"
+				/>{stars}</span
+			>
+		{/if}
+		<button type="button" class="settings-button">
+			<Icon icon="fluent:settings-24-filled" class="text-3xl text-light_text_black" />
+		</button>
+	</div>
 </div>
 
 <style>
 	.card_bg {
-		background-image: url('/imgs/svgs/card_bg.svg');
+		/* background-image: url('/imgs/svgs/card_bg.svg'); */
 		/* box-shadow: 3px 1px 15px var(--light-text-black-40); */
+	}
+
+	.title-placeholder-container {
+		background-image: url('/imgs/svgs/test-bg-placeholder.svg');
+		background-size: cover;
+		background-position: center;
+		box-shadow: 0 0 10px 0px black;
 	}
 
 	.title-placeholder {
@@ -90,11 +101,23 @@
 	.title-placeholder::before {
 		content: attr(data-text);
 		position: absolute;
-		left: -1px;
-		top: -1px;
+		left: -2px;
+		top: -2px;
 		width: 100%;
 		height: 100%;
-		-webkit-text-stroke: 1px black;
-		filter: blur(2px);
+		color: var(--light-whiter);
+	}
+
+	.settings-button:hover {
+		animation: rotate-settings 0.2s ease-in-out forwards;
+	}
+
+	@keyframes rotate-settings {
+		from {
+			rotate: 0;
+		}
+		to {
+			rotate: 60deg;
+		}
 	}
 </style>
