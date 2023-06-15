@@ -3,7 +3,7 @@
 	import Space from '~components/separators/Space.svelte';
 
 	export let redirectLink: string = '#';
-	export let imageLink: string = '/imgs/content_imgs/liska.avif';
+	export let imageLink: string = ''; //'/imgs/content_imgs/liska.avif';
 	export let imageAlt: string = '';
 	export let title: string;
 	export let description: string;
@@ -17,11 +17,25 @@
 	<div>
 		<a href={redirectLink} class="relative block group">
 			<div class="overflow-hidden rounded-lg">
-				<img
-					class="rounded-lg w-[100%] aspect-[3/2] object-cover group-hover:blur-md overflow-hidden duration-200"
-					src={imageLink}
-					alt={imageAlt}
-				/>
+				{#if imageLink}
+					<img
+						class="rounded-lg w-[100%] aspect-[3/2] object-cover group-hover:blur-md overflow-hidden duration-200"
+						src={imageLink}
+						alt={imageAlt}
+					/>
+				{:else}
+					<div
+						class="rounded-lg w-[100%] aspect-[3/2] group-hover:blur-md overflow-hidden duration-200
+						grid place-content-center bg-zinc-200"
+					>
+						<div
+							class="-rotate-[12deg] text-transparent font-bold text-h4 title-placeholder"
+							data-text={title}
+						>
+							{title}
+						</div>
+					</div>
+				{/if}
 			</div>
 			<Icon
 				icon="iconamoon:enter"
@@ -64,5 +78,23 @@
 	.card_bg {
 		background-image: url('/imgs/svgs/card_bg.svg');
 		/* box-shadow: 3px 1px 15px var(--light-text-black-40); */
+	}
+
+	.title-placeholder {
+		-webkit-text-stroke: 1px black;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		position: relative;
+	}
+
+	.title-placeholder::before {
+		content: attr(data-text);
+		position: absolute;
+		left: -1px;
+		top: -1px;
+		width: 100%;
+		height: 100%;
+		-webkit-text-stroke: 1px black;
+		filter: blur(2px);
 	}
 </style>

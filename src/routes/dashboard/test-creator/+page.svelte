@@ -98,7 +98,7 @@
 				title: testObject.title,
 				description: testObject.description,
 				questionContent: JSON.stringify(testObject.questions),
-				isPublished
+				isPublished: isPublished
 			});
 			isSubmitting = false;
 			goto('/dashboard/test-collection');

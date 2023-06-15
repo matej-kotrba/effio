@@ -44,6 +44,7 @@ const protectedRouter = t.router({
         title: input.title,
         description: input.description,
         ownerId: ctx.userId,
+        published: input.isPublished,
       }
     })
 

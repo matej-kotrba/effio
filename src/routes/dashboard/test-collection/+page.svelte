@@ -5,6 +5,7 @@
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
+	console.log(data);
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
@@ -23,7 +24,12 @@
 		</div>
 	</div> -->
 	{#each data.tests.published as test}
-		<Card title={test.title} description={test.description} />
+		<Card
+			title={test.title}
+			description={test.description}
+			stars={test.stars}
+			tags={test.tags.map((tag) => tag.name)}
+		/>
 	{/each}
 	<!-- <Card
 		redirectLink={'#'}
@@ -34,27 +40,19 @@
 		stars={152}
 		views={84201}
 		tags={['Nature', 'Animals', 'Plants']}
-	/>
-	<Card
-		redirectLink={'#'}
-		imageLink={'/imgs/content_imgs/liska.avif'}
-		imageAlt={'Liška'}
-		title={'Do you know the nature ?'}
-		description={'Test your knowladge about the nature which surrounds you.'}
-		stars={152}
-		views={84201}
-		tags={['Nature', 'Animals', 'Plants']}
-	/>
-	<Card
-		redirectLink={'#'}
-		imageLink={'/imgs/content_imgs/liska.avif'}
-		imageAlt={'Liška'}
-		title={'Do you know the nature ?'}
-		description={'Test your knowladge about the nature which surrounds you.'}
-		stars={152}
-		views={84201}
-		tags={['Nature', 'Animals', 'Plants']}
-	/> -->
+	/>-->
+</div>
+<Space />
+<h4 class="text-h5 text-light_text_black_80">Drafts</h4>
+<div class="flex gap-4">
+	{#each data.tests.published as test}
+		<Card
+			title={test.title}
+			description={test.description}
+			stars={test.stars}
+			tags={test.tags.map((tag) => tag.name)}
+		/>
+	{/each}
 </div>
 <Space />
 <h3 class="text-h4 text-light_text_black">Collection</h3>
