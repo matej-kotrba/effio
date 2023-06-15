@@ -104,6 +104,9 @@ export const router = t.router({
         owner: true
       },
       take: input.limit,
+      orderBy: {
+        updatedAt: "desc"
+      }
     })
     return tests
   }),

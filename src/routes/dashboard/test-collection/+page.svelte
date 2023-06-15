@@ -16,14 +16,13 @@
 <h3 class="text-h4 text-light_text_black">Recent activity</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<h4 class="text-h5 text-light_text_black_80">Published</h4>
 <div class="flex gap-4">
 	<!-- <div class="w-full max-w-xs p-5 rounded-md shadow-lg aspect-[5/6] bg-light_white">
 		<div class="p-5 text-white rounded-md bg-light_text_black_40">
 			<Icon icon="ic:round-plus" class="text-6xl" />
 		</div>
 	</div> -->
-	{#each data.tests.published as test}
+	{#each data.tests.recentTests as test}
 		<Card
 			title={test.title}
 			description={test.description}
@@ -42,18 +41,7 @@
 		tags={['Nature', 'Animals', 'Plants']}
 	/>-->
 </div>
-<Space />
-<h4 class="text-h5 text-light_text_black_80">Drafts</h4>
-<div class="flex gap-4">
-	{#each data.tests.published as test}
-		<Card
-			title={test.title}
-			description={test.description}
-			stars={test.stars}
-			tags={test.tags.map((tag) => tag.name)}
-		/>
-	{/each}
-</div>
+
 <Space />
 <h3 class="text-h4 text-light_text_black">Collection</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
