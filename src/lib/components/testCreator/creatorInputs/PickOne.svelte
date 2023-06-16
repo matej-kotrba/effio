@@ -6,7 +6,10 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
+	import { testObject } from '../../../../routes/dashboard/test-creator/store';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
 
+	export let indexParent: number;
 	export let defaultQuestionsData: PickOneQuestion = {
 		answers: [
 			{
@@ -67,7 +70,7 @@
 			/ {QUESTION_LIMIT}
 		</div>
 	</div>
-	{#each input['answers'] as q, index (q)}
+	{#each $testObject['questions'][indexParent].content.answers as q, index (q)}
 		<div class="flex" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"
@@ -88,7 +91,7 @@
 				<TextInput
 					title="Option {index + 1}"
 					titleName="Option {index + 1}"
-					bind:inputValue={q.answer}
+					bind:inputValue={$testObject.questions[indexParent].content.answers[index].answer}
 				/>
 			</div>
 			<button
@@ -96,7 +99,7 @@
 				data-tip="Mark this as a correct answer"
 				class={`px-2 grid tooltip place-content-center rounded-r-md`}
 				style={`${
-					index === input['correctAnswerIndex']
+					index === $testObject.questions[indexParent].content?.correctAnswerIndex
 						? 'background-color: var(--success); color: var(--light-white);'
 						: 'background-color: var(--light-white); color: var(--success);'
 				}}`}

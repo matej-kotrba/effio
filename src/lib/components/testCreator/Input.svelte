@@ -10,18 +10,18 @@ will be used in the test creator -->
 	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
+	import { testObject } from '../../../routes/dashboard/test-creator/store';
 
 	let dispatch = createEventDispatcher();
 
+	export let index: number;
 	export let input: PartialPick<
 		Pick<Question, 'content' | 'questionType' | 'displayType' | 'title'>,
 		'content' | 'title'
 	>;
 
-	let title: string = input['title'] || '';
-
 	function dispatchTitleEvent() {
-		dispatch('titleChange', title);
+		// dispatch('titleChange', title);
 	}
 
 	function dispatchDragEvent() {
@@ -35,9 +35,9 @@ will be used in the test creator -->
 		return (input['content'] as any) || undefined;
 	}
 
-	$: dispatchTitleEvent(), title;
+	// $: dispatchTitleEvent(), title;
 
-	$: console.log('aaa'), input;
+	// $: console.log('aaa'), input;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
@@ -66,15 +66,23 @@ will be used in the test creator -->
 	</div>
 	<Space gap={20} />
 	<h6 class="text-light_text_black">
-		<TextInput title="Title" titleName="title" bind:inputValue={title} />
+		<TextInput
+			title="Title"
+			titleName="title"
+			bind:inputValue={$testObject.questions[index].title}
+		/>
 	</h6>
 	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<Space gap={10} />
 	<div class="p-2 content">
-		{#if input['questionType'] === 'pickOne'}
-			<PickOneInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
-		{:else if input['questionType'] === 'true/false'}
+		{#if $testObject['questions'][index]['questionType'] === 'pickOne'}
+			<PickOneInput
+				on:questionDetails
+				defaultQuestionsData={sendDefaultValueToChild()}
+				indexParent={index}
+			/>
+		{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
 			<TrueFalseInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
 		{/if}
 	</div>

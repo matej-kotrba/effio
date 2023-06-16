@@ -20,6 +20,7 @@
 	import { flip } from 'svelte/animate';
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
+	import { testObject } from '~/routes/dashboard/test-creator/store';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -72,13 +73,13 @@
 		dragDisable = false;
 	}
 
-	$: {
-		dispatch('questionsDataChange', questionsData);
-	}
+	// $: {
+	// 	dispatch('questionsDataChange', questionsData);
+	// }
 
-	onMount(() => {
-		questionsData = initialData;
-	});
+	// onMount(() => {
+	// 	questionsData = initialData;
+	// });
 
 	// $: questionsData = initialData;
 	// $: console.log(questionsData);
@@ -101,14 +102,15 @@
 			on:consider={onOrderConsideration}
 		>
 			<!-- Separator with add new input -->
-			{#each questionsData as question, index (question['id'])}
+			{#each $testObject['questions'] as question, index (question['id'])}
 				<!-- Div which needs to be here for draggeble to be in creator and not in input -->
 				<div animate:flip={{ duration: 300 }}>
 					<Input
+						{index}
 						input={{
 							questionType: question.questionType,
-							title: questionsData[index]['title'],
-							content: questionsData[index]['content'],
+							title: 'dasdasd',
+							content: { answers: [] },
 							displayType: question.displayType
 						}}
 						on:questionDetails={({ detail }) => {
