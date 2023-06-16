@@ -44,13 +44,12 @@
 		"@auth/prisma-adapter": "^1.0.0",
 		"@auth/sveltekit": "^0.3.1",
 		"@prisma/client": "^4.15.0",
-		"@tanstack/svelte-query": "^4.29.11",
 		"@trpc/client": "^10.19.1",
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1",
 		"svelte-french-toast": "1.0.4-beta.0",
+		"sveltekit-superforms": "^1.0.0",
 		"tailwind-merge": "^1.13.1",
-		"trpc-svelte-query-adapter": "^2.1.0",
 		"trpc-sveltekit": "^3.5.7",
 		"zod": "^3.21.4"
 	}

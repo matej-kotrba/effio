@@ -23,7 +23,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: true,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -56,15 +56,15 @@
 				questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
 				content: {
 					correctAnswerIndex: 1,
-					questions: [
+					answers: [
 						{
-							question: 'Paris'
+							asnwer: 'Paris'
 						},
 						{
-							question: 'Paris'
+							asnwer: 'Paris'
 						},
 						{
-							question: 'Paris'
+							asnwer: 'Paris'
 						}
 					]
 				}
@@ -76,10 +76,10 @@
 				questionType: 'true/false',
 				questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
 				content: {
-					questions: [
+					asnwers: [
 						{
 							isTrue: false,
-							question: 'Is the earth flat?'
+							asnwer: 'Is the earth flat?'
 						}
 					]
 				}
@@ -106,6 +106,16 @@
 			console.log(e);
 			isSubmitting = false;
 		}
+	}
+
+	async function validateInputs() {
+		const res = await fetch('./test-creator', {
+			method: 'POST',
+			body: JSON.stringify(testObject.questions),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
 	}
 
 	$: console.log(testObject.title);
@@ -136,6 +146,7 @@
 			<button
 				type="button"
 				on:click={() => {
+					if (testCreationProgress.templateDone === false) return;
 					testCreationProgress.templateDone = true;
 					testCreationProgress.constructingDone = false;
 					testCreationProgress.detailsDone = false;
@@ -213,6 +224,7 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
+			<button type="submit" class="btn" on:click={validateInputs}>Validate and hope</button>
 			<Creator
 				inputTemplates={data.questionsTypes}
 				initialData={testObject.questions}

@@ -3,8 +3,12 @@ import { createContext } from "~/lib/trpc/context";
 import { router } from "~/lib/trpc/router";
 
 export const load: ServerLoad = async (event) => {
-  const templates = router.createCaller(await createContext(event)).getTemplates();
-  const questionsTypes = router.createCaller(await createContext(event)).getQuestionsTypes();
+
+  const context = await createContext(event)
+
+  const templates = router.createCaller(context).getTemplates();
+  const questionsTypes = router.createCaller(context).getQuestionsTypes();
+
 
   return {
     templates: templates,

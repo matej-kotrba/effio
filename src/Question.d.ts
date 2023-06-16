@@ -1,15 +1,15 @@
 // Content of the question, inputType determines the type of the question and questions is an array of questions and its structure
 // Apart from these two properties you can add any other properties you want for functionality of the question
 type TrueFalseQuestion = {
-  questions: {
-    question: string;
+  asnwers: {
+    asnwer: string;
     isTrue: boolean;
   }[];
 }
 
 type PickOneQuestion = {
-  questions: {
-    question: string;
+  answers: {
+    asnwer: string;
   }[];
   correctAnswerIndex: number;
 };

@@ -8,12 +8,12 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let defaultQuestionsData: PickOneQuestion = {
-		questions: [
+		answers: [
 			{
-				question: ''
+				asnwer: ''
 			},
 			{
-				question: ''
+				asnwer: ''
 			}
 		],
 		correctAnswerIndex: 0
@@ -27,7 +27,7 @@
 	let input: PickOneQuestion = defaultQuestionsData;
 
 	function newQuestionConditionCheck() {
-		return !(input.questions.length >= QUESTION_LIMIT);
+		return !(input.answers.length >= QUESTION_LIMIT);
 	}
 
 	function onAddNew() {
@@ -35,11 +35,11 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		input.questions = [...input.questions, { question: '' }];
+		input.answers = [...input.answers, { asnwer: '' }];
 	}
 
 	function deleteQuestion(index: number) {
-		input.questions = input.questions.filter((_, i) => i !== index);
+		input.answers = input.answers.filter((_, i) => i !== index);
 		if (input['correctAnswerIndex'] === index) input['correctAnswerIndex'] = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
@@ -56,23 +56,23 @@
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
 		<div class="flex gap-1">
-			{#key input['questions'].length}
+			{#key input['answers'].length}
 				<div
-					class={input['questions'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					class={input['answers'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
 					in:fly={{ x: 0, y: -20 }}
 				>
-					{input['questions'].length}
+					{input['answers'].length}
 				</div>
 			{/key}
 			/ {QUESTION_LIMIT}
 		</div>
 	</div>
-	{#each input['questions'] as q, index (q)}
+	{#each input['answers'] as q, index (q)}
 		<div class="flex" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"
 				class="group grid place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
-				 {input['questions'].length > 2
+				 {input['answers'].length > 2
 					? 'opacity-100 pointer-events-auto'
 					: 'opacity-0 pointer-events-none'}"
 				style="transition: 200ms background-color, 200ms color;"
@@ -88,7 +88,7 @@
 				<TextInput
 					title="Option {index + 1}"
 					titleName="Option {index + 1}"
-					bind:inputValue={q.question}
+					bind:inputValue={q.asnwer}
 				/>
 			</div>
 			<button

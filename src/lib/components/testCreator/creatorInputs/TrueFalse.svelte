@@ -10,13 +10,13 @@
 	const QUESTION_LIMIT = 10;
 
 	export let defaultQuestionsData: TrueFalseQuestion = {
-		questions: [
+		asnwers: [
 			{
-				question: '',
+				asnwer: '',
 				isTrue: true
 			},
 			{
-				question: '',
+				asnwer: '',
 				isTrue: false
 			}
 		]
@@ -30,7 +30,7 @@
 	let input: TrueFalseQuestion = defaultQuestionsData;
 
 	function newQuestionConditionCheck() {
-		return !(input.questions.length >= QUESTION_LIMIT);
+		return !(input.asnwers.length >= QUESTION_LIMIT);
 	}
 
 	function onAddNew() {
@@ -38,11 +38,11 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		input.questions = [...input.questions, { question: '', isTrue: false }];
+		input.asnwers = [...input.asnwers, { asnwer: '', isTrue: false }];
 	}
 
 	function deleteQuestion(index: number) {
-		input.questions = input.questions.filter((_, i) => i !== index);
+		input.asnwers = input.asnwers.filter((_, i) => i !== index);
 		toast.success(`Question ${index + 1} deleted`);
 	}
 
@@ -58,23 +58,23 @@
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
 		<div class="flex gap-1">
-			{#key input['questions'].length}
+			{#key input['asnwers'].length}
 				<div
-					class={input['questions'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					class={input['asnwers'].length === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
 					in:fly={{ x: 0, y: -20 }}
 				>
-					{input['questions'].length}
+					{input['asnwers'].length}
 				</div>
 			{/key}
 			/ {QUESTION_LIMIT}
 		</div>
 	</div>
-	{#each input['questions'] as q, index (q)}
+	{#each input['asnwers'] as q, index (q)}
 		<div class="flex" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"
 				class="group grid place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
-				 {input['questions'].length > 2
+				 {input['asnwers'].length > 2
 					? 'opacity-100 pointer-events-auto'
 					: 'opacity-0 pointer-events-none'}"
 				on:click={() => deleteQuestion(index)}
@@ -90,7 +90,7 @@
 				<TextInput
 					title="Option {index + 1}"
 					titleName="Option {index + 1}"
-					bind:inputValue={q.question}
+					bind:inputValue={q.asnwer}
 				/>
 			</div>
 			<button
@@ -98,12 +98,11 @@
 				data-tip="Mark this as a correct answer"
 				class={`px-2 grid tooltip place-content-center rounded-r-md`}
 				style={`${
-					input['questions'][index]['isTrue'] === true
+					input['asnwers'][index]['isTrue'] === true
 						? 'background-color: var(--success); color: var(--light-white);'
 						: 'background-color: var(--light-white); color: var(--success);'
 				}}`}
-				on:click={() =>
-					(input['questions'][index]['isTrue'] = !input['questions'][index]['isTrue'])}
+				on:click={() => (input['asnwers'][index]['isTrue'] = !input['asnwers'][index]['isTrue'])}
 			>
 				<Icon icon="charm:tick" class="text-3xl" />
 			</button>
