@@ -226,6 +226,7 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
+			Testing branch
 			<button type="submit" class="btn" on:click={validateInputs}>Validate and hope</button>
 			<Creator
 				inputTemplates={data.questionsTypes}
