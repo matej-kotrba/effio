@@ -79,6 +79,8 @@
 	onMount(() => {
 		questionsData = initialData;
 	});
+
+	// $: questionsData = initialData;
 	// $: console.log(questionsData);
 </script>
 

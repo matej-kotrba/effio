@@ -36,6 +36,8 @@ will be used in the test creator -->
 	}
 
 	$: dispatchTitleEvent(), title;
+
+	$: console.log('aaa'), input;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">

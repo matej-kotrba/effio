@@ -1,10 +1,10 @@
-import { z } from "zod"
+import { ZodError, z } from "zod"
 import { json } from "@sveltejs/kit"
 import type { RequestEvent } from "../$types"
 import type { QuestionsDataType } from "~components/testCreator/Creator.svelte"
 
 const asnwerSchema = z.object({
-  answer: z.string().min(1).max(100)
+  answer: z.string().min(1, "Answer has to be atleast 1 character long.").max(100, "Answer can be max 100 characters long.")
 }).passthrough()
 
 export async function POST(event: RequestEvent) {
@@ -16,12 +16,14 @@ export async function POST(event: RequestEvent) {
         try {
           asnwerSchema.parse(asnwer)
         }
-        catch (e) {
-          console.log(e)
-          // asnwer.error = e.message
+        catch (e: unknown) {
+          const error = e as ZodError<typeof asnwerSchema>
+          asnwer.error = error.errors[0].message
         }
     }
   }
 
-  return json("SUPER")
+  console.log(body[0].content)
+
+  return json(body)
 }

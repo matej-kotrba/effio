@@ -116,9 +116,11 @@
 				'Content-Type': 'application/json'
 			}
 		});
+		const data = await res.json();
+		testObject.questions = data as QuestionsDataType[];
 	}
 
-	$: console.log(testObject.title);
+	$: console.log(testObject);
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
