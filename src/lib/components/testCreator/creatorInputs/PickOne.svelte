@@ -10,10 +10,10 @@
 	export let defaultQuestionsData: PickOneQuestion = {
 		answers: [
 			{
-				asnwer: ''
+				answer: ''
 			},
 			{
-				asnwer: ''
+				answer: ''
 			}
 		],
 		correctAnswerIndex: 0
@@ -35,7 +35,7 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		input.answers = [...input.answers, { asnwer: '' }];
+		input.answers = [...input.answers, { answer: '' }];
 	}
 
 	function deleteQuestion(index: number) {
@@ -88,7 +88,7 @@
 				<TextInput
 					title="Option {index + 1}"
 					titleName="Option {index + 1}"
-					bind:inputValue={q.asnwer}
+					bind:inputValue={q.answer}
 				/>
 			</div>
 			<button

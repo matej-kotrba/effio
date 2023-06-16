@@ -58,13 +58,13 @@
 					correctAnswerIndex: 1,
 					answers: [
 						{
-							asnwer: 'Paris'
+							answer: 'Paris'
 						},
 						{
-							asnwer: 'Paris'
+							answer: 'Paris'
 						},
 						{
-							asnwer: 'Paris'
+							answer: 'Paris'
 						}
 					]
 				}
@@ -76,10 +76,10 @@
 				questionType: 'true/false',
 				questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
 				content: {
-					asnwers: [
+					answers: [
 						{
 							isTrue: false,
-							asnwer: 'Is the earth flat?'
+							answer: 'Is the earth flat?'
 						}
 					]
 				}
