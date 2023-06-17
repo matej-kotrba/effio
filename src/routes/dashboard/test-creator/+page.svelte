@@ -38,55 +38,6 @@
 
 	let isSubmitting = false;
 
-	// This object will contain all information associated with the test and will be sent to the DB
-
-	// let testObject: TestObject = {
-	// 	title: 'This is title',
-	// 	description: 'This is description',
-	// 	questions: [
-	// 		{
-	// 			id: crypto.randomUUID(),
-	// 			title: 'What is the capital of France?',
-	// 			displayType: 'Pick one',
-	// 			questionType: 'pickOne',
-	// 			questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
-	// 			content: {
-	// 				correctAnswerIndex: 1,
-	// 				answers: [
-	// 					{
-	// 						answer: 'Paris'
-	// 					},
-	// 					{
-	// 						answer: 'Paris'
-	// 					},
-	// 					{
-	// 						answer: 'Paris'
-	// 					}
-	// 				]
-	// 			}
-	// 		},
-	// 		{
-	// 			id: crypto.randomUUID(),
-	// 			title: 'What facts about Earh are true ?',
-	// 			displayType: 'True/False',
-	// 			questionType: 'true/false',
-	// 			questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
-	// 			content: {
-	// 				answers: [
-	// 					{
-	// 						isTrue: false,
-	// 						answer: 'Is the earth flat?'
-	// 					}
-	// 				]
-	// 			}
-	// 		}
-	// 	]
-	// };
-
-	const setQuestionsFromCreatorComponent = (data: CustomEvent<QuestionsDataType[]>) => {
-		// testObject.questions = data.detail;
-	};
-
 	async function postTestToDB(isPublished: boolean) {
 		// isSubmitting = true;
 		// try {
@@ -115,12 +66,6 @@
 		// const data = await res.json();
 		// testObject.questions = data as QuestionsDataType[];
 	}
-
-	// onMount(() => {
-	// 	setInterval(() => {
-	// 		console.log($testObject.questions[0].content);
-	// 	}, 500);
-	// });
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -228,10 +173,7 @@
 		>
 			Testing branch
 			<button type="submit" class="btn" on:click={validateInputs}>Validate and hope</button>
-			<Creator
-				inputTemplates={data.questionsTypes}
-				on:questionsDataChange={setQuestionsFromCreatorComponent}
-			/>
+			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
 			<BasicButton

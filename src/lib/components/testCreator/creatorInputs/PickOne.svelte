@@ -11,7 +11,7 @@
 	export let indexParent: number;
 
 	// Reference to the test object content
-	let content = $testObject.questions[indexParent].content as PickOneQuestion;
+	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
 
 	const QUESTION_LIMIT = 10;
 

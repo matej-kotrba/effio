@@ -25,8 +25,6 @@
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
-	const dispatch = createEventDispatcher();
-
 	// Dropdown state
 	let openDropdown = false;
 
