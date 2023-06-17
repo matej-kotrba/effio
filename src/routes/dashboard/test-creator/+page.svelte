@@ -16,6 +16,7 @@
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
 	import { testObject } from './store';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
@@ -114,8 +115,6 @@
 		// const data = await res.json();
 		// testObject.questions = data as QuestionsDataType[];
 	}
-
-	$: console.log($testObject.questions[0].content?.answers);
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
