@@ -20,11 +20,10 @@
 	import { flip } from 'svelte/animate';
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
+	import { testObject } from '~/routes/dashboard/test-creator/store';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
-
-	const dispatch = createEventDispatcher();
 
 	// Dropdown state
 	let openDropdown = false;
@@ -32,18 +31,15 @@
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
 
-	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
+	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
-	export let initialData: QuestionsDataType[] = [];
-
-	let questionsData: QuestionsDataType[] = [];
 
 	function addNewQuestion(input: NewQuestionInput) {
-		questionsData = [...questionsData, input];
+		$testObject.questions = [...$testObject.questions, input];
 	}
 
 	function removeQuestion(index: number) {
-		questionsData = questionsData.filter((_, i) => i !== index);
+		$testObject.questions = $testObject.questions.filter((_, i) => i !== index);
 	}
 
 	function onDropdownInputClick(input: QuestionTemplate) {
@@ -57,14 +53,14 @@
 	}
 
 	function onOrderChange(e: { detail: { items: QuestionsDataType[]; info: { source: any } } }) {
-		questionsData = e.detail.items;
+		$testObject.questions = e.detail.items;
 		if (e.detail.info.source === SOURCES.POINTER) {
 			dragDisable = true;
 		}
 	}
 
 	function onOrderConsideration(e: { detail: { items: QuestionsDataType[] } }) {
-		questionsData = e.detail.items;
+		$testObject.questions = e.detail.items;
 	}
 
 	function startDrag(e: Event) {
@@ -72,13 +68,13 @@
 		dragDisable = false;
 	}
 
-	$: {
-		dispatch('questionsDataChange', questionsData);
-	}
+	// $: {
+	// 	dispatch('questionsDataChange', questionsData);
+	// }
 
-	onMount(() => {
-		questionsData = initialData;
-	});
+	// onMount(() => {
+	// 	questionsData = initialData;
+	// });
 
 	// $: questionsData = initialData;
 	// $: console.log(questionsData);
@@ -89,7 +85,7 @@
 		<div
 			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
 			use:dndzone={{
-				items: questionsData,
+				items: $testObject['questions'],
 				flipDurationMs: 300,
 				dragDisabled: dragDisable,
 				dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
@@ -101,21 +97,16 @@
 			on:consider={onOrderConsideration}
 		>
 			<!-- Separator with add new input -->
-			{#each questionsData as question, index (question['id'])}
+			{#each $testObject['questions'] as question, index (question['id'])}
 				<!-- Div which needs to be here for draggeble to be in creator and not in input -->
 				<div animate:flip={{ duration: 300 }}>
 					<Input
-						input={{
-							questionType: question.questionType,
-							title: questionsData[index]['title'],
-							content: questionsData[index]['content'],
-							displayType: question.displayType
-						}}
+						{index}
 						on:questionDetails={({ detail }) => {
-							questionsData[index]['content'] = detail;
+							$testObject.questions[index]['content'] = detail;
 						}}
 						on:titleChange={({ detail }) => {
-							questionsData[index]['title'] = detail;
+							$testObject.questions[index]['title'] = detail;
 						}}
 						on:deleteInput={() => removeQuestion(index)}
 						on:dnddrag={startDrag}
