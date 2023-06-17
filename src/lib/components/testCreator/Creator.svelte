@@ -33,18 +33,15 @@
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
 
-	// Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
+	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
-	export let initialData: QuestionsDataType[] = [];
-
-	let questionsData: QuestionsDataType[] = [];
 
 	function addNewQuestion(input: NewQuestionInput) {
-		questionsData = [...questionsData, input];
+		$testObject.questions = [...$testObject.questions, input];
 	}
 
 	function removeQuestion(index: number) {
-		questionsData = questionsData.filter((_, i) => i !== index);
+		$testObject.questions = $testObject.questions.filter((_, i) => i !== index);
 	}
 
 	function onDropdownInputClick(input: QuestionTemplate) {
@@ -58,14 +55,14 @@
 	}
 
 	function onOrderChange(e: { detail: { items: QuestionsDataType[]; info: { source: any } } }) {
-		questionsData = e.detail.items;
+		$testObject.questions = e.detail.items;
 		if (e.detail.info.source === SOURCES.POINTER) {
 			dragDisable = true;
 		}
 	}
 
 	function onOrderConsideration(e: { detail: { items: QuestionsDataType[] } }) {
-		questionsData = e.detail.items;
+		$testObject.questions = e.detail.items;
 	}
 
 	function startDrag(e: Event) {
@@ -90,7 +87,7 @@
 		<div
 			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
 			use:dndzone={{
-				items: questionsData,
+				items: $testObject['questions'],
 				flipDurationMs: 300,
 				dragDisabled: dragDisable,
 				dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
@@ -107,17 +104,11 @@
 				<div animate:flip={{ duration: 300 }}>
 					<Input
 						{index}
-						input={{
-							questionType: question.questionType,
-							title: 'dasdasd',
-							content: { answers: [] },
-							displayType: question.displayType
-						}}
 						on:questionDetails={({ detail }) => {
-							questionsData[index]['content'] = detail;
+							$testObject.questions[index]['content'] = detail;
 						}}
 						on:titleChange={({ detail }) => {
-							questionsData[index]['title'] = detail;
+							$testObject.questions[index]['title'] = detail;
 						}}
 						on:deleteInput={() => removeQuestion(index)}
 						on:dnddrag={startDrag}

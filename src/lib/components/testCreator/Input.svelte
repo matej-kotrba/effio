@@ -15,34 +15,17 @@ will be used in the test creator -->
 	let dispatch = createEventDispatcher();
 
 	export let index: number;
-	export let input: PartialPick<
-		Pick<Question, 'content' | 'questionType' | 'displayType' | 'title'>,
-		'content' | 'title'
-	>;
-
-	function dispatchTitleEvent() {
-		// dispatch('titleChange', title);
-	}
 
 	function dispatchDragEvent() {
 		dispatch('dnddrag');
 	}
-
-	function sendDefaultValueToChild() {
-		// Here we know that the type will be correct because we are using this component only in the creator
-		// and we typecheck it in there, but to persist Input general and reusable we can't explicitly say that
-		// this input is type of ... so we have to type it as any to make Typescript happy
-		return (input['content'] as any) || undefined;
-	}
-
-	// $: dispatchTitleEvent(), title;
-
-	// $: console.log('aaa'), input;
 </script>
 
 <div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
 	<div class="grid grid-cols-3">
-		<p class="justify-self-start text-light_text_black_40 text-body2">{input.displayType}</p>
+		<p class="justify-self-start text-light_text_black_40 text-body2">
+			{$testObject['questions'][index].displayType}
+		</p>
 		<div
 			class="justify-self-center hover:cursor-grab"
 			aria-label="drag-handle"
@@ -77,64 +60,9 @@ will be used in the test creator -->
 	<Space gap={10} />
 	<div class="p-2 content">
 		{#if $testObject['questions'][index]['questionType'] === 'pickOne'}
-			<PickOneInput
-				on:questionDetails
-				defaultQuestionsData={sendDefaultValueToChild()}
-				indexParent={index}
-			/>
+			<PickOneInput on:questionDetails indexParent={index} />
 		{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
-			<TrueFalseInput on:questionDetails defaultQuestionsData={sendDefaultValueToChild()} />
+			<TrueFalseInput on:questionDetails indexParent={index} />
 		{/if}
 	</div>
 </div>
-
-<!-- <script lang="ts">
-	import Separator from '~components/separators/Separator.svelte';
-	import Space from '~components/separators/Space.svelte';
-
-	export let title: string;
-	export let content: QuestionContent;
-
-	// This is optional reference to form element wrapping the inputs, usefull if radio buttons or other inputs are used
-	let formRef: HTMLFormElement | null = null;
-
-	function displayTypeValue(content: QuestionContent) {
-		switch (content.inputType) {
-			case 'true/false':
-				return 'True / False';
-			case 'pickOne':
-				return 'Pick one';
-		}
-	}
-
-	// export function checkResult() {
-	// 	console.log('JESTLI TO JDE TAK JE TO SUPER');
-	// 	switch (content.inputType) {
-	// 		case 'true/false':
-	// 			return content.questions[0].answer;
-	// 		case 'pickOne':
-	// 			if (!formElement) return false;
-	// 			const inputs = formElement.querySelectorAll('input');
-	// 			console.log(inputs);
-	// 	}
-	// }
-</script>
-
-<div class="w-full p-4 rounded-lg bg-light_whiter">
-	<p class="text-light_text_black_40 text-body2">{displayTypeValue(content)}</p>
-	<Space gap={20} />
-	<h6 class="text-light_text_black">{title}</h6>
-	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
-	<div class="p-2 content">
-		{#if content.inputType === 'pickOne'}
-			<form bind:this={formRef}>
-				{#each content.questions as { question }, i}
-					<div class="flex">
-						<label for="{question}{i}">{question}</label>
-						<input type="radio" id="{question}{i}" name={title} />
-					</div>
-				{/each}
-			</form>
-		{/if}
-	</div>
-</div> -->

@@ -5,15 +5,13 @@
 	import { flip } from 'svelte/animate';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
-	import { createEventDispatcher } from 'svelte';
 	import { testObject } from '../../../../routes/dashboard/test-creator/store';
-	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import { onMount } from 'svelte';
 
 	export let indexParent: number;
 
+	// Reference to the test object content
 	let content = $testObject.questions[indexParent].content as PickOneQuestion;
-
-	$: console.log(content, $testObject.questions[indexParent].content);
 
 	const QUESTION_LIMIT = 10;
 
@@ -34,6 +32,16 @@
 		if (content['correctAnswerIndex'] === index) content['correctAnswerIndex'] = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
+
+	// Initialize the content object with all needed fields
+	onMount(() => {
+		if (!content) content = {} as any;
+		if (content['correctAnswerIndex'] === undefined) content['correctAnswerIndex'] = 0;
+		if (!content['answers']) content['answers'] = [];
+		for (let i = 0; content.answers.length < 2; i++) {
+			content.answers.push({ answer: '' });
+		}
+	});
 </script>
 
 <form class="relative flex flex-col gap-4">
@@ -52,7 +60,7 @@
 		</div>
 	</div>
 	<!-- Display the input fields with control -->
-	{#each content.answers || [] as q, index (q)}
+	{#each content.answers as q, index (q)}
 		<div class="flex" animate:flip={{ duration: 200 }}>
 			<button
 				type="button"

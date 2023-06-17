@@ -115,6 +115,12 @@
 		// const data = await res.json();
 		// testObject.questions = data as QuestionsDataType[];
 	}
+
+	// onMount(() => {
+	// 	setInterval(() => {
+	// 		console.log($testObject.questions[0].content);
+	// 	}, 500);
+	// });
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
