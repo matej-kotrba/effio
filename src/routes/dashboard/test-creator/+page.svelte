@@ -39,32 +39,32 @@
 	let isSubmitting = false;
 
 	async function postTestToDB(isPublished: boolean) {
-		// isSubmitting = true;
-		// try {
-		// 	await trpc($page).protected.saveTest.mutate({
-		// 		title: testObject.title,
-		// 		description: testObject.description,
-		// 		questionContent: JSON.stringify(testObject.questions),
-		// 		isPublished: isPublished
-		// 	});
-		// 	isSubmitting = false;
-		// 	goto('/dashboard/test-collection');
-		// } catch (e) {
-		// 	console.log(e);
-		// 	isSubmitting = false;
-		// }
+		isSubmitting = true;
+		try {
+			await trpc($page).protected.saveTest.mutate({
+				title: $testObject.title,
+				description: $testObject.description,
+				questionContent: JSON.stringify($testObject.questions),
+				isPublished: isPublished
+			});
+			isSubmitting = false;
+			goto('/dashboard/test-collection');
+		} catch (e) {
+			console.log(e);
+			isSubmitting = false;
+		}
 	}
 
 	async function validateInputs() {
-		// const res = await fetch('./test-creator', {
-		// 	method: 'POST',
-		// 	body: JSON.stringify(testObject.questions),
-		// 	headers: {
-		// 		'Content-Type': 'application/json'
-		// 	}
-		// });
-		// const data = await res.json();
-		// testObject.questions = data as QuestionsDataType[];
+		const res = await fetch('./test-creator', {
+			method: 'POST',
+			body: JSON.stringify($testObject.questions),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const data = await res.json();
+		$testObject.questions = data as QuestionsDataType[];
 	}
 </script>
 
