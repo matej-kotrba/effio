@@ -4,8 +4,11 @@
 		displayType: QuestionTemplate['name'];
 		questionType: Question['questionType'];
 		questionTypeId: string;
-		content?: undefined;
-		title?: undefined;
+		content?: string;
+		title?: string;
+		errors: {
+			[key: string]: string;
+		};
 	};
 
 	export type QuestionsDataType = Question | NewQuestionInput;
@@ -18,8 +21,6 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import { createEventDispatcher } from 'svelte';
-	import { onMount } from 'svelte';
 	import { testObject } from '~/routes/dashboard/test-creator/store';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
@@ -47,7 +48,8 @@
 			id: crypto.randomUUID(),
 			questionType: input.properties.inputType as Question['questionType'],
 			displayType: input.name,
-			questionTypeId: input.id
+			questionTypeId: input.id,
+			errors: {}
 		});
 		openDropdown = false;
 	}

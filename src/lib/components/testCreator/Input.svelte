@@ -55,6 +55,9 @@ will be used in the test creator -->
 			bind:inputValue={$testObject.questions[index].title}
 		/>
 	</h6>
+	{#if $testObject.questions[index].errors.title}
+		<p class="text-error text-body2">{$testObject.questions[index].errors.title}</p>
+	{/if}
 	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<Space gap={10} />

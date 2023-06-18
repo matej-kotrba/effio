@@ -16,6 +16,7 @@
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
+		console.log(content);
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
 
@@ -34,12 +35,22 @@
 	}
 
 	// Initialize the content object with all needed fields
+	// ts-ignore is needed because we need to reference store directly and the types cannot be defined
 	onMount(() => {
-		if (!content) content = {} as any;
-		if (content['correctAnswerIndex'] === undefined) content['correctAnswerIndex'] = 0;
-		if (!content['answers']) content['answers'] = [];
-		for (let i = 0; content.answers.length < 2; i++) {
-			content.answers.push({ answer: '' });
+		if (!$testObject.questions[indexParent].content)
+			$testObject.questions[indexParent].content = {} as any;
+		// @ts-ignore
+		if ($testObject.questions[indexParent].content['correctAnswerIndex'] === undefined)
+			// @ts-ignore
+			$testObject.questions[indexParent].content['correctAnswerIndex'] = 0;
+		// @ts-ignore
+		if (!$testObject.questions[indexParent].content['answers'])
+			// @ts-ignore
+			$testObject.questions[indexParent].content['answers'] = [];
+		// @ts-ignore
+		for (let i = 0; $testObject.questions[indexParent].content.answers.length < 2; i++) {
+			// @ts-ignore
+			$testObject.questions[indexParent].content.answers.push({ answer: '' });
 		}
 	});
 </script>
@@ -102,7 +113,7 @@
 				</button>
 			</div>
 			{#if content.answers[index].error}
-				<p class="text-sm text-error">{content.answers[index].error}</p>
+				<p class="text-body2 text-error">{content.answers[index].error}</p>
 			{/if}
 		</div>
 	{/each}

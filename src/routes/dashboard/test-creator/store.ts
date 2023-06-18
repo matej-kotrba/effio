@@ -30,7 +30,8 @@ export const testObject = writable({
             answer: 'Paris'
           }
         ]
-      }
+      },
+      errors: {}
     },
     {
       id: crypto.randomUUID(),
@@ -45,7 +46,8 @@ export const testObject = writable({
             answer: 'Is the earth flat?'
           }
         ]
-      }
+      },
+      errors: {}
     }
   ]
 } as TestObject);
