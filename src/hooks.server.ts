@@ -41,6 +41,10 @@ const handleAuth: Handle = SvelteKitAuth({
 
       return session;
     },
+    signIn: async ({ account }) => {
+      console.log(account)
+      return Promise.resolve(true)
+    }
   },
 })
 
