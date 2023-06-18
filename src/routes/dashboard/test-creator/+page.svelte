@@ -196,22 +196,22 @@
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
 			<div class="flex flex-col gap-4">
-				<!-- <TextInput
+				<TextInput
 					title="What will be the name of your test?"
 					titleName="name"
-					inputValue={testObject['title']}
+					inputValue={$testObject['title']}
 					on:inputChange={(data) => {
-						testObject['title'] = data.detail;
+						$testObject['title'] = data.detail;
 					}}
 				/>
 				<TextAreaInput
 					title="Describe what will you test be about."
 					titleName="name"
-					inputValue={testObject['description']}
+					inputValue={$testObject['description']}
 					on:inputChange={(data) => {
-						testObject['description'] = data.detail;
+						$testObject['description'] = data.detail;
 					}}
-				/> -->
+				/>
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton
 						onClick={() => {}}
