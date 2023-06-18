@@ -27,7 +27,7 @@ prismaAdapter.linkAccount = (data => {
   })
   return prisma.account.create({
     data: {
-      expires_in: data.expires_in ? data.expires_in : data.expires_at,
+      expires_at: data.expires_in ? data.expires_in : data.expires_at,
       ...data,
     }
   })
