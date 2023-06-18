@@ -17,11 +17,21 @@ const handleTRPCContext: Handle = createTRPCHandle({
   createContext: createContext,
 })
 
+const prismaAdapter = PrismaAdapter(prisma)
+prismaAdapter.linkAccount = (data => {
+  return prisma.account.create({
+    data: {
+      ...data,
+      expires_in: data.expires_in ? data.expires_in : data.expires_at,
+    }
+  })
+})
+
 const handleAuth: Handle = SvelteKitAuth({
   // Created PrismaAdapter with the Prisma client instance
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  adapter: PrismaAdapter(prisma),
+  adapter: prismaAdapter,
   providers: [
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

@@ -11,7 +11,8 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"postinstall": "prisma generate"
+		"postinstall": "prisma generate",
+		"prisma:go": "npx prisma db push && npx prisma generate"
 	},
 	"devDependencies": {
 		"@iconify/svelte": "^3.1.3",
