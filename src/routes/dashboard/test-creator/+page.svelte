@@ -11,7 +11,6 @@
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
 	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
@@ -63,8 +62,8 @@
 				'Content-Type': 'application/json'
 			}
 		});
-		const data = (await res.json()) as { store: QuestionsDataType[]; error: boolean };
-		$testObject.questions = data.store as QuestionsDataType[];
+		const data = (await res.json()) as { store: Question[]; error: boolean };
+		$testObject.questions = data.store as Question[];
 		console.log(data.store);
 		return !data.error;
 	}

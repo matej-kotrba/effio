@@ -6,19 +6,17 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '../../../../routes/dashboard/test-creator/store';
-	import { onMount } from 'svelte';
 	import { asnwerSchema } from '~schemas/textInput';
-	import { twMerge } from 'tailwind-merge';
 
 	export let indexParent: number;
 
 	// Reference to the test object content
 	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
+	$: answersLength = content.answers.length;
 
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
-		console.log(content);
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
 
@@ -27,34 +25,19 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		content.answers = [...content.answers, { answer: '' }];
+		if ($testObject.questions[indexParent].content.answers) {
+			$testObject.questions[indexParent].content.answers = [...content.answers, { answer: '' }];
+		}
 	}
 
 	function deleteQuestion(index: number) {
-		content.answers = content.answers.filter((_, i) => i !== index);
-		if (content['correctAnswerIndex'] === index) content['correctAnswerIndex'] = 0;
+		$testObject.questions[indexParent].content.answers = content.answers.filter(
+			(_, i) => i !== index
+		);
+		if (content['correctAnswerIndex'] === index)
+			($testObject.questions[indexParent].content as PickOneQuestion).correctAnswerIndex = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
-
-	// Initialize the content object with all needed fields
-	// ts-ignore is needed because we need to reference store directly and the types cannot be defined
-	onMount(() => {
-		if (!$testObject.questions[indexParent].content)
-			$testObject.questions[indexParent].content = {} as any;
-		// @ts-ignore
-		if ($testObject.questions[indexParent].content['correctAnswerIndex'] === undefined)
-			// @ts-ignore
-			$testObject.questions[indexParent].content['correctAnswerIndex'] = 0;
-		// @ts-ignore
-		if (!$testObject.questions[indexParent].content['answers'])
-			// @ts-ignore
-			$testObject.questions[indexParent].content['answers'] = [];
-		// @ts-ignore
-		for (let i = 0; $testObject.questions[indexParent].content.answers.length < 2; i++) {
-			// @ts-ignore
-			$testObject.questions[indexParent].content.answers.push({ answer: '' });
-		}
-	});
 </script>
 
 <form class="relative flex flex-col gap-4">
@@ -62,14 +45,12 @@
 	<div class="flex justify-end">
 		{#if content?.answers}
 			<div class="flex gap-1">
-				{#key content['answers'].length}
+				{#key answersLength}
 					<div
-						class={content['answers'].length === QUESTION_LIMIT
-							? 'text-error'
-							: 'text-light_primary'}
+						class={answersLength === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
 						in:fly={{ x: 0, y: -20 }}
 					>
-						{content['answers'].length}
+						{answersLength}
 					</div>
 				{/key}
 				/ {QUESTION_LIMIT}
@@ -83,7 +64,12 @@
 				<div class="flex">
 					<button
 						type="button"
-						class="grid px-2 group place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md"
+						data-tip="Delete answer"
+						class={`tooltip grid px-2 group place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md ${
+							!(content.answers.length > 2)
+								? 'text-gray-500 hover:text-gray-500 hover:bg-light_white'
+								: ''
+						}`}
 						disabled={!(content.answers.length > 2)}
 						style="transition: 200ms background-color, 200ms color;"
 						on:click={() => deleteQuestion(index)}

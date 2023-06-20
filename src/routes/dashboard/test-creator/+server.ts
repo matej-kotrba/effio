@@ -12,6 +12,7 @@ const questionSchema = z.object({
 
 export async function POST(event: RequestEvent) {
   const body = (await event.request.json()) as Question[]
+  console.log(body)
   let isError = false
 
   for (const item of body) {

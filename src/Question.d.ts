@@ -2,12 +2,14 @@
 // Apart from these two properties you can add any other properties you want for functionality of the question
 
 type TrueFalseQuestion = {
+  type: 'true/false';
   answers: (Answer & {
     isTrue: boolean;
   })[];
 }
 
 type PickOneQuestion = {
+  type: 'pickOne';
   answers: Answer[];
   correctAnswerIndex: number;
 };

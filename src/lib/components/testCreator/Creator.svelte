@@ -1,10 +1,10 @@
-<script lang="ts" context="module">
+<!-- <script lang="ts" context="module">
 	type NewQuestionInput = {
 		id: string;
 		displayType: QuestionTemplate['name'];
 		questionType: Question['questionType'];
 		questionTypeId: string;
-		content?: string;
+		content: Question['content'];
 		title?: string;
 		errors: {
 			[key: string]: string;
@@ -12,7 +12,7 @@
 	};
 
 	export type QuestionsDataType = Question | NewQuestionInput;
-</script>
+</script> -->
 
 <script lang="ts">
 	import Icon from '@iconify/svelte';
@@ -22,6 +22,7 @@
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { testObject } from '~/routes/dashboard/test-creator/store';
+	import TrueFalse from './creatorInputs/TrueFalse.svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -35,7 +36,7 @@
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
 
-	function addNewQuestion(input: NewQuestionInput) {
+	function addNewQuestion(input: Question) {
 		$testObject.questions = [...$testObject.questions, input];
 	}
 
@@ -44,24 +45,61 @@
 	}
 
 	function onDropdownInputClick(input: QuestionTemplate) {
-		addNewQuestion({
+		let newQuestionData: PartialPick<Question, 'content'> = {
 			id: crypto.randomUUID(),
+			title: '',
 			questionType: input.properties.inputType as Question['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
 			errors: {}
-		});
+		};
+
+		let questionType = input.properties.inputType as Question['questionType'];
+
+		if (questionType === 'pickOne') {
+			newQuestionData.content = {
+				type: 'pickOne',
+				correctAnswerIndex: 0,
+				answers: [
+					{
+						answer: ''
+					},
+					{
+						answer: ''
+					}
+				]
+			} as PickOneQuestion;
+		} else if (questionType === 'true/false') {
+			newQuestionData.content = {
+				type: 'true/false',
+				answers: [
+					{
+						answer: '',
+						isTrue: false
+					},
+					{
+						answer: '',
+						isTrue: false
+					}
+				]
+			} as TrueFalseQuestion;
+		} else {
+			console.error('This question type is not supported!');
+			return;
+		}
+
+		addNewQuestion(newQuestionData as Question);
 		openDropdown = false;
 	}
 
-	function onOrderChange(e: { detail: { items: QuestionsDataType[]; info: { source: any } } }) {
+	function onOrderChange(e: { detail: { items: Question[]; info: { source: any } } }) {
 		$testObject.questions = e.detail.items;
 		if (e.detail.info.source === SOURCES.POINTER) {
 			dragDisable = true;
 		}
 	}
 
-	function onOrderConsideration(e: { detail: { items: QuestionsDataType[] } }) {
+	function onOrderConsideration(e: { detail: { items: Question[] } }) {
 		$testObject.questions = e.detail.items;
 	}
 

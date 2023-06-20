@@ -1,10 +1,9 @@
 import { writable } from 'svelte/store';
-import type { QuestionsDataType } from '~components/testCreator/Creator.svelte';
 
 type TestObject = {
   title: string;
   description: string;
-  questions: QuestionsDataType[];
+  questions: Question[];
 };
 
 export const testObject = writable({

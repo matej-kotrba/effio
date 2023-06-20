@@ -6,7 +6,7 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '../../../../routes/dashboard/test-creator/store';
-	import { onMount } from 'svelte';
+	import { asnwerSchema } from '~schemas/textInput';
 
 	export let indexParent: number;
 
@@ -30,22 +30,6 @@
 		content.answers = content.answers.filter((_, i) => i !== index);
 		toast.success(`Question ${index + 1} deleted`);
 	}
-
-	// Initialize the content object with all needed fields
-	// ts-ignore is needed because we need to reference store directly and the types cannot be defined
-	onMount(() => {
-		if (!$testObject.questions[indexParent].content)
-			$testObject.questions[indexParent].content = {} as any;
-		// @ts-ignore
-		if (!$testObject.questions[indexParent].content['answers'])
-			// @ts-ignore
-			$testObject.questions[indexParent].content['answers'] = [];
-		// @ts-ignore
-		for (let i = 0; $testObject.questions[indexParent].content.answers.length < 2; i++) {
-			// @ts-ignore
-			$testObject.questions[indexParent].content.answers.push({ answer: '', isTrue: false });
-		}
-	});
 </script>
 
 <form class="relative flex flex-col gap-4">
@@ -72,11 +56,11 @@
 			<div class="flex">
 				<button
 					type="button"
-					class="group grid place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md px-2
-				 {content['answers'].length > 2
-						? 'opacity-100 pointer-events-auto'
-						: 'opacity-0 pointer-events-none'}"
-					on:click={() => deleteQuestion(index)}
+					class={`tooltip grid px-2 group place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md ${
+						!(content.answers.length > 2)
+							? 'text-gray-500 hover:text-gray-500 hover:bg-light_white'
+							: ''
+					}`}
 					style="transition: 200ms background-color, 200ms color;"
 				>
 					<Icon
@@ -89,6 +73,8 @@
 					<TextInput
 						title="Option {index + 1}"
 						titleName="Option {index + 1}"
+						validationSchema={asnwerSchema}
+						on:error={(event) => (content.answers[index].error = event.detail)}
 						bind:inputValue={q.answer}
 					/>
 				</div>
