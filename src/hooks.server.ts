@@ -18,20 +18,20 @@ const handleTRPCContext: Handle = createTRPCHandle({
 })
 
 const prismaAdapter = PrismaAdapter(prisma)
-prismaAdapter.linkAccount = (data => {
-  console.log("AAAAAAAA")
-  console.log(data)
-  console.log({
-    expires_at: data.expires_in ? data.expires_in : data.expires_at,
-    ...data,
-  })
-  return prisma.account.create({
-    data: {
-      expires_at: data.expires_in ? data.expires_in : data.expires_at,
-      ...data,
-    }
-  })
-})
+// prismaAdapter.linkAccount = (data => {
+//   console.log("AAAAAAAA")
+//   console.log(data)
+//   console.log({
+//     expires_at: data.expires_in ? data.expires_in : data.expires_at,
+//     ...data,
+//   })
+//   return prisma.account.create({
+//     data: {
+//       expires_at: data.expires_in ? data.expires_in : data.expires_at,
+//       ...data,
+//     }
+//   })
+// })
 
 const handleAuth: Handle = SvelteKitAuth({
   // Created PrismaAdapter with the Prisma client instance
@@ -58,7 +58,6 @@ const handleAuth: Handle = SvelteKitAuth({
       return session;
     },
     signIn: async ({ account }) => {
-      console.log(account)
       return Promise.resolve(true)
     }
   },

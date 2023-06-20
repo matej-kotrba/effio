@@ -55,7 +55,7 @@
 		}
 	}
 
-	async function validateInputs() {
+	async function validateInputsServer() {
 		const res = await fetch('./test-creator', {
 			method: 'POST',
 			body: JSON.stringify($testObject.questions),
@@ -66,6 +66,8 @@
 		const data = await res.json();
 		$testObject.questions = data as QuestionsDataType[];
 	}
+
+	function validateInputsClient() {}
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
@@ -172,7 +174,7 @@
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
 			Testing branch
-			<button type="submit" class="btn" on:click={validateInputs}>Validate and hope</button>
+			<button type="submit" class="btn" on:click={validateInputsServer}>Validate and hope</button>
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
