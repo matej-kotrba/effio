@@ -14,6 +14,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			'~components': './src/lib/components',
+			'~schemas': './src/lib/schemas',
 			'~use': './src/lib/use',
 			'~': './src'
 		}

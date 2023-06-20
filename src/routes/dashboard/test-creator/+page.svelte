@@ -68,8 +68,6 @@
 		console.log(data.store);
 		return !data.error;
 	}
-
-	function validateInputsClient() {}
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
