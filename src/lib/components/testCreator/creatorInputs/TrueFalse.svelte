@@ -13,6 +13,7 @@
 	const QUESTION_LIMIT = 10;
 
 	$: content = $testObject.questions[indexParent].content as TrueFalseQuestion;
+	$: answersLength = content.answers.length;
 
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
@@ -23,11 +24,16 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		content.answers = [...content.answers, { answer: '', isTrue: false }];
+		$testObject.questions[indexParent].content.answers = [
+			...content.answers,
+			{ answer: '', isTrue: false }
+		];
 	}
 
 	function deleteQuestion(index: number) {
-		content.answers = content.answers.filter((_, i) => i !== index);
+		$testObject.questions[indexParent].content.answers = content.answers.filter(
+			(_, i) => i !== index
+		);
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
@@ -35,21 +41,17 @@
 <form class="relative flex flex-col gap-4">
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
-		{#if content?.answers}
-			<div class="flex gap-1">
-				{#key content['answers'].length}
-					<div
-						class={content['answers'].length === QUESTION_LIMIT
-							? 'text-error'
-							: 'text-light_primary'}
-						in:fly={{ x: 0, y: -20 }}
-					>
-						{content['answers'].length}
-					</div>
-				{/key}
-				/ {QUESTION_LIMIT}
-			</div>
-		{/if}
+		<div class="flex gap-1">
+			{#key answersLength}
+				<div
+					class={answersLength === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					in:fly={{ x: 0, y: -20 }}
+				>
+					{answersLength}
+				</div>
+			{/key}
+			/ {QUESTION_LIMIT}
+		</div>
 	</div>
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
@@ -62,6 +64,7 @@
 							: ''
 					}`}
 					style="transition: 200ms background-color, 200ms color;"
+					on:click={() => deleteQuestion(index)}
 				>
 					<Icon
 						icon="material-symbols:close-rounded"
@@ -93,9 +96,9 @@
 					<Icon icon="charm:tick" class="text-3xl" />
 				</button>
 			</div>
-			{#if content.answers[index].error}
-				<p class="text-body2 text-error">{content.answers[index].error}</p>
-			{/if}
+			<p class={`text-body2 text-error ${!content.answers[index].error ? 'opacity-0' : ''}`}>
+				{content.answers[index].error || 'Placeholder error'}
+			</p>
 		</div>
 	{/each}
 	<div class="flex justify-center">

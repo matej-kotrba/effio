@@ -43,19 +43,17 @@
 <form class="relative flex flex-col gap-4">
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
-		{#if content?.answers}
-			<div class="flex gap-1">
-				{#key answersLength}
-					<div
-						class={answersLength === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
-						in:fly={{ x: 0, y: -20 }}
-					>
-						{answersLength}
-					</div>
-				{/key}
-				/ {QUESTION_LIMIT}
-			</div>
-		{/if}
+		<div class="flex gap-1">
+			{#key answersLength}
+				<div
+					class={answersLength === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					in:fly={{ x: 0, y: -20 }}
+				>
+					{answersLength}
+				</div>
+			{/key}
+			/ {QUESTION_LIMIT}
+		</div>
 	</div>
 	<!-- Display the input fields with control -->
 	{#each content?.answers || [] as q, index (q)}
