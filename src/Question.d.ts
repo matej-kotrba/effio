@@ -33,7 +33,7 @@ type Question = {
     questionTypeId: string;
     content: QuestionTypeMap[Key];
     errors: {
-      [ErrorKey in keyof Question as ErrorKey extends "errors" ? never : ErrorKey]: string;
+      [ErrorKey in keyof Question as ErrorKey extends "errors" ? never : ErrorKey]?: string;
     }
   };
 }[keyof QuestionTypeMap];

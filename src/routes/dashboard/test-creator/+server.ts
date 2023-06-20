@@ -12,28 +12,33 @@ const questionSchema = z.object({
 
 export async function POST(event: RequestEvent) {
   const body = (await event.request.json()) as Question[]
+  let isError = false
 
   for (const item of body) {
 
     try {
       questionSchema.parse(item)
+      item.errors = {}
     }
     catch (e) {
       const error = e as ZodError<typeof asnwerSchema>
       item.errors.title = error.errors[0].message
+      isError = true
     }
 
     if (item.content && item.content.answers) {
       for (const asnwer of item.content.answers)
         try {
           asnwerSchema.parse(asnwer)
+          asnwer.error = ""
         }
         catch (e: unknown) {
           const error = e as ZodError<typeof asnwerSchema>
           asnwer.error = error.errors[0].message
+          isError = true
         }
     }
   }
 
-  return json(body)
+  return json({ store: body, error: isError })
 }

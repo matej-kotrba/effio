@@ -55,7 +55,7 @@
 		}
 	}
 
-	async function validateInputsServer() {
+	async function isValidatInputServer() {
 		const res = await fetch('./test-creator', {
 			method: 'POST',
 			body: JSON.stringify($testObject.questions),
@@ -63,8 +63,10 @@
 				'Content-Type': 'application/json'
 			}
 		});
-		const data = await res.json();
-		$testObject.questions = data as QuestionsDataType[];
+		const data = (await res.json()) as { store: QuestionsDataType[]; error: boolean };
+		$testObject.questions = data.store as QuestionsDataType[];
+		console.log(data.store);
+		return !data.error;
 	}
 
 	function validateInputsClient() {}
@@ -173,14 +175,14 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
 		>
-			Testing branch
-			<button type="submit" class="btn" on:click={validateInputsServer}>Validate and hope</button>
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
 			<BasicButton
 				title="Continue"
-				onClick={() => {
+				onClick={async () => {
+					const isOK = await isValidatInputServer();
+					if (!isOK) return;
 					testCreationProgress.constructingDone = true;
 				}}
 				buttonAttributes={{ disabled: false }}
