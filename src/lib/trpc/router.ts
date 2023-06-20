@@ -39,34 +39,42 @@ const protectedRouter = t.router({
     questionContent: z.string(),
     isPublished: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
+    try {
 
-    const testData = await ctx.prisma.test.create({
-      data: {
-        title: input.title,
-        description: input.description,
-        ownerId: ctx.userId,
-        published: input.isPublished,
-      }
-    })
-
-    const questions = JSON.parse(input.questionContent) as Question[]
-
-    const questionsPromise = questions.map(async (question) => {
-      return ctx.prisma.question.create({
+      const testData = await ctx.prisma.test.create({
         data: {
-          title: question.title,
-          content: question.content,
-          typeId: question.questionTypeId,
-          testId: testData.id,
+          title: input.title,
+          description: input.description,
+          ownerId: ctx.userId,
+          published: input.isPublished,
         }
       })
-    })
 
-    const questionsData = await Promise.all(questionsPromise)
+      const questions = JSON.parse(input.questionContent) as Question[]
 
-    return {
-      test: testData,
-      questions: questionsData
+      const questionsPromise = questions.map(async (question) => {
+        return ctx.prisma.question.create({
+          data: {
+            title: question.title,
+            content: question.content,
+            typeId: question.questionTypeId,
+            testId: testData.id,
+          }
+        })
+      })
+
+      const questionsData = await Promise.all(questionsPromise)
+
+      return {
+        test: testData,
+        questions: questionsData,
+        success: true
+      }
+    }
+    catch (e) {
+      return {
+        success: false,
+      }
     }
   })
 })

@@ -8,23 +8,22 @@
 	import Creator from '~components/testCreator/Creator.svelte';
 	import TextInput from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
+	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import type { PageData } from './$types';
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
 	import { testObject } from './store';
-	import { onMount } from 'svelte';
 
-	export let data: PageData;
+	export let data;
 
-	const TRANSITION_DURATION = 400;
+	const SECTION_TRANSITION_DURATION = 400;
 
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: false,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -40,13 +39,14 @@
 	async function postTestToDB(isPublished: boolean) {
 		isSubmitting = true;
 		try {
-			await trpc($page).protected.saveTest.mutate({
+			const response = await trpc($page).protected.saveTest.mutate({
 				title: $testObject.title,
 				description: $testObject.description,
 				questionContent: JSON.stringify($testObject.questions),
 				isPublished: isPublished
 			});
 			isSubmitting = false;
+
 			goto('/dashboard/test-collection');
 		} catch (e) {
 			console.log(e);
@@ -134,10 +134,10 @@
 		<div
 			in:fly={{
 				x: 300,
-				duration: TRANSITION_DURATION,
-				delay: TRANSITION_DURATION
+				duration: SECTION_TRANSITION_DURATION,
+				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
+			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
 			class=""
 		>
 			{#each data.templates as template, index}
@@ -167,10 +167,10 @@
 		<div
 			in:fly={{
 				x: 300,
-				duration: TRANSITION_DURATION,
-				delay: TRANSITION_DURATION
+				duration: SECTION_TRANSITION_DURATION,
+				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
+			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
 		>
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
@@ -191,11 +191,12 @@
 		<div
 			in:fly={{
 				x: 300,
-				duration: TRANSITION_DURATION,
-				delay: TRANSITION_DURATION
+				duration: SECTION_TRANSITION_DURATION,
+				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? TRANSITION_DURATION : 0 }}
+			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
 		>
+			<SuccessKeyframe successMessage="Success!" />
 			<div class="flex flex-col gap-4">
 				<TextInput
 					title="What will be the name of your test?"
@@ -241,13 +242,13 @@
 							>
 						</div>
 						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
-						<!-- <p class="py-4 text-center text-body1">
-							Your test named <span class="font-semibold">{testObject['title']}</span> with a
-							description:<br />
-							<span class="font-semibold">{testObject['description']}</span><br />
+						<p class="py-4 text-center text-body1">
+							Your test named <span class="block font-semibold">{$testObject['title']}</span> with a
+							description:
+							<span class="block font-semibold">{$testObject['description']}</span><br />
 							<Separator w={'50%'} h={'1px'} color={'var(--light-text-black-20)'} />
 							should be
-						</p> -->
+						</p>
 						<div class="flex justify-center gap-3">
 							<button
 								type="button"
