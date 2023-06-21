@@ -23,6 +23,7 @@
 	import { flip } from 'svelte/animate';
 	import { testObject } from '~/routes/dashboard/test-creator/store';
 	import TrueFalse from './creatorInputs/TrueFalse.svelte';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -126,7 +127,17 @@
 		{#if $testObject.questions.length === 0}
 			<div class="flex flex-col items-center gap-3">
 				<h4 class="text-h6 text-light_text_black">Start with the first question!</h4>
-				<img src="/imgs/svgs/piece.svg" width="500" class="max-w-[500px] min-w-[150px]" alt="" />
+				<div class="grid grid-cols-2 grid-rows-2">
+					<img
+						src="/imgs/svgs/piece.svg"
+						width="500"
+						class="max-w-[500px] min-w-[150px] col-start-1 row-start-1 col-span-2 row-span-2"
+						alt=""
+					/>
+					<div class="grid col-start-2 row-start-2 place-content-center">
+						<BasicButton title="Add question" />
+					</div>
+				</div>
 			</div>
 		{:else}
 			<div
