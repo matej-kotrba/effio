@@ -23,7 +23,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: true,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -180,17 +180,19 @@
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
-			<BasicButton
-				title="Continue"
-				onClick={async () => {
-					const isOK = await isValidatInputServer();
-					if (!isOK) return;
-					testCreationProgress.constructingDone = true;
-				}}
-				buttonAttributes={{ disabled: false }}
-			>
-				<Icon icon="bxs:right-arrow" class="text-md" />
-			</BasicButton>
+			{#if $testObject.questions.length > 0}
+				<BasicButton
+					title="Continue"
+					onClick={async () => {
+						const isOK = await isValidatInputServer();
+						if (!isOK) return;
+						testCreationProgress.constructingDone = true;
+					}}
+					buttonAttributes={{ disabled: false }}
+				>
+					<Icon icon="bxs:right-arrow" class="text-md" />
+				</BasicButton>
+			{/if}
 		</div>
 	{:else}
 		<div

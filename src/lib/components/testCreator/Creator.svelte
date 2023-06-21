@@ -122,70 +122,78 @@
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
 	<div class="relative flex flex-col items-center justify-center gap-2">
-		<div
-			class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
-			use:dndzone={{
-				items: $testObject['questions'],
-				flipDurationMs: 300,
-				dragDisabled: dragDisable,
-				dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
-				dropTargetStyle: {
-					outline: '2px dashed var(--light-primary)'
-				}
-			}}
-			on:finalize={onOrderChange}
-			on:consider={onOrderConsideration}
-		>
-			<!-- Separator with add new input -->
-			{#each $testObject['questions'] as question, index (question['id'])}
-				<!-- Div which needs to be here for draggeble to be in creator and not in input -->
-				<div animate:flip={{ duration: 300 }}>
-					<Input
-						{index}
-						on:questionDetails={({ detail }) => {
-							$testObject.questions[index]['content'] = detail;
-						}}
-						on:titleChange={({ detail }) => {
-							$testObject.questions[index]['title'] = detail;
-						}}
-						on:deleteInput={() => removeQuestion(index)}
-						on:dnddrag={startDrag}
-					/>
-					<!-- The dropdown for new input -->
-					<div
-						class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
-						on:mouseleave={() => (openDropdown = false)}
-					>
-						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-						<button
-							type="button"
-							class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
-							on:click={() => (openDropdown = !openDropdown)}
-						>
-							<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
-						</button>
-						<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+		<!-- Displaying the initial create button -->
+		{#if $testObject.questions.length === 0}
+			<div class="flex flex-col items-center gap-3">
+				<h4 class="text-h6 text-light_text_black">Start with the first question!</h4>
+				<img src="/imgs/svgs/piece.svg" width="500" class="max-w-[500px] min-w-[150px]" alt="" />
+			</div>
+		{:else}
+			<div
+				class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
+				use:dndzone={{
+					items: $testObject['questions'],
+					flipDurationMs: 300,
+					dragDisabled: dragDisable,
+					dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
+					dropTargetStyle: {
+						outline: '2px dashed var(--light-primary)'
+					}
+				}}
+				on:finalize={onOrderChange}
+				on:consider={onOrderConsideration}
+			>
+				<!-- Separator with add new input -->
+				{#each $testObject['questions'] as question, index (question['id'])}
+					<!-- Div which needs to be here for draggeble to be in creator and not in input -->
+					<div animate:flip={{ duration: 300 }}>
+						<Input
+							{index}
+							on:questionDetails={({ detail }) => {
+								$testObject.questions[index]['content'] = detail;
+							}}
+							on:titleChange={({ detail }) => {
+								$testObject.questions[index]['title'] = detail;
+							}}
+							on:deleteInput={() => removeQuestion(index)}
+							on:dnddrag={startDrag}
+						/>
+						<!-- The dropdown for new input -->
 						<div
-							use:clickOutside
-							on:clickoutside={() => (openDropdown = false)}
-							class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-				rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
-				{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
+							class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
+							on:mouseleave={() => (openDropdown = false)}
 						>
-							{#each inputTemplates as input}
-								<button
-									type="button"
-									on:click={() => onDropdownInputClick(input)}
-									class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
-								>
-									{input.name}
-								</button>
-							{/each}
+							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+							<button
+								type="button"
+								class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
+								on:click={() => (openDropdown = !openDropdown)}
+							>
+								<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
+							</button>
+							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+							<div
+								use:clickOutside
+								on:clickoutside={() => (openDropdown = false)}
+								class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
+						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
+						{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
+							>
+								{#each inputTemplates as input}
+									<button
+										type="button"
+										on:click={() => onDropdownInputClick(input)}
+										class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+									>
+										{input.name}
+									</button>
+								{/each}
+							</div>
 						</div>
 					</div>
-				</div>
-			{/each}
-		</div>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>
 
