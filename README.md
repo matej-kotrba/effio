@@ -20,7 +20,6 @@
 
 ### Used technologies:
 - SvelteKit
-  - tanstack/svelte-query
   - Superforms
   - Svelte French Toast
 - TypeScript
@@ -51,7 +50,7 @@ FastAPI / NodeJS - Express, NestJS will be considered.
 ## Timeline
 #### January -> April - Learning stack and testing it separatly
 #### April -> May - Building frontend for Effio
-#### May -> Now - Building forentend, creating type definitions, routers, auth, DB and Prisma connection  
+#### May -> Now - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
 
 ## Sources
 - Youtube
