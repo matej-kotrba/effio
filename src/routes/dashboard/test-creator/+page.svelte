@@ -35,6 +35,7 @@
 	let finishModal: HTMLDialogElement;
 
 	let isSubmitting = false;
+	let isSuccess = false;
 
 	async function postTestToDB(isPublished: boolean) {
 		isSubmitting = true;
@@ -45,9 +46,13 @@
 				questionContent: JSON.stringify($testObject.questions),
 				isPublished: isPublished
 			});
+			isSuccess = response.success;
 			isSubmitting = false;
 
-			goto('/dashboard/test-collection');
+			if (isSuccess) {
+				goto('/dashboard/test-collection');
+			} else {
+			}
 		} catch (e) {
 			console.log(e);
 			isSubmitting = false;
@@ -196,7 +201,6 @@
 			}}
 			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
 		>
-			<SuccessKeyframe successMessage="Success!" />
 			<div class="flex flex-col gap-4">
 				<TextInput
 					title="What will be the name of your test?"
@@ -229,6 +233,11 @@
 				</div>
 				<dialog bind:this={finishModal} class="modal">
 					<form method="dialog" class="relative modal-box bg-light_whiter text-light_text_black">
+						<SuccessKeyframe
+							successMessage="Success!"
+							visible={isSuccess}
+							class="absolute top-0 left-0 w-full h-full bg-white"
+						/>
 						<div
 							class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting
 								? 'opacity-100 pointer-events-auto'

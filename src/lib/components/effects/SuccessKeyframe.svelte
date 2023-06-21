@@ -1,18 +1,28 @@
 <script lang="ts">
-	import { draw } from 'svelte/transition';
+	import { twMerge } from 'tailwind-merge';
+	import { draw, fade } from 'svelte/transition';
 
 	export let successMessage: string = 'Success!';
+	export let visible = true;
+	export { classes as class };
+	let classes = '';
 </script>
 
-<svg
-	xmlns="http://www.w3.org/2000/svg"
-	width="24"
-	height="24"
-	viewBox="0 0 24 24"
-	class="text-black"
-	><path
-		in:draw={{ duration: 5000 }}
-		fill="currentColor"
-		d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zM9.29 16.29L5.7 12.7a.996.996 0 1 1 1.41-1.41L10 14.17l6.88-6.88a.996.996 0 1 1 1.41 1.41l-7.59 7.59a.996.996 0 0 1-1.41 0z"
-	/></svg
->
+{#if visible}
+	<div class={twMerge('flex flex-col items-center justify-center', classes)} in:fade>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="256"
+			height="256"
+			viewBox="0 0 256 256"
+			class="scale-90"
+			><path
+				in:draw={{ duration: 1000 }}
+				fill="currentColor"
+				style="opacity:1;fill:none;stroke:rgb(92 184 92);stroke-width:4.84156466;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+				d="M173.66 98.34a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0ZM232 128A104 104 0 1 1 128 24a104.11 104.11 0 0 1 104 104Zm-16 0a88 88 0 1 0-88 88a88.1 88.1 0 0 0 88-88Z"
+			/></svg
+		>
+		<p class="text-success text-h5">{successMessage}</p>
+	</div>
+{/if}
