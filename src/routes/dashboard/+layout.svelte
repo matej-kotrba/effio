@@ -10,7 +10,7 @@
 
 <main class="h-full grid__layout">
 	<aside
-		class="sticky top-0 z-[100000] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
+		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
 	>
 		<div class="flex flex-col items-center">
 			<img src="/imgs/logo.png" alt="Effio logo" width="90" />

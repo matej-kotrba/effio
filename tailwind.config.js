@@ -55,6 +55,9 @@ export default {
 			},
 			boxShadowColor: {
 				primary: '#6533f053'
+			},
+			screens: {
+				xs: '420px'
 			}
 		}
 	},

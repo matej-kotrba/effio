@@ -24,12 +24,14 @@
 	import { testObject } from '~/routes/dashboard/test-creator/store';
 	import TrueFalse from './creatorInputs/TrueFalse.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
 	// Dropdown state
 	let isDropdownOpen = false;
+	let newInputModal: HTMLDialogElement;
 
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
@@ -45,7 +47,7 @@
 		$testObject.questions = $testObject.questions.filter((_, i) => i !== index);
 	}
 
-	function onDropdownInputClick(input: QuestionTemplate) {
+	function onNewInputClick(input: QuestionTemplate) {
 		let newQuestionData: PartialPick<Question, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
@@ -89,6 +91,7 @@
 			return;
 		}
 
+		newInputModal.close();
 		addNewQuestion(newQuestionData as Question);
 		isDropdownOpen = false;
 	}
@@ -122,6 +125,58 @@
 </script>
 
 <div class="p-4 bg-light_white roudned-md text-light_text_black">
+	<!-- The dropdown for new input -->
+	<dialog class="modal" bind:this={newInputModal}>
+		<form method="dialog" class="modal-box max-w-[1000px] bg-light_whiter">
+			<h3 class="text-lg font-bold text-light_text_black">Pick new input for your test!</h3>
+			<Space gap={20} />
+			<div class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+				{#each inputTemplates as input}
+					<button
+						type="button"
+						on:click={() => onNewInputClick(input)}
+						class="bg-white rounded-lg shadow-lg aspect-square new-input-button"
+					>
+						<span class="text-light_text_black">{input.name}</span>
+					</button>
+				{/each}
+			</div>
+		</form>
+		<form method="dialog" class="modal-backdrop">
+			<button class="cursor-default">close</button>
+		</form>
+	</dialog>
+	<!-- <div
+							class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
+							on:mouseleave={() => (isDropdownOpen = false)}
+						>
+							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+							<button
+								type="button"
+								class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
+								on:click={() => (isDropdownOpen = !isDropdownOpen)}
+							>
+								<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
+							</button>
+							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+							<div
+								use:clickOutside
+								on:clickoutside={() => (isDropdownOpen = false)}
+								class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
+						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
+						{isDropdownOpen ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
+							>
+								{#each inputTemplates as input}
+									<button
+										type="button"
+										on:click={() => onDropdownInputClick(input)}
+										class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+									>
+										{input.name}
+									</button>
+								{/each}
+							</div>
+						</div> -->
 	<div class="relative flex flex-col items-center justify-center gap-2">
 		<!-- Displaying the initial create button -->
 		{#if $testObject.questions.length === 0}
@@ -135,7 +190,7 @@
 						alt=""
 					/>
 					<div class="grid col-start-2 row-start-2 place-content-center">
-						<BasicButton onClick={() => (isDropdownOpen = true)} title="Add question" />
+						<BasicButton onClick={() => newInputModal?.showModal()} title="Add question" />
 					</div>
 				</div>
 			</div>
@@ -169,38 +224,6 @@
 							on:deleteInput={() => removeQuestion(index)}
 							on:dnddrag={startDrag}
 						/>
-						<!-- The dropdown for new input -->
-						<div
-							class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
-							on:mouseleave={() => (isDropdownOpen = false)}
-						>
-							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-							<button
-								type="button"
-								class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
-								on:click={() => (isDropdownOpen = !isDropdownOpen)}
-							>
-								<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
-							</button>
-							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-							<div
-								use:clickOutside
-								on:clickoutside={() => (isDropdownOpen = false)}
-								class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
-						{isDropdownOpen ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
-							>
-								{#each inputTemplates as input}
-									<button
-										type="button"
-										on:click={() => onDropdownInputClick(input)}
-										class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
-									>
-										{input.name}
-									</button>
-								{/each}
-							</div>
-						</div>
 					</div>
 				{/each}
 			</div>
@@ -209,32 +232,41 @@
 </div>
 
 <style>
-	.grid_layout {
+	.new-input-button {
+		background-image: radial-gradient(ellipse at 50% 0, white 60%, var(--light-primary) 300%);
+		transition: 0.4s ease;
+	}
+
+	.new-input-button:hover {
+		transform: translateY(-5px);
+	}
+
+	/* .grid_layout {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 		overflow-y: scroll;
 		max-height: 250px;
-	}
+	} */
 
 	/* width */
-	.absoluteContainer::-webkit-scrollbar {
-		width: 10px;
-	}
+	/* .absoluteContainer::-webkit-scrollbar {
+		width: 10px; */
+	/* } */
 
 	/* Track */
-	.absoluteContainer::-webkit-scrollbar-track {
+	/* .absoluteContainer::-webkit-scrollbar-track {
 		background: var(--light-text-black-20);
 		border-radius: 50px;
-	}
+	} */
 
 	/* Handle */
-	.absoluteContainer::-webkit-scrollbar-thumb {
+	/* .absoluteContainer::-webkit-scrollbar-thumb {
 		background: var(--light-terciary);
 		border-radius: 50px;
-	}
+	} */
 
 	/* Handle on hover */
-	.absoluteContainer::-webkit-scrollbar-thumb:hover {
+	/* .absoluteContainer::-webkit-scrollbar-thumb:hover {
 		background: var(--light-secondary);
-	}
+	} */
 </style>

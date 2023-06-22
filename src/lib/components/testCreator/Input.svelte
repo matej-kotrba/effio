@@ -11,10 +11,13 @@ will be used in the test creator -->
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { testObject } from '../../../routes/dashboard/test-creator/store';
+	import { titleSchema } from '~schemas/textInput';
 
 	let dispatch = createEventDispatcher();
 
 	export let index: number;
+
+	let titleError: string | null;
 
 	function dispatchDragEvent() {
 		dispatch('dnddrag');
@@ -53,10 +56,12 @@ will be used in the test creator -->
 			title="Title"
 			titleName="title"
 			bind:inputValue={$testObject.questions[index].title}
+			validationSchema={titleSchema}
+			on:error={(data) => (titleError = data.detail)}
 		/>
 	</h6>
-	{#if $testObject.questions[index].errors.title}
-		<p class="text-error text-body2">{$testObject.questions[index].errors.title}</p>
+	{#if titleError || $testObject.questions[index].errors.title}
+		<p class="text-error text-body2">{titleError || $testObject.questions[index].errors.title}</p>
 	{/if}
 	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
