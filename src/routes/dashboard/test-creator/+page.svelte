@@ -15,7 +15,12 @@
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
 	import { testObject } from './store';
-	import { descriptionSchema, titleSchema } from '~schemas/textInput';
+	import {
+		DESCRIPTION_MAX,
+		DESCRIPTION_MIN,
+		descriptionSchema,
+		titleSchema
+	} from '~schemas/textInput';
 
 	export let data;
 
@@ -226,10 +231,12 @@
 					{errors.title || 'Placeholder error'}
 				</p>
 				<TextAreaInput
-					title="Describe what will you test be about."
+					title="Describe what will your test be about."
 					titleName="name"
 					inputValue={$testObject['description']}
 					validationSchema={descriptionSchema}
+					min={DESCRIPTION_MIN}
+					max={DESCRIPTION_MAX}
 					on:inputChange={(data) => {
 						$testObject['description'] = data.detail;
 					}}
@@ -273,9 +280,11 @@
 							>
 						</div>
 						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
+						<Separator w={'80%'} h={'1px'} color={'var(--light-text-black-20)'} />
 						<p class="py-4 text-center text-body1">
-							Your test named <span class="block font-semibold">{$testObject['title']}</span> with a
-							description:
+							Your test named <span class="block font-semibold">{$testObject['title']}</span><Space
+								gap={20}
+							/> with a description:
 							<span class="block font-semibold">{$testObject['description']}</span><br />
 							<Separator w={'50%'} h={'1px'} color={'var(--light-text-black-20)'} />
 							should be

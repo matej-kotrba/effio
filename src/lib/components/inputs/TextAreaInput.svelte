@@ -10,8 +10,8 @@
 	export let customContainerStyles: string = '';
 	export let inputProperties: HTMLTextareaAttributes = {};
 	export let validationSchema: ZodSchema<any> | null = null;
-	export let min: number;
-	export let max: number;
+	export let min: number | undefined = undefined;
+	export let max: number | undefined = undefined;
 
 	export let inputValue: HTMLTextAreaElement['value'] = '';
 	let inputRef: HTMLTextAreaElement;
@@ -40,7 +40,7 @@
 	>
 	<div class="relative">
 		{#if min && max}
-			<Limit current={inputValue.length} {min} {max} class="absolute top-[2px] right-[2px]" />
+			<Limit current={inputValue.length} {min} {max} class="absolute top-1 right-1" />
 		{/if}
 		<textarea
 			bind:value={inputValue}
@@ -52,7 +52,7 @@
 			autocomplete="off"
 			class="resize-none min-h-[150px] outline-none bg-white
 		overflow-hidden overflow-ellipsis text-light_text_black
-		px-2 py-4 rounded-md shadow-lg w-full
+		px-2 py-4 rounded-md shadow-lg w-full {min && max && 'pt-6'}
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
      {customStyles}"
 			{...inputProperties}
