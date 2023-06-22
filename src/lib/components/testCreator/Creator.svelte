@@ -29,7 +29,7 @@
 	export let inputTemplates: QuestionTemplate[] = [];
 
 	// Dropdown state
-	let openDropdown = false;
+	let isDropdownOpen = false;
 
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
@@ -90,7 +90,7 @@
 		}
 
 		addNewQuestion(newQuestionData as Question);
-		openDropdown = false;
+		isDropdownOpen = false;
 	}
 
 	function onOrderChange(e: { detail: { items: Question[]; info: { source: any } } }) {
@@ -126,7 +126,7 @@
 		<!-- Displaying the initial create button -->
 		{#if $testObject.questions.length === 0}
 			<div class="flex flex-col items-center gap-3">
-				<h4 class="text-h6 text-light_text_black">Start with the first question!</h4>
+				<h4 class="font-semibold text-h6 text-light_text_black">Start with the first question!</h4>
 				<div class="grid grid-cols-2 grid-rows-2">
 					<img
 						src="/imgs/svgs/piece.svg"
@@ -135,7 +135,7 @@
 						alt=""
 					/>
 					<div class="grid col-start-2 row-start-2 place-content-center">
-						<BasicButton title="Add question" />
+						<BasicButton onClick={() => (isDropdownOpen = true)} title="Add question" />
 					</div>
 				</div>
 			</div>
@@ -172,23 +172,23 @@
 						<!-- The dropdown for new input -->
 						<div
 							class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
-							on:mouseleave={() => (openDropdown = false)}
+							on:mouseleave={() => (isDropdownOpen = false)}
 						>
 							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 							<button
 								type="button"
 								class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
-								on:click={() => (openDropdown = !openDropdown)}
+								on:click={() => (isDropdownOpen = !isDropdownOpen)}
 							>
 								<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
 							</button>
 							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
 							<div
 								use:clickOutside
-								on:clickoutside={() => (openDropdown = false)}
+								on:clickoutside={() => (isDropdownOpen = false)}
 								class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
 						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
-						{openDropdown ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
+						{isDropdownOpen ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
 							>
 								{#each inputTemplates as input}
 									<button
