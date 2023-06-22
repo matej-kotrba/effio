@@ -15,6 +15,7 @@
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
 	import { testObject } from './store';
+	import { descriptionSchema, titleSchema } from '~schemas/textInput';
 
 	export let data;
 
@@ -23,7 +24,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: false,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -36,6 +37,11 @@
 
 	let isSubmitting = false;
 	let isSuccess = false;
+
+	let errors = {
+		title: '',
+		description: ''
+	};
 
 	async function postTestToDB(isPublished: boolean) {
 		isSubmitting = true;
@@ -208,18 +214,32 @@
 					title="What will be the name of your test?"
 					titleName="name"
 					inputValue={$testObject['title']}
+					validationSchema={titleSchema}
 					on:inputChange={(data) => {
 						$testObject['title'] = data.detail;
 					}}
+					on:error={(data) => {
+						errors.title = data.detail;
+					}}
 				/>
+				<p class={`text-body2 text-error ${errors.title ? 'opacity-100' : 'opacity-0'}`}>
+					{errors.title || 'Placeholder error'}
+				</p>
 				<TextAreaInput
 					title="Describe what will you test be about."
 					titleName="name"
 					inputValue={$testObject['description']}
+					validationSchema={descriptionSchema}
 					on:inputChange={(data) => {
 						$testObject['description'] = data.detail;
 					}}
+					on:error={(data) => {
+						errors.description = data.detail;
+					}}
 				/>
+				<p class={`text-body2 text-error ${errors.description ? 'opacity-100' : 'opacity-0'}`}>
+					{errors.description || 'Placeholder error'}
+				</p>
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton
 						onClick={() => {}}

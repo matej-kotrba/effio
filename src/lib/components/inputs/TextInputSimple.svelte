@@ -1,17 +1,28 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import { createEventDispatcher } from 'svelte';
+	import type { ZodSchema } from 'zod';
 
 	export let title: string;
 	export let titleName: string;
 	export let customStyles: string = '';
 	export let customContainerStyles: string = '';
 	export let inputProperties: HTMLInputAttributes = {};
+	export let validationSchema: ZodSchema<any> | null = null;
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 	let inputRef: HTMLInputElement;
 
 	const dispatch = createEventDispatcher();
+
+	function validateInput() {
+		const result = validationSchema?.safeParse(inputValue);
+		if (!result?.success) {
+			dispatch('error', result?.error.errors[0].message);
+		} else {
+			dispatch('error', null);
+		}
+	}
 
 	function dispatchInputChange() {
 		dispatch('inputChange', inputRef.value);
@@ -28,6 +39,7 @@
 		bind:value={inputValue}
 		bind:this={inputRef}
 		on:input={dispatchInputChange}
+		on:focusout={validateInput}
 		name={titleName}
 		id={titleName}
 		type="text"
