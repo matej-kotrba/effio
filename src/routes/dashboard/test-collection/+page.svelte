@@ -14,7 +14,7 @@
 	};
 
 	onMount(async () => {
-		const res = await trpc($page).getTests.query({
+		const res = await trpc($page).getUserTests.query({
 			limit: 3
 		});
 		recentTests.data = res as unknown as TestFullType[];
@@ -47,6 +47,10 @@
 				description={test.description}
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.name)}
+				dropdownTabs={[
+					{ action: () => {}, text: 'Edit' },
+					{ action: () => {}, text: 'Delete' }
+				]}
 			/>
 		{/each}
 	{/if}

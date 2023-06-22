@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import Dropdown from '~components/effects/Dropdown.svelte';
 	import Space from '~components/separators/Space.svelte';
 
 	export let redirectLink: string = '#';
@@ -9,6 +10,7 @@
 	export let description: string;
 	export let stars: number | undefined = undefined;
 	export let tags: string[] = [];
+	export let dropdownTabs: { icon?: HTMLElement; text: string; action: Function }[] = [];
 </script>
 
 <div
@@ -69,9 +71,25 @@
 				/>{stars}</span
 			>
 		{/if}
-		<button type="button" class="settings-button">
-			<Icon icon="fluent:settings-24-filled" class="text-3xl text-light_text_black" />
-		</button>
+
+		<div class="dropdown dropdown-hover dropdown-top">
+			<button type="button" class="settings-button">
+				<Icon icon="fluent:settings-24-filled" class="text-3xl text-light_text_black" />
+			</button>
+			<ul
+				class="dropdown-content z-[1] menu p-2 shadow-lg shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black"
+			>
+				{#each dropdownTabs as item}
+					<li class="group">
+						<button
+							type="button"
+							class="group-hover:text-light_text_black"
+							on:click={(e) => item.action}>{item.icon || ''} {item.text}</button
+						>
+					</li>
+				{/each}
+			</ul>
+		</div>
 	</div>
 </div>
 
