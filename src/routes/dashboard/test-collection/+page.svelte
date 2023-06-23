@@ -49,6 +49,7 @@
 			<Card
 				title={test.title}
 				description={test.description}
+				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.name)}
 				dropdownTabs={[

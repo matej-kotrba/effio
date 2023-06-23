@@ -3,7 +3,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4]"
+	class="flex flex-col justify-between w-full p-3 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
 >
 	<div>
 		<div class="relative block group">

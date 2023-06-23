@@ -11,14 +11,15 @@
 	export let stars: number | undefined = undefined;
 	export let tags: string[] = [];
 	export let dropdownTabs: { icon?: HTMLElement; text: string; action: Function }[] = [];
+	export let createdAt: Date | undefined = undefined;
 </script>
 
 <div
-	class="flex flex-col justify-between w-full max-w-xs p-5 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4]"
+	class="flex flex-col justify-between w-full p-3 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
 >
 	<div>
 		<a href={redirectLink} class="relative block group">
-			<div class="overflow-hidden rounded-lg">
+			<div class="relative overflow-hidden rounded-lg image-container">
 				{#if imageLink}
 					<img
 						class="rounded-lg w-[100%] aspect-[3/2] object-cover group-hover:blur-md overflow-hidden duration-200"
@@ -31,13 +32,23 @@
 						grid place-content-center bg-zinc-200 title-placeholder-container"
 					>
 						<div
-							class="-rotate-[12deg] text-transparent font-bold text-h4 title-placeholder"
+							class="-rotate-[12deg] text-transparent font-bold text-h5 title-placeholder"
 							data-text={title}
 						>
 							{title}
 						</div>
 					</div>
 				{/if}
+				<!-- Display the time when the test was created -->
+				<div
+					class="absolute bottom-0 pt-1 pl-2 pr-1 rounded-br-md rounded-tl-md text-light_white right-0 z-[2] date group-hover:blur-md duration-100"
+				>
+					<p class="text-body2">
+						{typeof createdAt !== 'undefined'
+							? `${createdAt.getDate()}. ${createdAt.getMonth() + 1}. ${createdAt.getFullYear()}`
+							: ''}
+					</p>
+				</div>
 			</div>
 			<Icon
 				icon="iconamoon:enter"
@@ -73,7 +84,7 @@
 		{/if}
 
 		<div class="dropdown dropdown-hover dropdown-top">
-			<button type="button" class="settings-button">
+			<button type="button" class="flex items-center settings-button">
 				<Icon icon="fluent:settings-24-filled" class="text-3xl text-light_text_black" />
 			</button>
 			<ul
@@ -97,6 +108,18 @@
 	.card_bg {
 		/* background-image: url('/imgs/svgs/card_bg.svg'); */
 		/* box-shadow: 3px 1px 15px var(--light-text-black-40); */
+	}
+
+	.image-container::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+
+	.date {
+		background-color: rgba(0, 0, 0, 0.15);
+		box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.15);
 	}
 
 	.title-placeholder-container {
