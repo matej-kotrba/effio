@@ -6,6 +6,7 @@
 	import CardSkeleton from '~components/containers/card/CardSkeleton.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import type { TestFullType } from '~/Prisma';
 
 	export let data;
@@ -53,7 +54,12 @@
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.name)}
 				dropdownTabs={[
-					{ action: () => {}, text: 'Edit' },
+					{
+						action: () => {
+							goto('test-collection/edit/' + test['id']);
+						},
+						text: 'Edit'
+					},
 					{ action: () => {}, text: 'Delete' }
 				]}
 			/>

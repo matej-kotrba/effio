@@ -121,6 +121,19 @@ export const router = t.router({
     })
     return tests
   }),
+  getTestById: t.procedure.input(z.object({
+    id: z.string()
+  })).query(async ({ ctx, input }) => {
+    const test = await ctx.prisma.test.findUnique({
+      where: {
+        id: input.id
+      }
+    })
+
+    if (!test) return null
+
+    return test
+  }),
   protected: protectedRouter
 })
 

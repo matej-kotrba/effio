@@ -95,7 +95,7 @@
 						<button
 							type="button"
 							class="group-hover:text-light_text_black"
-							on:click={(e) => item.action}>{item.icon || ''} {item.text}</button
+							on:click={(e) => item.action(e)}>{item.icon || ''} {item.text}</button
 						>
 					</li>
 				{/each}
