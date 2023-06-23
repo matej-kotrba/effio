@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import { createEventDispatcher } from 'svelte';
+	import Limit from '~components/informatic/Limit.svelte';
 	import type { ZodSchema } from 'zod';
 
 	export let title: string;
@@ -9,6 +10,8 @@
 	export let customContainerStyles: string = '';
 	export let inputProperties: HTMLInputAttributes = {};
 	export let validationSchema: ZodSchema<any> | null = null;
+	export let min: number | undefined = undefined;
+	export let max: number | undefined = undefined;
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 	let inputRef: HTMLInputElement;
@@ -35,22 +38,27 @@
 		class="duration-150 text-light_text_black_80 text-body2 group-focus-within:text-light_primary"
 		>{title}</label
 	>
-	<input
-		bind:value={inputValue}
-		bind:this={inputRef}
-		on:input={dispatchInputChange}
-		on:focusout={validateInput}
-		name={titleName}
-		id={titleName}
-		type="text"
-		autocomplete="off"
-		class="resize-none outline-none bg-white
+	<div class="relative">
+		{#if min && max}
+			<Limit current={inputValue.length} {min} {max} class="absolute bottom-full right-1" />
+		{/if}
+		<input
+			bind:value={inputValue}
+			bind:this={inputRef}
+			on:input={dispatchInputChange}
+			on:focusout={validateInput}
+			name={titleName}
+			id={titleName}
+			type="text"
+			autocomplete="off"
+			class="resize-none outline-none bg-white
      overflow-hidden overflow-ellipsis text-light_text_black
      px-2 py-4 rounded-md shadow-lg w-full
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
      {customStyles}"
-		{...inputProperties}
-	/>
+			{...inputProperties}
+		/>
+	</div>
 </div>
 
 <style>

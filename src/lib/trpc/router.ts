@@ -98,8 +98,8 @@ export const router = t.router({
     // But its 100% safe because of the manual check above
     return result
   }),
-  getUserTests: t.procedure.input(z.object({
-    // id: z.string(),
+  getUserTestsById: t.procedure.input(z.object({
+    id: z.string(),
     limit: z.number(),
     isPublished: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
@@ -107,7 +107,7 @@ export const router = t.router({
     tests = await ctx.prisma.test.findMany({
       where: {
         published: input.isPublished,
-        // id: input.id,
+        ownerId: input.id,
       },
       include: {
         questions: true,

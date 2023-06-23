@@ -7,9 +7,8 @@
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
-	import type { LayoutServerData } from './$types';
 
-	export let data: LayoutServerData;
+	export let data;
 
 	$: if (data.hasLoggedOut) {
 		toast.success('You were successfully logged out!');
@@ -31,11 +30,12 @@
 				<p class="text-light_white text-body1">All you need is Github or Google account!</p>
 				<Space gap={10} />
 				<div class="flex items-center gap-4">
-					<button
-						on:click={() => {}}
+					<a
+						href={data.session?.user ? '/dashboard' : '/login'}
 						class="btn bg-light_primary text-light_white hover:bg-light_primary hover:brightness-125"
-						type="button">Log In</button
 					>
+						{data.session?.user ? 'Go to Dashboard' : 'Log In'}
+					</a>
 					<button
 						on:click={() => {}}
 						class="btn bg-light_white text-light_primary hover:bg-light_white hover:brightness-125"

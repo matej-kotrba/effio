@@ -18,6 +18,8 @@
 	import {
 		DESCRIPTION_MAX,
 		DESCRIPTION_MIN,
+		TITLE_MAX,
+		TITLE_MIN,
 		descriptionSchema,
 		titleSchema
 	} from '~schemas/textInput';
@@ -220,6 +222,8 @@
 					titleName="name"
 					inputValue={$testObject['title']}
 					validationSchema={titleSchema}
+					max={TITLE_MAX}
+					min={TITLE_MIN}
 					on:inputChange={(data) => {
 						$testObject['title'] = data.detail;
 					}}

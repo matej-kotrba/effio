@@ -8,14 +8,18 @@
 	import { page } from '$app/stores';
 	import type { TestFullType } from '~/Prisma';
 
+	export let data;
+
 	let recentTests: { data: TestFullType[]; isLoading: boolean } = {
 		data: [],
 		isLoading: true
 	};
 
 	onMount(async () => {
-		const res = await trpc($page).getUserTests.query({
-			limit: 3
+		if (!data.session?.user?.id) return;
+		const res = await trpc($page).getUserTestsById.query({
+			limit: 3,
+			id: data.session?.user?.id
 		});
 		recentTests.data = res as unknown as TestFullType[];
 		recentTests.isLoading = false;

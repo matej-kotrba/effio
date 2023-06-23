@@ -40,7 +40,7 @@
 	>
 	<div class="relative">
 		{#if min && max}
-			<Limit current={inputValue.length} {min} {max} class="absolute top-1 right-1" />
+			<Limit current={inputValue.length} {min} {max} class="absolute bottom-full right-1" />
 		{/if}
 		<textarea
 			bind:value={inputValue}
@@ -52,7 +52,7 @@
 			autocomplete="off"
 			class="resize-none min-h-[150px] outline-none bg-white
 		overflow-hidden overflow-ellipsis text-light_text_black
-		px-2 py-4 rounded-md shadow-lg w-full {min && max && 'pt-6'}
+		px-2 py-4 rounded-md shadow-lg w-full
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
      {customStyles}"
 			{...inputProperties}
