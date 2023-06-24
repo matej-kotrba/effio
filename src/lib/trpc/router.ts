@@ -1,7 +1,6 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
-import type { Test } from "@prisma/client";
 import type { TestFullType } from "~/Prisma";
 
 export const t = initTRPC.context<Context>().create()
@@ -110,7 +109,11 @@ export const router = t.router({
         ownerId: input.id,
       },
       include: {
-        questions: true,
+        questions: {
+          include: {
+            type: true
+          }
+        },
         tags: true,
         owner: true
       },
@@ -127,6 +130,13 @@ export const router = t.router({
     const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.id
+      },
+      include: {
+        questions: {
+          include: {
+            type: true
+          }
+        },
       }
     })
 

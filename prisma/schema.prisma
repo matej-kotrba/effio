@@ -69,7 +69,8 @@ model Template {
 
 model QuestionType {
   id         String     @id @default(uuid())
-  name       String
+  name       String     @unique
+  slug       String     @unique
   createdAt  DateTime   @default(now())
   properties Json       @default("{}")
   questions  Question[]

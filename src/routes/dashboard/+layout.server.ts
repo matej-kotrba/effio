@@ -6,10 +6,10 @@ export const load: ServerLoad = async (event) => {
 
   const context = await createContext(event)
 
-  const templates = router.createCaller(context).getTemplates();
+  const questionsTypes = router.createCaller(context).getQuestionsTypes();
 
 
   return {
-    templates: templates,
+    questionsTypes: questionsTypes
   }
 }
