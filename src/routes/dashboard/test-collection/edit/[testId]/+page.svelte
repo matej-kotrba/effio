@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { TITLE_MAX, TITLE_MIN, titleSchema } from '~schemas/textInput.js';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -14,6 +15,18 @@
 		title="Test title"
 		titleName="title"
 		inputValue={data.testData.title}
+		min={TITLE_MIN}
+		max={TITLE_MAX}
+		validationSchema={titleSchema}
+		on:error={(data) => {}}
+	/>
+</ErrorEnhance>
+
+<ErrorEnhance>
+	<TextAreaInput
+		title="Test title"
+		titleName="title"
+		inputValue={data.testData.description}
 		min={TITLE_MIN}
 		max={TITLE_MAX}
 		validationSchema={titleSchema}

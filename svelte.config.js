@@ -16,6 +16,7 @@ const config = {
 			'~components': './src/lib/components',
 			'~schemas': './src/lib/schemas',
 			'~use': './src/lib/use',
+			'~stores': './src/lib/stores',
 			'~': './src'
 		}
 	}

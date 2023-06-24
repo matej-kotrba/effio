@@ -14,7 +14,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { trpc } from '$lib/trpc/client';
-	import { testObject } from './store';
+	import { testObject } from '~stores/testObject';
 	import {
 		DESCRIPTION_MAX,
 		DESCRIPTION_MIN,

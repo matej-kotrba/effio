@@ -10,7 +10,7 @@ will be used in the test creator -->
 	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { testObject } from '../../../routes/dashboard/test-creator/store';
+	import { testObject } from '~stores/testObject';
 	import { titleSchema } from '~schemas/textInput';
 
 	let dispatch = createEventDispatcher();

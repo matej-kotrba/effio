@@ -2,6 +2,7 @@
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import { createEventDispatcher } from 'svelte';
 	import Limit from '~components/informatic/Limit.svelte';
+	import { getContext } from 'svelte';
 	import type { ZodSchema } from 'zod';
 
 	export let title: string;
@@ -14,6 +15,9 @@
 	export let max: number | undefined = undefined;
 
 	export let inputValue: HTMLTextAreaElement['value'] = '';
+
+	let setError = getContext('setError');
+
 	let inputRef: HTMLTextAreaElement;
 
 	const dispatch = createEventDispatcher();
@@ -22,8 +26,10 @@
 		const result = validationSchema?.safeParse(inputValue);
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);
+			if (typeof setError === 'function') setError(result?.error.errors[0].message);
 		} else {
 			dispatch('error', null);
+			if (typeof setError === 'function') setError('');
 		}
 	}
 

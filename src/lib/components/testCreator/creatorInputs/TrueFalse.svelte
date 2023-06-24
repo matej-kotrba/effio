@@ -5,7 +5,7 @@
 	import { flip } from 'svelte/animate';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
-	import { testObject } from '../../../../routes/dashboard/test-creator/store';
+	import { testObject } from '~stores/testObject';
 	import { asnwerSchema } from '~schemas/textInput';
 
 	export let indexParent: number;

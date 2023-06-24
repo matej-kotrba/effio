@@ -21,7 +21,7 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import { testObject } from '~/routes/dashboard/test-creator/store';
+	import { testObject } from '~stores/testObject';
 	import TrueFalse from './creatorInputs/TrueFalse.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
