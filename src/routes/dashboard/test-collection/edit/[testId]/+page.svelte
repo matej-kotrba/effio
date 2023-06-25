@@ -7,16 +7,20 @@
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { onMount } from 'svelte';
 	import { testObject } from '~stores/testObject.js';
+	import { initializeTestToTestStore } from '~/lib/helpers/test';
 
 	export let data;
 
 	onMount(() => {
 		console.log(data.testData);
+		initializeTestToTestStore(data.testData);
 	});
+
+	$: console.log($testObject);
 </script>
 
 <DashboardTitle title="Test editor" subtitle="Here you can edit your previously created test" />
-
+<!-- 
 <ErrorEnhance>
 	<TextInputSimple
 		title="Test title"
@@ -37,6 +41,6 @@
 		max={TITLE_MAX}
 		validationSchema={titleSchema}
 	/>
-</ErrorEnhance>
+</ErrorEnhance> -->
 
 <Creator inputTemplates={data.questionsTypes} />

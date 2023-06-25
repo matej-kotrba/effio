@@ -7,7 +7,7 @@ type TestObject = {
 };
 
 export const testObject = writable({
-  title: 'This is title',
+  title: 'This is title aaaaaaaaaaaaaa',
   description: 'This is description',
   questions: [
     {
@@ -20,7 +20,7 @@ export const testObject = writable({
         correctAnswerIndex: 1,
         answers: [
           {
-            answer: 'Paris'
+            answer: 'PRAHAAAA'
           },
           {
             answer: 'Paris'
