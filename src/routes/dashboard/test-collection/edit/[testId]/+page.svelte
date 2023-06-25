@@ -8,17 +8,21 @@
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { testObject } from '~stores/testObject.js';
 	import { initializeTestToTestStore } from '~/lib/helpers/test';
+	import { onMount } from 'svelte';
 
 	export let data;
 
 	initializeTestToTestStore(data.testData);
-
-	$: console.log($testObject);
 </script>
 
 <DashboardTitle title="Test editor" subtitle="Here you can edit your previously created test" />
 
-<Toggle title="Is Published" />
+<Toggle
+	title="Is Published"
+	isChecked={$testObject.published}
+	class="justify-end mb-4"
+	on:toggle={(e) => ($testObject.published = e.detail)}
+/>
 
 <ErrorEnhance>
 	<TextInputSimple
@@ -28,6 +32,7 @@
 		min={TITLE_MIN}
 		max={TITLE_MAX}
 		validationSchema={titleSchema}
+		on:inputChange={(e) => ($testObject.title = e.detail)}
 	/>
 </ErrorEnhance>
 
@@ -39,6 +44,7 @@
 		min={TITLE_MIN}
 		max={TITLE_MAX}
 		validationSchema={titleSchema}
+		on:inputChange={(e) => ($testObject.description = e.detail)}
 	/>
 </ErrorEnhance>
 

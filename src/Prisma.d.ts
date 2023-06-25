@@ -11,3 +11,9 @@ type TestFullType = Prisma.TestGetPayload<{
     tags: true
   }
 }>
+
+type TestWithQuestions = Prisma.TestGetPayload<{
+  include: {
+    questions: true
+  }
+}>

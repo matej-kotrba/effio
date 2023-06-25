@@ -1,8 +1,12 @@
+import type { Test } from '@prisma/client';
 import { writable } from 'svelte/store';
+import type { TestWithQuestions } from '~/Prisma';
 
 type TestObject = {
   title: string;
   description: string;
+  id?: string;
+  published?: boolean;
   questions: Question[];
 };
 
@@ -50,3 +54,6 @@ export const testObject = writable({
     }
   ]
 } as TestObject);
+
+
+// export const testUpdateObject = writable<Omit<TestWithQuestions, "ownerId" | "stars" | "createdAt" | "updatedAt">>()
