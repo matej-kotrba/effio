@@ -1,6 +1,14 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject } from "~stores/testObject";
 
+export function initializeNewTestToTestStore(testData: ClientTest) {
+  testObject.set({
+    title: testData.title,
+    description: testData.description,
+    questions: testData.questions
+  })
+}
+
 export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" | "tags">) {
   testObject.set({
     title: testData.title,

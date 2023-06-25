@@ -40,6 +40,12 @@ type Question = {
   };
 }[keyof QuestionTypeMap];
 
+type ClientTest = {
+  title: string;
+  description: string;
+  questions: Question[];
+}
+
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field
 // type QuestionTemplate = {

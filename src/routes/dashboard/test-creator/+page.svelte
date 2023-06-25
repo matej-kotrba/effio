@@ -23,10 +23,17 @@
 		descriptionSchema,
 		titleSchema
 	} from '~schemas/textInput';
+	import { initializeNewTestToTestStore } from '~/lib/helpers/test';
 
 	export let data;
 
 	const SECTION_TRANSITION_DURATION = 400;
+
+	initializeNewTestToTestStore({
+		title: '',
+		description: '',
+		questions: []
+	});
 
 	// TODO: Change this back to false
 	let testCreationProgress = {
