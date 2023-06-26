@@ -99,7 +99,7 @@ const protectedRouter = t.router({
 
       const questions = JSON.parse(input.questionContent) as Question[]
 
-      const questionsIds: string[] = []
+      const questionsIds: string[] = questions.map(item => item.id)
 
       const questionsPromise = questions.map(async (question) => {
         questionsIds.push(question.id)
@@ -110,9 +110,23 @@ const protectedRouter = t.router({
           update: {
             title: question.title,
             content: question.content,
-
-          }         
+          },
+          create: {
+            id: question.id,
+            title: question.title,
+            content: question.content,
+            typeId: question.questionTypeId,
+            testId: testData.id,
+          }
         })
+      })
+
+      ctx.prisma.question.deleteMany({
+        where: {
+          id: {
+            notIn: questionsIds
+          }
+        }
       })
 
       const questionsData = await Promise.all(questionsPromise)
