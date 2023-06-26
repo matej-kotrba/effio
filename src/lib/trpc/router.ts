@@ -29,10 +29,10 @@ const isLoggedIn = t.middleware(async (opts) => {
   })
 })
 
-const passwordProcedure = t.procedure.use(isLoggedIn)
+const loggedInProcedure = t.procedure.use(isLoggedIn)
 
 const protectedRouter = t.router({
-  saveTest: passwordProcedure.input(z.object({
+  saveTest: loggedInProcedure.input(z.object({
     title: z.string(),
     description: z.string(),
     questionContent: z.string(),
@@ -59,6 +59,59 @@ const protectedRouter = t.router({
             typeId: question.questionTypeId,
             testId: testData.id,
           }
+        })
+      })
+
+      const questionsData = await Promise.all(questionsPromise)
+
+      return {
+        test: testData,
+        questions: questionsData,
+        success: true
+      }
+    }
+    catch (e) {
+      return {
+        success: false,
+      }
+    }
+  }),
+  updateTest: loggedInProcedure.input(z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    questionContent: z.string(),
+    isPublished: z.boolean(),
+  })).mutation(async ({ ctx, input }) => {
+    try {
+
+      const testData = await ctx.prisma.test.update({
+        where: {
+          id: input.id
+        },
+        data: {
+          title: input.title,
+          description: input.description,
+          ownerId: ctx.userId,
+          published: input.isPublished,
+        }
+      })
+
+      const questions = JSON.parse(input.questionContent) as Question[]
+
+      const questionsIds: string[] = []
+
+      const questionsPromise = questions.map(async (question) => {
+        questionsIds.push(question.id)
+        return ctx.prisma.question.upsert({
+          where: {
+            id: question.id
+          },
+          update: {
+            title: question.title,
+            content: question.content,
+
+          }         
         })
       })
 

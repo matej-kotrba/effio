@@ -9,6 +9,8 @@
 	import { testObject } from '~stores/testObject.js';
 	import { initializeTestToTestStore } from '~/lib/helpers/test';
 	import { onMount } from 'svelte';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	export let data;
 
@@ -49,3 +51,7 @@
 </ErrorEnhance>
 
 <Creator inputTemplates={data.questionsTypes} />
+
+<Space />
+<BasicButton title="Update test" />
+<Space />
