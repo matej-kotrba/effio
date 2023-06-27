@@ -1,5 +1,5 @@
 import type { TestFullType } from "~/Prisma";
-import { testObject } from "~stores/testObject";
+import { testObject, type TestObject } from "~stores/testObject";
 
 export function initializeNewTestToTestStore(testData: ClientTest) {
   testObject.set({
@@ -30,4 +30,21 @@ export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" |
       }
     })
   })
+}
+
+export async function isValidatInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
+  const res = await fetch('./test-creator', {
+    method: 'POST',
+    body: JSON.stringify(obj.questions),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  const data = (await res.json()) as { store: Question[]; error: boolean };
+  obj.questions = data.store as Question[];
+  console.log(data.store);
+  return {
+    success: !data.error,
+    obj: obj
+  };
 }

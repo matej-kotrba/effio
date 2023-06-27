@@ -23,7 +23,8 @@
 		descriptionSchema,
 		titleSchema
 	} from '~schemas/textInput';
-	import { initializeNewTestToTestStore } from '~/lib/helpers/test';
+	import { initializeNewTestToTestStore, isValidatInputServer } from '~/lib/helpers/test';
+	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
 
@@ -38,7 +39,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: true,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -77,20 +78,6 @@
 			console.log(e);
 			isSubmitting = false;
 		}
-	}
-
-	async function isValidatInputServer() {
-		const res = await fetch('./test-creator', {
-			method: 'POST',
-			body: JSON.stringify($testObject.questions),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		const data = (await res.json()) as { store: Question[]; error: boolean };
-		$testObject.questions = data.store as Question[];
-		console.log(data.store);
-		return !data.error;
 	}
 </script>
 
@@ -204,8 +191,9 @@
 				<BasicButton
 					title="Continue"
 					onClick={async () => {
-						const isOK = await isValidatInputServer();
-						if (!isOK) return;
+						const result = await isValidatInputServer($testObject);
+						$testObject['questions'] = result['obj']['questions'];
+						if (!result['success']) return;
 						testCreationProgress.constructingDone = true;
 					}}
 					buttonAttributes={{ disabled: false }}

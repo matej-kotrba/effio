@@ -17,6 +17,7 @@ const config = {
 			'~schemas': './src/lib/schemas',
 			'~use': './src/lib/use',
 			'~stores': './src/lib/stores',
+			'~helpers': './src/lib/helpers',
 			'~': './src'
 		}
 	}

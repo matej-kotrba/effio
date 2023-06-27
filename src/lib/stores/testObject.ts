@@ -1,8 +1,6 @@
-import type { Test } from '@prisma/client';
 import { writable } from 'svelte/store';
-import type { TestWithQuestions } from '~/Prisma';
 
-type TestObject = {
+export type TestObject = {
   title: string;
   description: string;
   id?: string;
