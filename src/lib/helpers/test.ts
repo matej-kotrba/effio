@@ -1,5 +1,6 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
+import { dev } from "$app/environment"
 
 export function initializeNewTestToTestStore(testData: ClientTest) {
   testObject.set({
@@ -33,7 +34,7 @@ export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" |
 }
 
 export async function isValidatInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
-  const res = await fetch('./test-creator', {
+  const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
     method: 'POST',
     body: JSON.stringify(obj.questions),
     headers: {

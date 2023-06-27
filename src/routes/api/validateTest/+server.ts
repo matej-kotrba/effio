@@ -1,6 +1,6 @@
 import { ZodError, z } from "zod"
 import { json } from "@sveltejs/kit"
-import type { RequestEvent } from "../$types"
+import type { RequestEvent } from "../../dashboard/$types"
 import { asnwerSchema as answerObjectSchema, titleSchema } from "~schemas/textInput"
 
 const asnwerSchema = z.object({

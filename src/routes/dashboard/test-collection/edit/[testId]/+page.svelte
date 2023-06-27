@@ -7,16 +7,28 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { testObject } from '~stores/testObject.js';
-	import { initializeTestToTestStore } from '~/lib/helpers/test';
-	import { onMount } from 'svelte';
+	import { initializeTestToTestStore, isValidatInputServer } from '~/lib/helpers/test';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import { trpc } from '~/lib/trpc/client.js';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import { getContext } from 'svelte';
+	import type { toast as Toast } from 'svelte-french-toast';
+	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 
 	export let data;
+
+	const toast: typeof Toast = getContext('toast');
+
+	let isSubmitting = false;
 
 	initializeTestToTestStore(data.testData);
 </script>
 
+{#if isSubmitting}
+	<ScreenCover />
+{/if}
 <DashboardTitle title="Test editor" subtitle="Here you can edit your previously created test" />
 
 <Toggle
@@ -53,5 +65,34 @@
 <Creator inputTemplates={data.questionsTypes} />
 
 <Space />
-<BasicButton title="Update test" />
+<BasicButton
+	title="Update test"
+	buttonAttributes={{
+		disabled: isSubmitting
+	}}
+	onClick={async () => {
+		if (isSubmitting) return;
+		if (!$testObject.id || !$testObject.published) {
+			alert('Sorry, but this test is not valid and cannot be edited.');
+			goto('/dashboard/test-collection');
+			return;
+		}
+		const res = await isValidatInputServer($testObject);
+		if (!res['success']) return;
+		const data = await trpc($page).protected.updateTest.mutate({
+			id: $testObject.id,
+			title: $testObject.title,
+			description: $testObject.description,
+			isPublished: $testObject.published,
+			questionContent: JSON.stringify($testObject.questions)
+		});
+		if (data['success']) {
+			isSubmitting = true;
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			isSubmitting = false;
+			toast['success']('Test updated successfully');
+			goto('/dashboard/test-collection');
+		}
+	}}
+/>
 <Space />
