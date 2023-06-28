@@ -3,7 +3,14 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
-	import { TITLE_MAX, TITLE_MIN, titleSchema } from '~schemas/textInput.js';
+	import {
+		DESCRIPTION_MAX,
+		DESCRIPTION_MIN,
+		TITLE_MAX,
+		TITLE_MIN,
+		descriptionSchema,
+		titleSchema
+	} from '~schemas/textInput.js';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { testObject } from '~stores/testObject.js';
@@ -52,12 +59,12 @@
 
 <ErrorEnhance>
 	<TextAreaInput
-		title="Test title"
-		titleName="title"
+		title="Test description"
+		titleName="description"
 		inputValue={$testObject.description}
-		min={TITLE_MIN}
-		max={TITLE_MAX}
-		validationSchema={titleSchema}
+		min={DESCRIPTION_MIN}
+		max={DESCRIPTION_MAX}
+		validationSchema={descriptionSchema}
 		on:inputChange={(e) => ($testObject.description = e.detail)}
 	/>
 </ErrorEnhance>
@@ -72,13 +79,16 @@
 	}}
 	onClick={async () => {
 		if (isSubmitting) return;
-		if (!$testObject.id || !$testObject.published) {
+		if (!$testObject.id || $testObject.published === undefined) {
 			alert('Sorry, but this test is not valid and cannot be edited.');
 			goto('/dashboard/test-collection');
 			return;
 		}
 		const res = await isValidatInputServer($testObject);
-		if (!res['success']) return;
+		if (!res['success']) {
+			$testObject = res['obj'];
+			return;
+		}
 		const data = await trpc($page).protected.updateTest.mutate({
 			id: $testObject.id,
 			title: $testObject.title,

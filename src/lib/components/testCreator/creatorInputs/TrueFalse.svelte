@@ -64,6 +64,7 @@
 							: ''
 					}`}
 					style="transition: 200ms background-color, 200ms color;"
+					disabled={!(content.answers.length > 2)}
 					on:click={() => deleteQuestion(index)}
 				>
 					<Icon

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Dropdown from '~components/effects/Dropdown.svelte';
 	import Space from '~components/separators/Space.svelte';
 
 	export let redirectLink: string = '#';

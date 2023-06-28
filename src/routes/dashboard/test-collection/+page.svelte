@@ -48,6 +48,7 @@
 	{:else}
 		{#each recentTests.data as test}
 			<Card
+				redirectLink={`/tests/${test.id}`}
 				title={test.title}
 				description={test.description}
 				createdAt={new Date(test.createdAt)}
