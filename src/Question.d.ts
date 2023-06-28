@@ -44,6 +44,10 @@ type ClientTest = {
   title: string;
   description: string;
   questions: Question[];
+  errors: {
+    title?: string;
+    description?: string;
+  };
 }
 
 // Type with name and its properties retrieved from DB

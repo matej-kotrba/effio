@@ -6,7 +6,8 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
   testObject.set({
     title: testData.title,
     description: testData.description,
-    questions: testData.questions
+    questions: testData.questions,
+    errors: testData.errors
   })
 }
 
@@ -16,6 +17,7 @@ export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" |
     title: testData.title,
     description: testData.description,
     published: testData.published,
+    errors: {},
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     questions: testData.questions.map((question) => {
@@ -36,14 +38,13 @@ export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" |
 export async function isValidatInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
   const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
     method: 'POST',
-    body: JSON.stringify(obj.questions),
+    body: JSON.stringify(obj),
     headers: {
       'Content-Type': 'application/json'
     }
   });
   const data = (await res.json()) as { store: Question[]; error: boolean };
   obj.questions = data.store as Question[];
-  console.log(data.store);
   return {
     success: !data.error,
     obj: obj

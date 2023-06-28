@@ -33,13 +33,14 @@
 	initializeNewTestToTestStore({
 		title: '',
 		description: '',
+		errors: {},
 		questions: []
 	});
 
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: false,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -52,11 +53,6 @@
 
 	let isSubmitting = false;
 	let isSuccess = false;
-
-	let errors = {
-		title: '',
-		description: ''
-	};
 
 	async function postTestToDB(isPublished: boolean) {
 		isSubmitting = true;
@@ -223,11 +219,13 @@
 						$testObject['title'] = data.detail;
 					}}
 					on:error={(data) => {
-						errors.title = data.detail;
+						$testObject.errors.title = data.detail;
 					}}
 				/>
-				<p class={`text-body2 text-error ${errors.title ? 'opacity-100' : 'opacity-0'}`}>
-					{errors.title || 'Placeholder error'}
+				<p
+					class={`text-body2 text-error ${$testObject.errors.title ? 'opacity-100' : 'opacity-0'}`}
+				>
+					{$testObject.errors.title || 'Placeholder error'}
 				</p>
 				<TextAreaInput
 					title="Describe what will your test be about."
@@ -240,11 +238,15 @@
 						$testObject['description'] = data.detail;
 					}}
 					on:error={(data) => {
-						errors.description = data.detail;
+						$testObject.errors.description = data.detail;
 					}}
 				/>
-				<p class={`text-body2 text-error ${errors.description ? 'opacity-100' : 'opacity-0'}`}>
-					{errors.description || 'Placeholder error'}
+				<p
+					class={`text-body2 text-error ${
+						$testObject.errors.description ? 'opacity-100' : 'opacity-0'
+					}`}
+				>
+					{$testObject.errors.description || 'Placeholder error'}
 				</p>
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton

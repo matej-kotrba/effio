@@ -15,13 +15,13 @@ function questionCreator(question: QuestionTypeMap[keyof QuestionTypeMap]): Ques
 
 // Transform the question into data which will not contain answers
 const questionContentTransformation: QuestionTransformation = {
-  "pickOne": (question: PickOneQuestionContent) => {
+  "pickOne": (question: PickOneQuestion) => {
     return {
       ...question,
       correctAnswerIndex: undefined
-    } as PartialPick<PickOneQuestionContent, "correctAnswerIndex">
+    } as PartialPick<PickOneQuestion, "correctAnswerIndex">
   },
-  "true/false": (question: TrueFalseQuestionContent) => {
+  "true/false": (question: TrueFalseQuestion) => {
     return {
       ...question,
       answers: question.answers.map((answer) => {
@@ -31,7 +31,7 @@ const questionContentTransformation: QuestionTransformation = {
         }
       })
     } as unknown as {
-        [Key in keyof TrueFalseQuestionContent]: Key extends "answers" ? PartialPick<TrueFalseQuestionContent["answers"][number], "isTrue">[] : TrueFalseQuestionContent[Key]
+        [Key in keyof TrueFalseQuestion]: Key extends "answers" ? PartialPick<TrueFalseQuestion["answers"][number], "isTrue">[] : TrueFalseQuestionContent[Key]
       }
   }
 }

@@ -6,11 +6,16 @@ export type TestObject = {
   id?: string;
   published?: boolean;
   questions: Question[];
+  errors: {
+    title?: string;
+    description?: string;
+  }
 };
 
 export const testObject = writable({
   title: 'This is title',
   description: 'This is description',
+  errors: {},
   questions: [
     {
       id: crypto.randomUUID(),
