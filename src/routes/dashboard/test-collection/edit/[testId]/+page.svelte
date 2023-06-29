@@ -14,7 +14,7 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { testObject } from '~stores/testObject.js';
-	import { initializeTestToTestStore, isValidatInputServer } from '~/lib/helpers/test';
+	import { initializeTestToTestStore, isTestValid, isValidatInputServer } from '~/lib/helpers/test';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { trpc } from '~/lib/trpc/client.js';
@@ -31,6 +31,46 @@
 	let isSubmitting = false;
 
 	initializeTestToTestStore(data.testData);
+
+	async function postEditedTest() {
+		if (isSubmitting) return;
+		if (!$testObject.id || $testObject.published === undefined) {
+			alert('Sorry, but this test is not valid and cannot be edited.');
+			goto('/dashboard/test-collection');
+			return;
+		}
+		const result = isTestValid({
+			title: $testObject.title,
+			questions: $testObject.questions,
+			description: $testObject.description
+		});
+
+		if (result['store']['questions']) {
+			$testObject['questions'] = result['store']['questions'];
+		}
+
+		$testObject.errors.title = result['store']['errors']['title'] || undefined;
+		$testObject.errors.description = result['store']['errors']['description'] || undefined;
+
+		$testObject = $testObject;
+		console.log(result.store.errors);
+		if (result['isError']) return;
+
+		const data = await trpc($page).protected.updateTest.mutate({
+			id: $testObject.id as string,
+			title: $testObject.title,
+			description: $testObject.description,
+			isPublished: $testObject.published as boolean,
+			questionContent: JSON.stringify($testObject.questions)
+		});
+		if (data['success']) {
+			isSubmitting = true;
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			isSubmitting = false;
+			toast['success']('Test updated successfully');
+			goto('/dashboard/test-collection');
+		}
+	}
 </script>
 
 {#if isSubmitting}
@@ -45,7 +85,7 @@
 	on:toggle={(e) => ($testObject.published = e.detail)}
 />
 
-<ErrorEnhance>
+<ErrorEnhance error={$testObject.errors.title}>
 	<TextInputSimple
 		title="Test title"
 		titleName="title"
@@ -54,10 +94,11 @@
 		max={TITLE_MAX}
 		validationSchema={titleSchema}
 		on:inputChange={(e) => ($testObject.title = e.detail)}
+		on:error={(e) => ($testObject.errors.title = e.detail)}
 	/>
 </ErrorEnhance>
 
-<ErrorEnhance>
+<ErrorEnhance error={$testObject.errors.description}>
 	<TextAreaInput
 		title="Test description"
 		titleName="description"
@@ -66,6 +107,7 @@
 		max={DESCRIPTION_MAX}
 		validationSchema={descriptionSchema}
 		on:inputChange={(e) => ($testObject.description = e.detail)}
+		on:error={(e) => ($testObject.errors.description = e.detail)}
 	/>
 </ErrorEnhance>
 
@@ -77,32 +119,6 @@
 	buttonAttributes={{
 		disabled: isSubmitting
 	}}
-	onClick={async () => {
-		if (isSubmitting) return;
-		if (!$testObject.id || $testObject.published === undefined) {
-			alert('Sorry, but this test is not valid and cannot be edited.');
-			goto('/dashboard/test-collection');
-			return;
-		}
-		const res = await isValidatInputServer($testObject);
-		if (!res['success']) {
-			$testObject = res['obj'];
-			return;
-		}
-		const data = await trpc($page).protected.updateTest.mutate({
-			id: $testObject.id,
-			title: $testObject.title,
-			description: $testObject.description,
-			isPublished: $testObject.published,
-			questionContent: JSON.stringify($testObject.questions)
-		});
-		if (data['success']) {
-			isSubmitting = true;
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			isSubmitting = false;
-			toast['success']('Test updated successfully');
-			goto('/dashboard/test-collection');
-		}
-	}}
+	onClick={postEditedTest}
 />
 <Space />

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { setContext } from 'svelte';
 
-	let error = '';
+	export let error = '';
 
 	function setError(e: string) {
 		error = e;
