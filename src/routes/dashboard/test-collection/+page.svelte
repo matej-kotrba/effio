@@ -82,9 +82,3 @@
 <h3 class="text-h4 text-light_text_black">Collection</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-
-<style>
-	.card_bg {
-		background-image: url('/imgs/svgs/card_bg.svg');
-	}
-</style>

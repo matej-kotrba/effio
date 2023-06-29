@@ -30,8 +30,9 @@
 						class="rounded-lg w-[100%] aspect-[3/2] group-hover:blur-md overflow-hidden duration-200
 						grid place-content-center bg-zinc-200 title-placeholder-container"
 					>
+						<!-- -rotate-[12deg] -->
 						<div
-							class="-rotate-[12deg] text-transparent font-bold text-h5 title-placeholder"
+							class="font-bold text-center text-transparent text-h5 title-placeholder"
 							data-text={title}
 						>
 							{title}
@@ -122,20 +123,22 @@
 	}
 
 	.title-placeholder-container {
-		background-image: url('/imgs/svgs/test-bg-placeholder.svg');
+		background-image: url('/imgs/svgs/blob.svg');
 		background-size: cover;
 		background-position: center;
 		box-shadow: 0 0 10px 0px black;
 	}
 
 	.title-placeholder {
-		-webkit-text-stroke: 1px black;
+		/* -webkit-text-stroke: 1px black; */
+		color: white;
+		text-shadow: 0 0 10px var(--light-text-black-40);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		position: relative;
 	}
 
-	.title-placeholder::before {
+	/* .title-placeholder::before {
 		content: attr(data-text);
 		position: absolute;
 		left: -2px;
@@ -143,7 +146,7 @@
 		width: 100%;
 		height: 100%;
 		color: var(--light-whiter);
-	}
+	} */
 
 	.settings-button:hover {
 		animation: rotate-settings 0.2s ease-in-out forwards;
