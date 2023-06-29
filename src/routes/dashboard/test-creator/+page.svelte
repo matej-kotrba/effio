@@ -23,7 +23,11 @@
 		descriptionSchema,
 		titleSchema
 	} from '~schemas/textInput';
-	import { initializeNewTestToTestStore, isValidatInputServer } from '~/lib/helpers/test';
+	import {
+		initializeNewTestToTestStore,
+		isTestValid,
+		isValidatInputServer
+	} from '~/lib/helpers/test';
 	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
@@ -187,9 +191,20 @@
 				<BasicButton
 					title="Continue"
 					onClick={async () => {
-						const result = await isValidatInputServer($testObject);
-						$testObject['questions'] = result['obj']['questions'];
-						if (!result['success']) return;
+						// const result = await isValidatInputServer($testObject);
+						// $testObject['questions'] = result['obj']['questions'];
+						// if (!result['success']) return;
+						// testCreationProgress.constructingDone = true;
+						const result = isTestValid({
+							questions: $testObject.questions
+						});
+
+						if (result['store']['questions']) {
+							$testObject['questions'] = result['store']['questions'];
+						}
+
+						$testObject = $testObject;
+						if (result['isError']) return;
 						testCreationProgress.constructingDone = true;
 					}}
 					buttonAttributes={{ disabled: false }}
