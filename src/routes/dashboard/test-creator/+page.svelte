@@ -59,6 +59,19 @@
 	let isSuccess = false;
 
 	async function postTestToDB(isPublished: boolean) {
+		const result = isTestValid({
+			title: $testObject.title,
+			description: $testObject.description,
+			questions: $testObject.questions
+		});
+
+		$testObject.errors = result['store']['errors'];
+		if (result['store']['questions']) {
+			$testObject.questions = result['store']['questions'];
+		}
+
+		if (result['isError']) return;
+
 		isSubmitting = true;
 		try {
 			const response = await trpc($page).protected.saveTest.mutate({

@@ -2,7 +2,7 @@ import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { dev } from "$app/environment"
 import { z, ZodError } from "zod"
-import { asnwerSchema as answerObjectSchema, titleSchema } from "~schemas/textInput"
+import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 
 export function initializeNewTestToTestStore(testData: ClientTest) {
   testObject.set({
@@ -86,17 +86,17 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
   const titleParse = titleSchema.safeParse(title)
 
-  if (title && !titleParse.success) {
-    result.errors.title = titleParse.error.message
+  if (title !== undefined && !titleParse.success) {
+    result.errors.title = titleParse.error.errors[0].message
     isError = true
   } else {
     result.errors.title = ""
   }
 
-  const descriptionParse = titleSchema.safeParse(description)
+  const descriptionParse = descriptionSchema.safeParse(description)
 
-  if (description && !descriptionParse.success) {
-    result.errors.description = descriptionParse.error.message
+  if (description !== undefined && !descriptionParse.success) {
+    result.errors.description = descriptionParse.error.errors[0].message
     isError = true
   } else {
     result.errors.description = ""
