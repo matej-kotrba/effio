@@ -53,7 +53,6 @@
 		$testObject.errors.description = result['store']['errors']['description'] || undefined;
 
 		$testObject = $testObject;
-		console.log(result.store.errors);
 		if (result['isError']) return;
 
 		const data = await trpc($page).protected.updateTest.mutate({

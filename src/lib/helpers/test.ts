@@ -103,6 +103,9 @@ export function isTestValid(inputsToValidate: IsTestValid) {
   }
 
   if (questions) {
+    if (questions.length === 0) {
+      isError = true
+    }
     for (const item of questions) {
 
       try {
