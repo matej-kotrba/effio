@@ -1,11 +1,9 @@
-import { ZodError, z } from "zod"
-import { json } from "@sveltejs/kit"
+import { json, error } from "@sveltejs/kit"
 import type { RequestEvent } from "../../dashboard/$types"
-import { asnwerSchema as answerObjectSchema, titleSchema } from "~schemas/textInput"
-import type { TestObject } from "~stores/testObject"
 import { isTestValid } from "~helpers/test"
 
 export async function POST(event: RequestEvent) {
+  if (!(await event.locals.getSession())?.user?.name) throw error(401, "Unauthorized")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = await event.request.json() as { [key: string]: any }
 

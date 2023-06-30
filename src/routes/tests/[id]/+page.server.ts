@@ -2,37 +2,31 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import { router } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 
+// Type which takes the question and creates a question without the answer input
+// (PickOne without answer in answers array ...)
+
 type QuestionTransformation = {
   [Key in keyof QuestionTypeMap]: (question: QuestionTypeMap[Key]) => object
 }
 
-function questionCreator(question: QuestionTypeMap[keyof QuestionTypeMap]): QuestionTypeMap[keyof QuestionTypeMap] {
-  return {
-    ...question,
-
-  }
-}
-
 // Transform the question into data which will not contain answers
 const questionContentTransformation: QuestionTransformation = {
-  "pickOne": (question: PickOneQuestion) => {
+  "pickOne": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
     return {
       ...question,
       correctAnswerIndex: undefined
-    } as PartialPick<PickOneQuestion, "correctAnswerIndex">
+    }
   },
-  "true/false": (question: TrueFalseQuestion) => {
+  "true/false": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
+  } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "isTrue" | "error">[] } => {
     return {
       ...question,
-      answers: question.answers.map((answer) => {
+      answers: question.answers.map((item) => {
         return {
-          answer: answer,
-          isTrue: undefined
+          answer: item.answer,
         }
       })
-    } as unknown as {
-        [Key in keyof TrueFalseQuestion]: Key extends "answers" ? PartialPick<TrueFalseQuestion["answers"][number], "isTrue">[] : TrueFalseQuestionContent[Key]
-      }
+    }
   }
 }
 
@@ -49,16 +43,22 @@ export const load: ServerLoad = async (request) => {
   if (!test) throw redirect(302, "/")
 
   const questionTypeOptions = Object.keys(questionContentTransformation)
-  console.log(test.questions)
 
-  const editedTest = test.questions.map((question) => {
+  const editedQuestions = test.questions.map((question) => {
+    // check if the question type exists in the object above, if so then redirect to homepage
     if (!questionTypeOptions.some((key) => key === question.type.slug)) throw redirect(302, "/")
-    return questionContentTransformation[question.type.slug as keyof QuestionTransformation](question)
+    return {
+      ...question,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      content: questionContentTransformation[question.type.slug as keyof QuestionTransformation](question.content)
+    }
   })
 
-  console.log(editedTest)
-
   return {
-    // testContent: 
+    testContent: {
+      ...test,
+      questions: editedQuestions
+    }
   }
 }
