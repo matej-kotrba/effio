@@ -4,10 +4,6 @@
 	export let questionIndex: number;
 
 	let selectedInput: number = 0;
-
-	// Update the store based on the selection
-	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)['correctAnswerIndex'] =
-		selectedInput;
 </script>
 
 <div class="flex flex-col gap-2">
@@ -22,8 +18,8 @@
 				<span> {answer}</span>
 			</div>
 			<input
-				type="radio"
-				class="radio radio-primary radio_button"
+				type="checkbox"
+				class="checkbox checkbox-primary radio_button"
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				value={index}
 				bind:group={selectedInput}
