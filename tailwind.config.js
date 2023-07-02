@@ -64,7 +64,29 @@ export default {
 	plugins: [require('daisyui')],
 	daisyui: {
 		styled: true,
-		themes: false,
+		themes: [
+			{
+				mytheme: {
+					primary: '#6433f0',
+
+					secondary: '#d926a9',
+
+					accent: '#1fb2a6',
+
+					neutral: '#2a323c',
+
+					'base-100': '#f5f5f5',
+
+					info: '#3abff8',
+
+					success: '#36d399',
+
+					warning: '#fbbd23',
+
+					error: '#f87272'
+				}
+			}
+		],
 		base: false,
 		utils: true,
 		logs: false,
