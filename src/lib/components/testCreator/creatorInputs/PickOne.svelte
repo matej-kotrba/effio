@@ -14,6 +14,8 @@
 	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
 	$: answersLength = content.answers.length;
 
+	$: console.log($testObject.questions[indexParent].content.answers);
+
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
