@@ -53,8 +53,6 @@ export async function isValidatInputServer(obj: TestObject): Promise<{ success: 
   };
 }
 
-// TODO: Complete validation here or leave at the API endpoint
-
 const asnwerSchema = z.object({
   answer: answerObjectSchema//z.string().min(1, "Answer has to be at least 1 character long.").max(100, "Answer can be max 100 characters long.")
 }).passthrough()

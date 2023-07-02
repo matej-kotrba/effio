@@ -147,36 +147,36 @@
 		</form>
 	</dialog>
 	<!-- <div
-							class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
-							on:mouseleave={() => (isDropdownOpen = false)}
-						>
-							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-							<button
-								type="button"
-								class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
-								on:click={() => (isDropdownOpen = !isDropdownOpen)}
-							>
-								<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
-							</button>
-							<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-							<div
-								use:clickOutside
-								on:clickoutside={() => (isDropdownOpen = false)}
-								class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
+		class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
+		on:mouseleave={() => (isDropdownOpen = false)}
+	>
+		<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+		<button
+			type="button"
+			class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
+			on:click={() => (isDropdownOpen = !isDropdownOpen)}
+		>
+			<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
+		</button>
+		<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
+		<div
+			use:clickOutside
+			on:clickoutside={() => (isDropdownOpen = false)}
+			class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
 						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
 						{isDropdownOpen ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
-							>
-								{#each inputTemplates as input}
-									<button
-										type="button"
-										on:click={() => onDropdownInputClick(input)}
-										class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
-									>
-										{input.name}
-									</button>
-								{/each}
-							</div>
-						</div> -->
+		>
+			{#each inputTemplates as input}
+				<button
+					type="button"
+					on:click={() => onDropdownInputClick(input)}
+					class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
+				>
+					{input.name}
+				</button>
+			{/each}
+		</div>
+	</div> -->
 	<div class="relative flex flex-col items-center justify-center gap-2">
 		<!-- Displaying the initial create button -->
 		{#if $testObject.questions.length === 0}

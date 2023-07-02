@@ -9,23 +9,41 @@ type QuestionTransformation = {
   [Key in keyof QuestionTypeMap]: (question: QuestionTypeMap[Key]) => object
 }
 
+type QuestionContentTransformation = {
+  [Key in keyof QuestionTypeMap]: {
+    "separateAnswer": (question: QuestionTypeMap[Key]) => object,
+    "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean
+  }
+}
+
 // Transform the question into data which will not contain answers
-const questionContentTransformation: QuestionTransformation = {
-  "pickOne": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
-    return {
-      ...question,
-      correctAnswerIndex: undefined
-    }
+const questionContentTransformation: QuestionContentTransformation = {
+  "pickOne": {
+    "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
+      return {
+        ...question,
+        correctAnswerIndex: undefined
+      }
+    },
+    "checkAnswerPresence": (question: PickOneQuestion): boolean => {
+      return !(question.correctAnswerIndex === undefined)
+    },
   },
-  "true/false": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
-  } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "isTrue" | "error">[] } => {
-    return {
-      ...question,
-      answers: question.answers.map((item) => {
-        return {
-          answer: item.answer,
-        }
-      })
+  "true/false": {
+    "separateAnswer": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
+    } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "error">[] } => {
+      return {
+        ...question,
+        answers: question.answers.map((item) => {
+          return {
+            answer: item.answer,
+            isTrue: false,
+          }
+        })
+      }
+    },
+    "checkAnswerPresence": (question: TrueFalseQuestion): boolean => {
+      return question.answers.every((item) => item.isTrue !== undefined)
     }
   }
 }
@@ -51,7 +69,7 @@ export const load: ServerLoad = async (request) => {
       ...question,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      content: questionContentTransformation[question.type.slug as keyof QuestionTransformation](question.content)
+      content: questionContentTransformation[question.type.slug as keyof QuestionTransformation]["separateAnswer"](question.content)
     }
   })
 

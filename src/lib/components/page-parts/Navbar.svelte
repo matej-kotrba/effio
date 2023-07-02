@@ -2,8 +2,8 @@
 	import Icon from '@iconify/svelte';
 </script>
 
-<nav class="bg-transparent h-[70px] container mx-auto">
-	<div class="flex justify-between h-full px-5">
+<nav class="bg-transparent h-[70px] border-b-2 border-light_text_black_20">
+	<div class="container flex justify-between h-full px-5 mx-auto">
 		<div class="flex items-center h-full">
 			<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 		</div>
