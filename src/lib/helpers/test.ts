@@ -4,6 +4,50 @@ import { dev } from "$app/environment"
 import { z, ZodError } from "zod"
 import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 
+
+type QuestionContentTransformation = {
+  [Key in keyof QuestionTypeMap]: {
+    // Type which takes the question and creates a question without the answer input
+    // (PickOne without answer in answers array ...)
+    "separateAnswer": (question: QuestionTypeMap[Key]) => object,
+
+    // Type which takes the question and checks if the answer of the specific question type is present
+    "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean
+  }
+}
+
+// Transform the question into data which will not contain answers
+export const questionContentFunctions: QuestionContentTransformation = {
+  "pickOne": {
+    "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
+      return {
+        ...question,
+        correctAnswerIndex: undefined
+      }
+    },
+    "checkAnswerPresence": (question: PickOneQuestion): boolean => {
+      return !(question.correctAnswerIndex === undefined)
+    },
+  },
+  "true/false": {
+    "separateAnswer": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
+    } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "error">[] } => {
+      return {
+        ...question,
+        answers: question.answers.map((item) => {
+          return {
+            answer: item.answer,
+            isTrue: false,
+          }
+        })
+      }
+    },
+    "checkAnswerPresence": (question: TrueFalseQuestion): boolean => {
+      return question.answers.every((item) => item.isTrue !== undefined)
+    }
+  }
+}
+
 export function initializeNewTestToTestStore(testData: ClientTest) {
   testObject.set({
     title: testData.title,
@@ -135,49 +179,18 @@ export function isTestValid(inputsToValidate: IsTestValid) {
     store: result,
     isError
   }
+}
 
+type CheckServer = {
+  error?: string
+}
 
-  // const body = (await event.request.json()) as TestObject
+export const checkTestServer = (test: TestObject): CheckServer => {
+  if (!test.id) return {
+    error: "Test has no ID and hence cannot be saved."
+  }
 
-  // const questions = body.questions
-
-  // let isError = false
-
-  // for (const item of questions) {
-
-  //   try {
-  //     questionSchema.parse(item)
-  //     item.errors = {}
-  //   }
-  //   catch (e) {
-  //     const error = e as ZodError<typeof asnwerSchema>
-  //     item.errors.title = error.errors[0].message
-  //     isError = true
-  //   }
-
-  //   if (item.content && item.content.answers) {
-  //     for (const asnwer of item.content.answers)
-  //       try {
-  //         asnwerSchema.parse(asnwer)
-  //         asnwer.error = ""
-  //       }
-  //       catch (e: unknown) {
-  //         const error = e as ZodError<typeof asnwerSchema>
-  //         asnwer.error = error.errors[0].message
-  //         isError = true
-  //       }
-  //   }
-  // }
-
-  // const titleParse = titleSchema.safeParse(body.title)
-  // if (!titleParse.success) {
-  //   body.errors.title = titleParse.error.message
-  // }
-
-  // const descriptionParse = titleSchema.safeParse(body.description)
-  // if (!descriptionParse.success) {
-  //   body.errors.description = descriptionParse.error.message
-  // }
-
-  // return json({ store: questions, error: isError }) 
+  return {
+    error: undefined
+  }
 }
