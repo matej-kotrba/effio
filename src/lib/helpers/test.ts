@@ -3,6 +3,7 @@ import { testObject, type TestObject } from "~stores/testObject";
 import { dev } from "$app/environment"
 import { z, ZodError } from "zod"
 import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
+import { enviromentFetch } from "./fetch";
 
 
 type QuestionContentTransformation = {
@@ -181,16 +182,48 @@ export function isTestValid(inputsToValidate: IsTestValid) {
   }
 }
 
-type CheckServer = {
-  error?: string
-}
+// Check the test object and propagate errors if needed
+export const checkTestClient = (test: TestObject) => {
+  let isError = false
 
-export const checkTestServer = (test: TestObject): CheckServer => {
-  if (!test.id) return {
-    error: "Test has no ID and hence cannot be saved."
+  for (const question of test.questions) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (!questionContentFunctions[question.questionType].checkAnswerPresence(question.content as any)) {
+      question.errors.content = "Please fill in the answer."
+      isError = true
+    }
+
   }
 
   return {
-    error: undefined
+    success: !isError,
+    store: test
+  }
+}
+
+type CheckServer = {
+  error?: string;
+  success: boolean;
+}
+
+export const checkTestServer = async (test: TestObject): Promise<CheckServer> => {
+  if (!test.id) return {
+    error: "Test has no ID and hence cannot be submitted.",
+    success: false
+  }
+
+  const res = await enviromentFetch({
+    path: "checkTest",
+    method: "POST",
+    body: JSON.stringify(test)
+  })
+
+  const data = await res.json() as { error?: string, success?: boolean }
+
+
+  return {
+    error: data?.error ?? undefined,
+    success: data?.success ?? false
   }
 }

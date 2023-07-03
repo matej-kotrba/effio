@@ -3,7 +3,7 @@
 
 	export let questionIndex: number;
 
-	let selectedInput: number = 0;
+	let selectedInput: number;
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)['correctAnswerIndex'] =

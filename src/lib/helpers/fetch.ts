@@ -2,9 +2,9 @@ import { dev } from "$app/environment";
 
 type Props = {
   path: string;
-  method: "GET" | "POST";
-  body: BodyInit | null | undefined;
-  headers: HeadersInit | undefined;
+  method?: "GET" | "POST";
+  body?: BodyInit | null | undefined;
+  headers?: HeadersInit | undefined;
 }
 
 export const enviromentFetch = ({ path, method = "GET", body, headers }: Props) => {

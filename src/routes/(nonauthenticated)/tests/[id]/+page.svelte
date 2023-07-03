@@ -1,15 +1,17 @@
 <script lang="ts">
 	import Input from '~components/testTaking/Input.svelte';
 	import { testObject } from '~stores/testObject';
-	import { initializeTestToTestStore } from '~helpers/test';
+	import { checkTestClient, checkTestServer, initializeTestToTestStore } from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 
 	export let data;
 
+	let submitError: string = '';
+
 	initializeTestToTestStore(data.testContent);
 
-	$: console.log($testObject.questions);
+	// $: console.log($testObject.questions);
 </script>
 
 <div class="mx-auto max-w-[650px]">
@@ -17,8 +19,40 @@
 	<p class="text-light_text_black_60">{data.testContent.description}</p>
 	<Space gap={40} />
 	{#each data.testContent.questions as _, index}
-		<Input questionIndex={index} />
+		<Input
+			questionIndex={index}
+			class={`border-2 border-solid ${
+				$testObject.questions[index].errors.content ? ' border-error' : 'border-transparent'
+			}`}
+		/>
+		<Space gap={10} />
+		{#if $testObject.questions[index].errors.content}
+			<p class="text-error text-body2">{$testObject.questions[index].errors.content}</p>
+		{/if}
 	{/each}
 	<Space gap={40} />
-	<BasicButton title={'Check'} onClick={() => {}} class="ml-auto" />
+	<div class="flex items-center justify-between">
+		{#if submitError}
+			<p class="text-error text-body2">{submitError}</p>
+		{/if}
+		<BasicButton
+			title={'Check'}
+			onClick={async () => {
+				let clientCheck = checkTestClient($testObject);
+				if (!clientCheck['success']) {
+					$testObject = clientCheck['store'];
+					return;
+				}
+
+				let res = await checkTestServer($testObject);
+				if (!res['success']) {
+					submitError = res['error'] || 'Something went wrong';
+				} else {
+					submitError = '';
+					// ...
+				}
+			}}
+			class="ml-auto"
+		/>
+	</div>
 </div>

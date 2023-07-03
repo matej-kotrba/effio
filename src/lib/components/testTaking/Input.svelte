@@ -5,9 +5,12 @@
 	import TrueFalse from './takingInputs/TrueFalse.svelte';
 
 	export let questionIndex: number;
+
+	export { classes as class };
+	let classes = '';
 </script>
 
-<div class="p-3 rounded-md shadow-md bg-light_whiter">
+<div class={`p-3 rounded-md shadow-md bg-light_whiter ${classes}`}>
 	<p class="text-light_text_black_40 text-body2">
 		{$testObject.questions[questionIndex].displayType}
 	</p>
