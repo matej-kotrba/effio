@@ -38,6 +38,11 @@
 		<BasicButton
 			title={'Check'}
 			onClick={async () => {
+				// Reset errors
+				for (let i in $testObject.questions) {
+					$testObject.questions[i].errors.content = '';
+				}
+
 				let clientCheck = checkTestClient($testObject);
 				if (!clientCheck['success']) {
 					$testObject = clientCheck['store'];
