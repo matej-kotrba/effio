@@ -44,7 +44,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: true,
+		constructingDone: false,
 		detailsDone: false
 	};
 

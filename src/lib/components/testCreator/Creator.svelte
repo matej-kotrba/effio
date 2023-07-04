@@ -15,14 +15,11 @@
 </script> -->
 
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { clickOutside } from '~use/clickOutside';
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import { testObject } from '~stores/testObject';
-	import TrueFalse from './creatorInputs/TrueFalse.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 
