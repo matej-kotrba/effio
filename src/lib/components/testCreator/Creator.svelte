@@ -14,6 +14,53 @@
 	export type QuestionsDataType = Question | NewQuestionInput;
 </script> -->
 
+<script lang="ts" context="module">
+	export function createNewInput(input: QuestionTemplate) {
+		const newQuestionData: PartialPick<Question, 'content'> = {
+			id: crypto.randomUUID(),
+			title: '',
+			questionType: input.properties.inputType as Question['questionType'],
+			displayType: input.name,
+			questionTypeId: input.id,
+			errors: {}
+		};
+
+		const questionType = input.properties.inputType as Question['questionType'];
+
+		if (questionType === 'pickOne') {
+			newQuestionData.content = {
+				type: 'pickOne',
+				correctAnswerIndex: 0,
+				answers: [
+					{
+						answer: ''
+					},
+					{
+						answer: ''
+					}
+				]
+			} as PickOneQuestion;
+		} else if (questionType === 'true/false') {
+			newQuestionData.content = {
+				type: 'true/false',
+				answers: [
+					{
+						answer: '',
+						isTrue: false
+					},
+					{
+						answer: '',
+						isTrue: false
+					}
+				]
+			} as TrueFalseQuestion;
+		} else {
+			console.error('This question type is not supported!');
+			return;
+		}
+	}
+</script>
+
 <script lang="ts">
 	import Input from '~components/testCreator/Input.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
@@ -24,6 +71,9 @@
 	import Space from '~components/separators/Space.svelte';
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
 	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
+
+	// TODO: Poslat containter elment do sidebaru a tam udělat drop eventListener, asi posílat i index
+	// activatoru aby se tam rovnou mohl vytvořit input
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];

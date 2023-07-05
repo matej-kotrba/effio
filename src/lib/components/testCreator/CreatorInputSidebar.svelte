@@ -60,9 +60,10 @@
 			<div
 				class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500"
 			>
+				<!-- on:mousedown={() => onDragEvent(true, index)} -->
 				<div
 					bind:this={inputReferenes[index]}
-					on:mousedown={() => onDragEvent(true, index)}
+					draggable="true"
 					class="absolute top-0 left-0 grid w-full bg-white rounded-md shadow-md cursor-pointer select-none shadow-light_text_black_40 aspect-square place-content-center"
 				>
 					{input.name}
