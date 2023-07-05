@@ -73,7 +73,7 @@
 				/></button
 			>
 		</nav>
-		<div class="px-4 pt-6 overflow-hidden md:px-8 xl:px-16 content">
+		<div class="px-4 pt-6 md:px-8 xl:px-16 content">
 			<slot />
 		</div>
 	</div>
