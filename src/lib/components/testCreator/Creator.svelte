@@ -23,6 +23,7 @@
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
+	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -110,6 +111,32 @@
 		dragDisable = false;
 	}
 
+	type Activators = {
+		[index: number]: HTMLElement;
+	};
+
+	let activators: Activators = {};
+
+	let displayedActivatorId: number = -1;
+
+	// Calculates which activator should be displayed
+	function calculateActivatorToDisplay(event: MouseEvent) {
+		for (let i in activators) {
+			if (displayedActivatorId === -1) {
+				displayedActivatorId = +i;
+				return;
+			}
+			const activatorRect = activators[i].getBoundingClientRect();
+			const origRect = activators[displayedActivatorId].getBoundingClientRect();
+
+			// TODO: May be changed in the future
+			if (Math.abs(activatorRect.y - event.clientY) < Math.abs(origRect.y - event.clientY)) {
+				displayedActivatorId = +i;
+				return;
+			}
+		}
+	}
+
 	// $: {
 	// 	dispatch('questionsDataChange', questionsData);
 	// }
@@ -176,7 +203,7 @@
 			{/each}
 		</div>
 	</div> -->
-		<div class="relative flex flex-col items-center justify-center gap-2">
+		<div class="relative flex flex-col items-center justify-center gap-2 p-2 overflow-hidden">
 			<!-- Displaying the initial create button -->
 			{#if $testObject.questions.length === 0}
 				<div class="flex flex-col items-center gap-3">
@@ -209,22 +236,32 @@
 					}}
 					on:finalize={onOrderChange}
 					on:consider={onOrderConsideration}
+					on:mousemove={calculateActivatorToDisplay}
+					on:mouseleave={() => (displayedActivatorId = -1)}
 				>
 					<!-- Separator with add new input -->
 					{#each $testObject['questions'] as question, index (question['id'])}
 						<!-- Div which needs to be here for draggeble to be in creator and not in input -->
 						<div animate:flip={{ duration: 300 }}>
-							<Input
-								{index}
-								on:questionDetails={({ detail }) => {
-									$testObject.questions[index]['content'] = detail;
-								}}
-								on:titleChange={({ detail }) => {
-									$testObject.questions[index]['title'] = detail;
-								}}
-								on:deleteInput={() => removeQuestion(index)}
-								on:dnddrag={startDrag}
-							/>
+							<!-- {#if index === 0}
+								<CreatorInputDropdownActivator />
+							{/if} -->
+							<div class="flex flex-col gap-3">
+								<Input
+									{index}
+									on:questionDetails={({ detail }) => {
+										$testObject.questions[index]['content'] = detail;
+									}}
+									on:titleChange={({ detail }) => {
+										$testObject.questions[index]['title'] = detail;
+									}}
+									on:deleteInput={() => removeQuestion(index)}
+									on:dnddrag={startDrag}
+								/>
+								<div bind:this={activators[index]}>
+									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index} />
+								</div>
+							</div>
 						</div>
 					{/each}
 				</div>
