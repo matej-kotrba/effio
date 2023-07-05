@@ -35,6 +35,8 @@
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
 
+	let newInputDrag: boolean = false;
+
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
 
@@ -259,7 +261,9 @@
 									on:dnddrag={startDrag}
 								/>
 								<div bind:this={activators[index]}>
-									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index} />
+									<CreatorInputDropdownActivator
+										isVisible={newInputDrag && displayedActivatorId === index}
+									/>
 								</div>
 							</div>
 						</div>
@@ -268,7 +272,11 @@
 			{/if}
 		</div>
 	</div>
-	<CreatorInputSidebar inputs={inputTemplates} class="self-start" />
+	<CreatorInputSidebar
+		inputs={inputTemplates}
+		class="self-start"
+		on:drag={(event) => (newInputDrag = event.detail.isDragging)}
+	/>
 </div>
 
 <style>
