@@ -181,6 +181,7 @@
 		for (let i in activators) {
 			if (displayedActivatorId === -1) {
 				displayedActivatorId = +i;
+				return;
 			}
 			const activatorRect = activators[i].getBoundingClientRect();
 			const origRect = activators[displayedActivatorId].getBoundingClientRect();
@@ -200,6 +201,7 @@
 			if (input) {
 				addNewQuestion(input, displayedActivatorId);
 			}
+			displayedActivatorId = -1;
 		}
 	}
 
@@ -311,11 +313,14 @@
 					bind:this={containerRef}
 				>
 					<!-- Separator with add new input -->
+					<div bind:this={activators[0]}>
+						<CreatorInputDropdownActivator isVisible={displayedActivatorId === 0} />
+					</div>
 					{#each $testObject['questions'] as question, index (question['id'])}
 						<!-- Div which needs to be here for draggeble to be in creator and not in input -->
 						<div animate:flip={{ duration: 300 }}>
 							<!-- {#if index === 0}
-								<CreatorInputDropdownActivator />
+							<CreatorInputDropdownActivator />
 							{/if} -->
 							<div class="flex flex-col gap-3">
 								<Input
@@ -329,8 +334,8 @@
 									on:deleteInput={() => removeQuestion(index)}
 									on:dnddrag={startDrag}
 								/>
-								<div bind:this={activators[index]}>
-									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index} />
+								<div bind:this={activators[index + 1]}>
+									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index + 1} />
 								</div>
 							</div>
 						</div>
