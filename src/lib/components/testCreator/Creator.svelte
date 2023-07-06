@@ -87,8 +87,6 @@
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
 
-	let newInputDrag: boolean = false;
-
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
 
@@ -96,7 +94,6 @@
 		const data = [...$testObject.questions];
 		data.splice(index, 0, input);
 		$testObject.questions = data;
-		console.log(data);
 	}
 
 	function removeQuestion(index: number) {
@@ -272,7 +269,12 @@
 			{/each}
 		</div>
 	</div> -->
-		<div class="relative flex flex-col items-center justify-center gap-2 p-2 overflow-hidden">
+		<div
+			class="relative flex flex-col items-center justify-center gap-2 p-2 overflow-hidden"
+			on:dragleave|self={() => {
+				displayedActivatorId = -1;
+			}}
+		>
 			<!-- Displaying the initial create button -->
 			{#if $testObject.questions.length === 0}
 				<div class="flex flex-col items-center gap-3">
@@ -306,7 +308,6 @@
 					on:finalize={onOrderChange}
 					on:consider={onOrderConsideration}
 					on:dragover={calculateActivatorToDisplay}
-					on:mouseleave={() => (displayedActivatorId = -1)}
 					bind:this={containerRef}
 				>
 					<!-- Separator with add new input -->
@@ -329,9 +330,7 @@
 									on:dnddrag={startDrag}
 								/>
 								<div bind:this={activators[index]}>
-									<CreatorInputDropdownActivator
-										isVisible={newInputDrag && displayedActivatorId === index}
-									/>
+									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index} />
 								</div>
 							</div>
 						</div>
