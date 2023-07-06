@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import type { QuestionTemplate } from '../trpc/router';
 
 export type TestObject = {
   title: string;
@@ -57,6 +58,5 @@ export const testObject = writable({
     }
   ]
 } as TestObject);
-
 
 // export const testUpdateObject = writable<Omit<TestWithQuestions, "ownerId" | "stars" | "createdAt" | "updatedAt">>()
