@@ -15,7 +15,7 @@
 </script> -->
 
 <script lang="ts" context="module">
-	export function createNewInput(input: QuestionTemplate) {
+	export function createNewInput(input: QuestionTemplate): Question | void {
 		const newQuestionData: PartialPick<Question, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
@@ -58,6 +58,8 @@
 			console.error('This question type is not supported!');
 			return;
 		}
+
+		return newQuestionData as Question;
 	}
 </script>
 
@@ -90,8 +92,11 @@
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
 
-	function addNewQuestion(input: Question) {
-		$testObject.questions = [...$testObject.questions, input];
+	function addNewQuestion(input: Question, index: number) {
+		const data = [...$testObject.questions];
+		data.splice(index, 0, input);
+		$testObject.questions = data;
+		console.log(data);
 	}
 
 	function removeQuestion(index: number) {
@@ -143,7 +148,7 @@
 		}
 
 		newInputModal.close();
-		addNewQuestion(newQuestionData as Question);
+		addNewQuestion(newQuestionData as Question, $testObject.questions.length - 1);
 		isDropdownOpen = false;
 	}
 
@@ -171,12 +176,14 @@
 
 	let displayedActivatorId: number = -1;
 
+	let containerRef: HTMLDivElement;
+
 	// Calculates which activator should be displayed
 	function calculateActivatorToDisplay(event: MouseEvent) {
+		console.log(displayedActivatorId);
 		for (let i in activators) {
 			if (displayedActivatorId === -1) {
 				displayedActivatorId = +i;
-				return;
 			}
 			const activatorRect = activators[i].getBoundingClientRect();
 			const origRect = activators[displayedActivatorId].getBoundingClientRect();
@@ -184,7 +191,17 @@
 			// TODO: May be changed in the future
 			if (Math.abs(activatorRect.y - event.clientY) < Math.abs(origRect.y - event.clientY)) {
 				displayedActivatorId = +i;
-				return;
+			}
+		}
+	}
+
+	function onInputDrop(event: { detail: { input: QuestionTemplate } }) {
+		console.log(displayedActivatorId);
+		if (displayedActivatorId !== -1) {
+			console.log(event.detail.input);
+			const input = createNewInput(event.detail.input);
+			if (input) {
+				addNewQuestion(input, displayedActivatorId);
 			}
 		}
 	}
@@ -288,8 +305,9 @@
 					}}
 					on:finalize={onOrderChange}
 					on:consider={onOrderConsideration}
-					on:mousemove={calculateActivatorToDisplay}
+					on:dragover={calculateActivatorToDisplay}
 					on:mouseleave={() => (displayedActivatorId = -1)}
+					bind:this={containerRef}
 				>
 					<!-- Separator with add new input -->
 					{#each $testObject['questions'] as question, index (question['id'])}
@@ -324,9 +342,11 @@
 	</div>
 	<CreatorInputSidebar
 		inputs={inputTemplates}
+		{containerRef}
 		class="self-start"
-		on:drag={(event) => (newInputDrag = event.detail.isDragging)}
+		on:drop={onInputDrop}
 	/>
+	<!-- on:drag={(event) => (newInputDrag = event.detail.isDragging)} -->
 </div>
 
 <style>
