@@ -328,11 +328,15 @@
 							<CreatorInputDropdownActivator />
 							{/if} -->
 
-							<!-- TODO: Udělat stejný div (ve velikosti) aby tam nebyl glitch effect -->
 							{#if index === 0}
 								<div bind:this={activators[0]}>
-									<CreatorInputDropdownActivator isVisible={displayedActivatorId === 0} />
+									<CreatorInputDropdownActivator
+										isVisible={displayedActivatorId === 0}
+										class="h-1"
+									/>
 								</div>
+							{:else}
+								<div class="h-1" />
 							{/if}
 							<div class="flex flex-col gap-3">
 								<Input
