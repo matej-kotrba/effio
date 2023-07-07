@@ -98,6 +98,7 @@
 
 	function removeQuestion(index: number) {
 		$testObject.questions = $testObject.questions.filter((_, i) => i !== index);
+		delete activators[index + 1];
 	}
 
 	function onNewInputClick(input: QuestionTemplate) {
@@ -179,6 +180,7 @@
 	function calculateActivatorToDisplay(event: MouseEvent) {
 		console.log(displayedActivatorId);
 		for (let i in activators) {
+			if (activators[i] === null) continue;
 			if (displayedActivatorId === -1) {
 				displayedActivatorId = +i;
 				return;
@@ -194,7 +196,6 @@
 	}
 
 	function onInputDrop(event: { detail: { input: QuestionTemplate } }) {
-		console.log(displayedActivatorId);
 		if (displayedActivatorId !== -1) {
 			console.log(event.detail.input);
 			const input = createNewInput(event.detail.input);
@@ -309,7 +310,13 @@
 					}}
 					on:finalize={onOrderChange}
 					on:consider={onOrderConsideration}
-					on:dragover={calculateActivatorToDisplay}
+					on:dragover={(e) => {
+						calculateActivatorToDisplay(e);
+						if (e?.dataTransfer?.effectAllowed) {
+							e.preventDefault();
+							e.dataTransfer.dropEffect = 'move';
+						}
+					}}
 					bind:this={containerRef}
 				>
 					<!-- Separator with add new input -->

@@ -81,6 +81,11 @@
 				<div
 					bind:this={inputReferences[index]}
 					draggable="true"
+					on:dragstart={(e) => {
+						if (e?.dataTransfer) {
+							e.dataTransfer.effectAllowed = 'move';
+						}
+					}}
 					class="absolute top-0 left-0 grid w-full bg-white rounded-md shadow-md cursor-pointer select-none shadow-light_text_black_40 aspect-square place-content-center"
 				>
 					{input.name}
