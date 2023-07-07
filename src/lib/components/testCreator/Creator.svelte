@@ -158,6 +158,7 @@
 	}
 
 	function onOrderConsideration(e: { detail: { items: Question[] } }) {
+		console.log(e.detail.items);
 		$testObject.questions = e.detail.items;
 	}
 
@@ -320,15 +321,19 @@
 					bind:this={containerRef}
 				>
 					<!-- Separator with add new input -->
-					<div bind:this={activators[0]}>
-						<CreatorInputDropdownActivator isVisible={displayedActivatorId === 0} />
-					</div>
 					{#each $testObject['questions'] as question, index (question['id'])}
 						<!-- Div which needs to be here for draggeble to be in creator and not in input -->
 						<div animate:flip={{ duration: 300 }}>
 							<!-- {#if index === 0}
 							<CreatorInputDropdownActivator />
 							{/if} -->
+
+							<!-- TODO: Udělat stejný div (ve velikosti) aby tam nebyl glitch effect -->
+							{#if index === 0}
+								<div bind:this={activators[0]}>
+									<CreatorInputDropdownActivator isVisible={displayedActivatorId === 0} />
+								</div>
+							{/if}
 							<div class="flex flex-col gap-3">
 								<Input
 									{index}
@@ -363,7 +368,7 @@
 <style>
 	.grid__container {
 		display: grid;
-		grid-template-columns: 1fr 150px;
+		grid-template-columns: 1fr 180px;
 	}
 
 	.new-input-button {

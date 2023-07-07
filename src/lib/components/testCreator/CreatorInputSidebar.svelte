@@ -86,7 +86,7 @@
 							e.dataTransfer.effectAllowed = 'move';
 						}
 					}}
-					class="absolute top-0 left-0 grid w-full bg-white rounded-md shadow-md cursor-pointer select-none shadow-light_text_black_40 aspect-square place-content-center"
+					class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none hover:text-light_primary hover:bg-slate-100 shadow-light_text_black_40 aspect-square place-content-center border-light_primary"
 				>
 					{input.name}
 				</div>
