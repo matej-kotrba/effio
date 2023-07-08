@@ -2,6 +2,9 @@
 	import { testObject } from '~stores/testObject';
 
 	export let questionIndex: number;
+	export let resultFormat: boolean = false;
+
+	// TODO: Přepsat typy v test.ts a +server.ts aby to dávalo smysl
 
 	let selectedInput: number;
 
@@ -14,6 +17,7 @@
 	{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
 		<button
 			type="button"
+			disabled={resultFormat}
 			on:click={() => (selectedInput = index)}
 			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md hover:bg-slate-50 active:bg-slate-100"
 		>
@@ -24,6 +28,7 @@
 			<input
 				type="radio"
 				class="radio radio-primary radio_button"
+				disabled={resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				value={index}
 				bind:group={selectedInput}

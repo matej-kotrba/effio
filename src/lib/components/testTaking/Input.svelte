@@ -3,8 +3,10 @@
 	import { testObject } from '~stores/testObject';
 	import PickOne from './takingInputs/PickOne.svelte';
 	import TrueFalse from './takingInputs/TrueFalse.svelte';
+	import { setContext } from 'svelte';
 
 	export let questionIndex: number;
+	export let resultFormat: boolean = false;
 
 	export { classes as class };
 	let classes = '';
@@ -18,9 +20,9 @@
 		<h4 class="text-light_text_black text-h4">{$testObject.questions[questionIndex].title}</h4>
 		<Space gap={15} />
 		{#if $testObject['questions'][questionIndex]['questionType'] === 'pickOne'}
-			<PickOne {questionIndex} />
+			<PickOne {questionIndex} {resultFormat} />
 		{:else if $testObject['questions'][questionIndex]['questionType'] === 'true/false'}
-			<TrueFalse {questionIndex} />
+			<TrueFalse {questionIndex} {resultFormat} />
 		{/if}
 	</div>
 </div>

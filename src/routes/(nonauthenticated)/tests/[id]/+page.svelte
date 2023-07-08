@@ -9,6 +9,8 @@
 
 	let submitError: string = '';
 
+	let result: { isCorrect: boolean }[] | null = null;
+
 	initializeTestToTestStore(data.testContent);
 
 	// $: console.log($testObject.questions);
@@ -24,6 +26,7 @@
 			class={`border-2 border-solid ${
 				$testObject.questions[index].errors.content ? ' border-error' : 'border-transparent'
 			}`}
+			resultFormat={!!result}
 		/>
 		<Space gap={10} />
 		{#if $testObject.questions[index].errors.content}
@@ -56,6 +59,9 @@
 					submitError = res['error'] || 'Something went wrong';
 				} else {
 					submitError = '';
+					console.log(res);
+					if (!res['questionData']) return;
+					result = res['questionData'];
 					// ...
 				}
 			}}

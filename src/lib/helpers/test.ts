@@ -212,6 +212,7 @@ export const checkTestClient = (test: TestObject) => {
 type CheckServer = {
   error?: string;
   success: boolean;
+  questionData?: ({ isCorrect: boolean } & { [key: string]: unknown })[]
 }
 
 export const checkTestServer = async (test: TestObject): Promise<CheckServer> => {
@@ -226,11 +227,17 @@ export const checkTestServer = async (test: TestObject): Promise<CheckServer> =>
     body: JSON.stringify(test)
   })
 
-  const data = await res.json() as { error?: string, success?: boolean }
+  const data = await res.json() as { error?: string, success?: boolean, data: unknown[] }
+  console.log(data)
 
+  if (data.data.some((item: any) => item.isCorrect === undefined)) return {
+    error: "Incorect check",
+    success: false
+  }
 
   return {
     error: data?.error ?? undefined,
-    success: data?.success ?? false
+    success: data?.success ?? false,
+    questionData: data.data as ({ isCorrect: boolean } & { [key: string]: unknown })[]
   }
 }

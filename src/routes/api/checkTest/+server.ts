@@ -31,5 +31,5 @@ export async function POST(event) {
     }
   })
 
-  return json({ error: undefined, success: true })
+  return json({ error: undefined, success: true, data: result })
 }
