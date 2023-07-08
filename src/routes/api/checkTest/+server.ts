@@ -1,6 +1,7 @@
 import { questionContentFunctions } from "~helpers/test"
 import { json } from '@sveltejs/kit'
 import type { TestObject } from "~stores/testObject.js"
+import prisma from "~/lib/prisma.js"
 
 export async function POST(event) {
   const body = (await event.request.json()) as TestObject
@@ -11,6 +12,22 @@ export async function POST(event) {
     // @ts-ignore
     return !(questionContentFunctions[question.questionType]["checkAnswerPresence"](question.content as any))
   })) return json({ error: "Not all questions has been filled!", success: false })
+
+  // Get test from DB so we can access correct answers
+  const test = await prisma.test.findUnique({
+    where: {
+      id: body.id
+    },
+    include: {
+      questions: true
+    }
+  })
+
+  const result = body.questions.map((question, index) => {
+    return {
+
+    }
+  })
 
   return json({ error: undefined, success: true })
 }

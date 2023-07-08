@@ -1,19 +1,3 @@
-<!-- <script lang="ts" context="module">
-	type NewQuestionInput = {
-		id: string;
-		displayType: QuestionTemplate['name'];
-		questionType: Question['questionType'];
-		questionTypeId: string;
-		content: Question['content'];
-		title?: string;
-		errors: {
-			[key: string]: string;
-		};
-	};
-
-	export type QuestionsDataType = Question | NewQuestionInput;
-</script> -->
-
 <script lang="ts" context="module">
 	export function createNewInput(input: QuestionTemplate): Question | void {
 		const newQuestionData: PartialPick<Question, 'content'> = {
@@ -158,7 +142,6 @@
 	}
 
 	function onOrderConsideration(e: { detail: { items: Question[] } }) {
-		console.log(e.detail.items);
 		$testObject.questions = e.detail.items;
 	}
 
@@ -179,7 +162,6 @@
 
 	// Calculates which activator should be displayed
 	function calculateActivatorToDisplay(event: MouseEvent) {
-		console.log(displayedActivatorId);
 		for (let i in activators) {
 			if (activators[i] === null) continue;
 			if (displayedActivatorId === -1) {
@@ -360,12 +342,14 @@
 			{/if}
 		</div>
 	</div>
-	<CreatorInputSidebar
-		inputs={inputTemplates}
-		{containerRef}
-		class="self-start"
-		on:drop={onInputDrop}
-	/>
+	{#if $testObject.questions.length > 0}
+		<CreatorInputSidebar
+			inputs={inputTemplates}
+			{containerRef}
+			class="self-start"
+			on:drop={onInputDrop}
+		/>
+	{/if}
 	<!-- on:drag={(event) => (newInputDrag = event.detail.isDragging)} -->
 </div>
 

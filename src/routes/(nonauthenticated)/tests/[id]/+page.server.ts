@@ -3,9 +3,6 @@ import { router } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 import { questionContentFunctions } from "~helpers/test";
 
-
-
-
 export const load: ServerLoad = async (request) => {
 
   const id = request.params.id;

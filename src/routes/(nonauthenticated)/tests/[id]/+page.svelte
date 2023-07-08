@@ -43,12 +43,14 @@
 					$testObject.questions[i].errors.content = '';
 				}
 
+				// Check test on the client first for all inputs filled and so on...
 				let clientCheck = checkTestClient($testObject);
 				if (!clientCheck['success']) {
 					$testObject = clientCheck['store'];
 					return;
 				}
 
+				// Then check the test on the server for the correct answers
 				let res = await checkTestServer($testObject);
 				if (!res['success']) {
 					submitError = res['error'] || 'Something went wrong';
