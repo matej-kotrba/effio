@@ -23,9 +23,11 @@ export async function POST(event) {
     }
   })
 
+  if (!test) return json({ error: "Test not found!", success: false })
+
   const result = body.questions.map((question, index) => {
     return {
-
+      isCorrect: questionContentFunctions[question.questionType]["checkAnswerCorrectness"](question.content as any, test.questions[index].content as any)
     }
   })
 

@@ -13,7 +13,8 @@ type QuestionContentTransformation = {
     "separateAnswer": (question: QuestionTypeMap[Key]) => object,
 
     // Type which takes the question and checks if the answer of the specific question type is present
-    "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean
+    "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
+    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean
   }
 }
 
@@ -29,6 +30,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "checkAnswerPresence": (question: PickOneQuestion): boolean => {
       return !(question.correctAnswerIndex === undefined)
     },
+    "checkAnswerCorrectness": (answer: PickOneQuestion, original: PickOneQuestion) => {
+      return answer.correctAnswerIndex === original.correctAnswerIndex
+    }
   },
   "true/false": {
     "separateAnswer": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
@@ -45,6 +49,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerPresence": (question: TrueFalseQuestion): boolean => {
       return question.answers.every((item) => item.isTrue !== undefined)
+    },
+    "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
+      return answer.answers.every((item, index) => item.isTrue === original.answers[index].isTrue)
     }
   }
 }
