@@ -215,7 +215,15 @@ export const checkTestClient = (test: TestObject) => {
 type CheckServer = {
   error?: string;
   success: boolean;
-  questionData?: ({ isCorrect: boolean } & { [key: string]: unknown })[]
+  questionData?: {
+    isCorrect: boolean;
+    correctAnswer: keyof QuestionTypeMap;
+    userAnswer: keyof QuestionTypeMap;
+  }[]
+
+
+
+  //({ isCorrect: boolean } & { [key: string]: unknown })[]
 }
 
 // Check test on the server for correctness of the answers
@@ -241,9 +249,39 @@ export const checkTestServer = async (test: TestObject): Promise<CheckServer> =>
     success: false
   }
 
+  if (responseData.data?.some((item) =>
+    typeof item.correctAnswer === "undefined" ||
+    typeof item.isCorrect === "undefined" ||
+    typeof item.userAnswer === "undefined")) return {
+      error: "Incorect inputs",
+      success: false
+    }
+
+  let questionData
+
+  try {
+    questionData = responseData.data?.map(item => {
+      if (item.isCorrect === undefined) throw new Error("Incorrect Input")
+      if (item.correctAnswer === undefined) throw new Error("Incorrect Input")
+      if (item.userAnswer === undefined) throw new Error("Incorrect Input")
+
+      return {
+        isCorrect: item.isCorrect,
+        correctAnswer: item.correctAnswer,
+        userAnswer: item.userAnswer,
+      }
+    })
+  }
+  catch (e) {
+    return {
+      error: "Incorrect inputs",
+      success: false
+    }
+  }
+
   return {
     error: responseData?.error ?? undefined,
     success: responseData?.success ?? false,
-    questionData: responseData.data as ({ isCorrect: boolean } & { [key: string]: unknown })[]
+    questionData
   }
 }

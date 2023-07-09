@@ -17,6 +17,8 @@
 
 	initializeTestToTestStore(data.testContent);
 
+	result = null;
+
 	// $: console.log($testObject.questions);
 </script>
 
@@ -25,6 +27,7 @@
 	<p class="text-light_text_black_60">{data.testContent.description}</p>
 	<Space gap={40} />
 	{#each data.testContent.questions as _, index}
+		<!-- TODO: Přiřazovat otázky k jiným podle ID nebo to seřazovat na serveru podle client inputu  -->
 		<Input
 			questionIndex={index}
 			class={`border-2 border-solid ${
@@ -46,35 +49,36 @@
 		{#if submitError}
 			<p class="text-error text-body2">{submitError}</p>
 		{/if}
-		<BasicButton
-			title={'Check'}
-			buttonAttributes={{ disabled: result !== null }}
-			onClick={async () => {
-				// Reset errors
-				for (let i in $testObject.questions) {
-					$testObject.questions[i].errors.content = '';
-				}
+		{#if result === null}
+			<BasicButton
+				title={'Check'}
+				onClick={async () => {
+					// Reset errors
+					for (let i in $testObject.questions) {
+						$testObject.questions[i].errors.content = '';
+					}
 
-				// Check test on the client first for all inputs filled and so on...
-				let clientCheck = checkTestClient($testObject);
-				if (!clientCheck['success']) {
-					$testObject = clientCheck['store'];
-					return;
-				}
+					// Check test on the client first for all inputs filled and so on...
+					let clientCheck = checkTestClient($testObject);
+					if (!clientCheck['success']) {
+						$testObject = clientCheck['store'];
+						return;
+					}
 
-				// Then check the test on the server for the correct answers
-				let res = await checkTestServer($testObject);
-				if (!res['success']) {
-					submitError = res['error'] || 'Something went wrong';
-				} else {
-					submitError = '';
-					console.log(res);
-					if (!res['questionData']) return;
-					result = res['questionData'];
-					// ...
-				}
-			}}
-			class="ml-auto"
-		/>
+					// Then check the test on the server for the correct answers
+					let res = await checkTestServer($testObject);
+					if (!res['success']) {
+						submitError = res['error'] || 'Something went wrong';
+					} else {
+						submitError = '';
+						console.log(res);
+						if (!res['questionData']) return;
+						result = res['questionData'];
+						// ...
+					}
+				}}
+				class="ml-auto"
+			/>
+		{/if}
 	</div>
 </div>

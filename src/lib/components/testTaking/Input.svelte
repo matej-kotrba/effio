@@ -3,7 +3,6 @@
 	import { testObject } from '~stores/testObject';
 	import PickOne from './takingInputs/PickOne.svelte';
 	import TrueFalse from './takingInputs/TrueFalse.svelte';
-	import { setContext } from 'svelte';
 
 	type ResultFormat =
 		| false
@@ -14,19 +13,17 @@
 	export let questionIndex: number;
 	export let resultFormat: ResultFormat = false;
 
-	$: console.log(resultFormat);
-
 	export { classes as class };
 	let classes = '';
 </script>
 
 <div
-	class={`p-3 rounded-md shadow-md bg-light_whiter border-2 border-solid ${
+	class={`p-3 rounded-md shadow-md bg-light_whiter outline-2 outline ${
 		resultFormat !== false
 			? resultFormat.isCorrect
-				? 'border-success'
-				: 'border-red-600'
-			: ''
+				? 'outline-success'
+				: 'outline-error'
+			: 'outline-transparent'
 	} ${classes}`}
 >
 	<p class="text-light_text_black_40 text-body2">

@@ -8,6 +8,8 @@ export type CheckTestResponse = {
   success?: boolean;
   data?: {
     isCorrect?: boolean;
+    correctAnswer?: keyof QuestionTypeMap;
+    userAnswer?: keyof QuestionTypeMap;
   }[]
 }
 
@@ -44,8 +46,10 @@ export async function POST(event) {
     return {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      isCorrect: questionContentFunctions[question.questionType].checkAnswerCorrectness(question.content, compareQuestion.content)
-    }
+      isCorrect: questionContentFunctions[question.questionType].checkAnswerCorrectness(question.content, compareQuestion.content),
+      correctAnswer: compareQuestion.content,
+      userAnswer: question.content
+    } as CheckTestResponse
   })
 
   return json({ error: undefined, success: true, data: result })

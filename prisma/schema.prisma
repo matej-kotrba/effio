@@ -77,16 +77,17 @@ model QuestionType {
 }
 
 model Test {
-  id          String     @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
-  description String     @default("")
-  published   Boolean    @default(false)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  description String       @default("")
+  published   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   questions   Question[]
+  records     TestRecord[]
   tags        Tag[]
-  stars       Int        @default(0)
-  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  stars       Int          @default(0)
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId     String
 
   @@index([ownerId])
@@ -105,6 +106,25 @@ model Question {
 
   @@index([typeId])
   @@index([testId])
+}
+
+model TestRecord {
+  id              String           @id @default(uuid())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  test            Test             @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId          String
+  questionRecords QuestionRecord[]
+
+  @@index([testId])
+}
+
+model QuestionRecord {
+  id           String     @id @default(uuid())
+  testRecord   TestRecord @relation(fields: [testRecordId], references: [id], onDelete: Cascade)
+  testRecordId String
+
+  @@index([testRecordId])
 }
 
 model Tag {
