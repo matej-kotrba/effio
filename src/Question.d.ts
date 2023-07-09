@@ -26,7 +26,7 @@ type QuestionTypeMap = {
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];
 
-type Question = {
+type QuestionClient = {
   [Key in keyof QuestionTypeMap]: {
     id: string;
     title: string;
@@ -35,7 +35,7 @@ type Question = {
     questionTypeId: string;
     content: QuestionTypeMap[Key];
     errors: {
-      [ErrorKey in keyof Question as ErrorKey extends "errors" ? never : ErrorKey]?: string;
+      [ErrorKey in keyof QuestionClient as ErrorKey extends "errors" ? never : ErrorKey]?: string;
     }
   };
 }[keyof QuestionTypeMap];
@@ -43,7 +43,7 @@ type Question = {
 type ClientTest = {
   title: string;
   description: string;
-  questions: Question[];
+  questions: QuestionClient[];
   errors: {
     title?: string;
     description?: string;

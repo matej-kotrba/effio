@@ -1,15 +1,19 @@
 <script lang="ts" context="module">
-	export function createNewInput(input: QuestionTemplate): Question | void {
-		const newQuestionData: PartialPick<Question, 'content'> = {
+	export function createNewInput(
+		input: QuestionTemplate
+	): QuestionClient | void {
+		const newQuestionData: PartialPick<QuestionClient, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
-			questionType: input.properties.inputType as Question['questionType'],
+			questionType: input.properties
+				.inputType as QuestionClient['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
 			errors: {}
 		};
 
-		const questionType = input.properties.inputType as Question['questionType'];
+		const questionType = input.properties
+			.inputType as QuestionClient['questionType'];
 
 		if (questionType === 'pickOne') {
 			newQuestionData.content = {
@@ -43,7 +47,7 @@
 			return;
 		}
 
-		return newQuestionData as Question;
+		return newQuestionData as QuestionClient;
 	}
 </script>
 
@@ -74,7 +78,7 @@
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
 
-	function addNewQuestion(input: Question, index: number) {
+	function addNewQuestion(input: QuestionClient, index: number) {
 		const data = [...$testObject.questions];
 		data.splice(index, 0, input);
 		$testObject.questions = data;
@@ -86,16 +90,18 @@
 	}
 
 	function onNewInputClick(input: QuestionTemplate) {
-		let newQuestionData: PartialPick<Question, 'content'> = {
+		let newQuestionData: PartialPick<QuestionClient, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
-			questionType: input.properties.inputType as Question['questionType'],
+			questionType: input.properties
+				.inputType as QuestionClient['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
 			errors: {}
 		};
 
-		let questionType = input.properties.inputType as Question['questionType'];
+		let questionType = input.properties
+			.inputType as QuestionClient['questionType'];
 
 		if (questionType === 'pickOne') {
 			newQuestionData.content = {
@@ -130,18 +136,23 @@
 		}
 
 		newInputModal.close();
-		addNewQuestion(newQuestionData as Question, $testObject.questions.length - 1);
+		addNewQuestion(
+			newQuestionData as QuestionClient,
+			$testObject.questions.length - 1
+		);
 		isDropdownOpen = false;
 	}
 
-	function onOrderChange(e: { detail: { items: Question[]; info: { source: any } } }) {
+	function onOrderChange(e: {
+		detail: { items: QuestionClient[]; info: { source: any } };
+	}) {
 		$testObject.questions = e.detail.items;
 		if (e.detail.info.source === SOURCES.POINTER) {
 			dragDisable = true;
 		}
 	}
 
-	function onOrderConsideration(e: { detail: { items: Question[] } }) {
+	function onOrderConsideration(e: { detail: { items: QuestionClient[] } }) {
 		$testObject.questions = e.detail.items;
 	}
 
@@ -172,7 +183,10 @@
 			const origRect = activators[displayedActivatorId].getBoundingClientRect();
 
 			// TODO: May be changed in the future
-			if (Math.abs(activatorRect.y - event.clientY) < Math.abs(origRect.y - event.clientY)) {
+			if (
+				Math.abs(activatorRect.y - event.clientY) <
+				Math.abs(origRect.y - event.clientY)
+			) {
 				displayedActivatorId = +i;
 			}
 		}
@@ -201,14 +215,20 @@
 	// $: console.log(questionsData);
 </script>
 
-<div class="relative h-full bg-light_white roudned-md text-light_text_black grid__container">
+<div
+	class="relative h-full bg-light_white roudned-md text-light_text_black grid__container"
+>
 	<div class="p-4">
 		<!-- The dropdown for new input -->
 		<dialog class="modal" bind:this={newInputModal}>
 			<form method="dialog" class="modal-box max-w-[1000px] bg-light_whiter">
-				<h3 class="text-lg font-bold text-light_text_black">Pick new input for your test!</h3>
+				<h3 class="text-lg font-bold text-light_text_black">
+					Pick new input for your test!
+				</h3>
 				<Space gap={20} />
-				<div class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+				<div
+					class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+				>
 					{#each inputTemplates as input}
 						<button
 							type="button"
@@ -275,7 +295,10 @@
 							alt=""
 						/>
 						<div class="grid col-start-2 row-start-2 place-content-center">
-							<BasicButton onClick={() => newInputModal?.showModal()} title="Add question" />
+							<BasicButton
+								onClick={() => newInputModal?.showModal()}
+								title="Add question"
+							/>
 						</div>
 					</div>
 				</div>
@@ -286,7 +309,11 @@
 						items: $testObject['questions'],
 						flipDurationMs: 300,
 						dragDisabled: dragDisable,
-						dropTargetClasses: ['outline-light_primary', 'outline-solid', 'rounded-md'],
+						dropTargetClasses: [
+							'outline-light_primary',
+							'outline-solid',
+							'rounded-md'
+						],
 						dropTargetStyle: {
 							outline: '2px dashed var(--light-primary)'
 						}
@@ -333,7 +360,9 @@
 									on:dnddrag={startDrag}
 								/>
 								<div bind:this={activators[index + 1]}>
-									<CreatorInputDropdownActivator isVisible={displayedActivatorId === index + 1} />
+									<CreatorInputDropdownActivator
+										isVisible={displayedActivatorId === index + 1}
+									/>
 								</div>
 							</div>
 						</div>
@@ -360,7 +389,11 @@
 	}
 
 	.new-input-button {
-		background-image: radial-gradient(ellipse at 50% 0, white 60%, var(--light-primary) 300%);
+		background-image: radial-gradient(
+			ellipse at 50% 0,
+			white 60%,
+			var(--light-primary) 300%
+		);
 		transition: 0.4s ease;
 	}
 

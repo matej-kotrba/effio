@@ -49,7 +49,7 @@ const protectedRouter = t.router({
         }
       })
 
-      const questions = JSON.parse(input.questionContent) as Question[]
+      const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
       const questionsPromise = questions.map(async (question) => {
         return ctx.prisma.question.create({
@@ -97,7 +97,7 @@ const protectedRouter = t.router({
         }
       })
 
-      const questions = JSON.parse(input.questionContent) as Question[]
+      const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
       const questionsIds: string[] = questions.map(item => item.id)
 

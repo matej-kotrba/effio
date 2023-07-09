@@ -6,7 +6,7 @@ export type TestObject = {
   description: string;
   id?: string;
   published?: boolean;
-  questions: Question[];
+  questions: QuestionClient[];
   errors: {
     title?: string;
     description?: string;

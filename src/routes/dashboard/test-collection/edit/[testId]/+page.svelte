@@ -14,7 +14,11 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { testObject } from '~stores/testObject.js';
-	import { initializeTestToTestStore, isTestValid, isValidatInputServer } from '~/lib/helpers/test';
+	import {
+		initializeTestToTestStore,
+		isTestValid,
+		isValidInputServer
+	} from '~/lib/helpers/test';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { trpc } from '~/lib/trpc/client.js';
@@ -50,7 +54,8 @@
 		}
 
 		$testObject.errors.title = result['store']['errors']['title'] || undefined;
-		$testObject.errors.description = result['store']['errors']['description'] || undefined;
+		$testObject.errors.description =
+			result['store']['errors']['description'] || undefined;
 
 		$testObject = $testObject;
 		if (result['isError']) return;
@@ -75,7 +80,10 @@
 {#if isSubmitting}
 	<ScreenCover />
 {/if}
-<DashboardTitle title="Test editor" subtitle="Here you can edit your previously created test" />
+<DashboardTitle
+	title="Test editor"
+	subtitle="Here you can edit your previously created test"
+/>
 
 <Toggle
 	title="Is Published"

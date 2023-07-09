@@ -4,6 +4,7 @@ import { dev } from "$app/environment"
 import { z, ZodError } from "zod"
 import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
+import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 
 
 type QuestionContentTransformation = {
@@ -89,7 +90,8 @@ export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" |
   })
 }
 
-export async function isValidatInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
+// Check the validity of the test object on the server
+export async function isValidInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
   const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
     method: 'POST',
     body: JSON.stringify(obj),
@@ -97,8 +99,8 @@ export async function isValidatInputServer(obj: TestObject): Promise<{ success: 
       'Content-Type': 'application/json'
     }
   });
-  const data = (await res.json()) as { store: Question[]; error: boolean };
-  obj.questions = data.store as Question[];
+  const data = (await res.json()) as { store: QuestionClient[]; error: boolean };
+  obj.questions = data.store as QuestionClient[];
   return {
     success: !data.error,
     obj: obj
@@ -116,9 +118,10 @@ const questionSchema = z.object({
 type IsTestValid = {
   title?: string,
   description?: string,
-  questions?: Question[]
+  questions?: QuestionClient[]
 }
 
+// Validates if the test object is valid - meaning that all the inputs are filled and so on
 export function isTestValid(inputsToValidate: IsTestValid) {
 
   const { title, description, questions } = inputsToValidate
@@ -129,7 +132,7 @@ export function isTestValid(inputsToValidate: IsTestValid) {
       title?: string,
       description?: string
     };
-    questions?: Question[];
+    questions?: QuestionClient[];
   } = {
     errors: {}
   }
@@ -215,6 +218,8 @@ type CheckServer = {
   questionData?: ({ isCorrect: boolean } & { [key: string]: unknown })[]
 }
 
+// Check test on the server for correctness of the answers
+
 export const checkTestServer = async (test: TestObject): Promise<CheckServer> => {
   if (!test.id) return {
     error: "Test has no ID and hence cannot be submitted.",
@@ -227,17 +232,18 @@ export const checkTestServer = async (test: TestObject): Promise<CheckServer> =>
     body: JSON.stringify(test)
   })
 
-  const data = await res.json() as { error?: string, success?: boolean, data: unknown[] }
-  console.log(data)
+  const responseData = await res.json() as CheckTestResponse
 
-  if (data.data.some((item: any) => item.isCorrect === undefined)) return {
+  if (responseData.success === undefined) throw new Error("Server error")
+
+  if (responseData.data?.some((item) => item.isCorrect === undefined)) return {
     error: "Incorect check",
     success: false
   }
 
   return {
-    error: data?.error ?? undefined,
-    success: data?.success ?? false,
-    questionData: data.data as ({ isCorrect: boolean } & { [key: string]: unknown })[]
+    error: responseData?.error ?? undefined,
+    success: responseData?.success ?? false,
+    questionData: responseData.data as ({ isCorrect: boolean } & { [key: string]: unknown })[]
   }
 }

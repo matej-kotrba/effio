@@ -26,7 +26,7 @@
 	import {
 		initializeNewTestToTestStore,
 		isTestValid,
-		isValidatInputServer
+		isValidInputServer
 	} from '~/lib/helpers/test';
 	// TODO: Implement isValidInputServer function instead of the local one
 
@@ -94,7 +94,9 @@
 	}
 </script>
 
-<h2 class="text-h3 font-extralight text-light_text_black">Create your new test</h2>
+<h2 class="text-h3 font-extralight text-light_text_black">
+	Create your new test
+</h2>
 <p class="text-body1 text-light_text_black_40">
 	Choose a template and make a new test using many prebuilt inputs.
 </p>
@@ -102,7 +104,10 @@
 <Space />
 <div class="text-sm breadcrumbs">
 	<ul>
-		<li class="text-light_text_black_80 text-body2" class:done={testCreationProgress.templateDone}>
+		<li
+			class="text-light_text_black_80 text-body2"
+			class:done={testCreationProgress.templateDone}
+		>
 			<button
 				type="button"
 				on:click={() => {
@@ -126,7 +131,10 @@
 				}}>Constructing a test</button
 			>
 		</li>
-		<li class="text-light_text_black_80 text-body2" class:done={testCreationProgress.detailsDone}>
+		<li
+			class="text-light_text_black_80 text-body2"
+			class:done={testCreationProgress.detailsDone}
+		>
 			Details
 		</li>
 	</ul>
@@ -149,7 +157,9 @@
 			>Construct your test</span
 		>
 	{:else}
-		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}>Details</span>
+		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
+			>Details</span
+		>
 	{/if}
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
@@ -162,7 +172,10 @@
 				duration: SECTION_TRANSITION_DURATION,
 				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
+			out:fly={{
+				x: -300,
+				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
+			}}
 			class=""
 		>
 			{#each data.templates as template, index}
@@ -195,7 +208,10 @@
 				duration: SECTION_TRANSITION_DURATION,
 				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
+			out:fly={{
+				x: -300,
+				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
+			}}
 		>
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
@@ -233,7 +249,10 @@
 				duration: SECTION_TRANSITION_DURATION,
 				delay: SECTION_TRANSITION_DURATION
 			}}
-			out:fly={{ x: -300, duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0 }}
+			out:fly={{
+				x: -300,
+				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
+			}}
 		>
 			<div class="flex flex-col gap-4">
 				<TextInput
@@ -251,7 +270,9 @@
 					}}
 				/>
 				<p
-					class={`text-body2 text-error ${$testObject.errors.title ? 'opacity-100' : 'opacity-0'}`}
+					class={`text-body2 text-error ${
+						$testObject.errors.title ? 'opacity-100' : 'opacity-0'
+					}`}
 				>
 					{$testObject.errors.title || 'Placeholder error'}
 				</p>
@@ -290,7 +311,10 @@
 					/>
 				</div>
 				<dialog bind:this={finishModal} class="modal">
-					<form method="dialog" class="relative modal-box bg-light_whiter text-light_text_black">
+					<form
+						method="dialog"
+						class="relative modal-box bg-light_whiter text-light_text_black"
+					>
 						<SuccessKeyframe
 							successMessage="Success!"
 							visible={isSuccess}
@@ -305,17 +329,30 @@
 						</div>
 						<div class="modal-action">
 							<button type="button" on:click={() => finishModal.close()}
-								><Icon icon="ic:round-close" class="absolute text-2xl top-4 right-4" /></button
+								><Icon
+									icon="ic:round-close"
+									class="absolute text-2xl top-4 right-4"
+								/></button
 							>
 						</div>
 						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
-						<Separator w={'80%'} h={'1px'} color={'var(--light-text-black-20)'} />
+						<Separator
+							w={'80%'}
+							h={'1px'}
+							color={'var(--light-text-black-20)'}
+						/>
 						<p class="py-4 text-center text-body1">
-							Your test named <span class="block font-semibold">{$testObject['title']}</span><Space
-								gap={20}
-							/> with a description:
-							<span class="block font-semibold">{$testObject['description']}</span><br />
-							<Separator w={'50%'} h={'1px'} color={'var(--light-text-black-20)'} />
+							Your test named <span class="block font-semibold"
+								>{$testObject['title']}</span
+							><Space gap={20} /> with a description:
+							<span class="block font-semibold"
+								>{$testObject['description']}</span
+							><br />
+							<Separator
+								w={'50%'}
+								h={'1px'}
+								color={'var(--light-text-black-20)'}
+							/>
 							should be
 						</p>
 						<div class="flex justify-center gap-3">

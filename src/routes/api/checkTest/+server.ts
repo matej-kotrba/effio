@@ -3,6 +3,14 @@ import { json } from '@sveltejs/kit'
 import type { TestObject } from "~stores/testObject.js"
 import prisma from "~/lib/prisma.js"
 
+export type CheckTestResponse = {
+  error?: string;
+  success?: boolean;
+  data?: {
+    isCorrect?: boolean;
+  }[]
+}
+
 export async function POST(event) {
   const body = (await event.request.json()) as TestObject
   if (!body) return json({ error: "No body attached!", success: false })
@@ -20,14 +28,23 @@ export async function POST(event) {
     },
     include: {
       questions: true
+
     }
   })
 
   if (!test) return json({ error: "Test not found!", success: false })
 
-  const result = body.questions.map((question, index) => {
+  const result = body.questions.map((question) => {
+    const compareQuestion = test.questions.find(item => item.id === question.id)
+    if (!compareQuestion || Object.keys(questionContentFunctions).includes(question.questionType)) throw new Error("Question not found!")
+
+    // This would cost additional reads which should not be neccecary
+    // if (compareQuestion.type.slug !== question.questionType) throw new Error("Question type mismatch!")
+
     return {
-      isCorrect: questionContentFunctions[question.questionType]["checkAnswerCorrectness"](question.content as any, test.questions[index].content as any)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      isCorrect: questionContentFunctions[question.questionType].checkAnswerCorrectness(question.content, compareQuestion.content)
     }
   })
 
