@@ -36,7 +36,7 @@ export async function POST(event) {
 
   const result = body.questions.map((question) => {
     const compareQuestion = test.questions.find(item => item.id === question.id)
-    if (!compareQuestion || Object.keys(questionContentFunctions).includes(question.questionType)) throw new Error("Question not found!")
+    if (!compareQuestion || !Object.keys(questionContentFunctions).includes(question.questionType)) throw new Error("Question not found!")
 
     // This would cost additional reads which should not be neccecary
     // if (compareQuestion.type.slug !== question.questionType) throw new Error("Question type mismatch!")

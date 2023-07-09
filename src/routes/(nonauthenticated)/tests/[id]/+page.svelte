@@ -1,7 +1,11 @@
 <script lang="ts">
 	import Input from '~components/testTaking/Input.svelte';
 	import { testObject } from '~stores/testObject';
-	import { checkTestClient, checkTestServer, initializeTestToTestStore } from '~helpers/test';
+	import {
+		checkTestClient,
+		checkTestServer,
+		initializeTestToTestStore
+	} from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 
@@ -24,13 +28,17 @@
 		<Input
 			questionIndex={index}
 			class={`border-2 border-solid ${
-				$testObject.questions[index].errors.content ? ' border-error' : 'border-transparent'
+				$testObject.questions[index].errors.content
+					? ' border-error'
+					: 'border-transparent'
 			}`}
-			resultFormat={!!result}
+			resultFormat={result === null ? false : result[index]}
 		/>
 		<Space gap={10} />
 		{#if $testObject.questions[index].errors.content}
-			<p class="text-error text-body2">{$testObject.questions[index].errors.content}</p>
+			<p class="text-error text-body2">
+				{$testObject.questions[index].errors.content}
+			</p>
 		{/if}
 	{/each}
 	<Space gap={40} />
@@ -40,6 +48,7 @@
 		{/if}
 		<BasicButton
 			title={'Check'}
+			buttonAttributes={{ disabled: result !== null }}
 			onClick={async () => {
 				// Reset errors
 				for (let i in $testObject.questions) {
