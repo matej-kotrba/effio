@@ -42,14 +42,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   tests         Test[]
+  testRecords   TestRecord[]
 }
 
 model VerificationToken {
@@ -94,15 +95,16 @@ model Test {
 }
 
 model Question {
-  id        String       @id @default(uuid())
+  id        String           @id @default(uuid())
   title     String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  type      QuestionType @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  type      QuestionType     @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId    String
-  test      Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+  test      Test             @relation(fields: [testId], references: [id], onDelete: Cascade)
   testId    String
-  content   Json         @default("{}")
+  records   QuestionRecord[]
+  content   Json             @default("{}")
 
   @@index([typeId])
   @@index([testId])
@@ -115,16 +117,23 @@ model TestRecord {
   test            Test             @relation(fields: [testId], references: [id], onDelete: Cascade)
   testId          String
   questionRecords QuestionRecord[]
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
 
   @@index([testId])
+  @@index([userId])
 }
 
 model QuestionRecord {
   id           String     @id @default(uuid())
   testRecord   TestRecord @relation(fields: [testRecordId], references: [id], onDelete: Cascade)
   testRecordId String
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId   String
+  content      Json       @default("{}")
 
   @@index([testRecordId])
+  @@index([questionId])
 }
 
 model Tag {
