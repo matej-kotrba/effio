@@ -3,8 +3,6 @@
 
 	export let questionIndex: number;
 	export let resultFormat: boolean = false;
-
-	let selectedInput: number = 0;
 </script>
 
 <div class="flex flex-col gap-2">
@@ -12,7 +10,6 @@
 		<button
 			type="button"
 			disabled={resultFormat}
-			on:click={() => (selectedInput = index)}
 			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md hover:bg-slate-50 active:bg-slate-100"
 		>
 			<div class="grid__container">
@@ -25,7 +22,6 @@
 				disabled={resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				value={index}
-				bind:group={selectedInput}
 			/>
 		</button>
 	{/each}
