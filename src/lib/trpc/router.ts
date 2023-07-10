@@ -153,8 +153,8 @@ export const recordsRouter = router({
       z.object({
         questionId: z.string(),
         questionContent: z.object({
-          original: z.string(),
-          user: z.string()
+          original: z.object({}).passthrough(),
+          user: z.object({}).passthrough()
         })
       })
     ),

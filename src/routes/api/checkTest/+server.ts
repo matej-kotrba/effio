@@ -8,8 +8,8 @@ export type CheckTestResponse = {
   success?: boolean;
   data?: {
     isCorrect?: boolean;
-    correctAnswer?: keyof QuestionTypeMap;
-    userAnswer?: keyof QuestionTypeMap;
+    correctAnswer?: QuestionContent;
+    userAnswer?: QuestionContent;
   }[]
 }
 

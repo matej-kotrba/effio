@@ -218,8 +218,8 @@ type CheckServer = {
   success: boolean;
   questionData?: {
     isCorrect: boolean;
-    correctAnswer: keyof QuestionTypeMap;
-    userAnswer: keyof QuestionTypeMap;
+    correctAnswer: QuestionContent;
+    userAnswer: QuestionContent;
   }[]
 
 
