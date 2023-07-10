@@ -52,5 +52,6 @@ export async function POST(event) {
     } as CheckTestResponse
   })
 
+
   return json({ error: undefined, success: true, data: result })
 }

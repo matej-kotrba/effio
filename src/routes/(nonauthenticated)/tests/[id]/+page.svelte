@@ -3,7 +3,7 @@
 	import { testObject } from '~stores/testObject';
 	import {
 		checkTestClient,
-		checkTestServer,
+		checkTestServerAndRecordIt,
 		initializeTestToTestStore
 	} from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
@@ -66,7 +66,7 @@
 					}
 
 					// Then check the test on the server for the correct answers
-					let res = await checkTestServer($testObject);
+					let res = await checkTestServerAndRecordIt($testObject);
 					if (!res['success']) {
 						submitError = res['error'] || 'Something went wrong';
 					} else {

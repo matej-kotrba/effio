@@ -152,7 +152,10 @@ export const recordsRouter = router({
     answerContent: z.array(
       z.object({
         questionId: z.string(),
-        questionContent: z.string()
+        questionContent: z.object({
+          original: z.string(),
+          user: z.string()
+        })
       })
     ),
   })).mutation(async ({ ctx, input }) => {

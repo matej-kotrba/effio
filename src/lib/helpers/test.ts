@@ -5,6 +5,7 @@ import { z, ZodError } from "zod"
 import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
+import { trpc } from "../trpc/client";
 
 
 type QuestionContentTransformation = {
@@ -228,8 +229,8 @@ type CheckServer = {
 
 // Check test on the server for correctness of the answers
 
-export const checkTestServer = async (test: TestObject): Promise<CheckServer> => {
-  if (!test.id) return {
+export const checkTestServerAndRecordIt = async (test: TestObject): Promise<CheckServer> => {
+  if (test.id === undefined) return {
     error: "Test has no ID and hence cannot be submitted.",
     success: false
   }
@@ -278,6 +279,39 @@ export const checkTestServer = async (test: TestObject): Promise<CheckServer> =>
       success: false
     }
   }
+
+  if (!questionData) return {
+    error: "Incorrect inputs",
+    success: false
+  }
+
+  console.log({
+    testId: test.id,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    answerContent: questionData.map((item, index) => {
+      return {
+        questionId: test.questions[index].id,
+        questionContent: {
+          original: item.correctAnswer,
+          user: item.userAnswer
+        },
+      }
+    })
+  })
+
+  await trpc().records.createTestRecord.mutate({
+    testId: test.id,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    answerContent: questionData.map((item, index) => {
+      return {
+        questionId: test.questions[index].id,
+        questionContent: {
+          original: item.correctAnswer,
+          user: item.userAnswer
+        },
+      }
+    })
+  })
 
   return {
     error: responseData?.error ?? undefined,
