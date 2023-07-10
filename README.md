@@ -16,7 +16,7 @@
 
 ## Techstack
 #### About techstack
-- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create web application using modern technologies with typesafety and for the most part without the need of the own server
+- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create serverless web application using modern technologies with typesafety and for the most part without the need of the own server
 
 ### Used technologies:
 - SvelteKit
@@ -50,7 +50,8 @@ FastAPI / NodeJS - Express, NestJS will be considered.
 ## Timeline
 #### January -> April - Learning stack and testing it separatly
 #### April -> May - Building frontend for Effio
-#### May -> Now - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
+#### May -> June - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
+#### June -> Now - Displaying tests, taking them and being able to visit previously taken one, implemented drag and drop input creation in test creator
 
 ## Sources
 - Youtube
