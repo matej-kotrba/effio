@@ -1,6 +1,6 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { createContext } from "./lib/trpc/context";
-import { router } from "./lib/trpc/router"
+import { appRouter } from "./lib/trpc/router"
 import { redirect, type Handle } from "@sveltejs/kit";
 import { createTRPCHandle } from "trpc-sveltekit"
 import { SvelteKitAuth } from "@auth/sveltekit"
@@ -13,7 +13,7 @@ import type { User } from "@auth/core/types";
 import type { AdapterUser } from "@auth/core/adapters";
 
 const handleTRPCContext: Handle = createTRPCHandle({
-  router: router,
+  router: appRouter,
   createContext: createContext,
 })
 

@@ -130,7 +130,7 @@ model QuestionRecord {
   testRecordId String
   question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId   String
-  content      Json       @default("{}")
+  content      Json
 
   @@index([testRecordId])
   @@index([questionId])

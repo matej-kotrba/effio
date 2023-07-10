@@ -1,5 +1,5 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
-import { router } from "~/lib/trpc/router";
+import { appRouter } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 import { questionContentFunctions } from "~helpers/test";
 
@@ -11,7 +11,7 @@ export const load: ServerLoad = async (request) => {
 
   const context = await createContext(request)
 
-  const test = await router.createCaller(context).getTestById({ id: id });
+  const test = await appRouter.createCaller(context).getTestById({ id: id });
 
   if (!test) throw redirect(302, "/")
 

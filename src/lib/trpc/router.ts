@@ -4,6 +4,7 @@ import type { Context } from "./context";
 import type { TestFullType } from "~/Prisma";
 
 export const t = initTRPC.context<Context>().create()
+export const router = t.router
 
 // Schema of template question type
 const schema = z.object({
@@ -29,9 +30,9 @@ const isLoggedIn = t.middleware(async (opts) => {
   })
 })
 
-const loggedInProcedure = t.procedure.use(isLoggedIn)
+export const loggedInProcedure = t.procedure.use(isLoggedIn)
 
-const protectedRouter = t.router({
+const protectedRouter = router({
   saveTest: loggedInProcedure.input(z.object({
     title: z.string(),
     description: z.string(),
@@ -145,7 +146,52 @@ const protectedRouter = t.router({
   })
 })
 
-export const router = t.router({
+export const recordsRouter = router({
+  createTestRecord: loggedInProcedure.input(z.object({
+    testId: z.string(),
+    answerContent: z.array(
+      z.object({
+        questionId: z.string(),
+        questionContent: z.string()
+      })
+    ),
+  })).mutation(async ({ ctx, input }) => {
+    const createdTest = await ctx.prisma.testRecord.create({
+      data: {
+        userId: ctx.userId,
+        testId: input.testId,
+      }
+    })
+
+    if (!createdTest) {
+      return {
+        success: false,
+      }
+    }
+
+    const questionResponse = await ctx.prisma.questionRecord.createMany({
+      data: input.answerContent.map(item => {
+        return {
+          testRecordId: createdTest.id,
+          questionId: item.questionId,
+          content: item.questionContent
+        }
+      })
+    })
+
+    if (!questionResponse) {
+      return {
+        success: false,
+      }
+    }
+
+    return {
+      success: true
+    }
+  })
+})
+
+export const appRouter = router({
   getTemplates: t.procedure.query(async ({ ctx }) => {
     const templates = await ctx.prisma.template.findMany()
     return templates
@@ -211,10 +257,11 @@ export const router = t.router({
 
     return test
   }),
-  protected: protectedRouter
+  protected: protectedRouter,
+  records: recordsRouter,
 })
 
-export type Router = typeof router
+export type Router = typeof appRouter
 
 // import type { RequestHandler } from "./$types"
 // import { json } from "@sveltejs/kit"
