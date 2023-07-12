@@ -8,7 +8,6 @@
 	} from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -19,7 +18,6 @@
 	result = null;
 
 	initializeTestToTestStore(data.testContent);
-	$: console.log($testObject.questions);
 </script>
 
 {#if $testObject}
