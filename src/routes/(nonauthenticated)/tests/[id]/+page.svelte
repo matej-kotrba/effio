@@ -19,7 +19,7 @@
 	result = null;
 
 	initializeTestToTestStore(data.testContent);
-	// $: console.log($testObject.questions);
+	$: console.log($testObject.questions);
 </script>
 
 {#if $testObject}

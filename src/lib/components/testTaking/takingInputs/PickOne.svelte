@@ -4,13 +4,12 @@
 	export let questionIndex: number;
 	export let resultFormat: boolean = false;
 
-	// TODO: Přepsat typy v test.ts a +server.ts aby to dávalo smysl
-
 	let selectedInput: number;
 
 	// Update the store based on the selection
-	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)['correctAnswerIndex'] =
-		selectedInput;
+	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
+		'correctAnswerIndex'
+	] = selectedInput;
 </script>
 
 <div class="flex flex-col gap-2">

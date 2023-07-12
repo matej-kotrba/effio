@@ -3,6 +3,13 @@
 
 	export let questionIndex: number;
 	export let resultFormat: boolean = false;
+
+	const checkBoxValues = (
+		$testObject.questions[questionIndex]['content'] as TrueFalseQuestion
+	)['answers'];
+
+	$: $testObject.questions[questionIndex]['content']['answers'] =
+		checkBoxValues;
 </script>
 
 <div class="flex flex-col gap-2">
@@ -21,7 +28,7 @@
 				class="checkbox checkbox-primary radio_button"
 				disabled={resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
-				value={index}
+				bind:checked={checkBoxValues[index]['isTrue']}
 			/>
 		</button>
 	{/each}
