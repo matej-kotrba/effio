@@ -13,7 +13,6 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	</pre>
 	{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
 		<button
 			type="button"
