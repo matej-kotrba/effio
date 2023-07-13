@@ -191,6 +191,31 @@ export const recordsRouter = router({
     return {
       success: true
     }
+  }),
+  getUserRecords: loggedInProcedure.input(z.object({
+    id: z.string(),
+    limit: z.number().optional(),
+    skip: z.number().optional(),
+  })).query(async ({ ctx, input }) => {
+    const records = await ctx.prisma.testRecord.findMany({
+      take: input.limit || 10,
+      skip: input.skip || 0,
+      where: {
+        userId: input.id
+      }
+    })
+
+    if (!records) {
+      return {
+        success: false,
+        records: []
+      }
+    }
+
+    return {
+      success: true,
+      records: records
+    }
   })
 })
 

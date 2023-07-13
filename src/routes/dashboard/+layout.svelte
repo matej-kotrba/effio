@@ -25,23 +25,36 @@
 				<a
 					href="/dashboard/test-creator"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
-					class:active={browser && $page.url.pathname === '/dashboard/test-creator'}
+					class:active={browser &&
+						$page.url.pathname === '/dashboard/test-creator'}
 				>
-					<Icon icon="material-symbols:edit-square-outline-rounded" class="text-2xl" /> Create a new
-					test
+					<Icon
+						icon="material-symbols:edit-square-outline-rounded"
+						class="text-2xl"
+					/> Create a new test
 				</a>
 				<a
 					href="/dashboard/test-collection"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
-					class:active={browser && $page.url.pathname === '/dashboard/test-collection'}
+					class:active={browser &&
+						$page.url.pathname === '/dashboard/test-collection'}
 				>
 					<Icon icon="heroicons-solid:collection" class="text-2xl" /> Test collection
+				</a>
+				<a
+					href="/dashboard/test-history"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class:active={browser &&
+						$page.url.pathname === '/dashboard/test-history'}
+				>
+					<Icon icon="ic:round-history" class="text-2xl" /> Test History
 				</a>
 				<a
 					href="#"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
 				>
-					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community place
+					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community
+					place
 				</a>
 			</div>
 		</div>
@@ -58,14 +71,18 @@
 				class="object-cover rounded-full aspect-square"
 			/>
 			<div class="flex flex-col">
-				<span class="font-semibold uppercase text-light_text_black">{data.session?.user?.name}</span
+				<span class="font-semibold uppercase text-light_text_black"
+					>{data.session?.user?.name}</span
 				>
-				<span class="text-light_text_black_40 text-body3">{data.session?.user?.email}</span>
+				<span class="text-light_text_black_40 text-body3"
+					>{data.session?.user?.email}</span
+				>
 			</div>
 			<button
 				class="ml-4"
 				type="button"
-				on:click={async () => await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
+				on:click={async () =>
+					await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
 			>
 				<Icon
 					icon="iconamoon:exit-light"

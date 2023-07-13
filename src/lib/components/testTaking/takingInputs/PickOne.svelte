@@ -5,7 +5,7 @@
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
 
-	let selectedInput: number = 1;
+	let selectedInput: number;
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[

@@ -81,7 +81,7 @@
 	<ScreenCover />
 {/if}
 <DashboardTitle
-	title="Test editor"
+	title="Test Editor"
 	subtitle="Here you can edit your previously created test"
 />
 

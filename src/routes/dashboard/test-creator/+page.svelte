@@ -28,6 +28,7 @@
 		isTestValid,
 		isValidInputServer
 	} from '~/lib/helpers/test';
+	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
@@ -94,14 +95,10 @@
 	}
 </script>
 
-<h2 class="text-h3 font-extralight text-light_text_black">
-	Create your new test
-</h2>
-<p class="text-body1 text-light_text_black_40">
-	Choose a template and make a new test using many prebuilt inputs.
-</p>
-<!-- <button class="p-2 bg-slate-600" on:click={postTestToDB}>Save to db</button> -->
-<Space />
+<DashboardTitle
+	title="Create your new test"
+	subtitle="Choose a template and make a new test using many prebuilt inputs."
+/>
 <div class="text-sm breadcrumbs">
 	<ul>
 		<li
