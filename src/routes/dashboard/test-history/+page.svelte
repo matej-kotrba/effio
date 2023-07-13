@@ -3,11 +3,15 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { TestRecord } from '@prisma/client';
+	import type { Test, TestRecord } from '@prisma/client';
 
 	export let data;
 
-	let records: TestRecord[] = [];
+	type RecordType = TestRecord & {
+		test: Test;
+	};
+
+	let records: RecordType[] = [];
 
 	onMount(async () => {
 		if (!data?.session?.user?.id) return;
@@ -16,7 +20,7 @@
 			id: data?.session?.user?.id
 		});
 
-		records = recordsResponse.records as unknown as TestRecord[];
+		records = recordsResponse.records as unknown as RecordType[];
 	});
 </script>
 
@@ -26,5 +30,5 @@
 />
 
 {#each records as record}
-	<p>{record.id}</p>
+	<p>{record.test.title}</p>
 {/each}

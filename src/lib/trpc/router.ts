@@ -202,6 +202,9 @@ export const recordsRouter = router({
       skip: input.skip || 0,
       where: {
         userId: input.id
+      },
+      include: {
+        test: true,
       }
     })
 
