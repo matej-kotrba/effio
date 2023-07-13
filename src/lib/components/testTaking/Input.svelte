@@ -45,7 +45,7 @@
 			<TrueFalse
 				{questionIndex}
 				resultFormat={resultFormat &&
-				resultFormat['userAnswer']['type'] === 'pickOne'
+				resultFormat['userAnswer']['type'] === 'true/false'
 					? typedResultFormat
 					: null}
 			/>

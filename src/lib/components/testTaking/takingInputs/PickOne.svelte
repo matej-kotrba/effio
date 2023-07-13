@@ -5,7 +5,7 @@
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
 
-	let selectedInput: number;
+	let selectedInput: number = 1;
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
@@ -19,7 +19,15 @@
 			type="button"
 			disabled={!!resultFormat}
 			on:click|self={() => (selectedInput = index)}
-			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md hover:bg-slate-50 active:bg-slate-100"
+			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md {!resultFormat &&
+				'hover:bg-slate-50'} active:bg-slate-100
+			{resultFormat &&
+				resultFormat.isCorrect === false &&
+				selectedInput === index &&
+				'bg-red-100'} {resultFormat &&
+				resultFormat.isCorrect === false &&
+				index === resultFormat.correctAnswer.correctAnswerIndex &&
+				'bg-green-100'}"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>

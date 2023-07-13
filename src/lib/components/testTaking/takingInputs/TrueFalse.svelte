@@ -20,7 +20,17 @@
 			disabled={!!resultFormat}
 			on:click|self={() =>
 				(checkBoxValues[index]['isTrue'] = !checkBoxValues[index]['isTrue'])}
-			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md hover:bg-slate-50 active:bg-slate-100"
+			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md {!resultFormat &&
+				'hover:bg-slate-50'} active:bg-slate-100
+			{resultFormat &&
+				resultFormat.isCorrect === false &&
+				resultFormat.correctAnswer.answers[index].isTrue ===
+					resultFormat.userAnswer.answers[index].isTrue &&
+				'bg-green-100'} {resultFormat &&
+				resultFormat.isCorrect === false &&
+				resultFormat.correctAnswer.answers[index].isTrue !==
+					resultFormat.userAnswer.answers[index].isTrue &&
+				'bg-red-100'}"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>
