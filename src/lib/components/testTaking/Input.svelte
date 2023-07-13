@@ -4,22 +4,21 @@
 	import PickOne from './takingInputs/PickOne.svelte';
 	import TrueFalse from './takingInputs/TrueFalse.svelte';
 
-	type ResultFormat =
-		| false
-		| {
-				isCorrect: boolean;
-		  };
-
+	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let questionIndex: number;
-	export let resultFormat: ResultFormat = false;
+	export let resultFormat: ResultFormat = null;
 
 	export { classes as class };
 	let classes = '';
+
+	$: typedResultFormat = resultFormat as any;
+
+	$: console.log(resultFormat);
 </script>
 
 <div
 	class={`p-3 rounded-md shadow-md bg-light_whiter outline-2 outline ${
-		resultFormat !== false
+		resultFormat
 			? resultFormat.isCorrect
 				? 'outline-success'
 				: 'outline-error'
@@ -35,9 +34,21 @@
 		</h4>
 		<Space gap={15} />
 		{#if $testObject['questions'][questionIndex]['questionType'] === 'pickOne'}
-			<PickOne {questionIndex} resultFormat={!!resultFormat} />
+			<PickOne
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'pickOne'
+					? typedResultFormat
+					: null}
+			/>
 		{:else if $testObject['questions'][questionIndex]['questionType'] === 'true/false'}
-			<TrueFalse {questionIndex} resultFormat={!!resultFormat} />
+			<TrueFalse
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'pickOne'
+					? typedResultFormat
+					: null}
+			/>
 		{/if}
 	</div>
 </div>

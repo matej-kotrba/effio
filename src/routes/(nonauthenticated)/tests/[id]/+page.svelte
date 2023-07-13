@@ -13,7 +13,7 @@
 
 	let submitError: string = '';
 
-	let result: { isCorrect: boolean }[] | null = null;
+	let result: QuestionServerCheckResponse<QuestionContent>[] | null = null;
 
 	result = null;
 
@@ -34,7 +34,7 @@
 						? ' border-error'
 						: 'border-transparent'
 				}`}
-				resultFormat={result === null ? false : result[index]}
+				resultFormat={result === null ? null : result[index]}
 			/>
 			<Space gap={10} />
 			{#if $testObject.questions[index].errors.content}

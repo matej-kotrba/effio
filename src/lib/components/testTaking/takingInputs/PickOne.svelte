@@ -2,7 +2,8 @@
 	import { testObject } from '~stores/testObject';
 
 	export let questionIndex: number;
-	export let resultFormat: boolean = false;
+	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
+		null;
 
 	let selectedInput: number;
 
@@ -16,7 +17,7 @@
 	{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
 		<button
 			type="button"
-			disabled={resultFormat}
+			disabled={!!resultFormat}
 			on:click|self={() => (selectedInput = index)}
 			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md hover:bg-slate-50 active:bg-slate-100"
 		>
@@ -27,7 +28,7 @@
 			<input
 				type="radio"
 				class="radio radio-primary radio_button"
-				disabled={resultFormat}
+				disabled={!!resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				value={index}
 				bind:group={selectedInput}

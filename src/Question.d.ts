@@ -50,6 +50,12 @@ type ClientTest = {
   };
 }
 
+type QuestionServerCheckResponse<T extends QuestionContent> = {
+  isCorrect: boolean;
+  correctAnswer: T;
+  userAnswer: T;
+}
+
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field
 // type QuestionTemplate = {

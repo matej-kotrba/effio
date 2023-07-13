@@ -216,11 +216,7 @@ export const checkTestClient = (test: TestObject) => {
 type CheckServer = {
   error?: string;
   success: boolean;
-  questionData?: {
-    isCorrect: boolean;
-    correctAnswer: QuestionContent;
-    userAnswer: QuestionContent;
-  }[]
+  questionData?: QuestionServerCheckResponse<QuestionContent>[]
 
 
 
@@ -299,19 +295,20 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     })
   })
 
-  await trpc().records.createTestRecord.mutate({
-    testId: test.id,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    answerContent: questionData.map((item, index) => {
-      return {
-        questionId: test.questions[index].id,
-        questionContent: {
-          original: item.correctAnswer,
-          user: item.userAnswer
-        },
-      }
-    })
-  })
+  // TODO: UNCOMMENT
+  // await trpc().records.createTestRecord.mutate({
+  //   testId: test.id,
+  //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  //   answerContent: questionData.map((item, index) => {
+  //     return {
+  //       questionId: test.questions[index].id,
+  //       questionContent: {
+  //         original: item.correctAnswer,
+  //         user: item.userAnswer
+  //       },
+  //     }
+  //   })
+  // })
 
   return {
     error: responseData?.error ?? undefined,
