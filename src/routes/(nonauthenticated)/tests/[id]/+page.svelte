@@ -26,7 +26,6 @@
 		<p class="text-light_text_black_60">{data.testContent.description}</p>
 		<Space gap={40} />
 		{#each data.testContent.questions as _, index}
-			<!-- TODO: Přiřazovat otázky k jiným podle ID nebo to seřazovat na serveru podle client inputu  -->
 			<Input
 				questionIndex={index}
 				class={`border-2 border-solid ${

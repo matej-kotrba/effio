@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import type { Test, TestRecord } from '@prisma/client';
+	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -42,7 +43,12 @@
 		<tbody>
 			<!-- row 1 -->
 			{#each records as record}
-				<tr class="hover:bg-base-200">
+				<tr
+					class="cursor-pointer hover:bg-base-200"
+					on:click={() => {
+						goto('/dashboard/test-history/records/' + record.id);
+					}}
+				>
 					<td>{record.test.title}</td>
 					<td>{new Date(record.createdAt).toLocaleDateString('en-GB')}</td>
 					<td class="max-w-lg overflow-hidden text-ellipsis whitespace-nowrap"

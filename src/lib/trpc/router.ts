@@ -222,6 +222,31 @@ export const recordsRouter = router({
       success: true,
       records: records
     }
+  }),
+  getTestRecordById: loggedInProcedure.input(z.object({
+    id: z.string(),
+  })).query(async ({ ctx, input }) => {
+    const record = await ctx.prisma.testRecord.findUnique({
+      where: {
+        id: input.id
+      },
+      include: {
+        test: true,
+        questionRecords: true
+      }
+    })
+
+    if (!record) {
+      return {
+        success: false,
+        record: null
+      }
+    }
+
+    return {
+      success: true,
+      record
+    }
   })
 })
 
