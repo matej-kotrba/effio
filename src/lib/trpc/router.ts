@@ -204,7 +204,10 @@ export const recordsRouter = router({
         userId: input.id
       },
       include: {
-        test: true,
+        test: true
+      },
+      orderBy: {
+        createdAt: "desc"
       }
     })
 

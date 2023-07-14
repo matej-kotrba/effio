@@ -29,6 +29,27 @@
 	subtitle="Browser through your test records."
 />
 
-{#each records as record}
-	<p>{record.test.title}</p>
-{/each}
+<div class="overflow-x-auto">
+	<table class="table">
+		<!-- head -->
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Taken at</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- row 1 -->
+			{#each records as record}
+				<tr class="hover:bg-base-200">
+					<td>{record.test.title}</td>
+					<td>{new Date(record.createdAt).toLocaleDateString('en-GB')}</td>
+					<td class="max-w-lg overflow-hidden text-ellipsis whitespace-nowrap"
+						>{record.test.description}</td
+					>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>

@@ -8,7 +8,6 @@ export const load: ServerLoad = async (event) => {
 
   const questionsTypes = appRouter.createCaller(context).getQuestionsTypes();
 
-
   return {
     questionsTypes: questionsTypes
   }
