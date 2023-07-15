@@ -8,16 +8,16 @@
 
 	export let data;
 
-	// console.log({
-	// 	...data.record.test,
-	// 	questions: data.record.questionRecords.map((item) => item.content)
-	// });
-	// onMount(() => {
-	// 	initializeTestToTestStore({
-	// 		...data.record.test,
-	// 		questions: data.record.questionRecords.map((item) => item.content)
-	// 	});
-	// });
+	console.log({
+		...data.record.test,
+		questions: data.record.questionRecords.map((item) => item.content)
+	});
+	onMount(() => {
+		initializeTestToTestStore({
+			...data.record.test,
+			questions: data.record.questionRecords.map((item) => item.content)
+		});
+	});
 </script>
 
 <DashboardTitle

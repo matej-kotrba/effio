@@ -296,19 +296,22 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
   })
 
   // TODO: UNCOMMENT
-  // await trpc().records.createTestRecord.mutate({
-  //   testId: test.id,
-  //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //   answerContent: questionData.map((item, index) => {
-  //     return {
-  //       questionId: test.questions[index].id,
-  //       questionContent: {
-  //         original: item.correctAnswer,
-  //         user: item.userAnswer
-  //       },
-  //     }
-  //   })
-  // })
+  await trpc().records.createTestRecord.mutate({
+    testId: test.id,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    answerContent: questionData.map((item, index) => {
+      return {
+        questionId: test.questions[index].id,
+        questionContent: {
+          original: item.correctAnswer,
+          user: item.userAnswer,
+          title: test.questions[index].title,
+          questionType: test.questions[index].questionType,
+          displayType: test.questions[index].displayType,
+        },
+      }
+    })
+  })
 
   return {
     error: responseData?.error ?? undefined,
