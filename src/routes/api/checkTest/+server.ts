@@ -24,7 +24,7 @@ export async function POST(event) {
   })) return json({ error: "Not all questions has been filled!", success: false })
 
   // Get test from DB so we can access correct answers
-  const test = await prisma.test.findUnique({
+  const test = await prisma.testVersion.findUnique({
     where: {
       id: body.id
     },
