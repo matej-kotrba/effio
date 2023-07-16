@@ -1,19 +1,36 @@
 import type { Prisma } from "@prisma/client"
 
-type TestFullType = Prisma.TestVersionGetPayload<{
+type TestFullType = Prisma.TestGetPayload<{
   include: {
-    testGroup: true,
-    questions: true
+    owner: true,
+    tags: true,
+    testVersions: {
+      include: {
+        questions: {
+          include: {
+            type: true
+          }
+        },
+        records?: true,
+      }
+    }
   }
-  // include: {
-  //   questions: {
-  //     include: {
-  //       type: true
-  //     }
-  //   },
-  //   tags: true
-  // }
 }>
+
+// type TestFullType = Prisma.TestVersionGetPayload<{
+//   include: {
+//     testGroup: true,
+//     questions: true
+//   }
+//   // include: {
+//   //   questions: {
+//   //     include: {
+//   //       type: true
+//   //     }
+//   //   },
+//   //   tags: true
+//   // }
+// }>
 
 type TestWithQuestions = Prisma.TestVersionGetPayload<{
   include: {

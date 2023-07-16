@@ -78,21 +78,21 @@ model QuestionType {
 }
 
 model Test {
-  id        String        @id @default(uuid())
-  tests     TestVersion[]
-  published Boolean       @default(false)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  tags      Tag[]
-  stars     Int           @default(0)
-  owner     User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId   String
+  id           String        @id @default(uuid())
+  testVersions TestVersion[]
+  published    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tags         Tag[]
+  stars        Int           @default(0)
+  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId      String
 
   @@index([ownerId])
 }
 
 model TestVersion {
-  id          String       @id @default(uuid())
+  versionId   String       @id @default(uuid())
   title       String
   description String       @default("")
   createdAt   DateTime     @default(now())
@@ -114,7 +114,7 @@ model Question {
   updatedAt DateTime         @updatedAt
   type      QuestionType     @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId    String
-  test      TestVersion      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  test      TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   testId    String
   records   QuestionRecord[]
   content   Json             @default("{}")
@@ -127,7 +127,7 @@ model TestRecord {
   id              String           @id @default(uuid())
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  test            TestVersion      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  test            TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   testId          String
   questionRecords QuestionRecord[]
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)

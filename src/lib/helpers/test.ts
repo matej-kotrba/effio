@@ -67,16 +67,16 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
   })
 }
 
-export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" | "tags">) {
+export function initializeTestToTestStore(testData: TestFullType) {
   testObject.set({
     id: testData.id,
-    title: testData.title,
-    description: testData.description,
+    title: testData.testVersions[0].title,
+    description: testData.testVersions[0].description,
     published: testData.published,
     errors: {},
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    questions: testData.questions.map((question) => {
+    questions: testData.testVersions[0].questions.map((question) => {
       return {
         id: question.id,
         title: question.title,
@@ -123,6 +123,7 @@ type IsTestValid = {
 }
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
+// TODO: Rewrite this to use zod
 export function isTestValid(inputsToValidate: IsTestValid) {
 
   const { title, description, questions } = inputsToValidate

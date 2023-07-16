@@ -24,12 +24,20 @@ export async function POST(event) {
   })) return json({ error: "Not all questions has been filled!", success: false })
 
   // Get test from DB so we can access correct answers
-  const test = await prisma.testVersion.findUnique({
+  const test = await prisma.test.findUnique({
     where: {
       id: body.id
     },
     include: {
-      questions: true
+      testVersions: {
+        include: {
+          questions: true
+        },
+        take: 1,
+        orderBy: {
+          version: "desc"
+        }
+      }
 
     }
   })
@@ -37,7 +45,7 @@ export async function POST(event) {
   if (!test) return json({ error: "Test not found!", success: false })
 
   const result = body.questions.map((question) => {
-    const compareQuestion = test.questions.find(item => item.id === question.id)
+    const compareQuestion = test.testVersions[0].questions.find(item => item.id === question.id)
     if (!compareQuestion || !Object.keys(questionContentFunctions).includes(question.questionType)) throw new Error("Question not found!")
 
     // This would cost additional reads which should not be neccecary

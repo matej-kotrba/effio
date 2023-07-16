@@ -49,6 +49,8 @@
 			description: $testObject.description
 		});
 
+		// TODO: Check if the isValidServer is needed here
+
 		if (result['store']['questions']) {
 			$testObject['questions'] = result['store']['questions'];
 		}
@@ -61,7 +63,7 @@
 		if (result['isError']) return;
 
 		const data = await trpc($page).protected.updateTest.mutate({
-			id: $testObject.id as string,
+			testGroupId: $testObject.id as string,
 			title: $testObject.title,
 			description: $testObject.description,
 			isPublished: $testObject.published as boolean,

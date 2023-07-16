@@ -1,7 +1,6 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
-import type { TestFullType } from "~/Prisma";
 
 export const t = initTRPC.context<Context>().create()
 export const router = t.router
@@ -65,7 +64,7 @@ const protectedRouter = router({
             title: question.title,
             content: question.content,
             typeId: question.questionTypeId,
-            testId: testData.id,
+            testId: testData.versionId,
           }
         })
       })
@@ -130,7 +129,7 @@ const protectedRouter = router({
             title: question.title,
             content: question.content,
             typeId: question.questionTypeId,
-            testId: testData.id,
+            testId: testData.versionId,
           }
         })
       })
@@ -314,7 +313,7 @@ export const appRouter = router({
     limit: z.number(),
     isPublished: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
-    let tests: TestFullType[] = []
+    // let tests: TestFullType[] = []
     const groupTests = await ctx.prisma.test.findMany({
       where: {
         published: input.isPublished,
@@ -322,7 +321,7 @@ export const appRouter = router({
 
       },
       include: {
-        tests: {
+        testVersions: {
           take: 1,
           orderBy: {
             version: "desc"
@@ -340,53 +339,65 @@ export const appRouter = router({
       }
     })
 
-    tests[0] = {
+    return groupTests
 
-    }
+    // tests = groupTests.map(test => {
+    //   return {
+    //     versionId: test.tests[0].versionId,
+    //     createdAt: test.createdAt,
+    //     updatedAt: test.updatedAt,
+    //     title: test.tests[0].title,
+    //     description: test.tests[0].description,
+    //     questions: test.tests[0].questions,
+    //     testGroup: {
+    //       ...test
+    //     },
+    //     testId: test.id,
+    //     version: test.tests[0].version,
 
-    tests = groupTests.map(test => {
-      return {
-        id: test.id,
-        createdAt: test.createdAt,
-        updatedAt: test.updatedAt,
-
-
-        // id: test.id,
-        // owner: test.owner,
-        // ownerId: test.ownerId,
-        // tags: test.tags,
-        // published: test.published,
-        // stars: test.stars,
-        // createdAt: test.createdAt,
-        // updatedAt: test.updatedAt,
-        // title: test.tests[0].title,
-        // description: test.tests[0].description,
-        // questions: test.tests[0].questions,
-        // version: test.tests[0].version,
-        // testGroupId: test.tests[0].testId,
-      }
-    })
-
-    return tests
+    //     // id: test.id,
+    //     // owner: test.owner,
+    //     // ownerId: test.ownerId,
+    //     // tags: test.tags,
+    //     // published: test.published,
+    //     // stars: test.stars,
+    //     // createdAt: test.createdAt,
+    //     // updatedAt: test.updatedAt,
+    //     // title: test.tests[0].title,
+    //     // description: test.tests[0].description,
+    //     // questions: test.tests[0].questions,
+    //     // version: test.tests[0].version,
+    //     // testGroupId: test.tests[0].testId,
+    //   }
+    // })
   }),
   getTestById: t.procedure.input(z.object({
     id: z.string()
   })).query(async ({ ctx, input }) => {
-    const test = await ctx.prisma.testVersion.findUnique({
+    const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.id
       },
       include: {
-        questions: {
+        owner: true,
+        tags: true,
+        testVersions: {
           include: {
-            type: true
-          }
-        },
+            questions: {
+              include: {
+                type: true
+              }
+            }
+          },
+          orderBy: {
+            version: "desc"
+          },
+          take: 1
+        }
       }
     })
 
     if (!test) return null
-
     return test
   }),
   protected: protectedRouter,
