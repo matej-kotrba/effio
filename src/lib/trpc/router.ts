@@ -58,18 +58,28 @@ const protectedRouter = router({
 
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
-      const questionsPromise = questions.map(async (question) => {
-        return ctx.prisma.question.create({
-          data: {
+      // const questionData = questions.map(async (question) => {
+      //   return ctx.prisma.question.create({
+      //     data: {
+      //       title: question.title,
+      //       content: question.content,
+      //       typeId: question.questionTypeId,
+      //       testId: testData.versionId,
+      //     }
+      //   })
+      // })
+
+      const questionsData = await ctx.prisma.question.createMany({
+        data: questions.map((question) => {
+          return {
             title: question.title,
             content: question.content,
             typeId: question.questionTypeId,
             testId: testData.versionId,
+
           }
         })
       })
-
-      const questionsData = await Promise.all(questionsPromise)
 
       return {
         test: testData,
@@ -188,16 +198,16 @@ export const recordsRouter = router({
     answerContent: z.array(
       z.object({
         questionId: z.string(),
-        questionContent: z.object({
-          title: z.string(),
-          questionType: z.string(),
-          displayType: z.string(),
-          original: z.object({}).passthrough(),
-          user: z.object({}).passthrough()
-        })
+        userContent: z.object({}).passthrough()
       })
     ),
   })).mutation(async ({ ctx, input }) => {
+    console.log(input)
+    if (input.answerContent.length === 0) {
+      return {
+        success: false,
+      }
+    }
     const createdTest = await ctx.prisma.testRecord.create({
       data: {
         userId: ctx.userId,
@@ -216,10 +226,12 @@ export const recordsRouter = router({
         return {
           testRecordId: createdTest.id,
           questionId: item.questionId,
-          content: item.questionContent
+          content: item.userContent
         }
       })
     })
+
+    console.log(questionResponse)
 
     if (!questionResponse) {
       return {

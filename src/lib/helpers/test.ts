@@ -303,13 +303,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     answerContent: questionData.map((item, index) => {
       return {
         questionId: test.questions[index].id,
-        questionContent: {
-          original: item.correctAnswer,
-          user: item.userAnswer,
-          title: test.questions[index].title,
-          questionType: test.questions[index].questionType,
-          displayType: test.questions[index].displayType,
-        },
+        userContent: item.userAnswer
       }
     })
   })
