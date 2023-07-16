@@ -5,6 +5,7 @@ export type TestObject = {
   title: string;
   description: string;
   id?: string;
+  versionId?: string;
   published?: boolean;
   questions: QuestionClient[];
   errors: {
@@ -13,7 +14,7 @@ export type TestObject = {
   }
 };
 
-export const testObject = writable({
+export const testObject = writable<TestObject>({
   title: 'This is title',
   description: 'This is description',
   errors: {},

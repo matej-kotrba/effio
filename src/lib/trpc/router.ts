@@ -208,10 +208,12 @@ export const recordsRouter = router({
         success: false,
       }
     }
+
     const createdTest = await ctx.prisma.testRecord.create({
       data: {
         userId: ctx.userId,
         testId: input.testId,
+
       }
     })
 
@@ -230,8 +232,6 @@ export const recordsRouter = router({
         }
       })
     })
-
-    console.log(questionResponse)
 
     if (!questionResponse) {
       return {

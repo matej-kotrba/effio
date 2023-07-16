@@ -70,6 +70,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
 export function initializeTestToTestStore(testData: TestFullType) {
   testObject.set({
     id: testData.id,
+    versionId: testData.testVersions[0].versionId,
     title: testData.testVersions[0].title,
     description: testData.testVersions[0].description,
     published: testData.published,
@@ -227,7 +228,7 @@ type CheckServer = {
 // Check test on the server for correctness of the answers
 
 export const checkTestServerAndRecordIt = async (test: TestObject): Promise<CheckServer> => {
-  if (test.id === undefined) return {
+  if (test.id === undefined || test.versionId === undefined) return {
     error: "Test has no ID and hence cannot be submitted.",
     success: false
   }
@@ -298,7 +299,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
 
   // TODO: UNCOMMENT
   await trpc().records.createTestRecord.mutate({
-    testId: test.id,
+    testId: test.versionId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     answerContent: questionData.map((item, index) => {
       return {
