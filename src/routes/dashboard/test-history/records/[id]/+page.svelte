@@ -21,14 +21,18 @@
 		testVersions: [
 			{
 				...data.record.test,
-				questions: data.record.question
+				questions: data.record.questionRecords.map((item) => {
+					return {
+						...item.question,
+						content: item.content
+					};
+				})
 			}
 		]
 
 		// ...data.record.test,
 		// questions: data.record.questionRecords.map((item) => item.content)
 	});
-	console.log(data.record.test.questions);
 </script>
 
 <DashboardTitle
@@ -47,13 +51,16 @@
 						: 'border-transparent'
 				}`}
 				resultFormat={{
+					// @ts-ignore
 					isCorrect: questionContentFunctions[
 						question['question']['type']['slug']
 					]['checkAnswerCorrectness'](
 						question['question']['content'],
 						question['content']
 					),
+					// @ts-ignore
 					correctAnswer: question['question']['content'],
+					// @ts-ignore
 					userAnswer: question['content']
 				}}
 			/>

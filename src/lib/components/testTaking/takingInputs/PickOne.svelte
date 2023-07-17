@@ -5,7 +5,11 @@
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
 
-	let selectedInput: number;
+	console.log(resultFormat);
+
+	let selectedInput: number = (
+		$testObject.questions[questionIndex]['content'] as PickOneQuestion
+	)['correctAnswerIndex'];
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
@@ -24,10 +28,10 @@
 			{resultFormat &&
 				resultFormat.isCorrect === false &&
 				selectedInput === index &&
-				'bg-red-100'} {resultFormat &&
+				'bg-red-200'} {resultFormat &&
 				resultFormat.isCorrect === false &&
 				index === resultFormat.correctAnswer.correctAnswerIndex &&
-				'bg-green-100'}"
+				'bg-green-200'}"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>
