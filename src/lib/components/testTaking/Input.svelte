@@ -11,9 +11,9 @@
 	export { classes as class };
 	let classes = '';
 
-	$: typedResultFormat = resultFormat as any;
+	console.log($testObject.questions);
 
-	$: console.log(resultFormat);
+	$: typedResultFormat = resultFormat as any;
 </script>
 
 <div

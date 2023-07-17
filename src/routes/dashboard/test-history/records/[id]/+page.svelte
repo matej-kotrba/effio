@@ -8,26 +8,27 @@
 	import { testObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
+	import type { QuestionType } from '@prisma/client';
 
 	export let data;
 
-	console.log({
-		...data.record.test,
-		questions: data.record.questionRecords.map((item) => item.content)
-	});
-	onMount(() => {
-		initializeTestToTestStore({
-			id: data.record.id,
-			createdAt: data.record.createdAt,
-			updatedAt: data.record.updatedAt,
-			ownerId: data.record.userId,
-			published: data.record.test.testGroup.published,
-			testVersions: [data.record.test]
+	initializeTestToTestStore({
+		id: data.record.id,
+		createdAt: data.record.createdAt,
+		updatedAt: data.record.updatedAt,
+		ownerId: data.record.userId,
+		published: data.record.test.testGroup.published,
+		testVersions: [
+			{
+				...data.record.test,
+				questions: data.record.question
+			}
+		]
 
-			// ...data.record.test,
-			// questions: data.record.questionRecords.map((item) => item.content)
-		});
+		// ...data.record.test,
+		// questions: data.record.questionRecords.map((item) => item.content)
 	});
+	console.log(data.record.test.questions);
 </script>
 
 <DashboardTitle
@@ -48,7 +49,10 @@
 				resultFormat={{
 					isCorrect: questionContentFunctions[
 						question['question']['type']['slug']
-					](question['question'][('content', question['content'])]),
+					]['checkAnswerCorrectness'](
+						question['question']['content'],
+						question['content']
+					),
 					correctAnswer: question['question']['content'],
 					userAnswer: question['content']
 				}}
