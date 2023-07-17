@@ -11,8 +11,6 @@
 	export { classes as class };
 	let classes = '';
 
-	console.log(resultFormat);
-
 	$: typedResultFormat = resultFormat as any;
 </script>
 

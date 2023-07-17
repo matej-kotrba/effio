@@ -28,10 +28,11 @@ export const load: ServerLoad = async (request) => {
     }
   })
 
+  test.testVersions[0].questions = editedQuestions
+
   return {
     testContent: {
       ...test,
-      questions: editedQuestions
     }
   }
 }

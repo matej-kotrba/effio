@@ -17,7 +17,11 @@
 
 	result = null;
 
+	console.log(data.testContent);
+
 	initializeTestToTestStore(data.testContent);
+
+	$: console.log($testObject);
 </script>
 
 {#if $testObject}
@@ -27,7 +31,7 @@
 			{data.testContent.testVersions[0].description}
 		</p>
 		<Space gap={40} />
-		{#each data.testContent.questions as _, index}
+		{#each data.testContent.testVersions[0].questions as _, index}
 			<Input
 				questionIndex={index}
 				class={`border-2 border-solid ${
