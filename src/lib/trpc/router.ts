@@ -282,8 +282,25 @@ export const recordsRouter = router({
         id: input.id
       },
       include: {
-        test: true,
-        questionRecords: true
+        test: {
+          include: {
+            questions: {
+              include: {
+                type: true
+              }
+            },
+            testGroup: true
+          }
+        },
+        questionRecords: {
+          include: {
+            question: {
+              include: {
+                type: true
+              }
+            }
+          }
+        }
       }
     })
 

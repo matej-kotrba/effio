@@ -1,7 +1,10 @@
 <script lang="ts">
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { onMount } from 'svelte';
-	import { initializeTestToTestStore } from '~helpers/test.js';
+	import {
+		initializeTestToTestStore,
+		questionContentFunctions
+	} from '~helpers/test.js';
 	import { testObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
@@ -14,8 +17,15 @@
 	});
 	onMount(() => {
 		initializeTestToTestStore({
-			...data.record.test,
-			questions: data.record.questionRecords.map((item) => item.content)
+			id: data.record.id,
+			createdAt: data.record.createdAt,
+			updatedAt: data.record.updatedAt,
+			ownerId: data.record.userId,
+			published: data.record.test.testGroup.published,
+			testVersions: [data.record.test]
+
+			// ...data.record.test,
+			// questions: data.record.questionRecords.map((item) => item.content)
 		});
 	});
 </script>
@@ -25,9 +35,9 @@
 	subtitle="Browser through your test records."
 />
 
-<!-- {#if $testObject}
+{#if $testObject}
 	<div class="mx-auto max-w-[650px]">
-		{#each data.record.questions as _, index}
+		{#each data.record['questionRecords'] as question, index}
 			<Input
 				questionIndex={index}
 				class={`border-2 border-solid ${
@@ -35,8 +45,14 @@
 						? ' border-error'
 						: 'border-transparent'
 				}`}
-				resultFormat={data.record}
+				resultFormat={{
+					isCorrect: questionContentFunctions[
+						question['question']['type']['slug']
+					](question['question'][('content', question['content'])]),
+					correctAnswer: question['question']['content'],
+					userAnswer: question['content']
+				}}
 			/>
 		{/each}
 	</div>
-{/if} -->
+{/if}
