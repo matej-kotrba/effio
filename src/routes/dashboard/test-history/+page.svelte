@@ -3,13 +3,13 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { Test, TestRecord } from '@prisma/client';
+	import type { TestRecord, TestVersion } from '@prisma/client';
 	import { goto } from '$app/navigation';
 
 	export let data;
 
 	type RecordType = TestRecord & {
-		test: Test;
+		test: TestVersion;
 	};
 
 	let records: RecordType[] = [];

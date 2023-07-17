@@ -64,6 +64,7 @@
 					userAnswer: question['content']
 				}}
 			/>
+			<Space gap={20} />
 		{/each}
 	</div>
 {/if}
