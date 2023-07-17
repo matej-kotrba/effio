@@ -1,7 +1,6 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
-import type { TestFullType } from "~/Prisma";
 
 export const t = initTRPC.context<Context>().create()
 export const router = t.router
@@ -41,29 +40,46 @@ const protectedRouter = router({
   })).mutation(async ({ ctx, input }) => {
     try {
 
-      const testData = await ctx.prisma.test.create({
+      const testGroupData = await ctx.prisma.test.create({
         data: {
-          title: input.title,
-          description: input.description,
           ownerId: ctx.userId,
           published: input.isPublished,
         }
       })
 
+      const testData = await ctx.prisma.testVersion.create({
+        data: {
+          title: input.title,
+          description: input.description,
+          version: 1,
+          testId: testGroupData.id,
+        }
+      })
+
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
-      const questionsPromise = questions.map(async (question) => {
-        return ctx.prisma.question.create({
-          data: {
+      // const questionData = questions.map(async (question) => {
+      //   return ctx.prisma.question.create({
+      //     data: {
+      //       title: question.title,
+      //       content: question.content,
+      //       typeId: question.questionTypeId,
+      //       testId: testData.versionId,
+      //     }
+      //   })
+      // })
+
+      const questionsData = await ctx.prisma.question.createMany({
+        data: questions.map((question) => {
+          return {
             title: question.title,
             content: question.content,
             typeId: question.questionTypeId,
-            testId: testData.id,
+            testId: testData.versionId,
+
           }
         })
       })
-
-      const questionsData = await Promise.all(questionsPromise)
 
       return {
         test: testData,
@@ -78,7 +94,7 @@ const protectedRouter = router({
     }
   }),
   updateTest: loggedInProcedure.input(z.object({
-    id: z.string(),
+    testGroupId: z.string(),
     title: z.string(),
     description: z.string(),
     questionContent: z.string(),
@@ -86,51 +102,81 @@ const protectedRouter = router({
   })).mutation(async ({ ctx, input }) => {
     try {
 
-      const testData = await ctx.prisma.test.update({
+      // const testData = await ctx.prisma.testVersion.update({
+      //   where: {
+      //     id: input.id
+      //   },
+      //   data: {
+      //     title: input.title,
+      //     description: input.description,
+      //     ownerId: ctx.userId,
+      //     published: input.isPublished,
+      //   }
+      // })
+
+      const version = await ctx.prisma.testVersion.count({
         where: {
-          id: input.id
-        },
+          testId: input.testGroupId
+        }
+      })
+
+      console.log("VERSION", version)
+
+      const testData = await ctx.prisma.testVersion.create({
         data: {
           title: input.title,
           description: input.description,
-          ownerId: ctx.userId,
-          published: input.isPublished,
+          testId: input.testGroupId,
+          version: version + 1
         }
       })
 
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
-      const questionsIds: string[] = questions.map(item => item.id)
-
       const questionsPromise = questions.map(async (question) => {
-        questionsIds.push(question.id)
-        return ctx.prisma.question.upsert({
-          where: {
-            id: question.id
-          },
-          update: {
-            title: question.title,
-            content: question.content,
-          },
-          create: {
-            id: question.id,
+        return ctx.prisma.question.create({
+          data: {
             title: question.title,
             content: question.content,
             typeId: question.questionTypeId,
-            testId: testData.id,
+            testId: testData.versionId,
           }
         })
       })
 
-      ctx.prisma.question.deleteMany({
-        where: {
-          id: {
-            notIn: questionsIds
-          }
-        }
-      })
-
       const questionsData = await Promise.all(questionsPromise)
+
+      // const questionsIds: string[] = questions.map(item => item.id)
+
+      // const questionsPromise = questions.map(async (question) => {
+      //   questionsIds.push(question.id)
+      //   return ctx.prisma.question.upsert({
+      //     where: {
+      //       id: question.id
+      //     },
+      //     update: {
+      //       title: question.title,
+      //       content: question.content,
+      //     },
+      //     create: {
+      //       id: question.id,
+      //       title: question.title,
+      //       content: question.content,
+      //       typeId: question.questionTypeId,
+      //       testId: testData.id,
+      //     }
+      //   })
+      // })
+
+      // ctx.prisma.question.deleteMany({
+      //   where: {
+      //     id: {
+      //       notIn: questionsIds
+      //     }
+      //   }
+      // })
+
+      // const questionsData = await Promise.all(questionsPromise)
 
       return {
         test: testData,
@@ -152,20 +198,22 @@ export const recordsRouter = router({
     answerContent: z.array(
       z.object({
         questionId: z.string(),
-        questionContent: z.object({
-          title: z.string(),
-          questionType: z.string(),
-          displayType: z.string(),
-          original: z.object({}).passthrough(),
-          user: z.object({}).passthrough()
-        })
+        userContent: z.object({}).passthrough()
       })
     ),
   })).mutation(async ({ ctx, input }) => {
+    console.log(input)
+    if (input.answerContent.length === 0) {
+      return {
+        success: false,
+      }
+    }
+
     const createdTest = await ctx.prisma.testRecord.create({
       data: {
         userId: ctx.userId,
         testId: input.testId,
+
       }
     })
 
@@ -180,7 +228,7 @@ export const recordsRouter = router({
         return {
           testRecordId: createdTest.id,
           questionId: item.questionId,
-          content: item.questionContent
+          content: item.userContent
         }
       })
     })
@@ -234,8 +282,25 @@ export const recordsRouter = router({
         id: input.id
       },
       include: {
-        test: true,
-        questionRecords: true
+        test: {
+          include: {
+            questions: {
+              include: {
+                type: true
+              }
+            },
+            testGroup: true
+          }
+        },
+        questionRecords: {
+          include: {
+            question: {
+              include: {
+                type: true
+              }
+            }
+          }
+        }
       }
     })
 
@@ -277,16 +342,21 @@ export const appRouter = router({
     limit: z.number(),
     isPublished: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
-    let tests: TestFullType[] = []
-    tests = await ctx.prisma.test.findMany({
+    // let tests: TestFullType[] = []
+    const groupTests = await ctx.prisma.test.findMany({
       where: {
         published: input.isPublished,
         ownerId: input.id,
+
       },
       include: {
-        questions: {
+        testVersions: {
+          take: 1,
+          orderBy: {
+            version: "desc"
+          },
           include: {
-            type: true
+            questions: true
           }
         },
         tags: true,
@@ -297,7 +367,38 @@ export const appRouter = router({
         updatedAt: "desc"
       }
     })
-    return tests
+
+    return groupTests
+
+    // tests = groupTests.map(test => {
+    //   return {
+    //     versionId: test.tests[0].versionId,
+    //     createdAt: test.createdAt,
+    //     updatedAt: test.updatedAt,
+    //     title: test.tests[0].title,
+    //     description: test.tests[0].description,
+    //     questions: test.tests[0].questions,
+    //     testGroup: {
+    //       ...test
+    //     },
+    //     testId: test.id,
+    //     version: test.tests[0].version,
+
+    //     // id: test.id,
+    //     // owner: test.owner,
+    //     // ownerId: test.ownerId,
+    //     // tags: test.tags,
+    //     // published: test.published,
+    //     // stars: test.stars,
+    //     // createdAt: test.createdAt,
+    //     // updatedAt: test.updatedAt,
+    //     // title: test.tests[0].title,
+    //     // description: test.tests[0].description,
+    //     // questions: test.tests[0].questions,
+    //     // version: test.tests[0].version,
+    //     // testGroupId: test.tests[0].testId,
+    //   }
+    // })
   }),
   getTestById: t.procedure.input(z.object({
     id: z.string()
@@ -307,16 +408,25 @@ export const appRouter = router({
         id: input.id
       },
       include: {
-        questions: {
+        owner: true,
+        tags: true,
+        testVersions: {
           include: {
-            type: true
-          }
-        },
+            questions: {
+              include: {
+                type: true
+              }
+            }
+          },
+          orderBy: {
+            version: "desc"
+          },
+          take: 1
+        }
       }
     })
 
     if (!test) return null
-
     return test
   }),
   protected: protectedRouter,

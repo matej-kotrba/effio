@@ -49,8 +49,8 @@
 		{#each recentTests.data as test}
 			<Card
 				redirectLink={`/tests/${test.id}`}
-				title={test.title}
-				description={test.description}
+				title={test.testVersions[0].title}
+				description={test.testVersions[0].description}
 				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.name)}

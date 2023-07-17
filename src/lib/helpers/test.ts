@@ -67,16 +67,17 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
   })
 }
 
-export function initializeTestToTestStore(testData: Omit<TestFullType, "owner" | "tags">) {
+export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars">) {
   testObject.set({
     id: testData.id,
-    title: testData.title,
-    description: testData.description,
+    versionId: testData.testVersions[0].versionId,
+    title: testData.testVersions[0].title,
+    description: testData.testVersions[0].description,
     published: testData.published,
     errors: {},
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    questions: testData.questions.map((question) => {
+    questions: testData.testVersions[0].questions.map((question) => {
       return {
         id: question.id,
         title: question.title,
@@ -123,6 +124,7 @@ type IsTestValid = {
 }
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
+// TODO: Rewrite this to use zod
 export function isTestValid(inputsToValidate: IsTestValid) {
 
   const { title, description, questions } = inputsToValidate
@@ -226,7 +228,7 @@ type CheckServer = {
 // Check test on the server for correctness of the answers
 
 export const checkTestServerAndRecordIt = async (test: TestObject): Promise<CheckServer> => {
-  if (test.id === undefined) return {
+  if (test.id === undefined || test.versionId === undefined) return {
     error: "Test has no ID and hence cannot be submitted.",
     success: false
   }
@@ -297,18 +299,12 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
 
   // TODO: UNCOMMENT
   await trpc().records.createTestRecord.mutate({
-    testId: test.id,
+    testId: test.versionId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     answerContent: questionData.map((item, index) => {
       return {
         questionId: test.questions[index].id,
-        questionContent: {
-          original: item.correctAnswer,
-          user: item.userAnswer,
-          title: test.questions[index].title,
-          questionType: test.questions[index].questionType,
-          displayType: test.questions[index].displayType,
-        },
+        userContent: item.userAnswer
       }
     })
   })

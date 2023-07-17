@@ -26,11 +26,11 @@
 				resultFormat.isCorrect === false &&
 				resultFormat.correctAnswer.answers[index].isTrue ===
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-green-100'} {resultFormat &&
+				'bg-green-200'} {resultFormat &&
 				resultFormat.isCorrect === false &&
 				resultFormat.correctAnswer.answers[index].isTrue !==
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-red-100'}"
+				'bg-red-200'}"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>

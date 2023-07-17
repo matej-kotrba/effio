@@ -17,15 +17,21 @@
 
 	result = null;
 
+	console.log(data.testContent);
+
 	initializeTestToTestStore(data.testContent);
+
+	$: console.log($testObject);
 </script>
 
 {#if $testObject}
 	<div class="mx-auto max-w-[650px]">
-		<h2 class="font-thin text-h3">{data.testContent.title}</h2>
-		<p class="text-light_text_black_60">{data.testContent.description}</p>
+		<h2 class="font-thin text-h3">{data.testContent.testVersions[0].title}</h2>
+		<p class="text-light_text_black_60">
+			{data.testContent.testVersions[0].description}
+		</p>
 		<Space gap={40} />
-		{#each data.testContent.questions as _, index}
+		{#each data.testContent.testVersions[0].questions as _, index}
 			<Input
 				questionIndex={index}
 				class={`border-2 border-solid ${
@@ -64,6 +70,7 @@
 						}
 
 						// Then check the test on the server for the correct answers
+						console.log('TEST', $testObject);
 						let res = await checkTestServerAndRecordIt($testObject);
 						if (!res['success']) {
 							submitError = res['error'] || 'Something went wrong';

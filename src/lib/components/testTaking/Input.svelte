@@ -12,8 +12,6 @@
 	let classes = '';
 
 	$: typedResultFormat = resultFormat as any;
-
-	$: console.log(resultFormat);
 </script>
 
 <div

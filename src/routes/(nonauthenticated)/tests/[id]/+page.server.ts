@@ -17,7 +17,7 @@ export const load: ServerLoad = async (request) => {
 
   const questionTypeOptions = Object.keys(questionContentFunctions)
 
-  const editedQuestions = test.questions.map((question) => {
+  const editedQuestions = test.testVersions[0].questions.map((question) => {
     // check if the question type exists in the object above, if so then redirect to homepage
     if (!questionTypeOptions.some((key) => key === question.type.slug)) throw redirect(302, "/")
     return {
@@ -28,10 +28,11 @@ export const load: ServerLoad = async (request) => {
     }
   })
 
+  test.testVersions[0].questions = editedQuestions
+
   return {
     testContent: {
       ...test,
-      questions: editedQuestions
     }
   }
 }
