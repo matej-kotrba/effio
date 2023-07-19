@@ -1,3 +1,32 @@
+<script lang="ts">
+	import { parse, type GIFTQuestion } from 'gift-pegjs';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+	let fileRef: HTMLInputElement | null = null;
+
+	function readFile() {
+		if (!fileRef?.files || !fileRef.files[0]) return;
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const fileContent = e.target?.result;
+			if (!fileContent) return;
+
+			let parsed: undefined | GIFTQuestion[];
+			try {
+				parsed = parse(fileContent as string);
+			} catch (e) {
+				return;
+			}
+
+			dispatch('parsedFile', parsed);
+		};
+		reader.readAsText(fileRef.files[0]);
+	}
+</script>
+
 <div
 	class="relative w-full p-5 duration-300 rounded-xl shadow-surrounding max-w-xxs aspect-square box"
 >
@@ -13,7 +42,10 @@
 		</div>
 	</div>
 	<input
+		bind:this={fileRef}
+		accept=".txt"
 		on:dragover={() => console.log('asdasd')}
+		on:input={readFile}
 		type="file"
 		class="absolute w-full h-full input-styled"
 	/>

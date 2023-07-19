@@ -187,7 +187,7 @@
 							: ' border-transparent border-4 border-solid'}
 					/>
 				{/each}
-				<FileImport />
+				<FileImport on:parsedFile={() => {}} />
 			</div>
 			<Space />
 
