@@ -26,7 +26,10 @@
 			return;
 		}
 		if ($testObject.questions[indexParent].content.answers) {
-			$testObject.questions[indexParent].content.answers = [...content.answers, { answer: '' }];
+			$testObject.questions[indexParent].content.answers = [
+				...content.answers,
+				{ answer: '' }
+			];
 		}
 	}
 
@@ -35,7 +38,9 @@
 			(_, i) => i !== index
 		);
 		if (content['correctAnswerIndex'] === index)
-			($testObject.questions[indexParent].content as PickOneQuestion).correctAnswerIndex = 0;
+			(
+				$testObject.questions[indexParent].content as PickOneQuestion
+			).correctAnswerIndex = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
@@ -46,7 +51,9 @@
 		<div class="flex gap-1">
 			{#key answersLength}
 				<div
-					class={answersLength === QUESTION_LIMIT ? 'text-error' : 'text-light_primary'}
+					class={answersLength === QUESTION_LIMIT
+						? 'text-error'
+						: 'text-light_primary'}
 					in:fly={{ x: 0, y: -20 }}
 				>
 					{answersLength}
@@ -83,7 +90,8 @@
 							title="Option {index + 1}"
 							titleName="Option {index + 1}"
 							validationSchema={asnwerSchema}
-							on:error={(event) => (content.answers[index].error = event.detail)}
+							on:error={(event) =>
+								(content.answers[index].error = event.detail)}
 							bind:inputValue={content.answers[index].answer}
 						/>
 					</div>
@@ -101,7 +109,11 @@
 						<Icon icon="charm:tick" class="text-3xl" />
 					</button>
 				</div>
-				<p class={`text-body2 text-error ${!content.answers[index].error ? 'opacity-0' : ''}`}>
+				<p
+					class={`text-body2 text-error ${
+						!content.answers[index].error ? 'opacity-0' : ''
+					}`}
+				>
 					{content.answers[index].error || 'Placeholder error'}
 				</p>
 			</div>

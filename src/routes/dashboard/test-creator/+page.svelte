@@ -9,6 +9,7 @@
 	import TextInput from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
+	import FileImport from '~components/inputs/FileImport.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
@@ -44,7 +45,7 @@
 
 	// TODO: Change this back to false
 	let testCreationProgress = {
-		templateDone: true,
+		templateDone: false,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -175,16 +176,19 @@
 			}}
 			class=""
 		>
-			{#each data.templates as template, index}
-				<TemplateCard
-					title={template.name}
-					imageSrc={templates[index].image}
-					onClick={() => (templatesActive = index)}
-					customClasses={index === templatesActive
-						? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
-						: ' border-transparent border-4 border-solid'}
-				/>
-			{/each}
+			<div class="flex items-center gap-4">
+				{#each data.templates as template, index}
+					<TemplateCard
+						title={template.name}
+						imageSrc={templates[index].image}
+						onClick={() => (templatesActive = index)}
+						customClasses={index === templatesActive
+							? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
+							: ' border-transparent border-4 border-solid'}
+					/>
+				{/each}
+				<FileImport />
+			</div>
 			<Space />
 
 			<BasicButton

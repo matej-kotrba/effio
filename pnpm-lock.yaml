@@ -26,6 +26,9 @@ dependencies:
   '@trpc/server':
     specifier: ^10.19.1
     version: 10.19.1
+  gift-pegjs:
+    specifier: ^0.2.1
+    version: 0.2.1
   svelte-french-toast:
     specifier: 1.0.4-beta.0
     version: 1.0.4-beta.0(svelte@3.58.0)
@@ -1459,6 +1462,12 @@ packages:
     resolution: {integrity: sha512-Hm0ixYtaSZ/V7C8FJrtZIuBBI+iSgL+1Aq82zSu8VQNB4S3Gk8e7Qs3VwBDJAhmRZcFqkl3tQu36g/Foh5I5ig==}
     dev: true
 
+  /gift-pegjs@0.2.1:
+    resolution: {integrity: sha512-yNK6GFuV2jbscIktKFryDeEwoQ0XJDAK3haywbssSrownLFlafr+SCQ1yReUeOAVNJ94cUt3QMR4GqUjovaiuQ==}
+    dependencies:
+      pegjs: 0.10.0
+    dev: false
+
   /glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
     engines: {node: '>= 6'}
@@ -1908,6 +1917,12 @@ packages:
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
     dev: true
+
+  /pegjs@0.10.0:
+    resolution: {integrity: sha512-qI5+oFNEGi3L5HAxDwN2LA4Gg7irF70Zs25edhjld9QemOgp0CbvMtbFcMvFtEo1OityPrcCzkQFB8JP/hxgow==}
+    engines: {node: '>=0.10'}
+    hasBin: true
+    dev: false
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
