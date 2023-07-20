@@ -94,6 +94,10 @@
 			isSubmitting = false;
 		}
 	}
+
+	function handleParsedData(e: CustomEvent) {
+		console.log(e.detail);
+	}
 </script>
 
 <DashboardTitle
@@ -187,7 +191,7 @@
 							: ' border-transparent border-4 border-solid'}
 					/>
 				{/each}
-				<FileImport on:parsedFile={() => {}} />
+				<FileImport on:parsedFile={handleParsedData} />
 			</div>
 			<Space />
 
