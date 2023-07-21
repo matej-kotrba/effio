@@ -7,9 +7,11 @@ export const load: ServerLoad = async (event) => {
   const context = await createContext(event)
 
   const templates = appRouter.createCaller(context).getTemplates();
+  const questionTemplates = appRouter.createCaller(context).getQuestionsTypes()
 
 
   return {
     templates: templates,
+    questionTemplates: questionTemplates
   }
 }

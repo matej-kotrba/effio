@@ -10,6 +10,7 @@ const schema = z.object({
   id: z.string(),
   createdAt: z.date(),
   name: z.string(),
+  slug: z.string(),
   properties: z.object({
     inputType: z.string(),
     question: z.array(z.string()),

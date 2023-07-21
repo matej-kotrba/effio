@@ -30,6 +30,7 @@
 		isValidInputServer
 	} from '~/lib/helpers/test';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
+	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
@@ -97,6 +98,17 @@
 
 	function handleParsedData(e: CustomEvent) {
 		console.log(e.detail);
+		try {
+			const questions = transformParsedJSONIntoEffioObject(
+				e.detail,
+				data.questionTemplates
+			);
+			$testObject.questions = questions;
+
+			testCreationProgress.templateDone = true;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 </script>
 
