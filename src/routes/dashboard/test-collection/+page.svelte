@@ -8,6 +8,8 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { TestFullType } from '~/Prisma';
+	import { generateGIFT, type GIFTQuestion } from 'gift-format-generator';
+	import { toast } from 'svelte-french-toast';
 
 	export let data;
 
@@ -22,9 +24,57 @@
 			limit: 3,
 			id: data.session?.user?.id
 		});
-		recentTests.data = res as unknown as TestFullType[];
+		recentTests.data = res;
 		recentTests.isLoading = false;
 	});
+
+	function createExportedFileAndMakeItDownloadable(test: TestFullType) {
+		return generateGIFT(
+			test.testVersions[0]['questions'].map((question) => {
+				let questionType;
+				let content: GIFTQuestion['answers'];
+				console.log(question);
+
+				switch (question['type']['slug'] as keyof QuestionTypeMap) {
+					case 'pickOne': {
+						questionType = 'MC' as const;
+
+						const questionContent = question['content'] as PickOneQuestion;
+						content = questionContent.answers.map((answer, index) => {
+							return {
+								text: answer.answer,
+								isCorrect: index === questionContent.correctAnswerIndex
+							};
+						});
+						break;
+					}
+					case 'true/false': {
+						questionType = 'SC' as const;
+
+						const questionContent = question['content'] as TrueFalseQuestion;
+						content = questionContent.answers.map((answer) => {
+							return {
+								text: answer.answer,
+								isCorrect: answer.isTrue
+							};
+						});
+						break;
+					}
+					default: {
+						throw new Error('Unknown question type');
+					}
+				}
+
+				return {
+					title: question.title,
+					questionName: question.title,
+					formatter: 'plain',
+					type: questionType,
+					answers: content
+				};
+			})
+		);
+	}
 </script>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
@@ -61,7 +111,37 @@
 						},
 						text: 'Edit'
 					},
-					{ action: () => {}, text: 'Delete' }
+					{ action: () => {}, text: 'Delete' },
+					{
+						action: () => {
+							const element = document.createElement('a');
+
+							let gift;
+							console.log(test);
+							try {
+								gift = createExportedFileAndMakeItDownloadable(test);
+							} catch (e) {
+								console.error(e);
+								toast.error('Unknown question type');
+							}
+
+							if (!gift) return;
+
+							element.setAttribute(
+								'href',
+								'data:text/plain;charset=utf-8,' + encodeURIComponent(gift)
+							);
+							element.setAttribute(
+								'download',
+								`${test['testVersions'][0]['title']}.txt`
+							);
+							element.style.display = 'none';
+							document.body.appendChild(element);
+							element.click();
+							document.body.removeChild(element);
+						},
+						text: 'Export'
+					}
 				]}
 			/>
 		{/each}
