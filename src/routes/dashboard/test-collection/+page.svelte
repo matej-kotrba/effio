@@ -20,6 +20,7 @@
 	};
 
 	let openModal: () => void;
+	let modalDeleteTitle = '';
 
 	onMount(async () => {
 		if (!data.session?.user?.id) return;
@@ -81,7 +82,26 @@
 </script>
 
 <Dialog bind:open={openModal}>
-	<p>Are you sure you want to delete this test ?</p>
+	<p class="text-center text-light_text_black">
+		Are you sure you want to delete test<br /><span class="font-semibold"
+			>{modalDeleteTitle}</span
+		>
+	</p>
+	<Space />
+	<div class="flex justify-center gap-3">
+		<button class="btn">Cancel</button>
+		<button
+			class="text-white btn btn-error hover:bg-red-600"
+			on:click={() => {
+				// const response = await trpc($page).protected.deleteTest.mutate({
+				// 	testGroupId: test['id']
+				// });
+				// if (response['success']) {
+				// 	recentTests.data.filter((item) => item.id !== test['id']);
+				// }
+			}}>Delete</button
+		>
+	</div>
 </Dialog>
 
 <h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
@@ -152,13 +172,8 @@
 					},
 					{
 						action: async () => {
+							modalDeleteTitle = test.testVersions[0].title;
 							openModal();
-							// const response = await trpc($page).protected.deleteTest.mutate({
-							// 	testGroupId: test['id']
-							// });
-							// if (response['success']) {
-							// 	recentTests.data.filter((item) => item.id !== test['id']);
-							// }
 						},
 						text: 'Delete',
 						iconClass: 'fluent:delete-28-filled'
