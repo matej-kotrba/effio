@@ -1,8 +1,13 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
+import superjson from "superjson"
 
-export const t = initTRPC.context<Context>().create()
+export const t = initTRPC.context<Context>().create(
+  {
+    transformer: superjson
+  }
+)
 export const router = t.router
 
 // Schema of template question type
@@ -357,11 +362,15 @@ export const appRouter = router({
             version: "desc"
           },
           include: {
-            questions: true
+            questions: {
+              include: {
+                type: true
+              }
+            },
           }
         },
         tags: true,
-        owner: true
+        owner: true,
       },
       take: input.limit,
       orderBy: {

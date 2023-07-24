@@ -50,6 +50,7 @@
 		"@trpc/server": "^10.19.1",
 		"gift-format-generator": "^0.2.3",
 		"gift-pegjs": "^0.2.1",
+		"superjson": "^1.13.1",
 		"svelte-french-toast": "1.0.4-beta.0",
 		"sveltekit-superforms": "^1.0.0",
 		"tailwind-merge": "^1.13.1",
