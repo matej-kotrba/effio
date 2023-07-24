@@ -10,6 +10,7 @@
 	import type { TestFullType } from '~/Prisma';
 	import { generateGIFT, type GIFTQuestion } from 'gift-format-generator';
 	import { toast } from 'svelte-french-toast';
+	import Dialog from '~components/portals/Dialog.svelte';
 
 	export let data;
 
@@ -17,6 +18,8 @@
 		data: [],
 		isLoading: true
 	};
+
+	let openModal: () => void;
 
 	onMount(async () => {
 		if (!data.session?.user?.id) return;
@@ -77,6 +80,10 @@
 	}
 </script>
 
+<Dialog bind:open={openModal}>
+	<p>Are you sure you want to delete this test ?</p>
+</Dialog>
+
 <h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
 <p class="text-body1 text-light_text_black_40">
 	Here you can see all your tests which you have created
@@ -109,9 +116,9 @@
 						action: () => {
 							goto('test-collection/edit/' + test['id']);
 						},
-						text: 'Edit'
+						text: 'Edit',
+						iconClass: 'iconamoon:edit-light'
 					},
-					{ action: () => {}, text: 'Delete' },
 					{
 						action: () => {
 							const element = document.createElement('a');
@@ -140,7 +147,21 @@
 							element.click();
 							document.body.removeChild(element);
 						},
-						text: 'Export'
+						text: 'Export',
+						iconClass: 'mdi:export'
+					},
+					{
+						action: async () => {
+							openModal();
+							// const response = await trpc($page).protected.deleteTest.mutate({
+							// 	testGroupId: test['id']
+							// });
+							// if (response['success']) {
+							// 	recentTests.data.filter((item) => item.id !== test['id']);
+							// }
+						},
+						text: 'Delete',
+						iconClass: 'fluent:delete-28-filled'
 					}
 				]}
 			/>

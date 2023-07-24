@@ -108,18 +108,6 @@ const protectedRouter = router({
   })).mutation(async ({ ctx, input }) => {
     try {
 
-      // const testData = await ctx.prisma.testVersion.update({
-      //   where: {
-      //     id: input.id
-      //   },
-      //   data: {
-      //     title: input.title,
-      //     description: input.description,
-      //     ownerId: ctx.userId,
-      //     published: input.isPublished,
-      //   }
-      // })
-
       const version = await ctx.prisma.testVersion.count({
         where: {
           testId: input.testGroupId
@@ -139,6 +127,7 @@ const protectedRouter = router({
 
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
+      // TODO: use createMany
       const questionsPromise = questions.map(async (question) => {
         return ctx.prisma.question.create({
           data: {
@@ -152,42 +141,52 @@ const protectedRouter = router({
 
       const questionsData = await Promise.all(questionsPromise)
 
-      // const questionsIds: string[] = questions.map(item => item.id)
-
-      // const questionsPromise = questions.map(async (question) => {
-      //   questionsIds.push(question.id)
-      //   return ctx.prisma.question.upsert({
-      //     where: {
-      //       id: question.id
-      //     },
-      //     update: {
-      //       title: question.title,
-      //       content: question.content,
-      //     },
-      //     create: {
-      //       id: question.id,
-      //       title: question.title,
-      //       content: question.content,
-      //       typeId: question.questionTypeId,
-      //       testId: testData.id,
-      //     }
-      //   })
-      // })
-
-      // ctx.prisma.question.deleteMany({
-      //   where: {
-      //     id: {
-      //       notIn: questionsIds
-      //     }
-      //   }
-      // })
-
-      // const questionsData = await Promise.all(questionsPromise)
-
       return {
         test: testData,
         questions: questionsData,
         success: true
+      }
+    }
+    catch (e) {
+      return {
+        success: false,
+      }
+    }
+  }),
+  deleteTest: loggedInProcedure.input(z.object({
+    testGroupId: z.string(),
+  })).mutation(async ({ ctx, input }) => {
+    try {
+      const test = await ctx.prisma.test.findUnique({
+        where: {
+          id: input.testGroupId
+        }
+      })
+
+      if (!test) {
+        return {
+          success: false,
+          message: "Test not found"
+        }
+      }
+
+      if (test.ownerId !== ctx.userId) {
+        return {
+          success: false,
+          message: "Unauthorized"
+        }
+      }
+
+      const deleteTest = await ctx.prisma.test.delete({
+        where: {
+          id: input.testGroupId
+        }
+      })
+
+      return {
+        success: true,
+        message: "Test deleted",
+        test: deleteTest
       }
     }
     catch (e) {

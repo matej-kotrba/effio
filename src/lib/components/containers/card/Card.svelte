@@ -9,7 +9,11 @@
 	export let description: string;
 	export let stars: number | undefined = undefined;
 	export let tags: string[] = [];
-	export let dropdownTabs: { icon?: HTMLElement; text: string; action: Function }[] = [];
+	export let dropdownTabs: {
+		iconClass?: string;
+		text: string;
+		action: Function;
+	}[] = [];
 	export let createdAt: Date | undefined = undefined;
 </script>
 
@@ -45,7 +49,9 @@
 				>
 					<p class="text-body2">
 						{typeof createdAt !== 'undefined'
-							? `${createdAt.getDate()}. ${createdAt.getMonth() + 1}. ${createdAt.getFullYear()}`
+							? `${createdAt.getDate()}. ${
+									createdAt.getMonth() + 1
+							  }. ${createdAt.getFullYear()}`
 							: ''}
 					</p>
 				</div>
@@ -70,7 +76,9 @@
 	</div>
 	<div class="flex gap-2">
 		{#each tags as tag}
-			<div class="px-2 py-1 text-white rounded-full bg-success text-body2">{tag}</div>
+			<div class="px-2 py-1 text-white rounded-full bg-success text-body2">
+				{tag}
+			</div>
 		{/each}
 	</div>
 	<div class="flex items-center justify-between">
@@ -85,17 +93,25 @@
 
 		<div class="dropdown dropdown-hover dropdown-top">
 			<button type="button" class="flex items-center settings-button">
-				<Icon icon="fluent:settings-24-filled" class="text-3xl text-light_text_black" />
+				<Icon
+					icon="fluent:settings-24-filled"
+					class="text-3xl text-light_text_black"
+				/>
 			</button>
 			<ul
-				class="dropdown-content z-[1] menu p-2 shadow-lg shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black"
+				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black"
 			>
 				{#each dropdownTabs as item}
 					<li class="group">
 						<button
 							type="button"
-							class="group-hover:text-light_text_black"
-							on:click={(e) => item.action(e)}>{item.icon || ''} {item.text}</button
+							class="flex items-center justify-start group-hover:text-light_text_black"
+							on:click={(e) => item.action(e)}
+						>
+							{#if item['iconClass']}
+								<iconify-icon icon={item['iconClass']} class="text-md" />
+							{/if}
+							{item.text}</button
 						>
 					</li>
 				{/each}
