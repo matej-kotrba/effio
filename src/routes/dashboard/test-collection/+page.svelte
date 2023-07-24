@@ -37,7 +37,7 @@
 
 				switch (question['type']['slug'] as keyof QuestionTypeMap) {
 					case 'pickOne': {
-						questionType = 'MC' as const;
+						questionType = 'SC' as const;
 
 						const questionContent = question['content'] as PickOneQuestion;
 						content = questionContent.answers.map((answer, index) => {
@@ -49,7 +49,7 @@
 						break;
 					}
 					case 'true/false': {
-						questionType = 'SC' as const;
+						questionType = 'MC' as const;
 
 						const questionContent = question['content'] as TrueFalseQuestion;
 						content = questionContent.answers.map((answer) => {
