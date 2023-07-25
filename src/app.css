@@ -31,6 +31,7 @@ html {
 body {
 	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black bg-light_white;
 	box-sizing: border-box;
+	overflow-x: hidden;
 }
 
 *::selection {

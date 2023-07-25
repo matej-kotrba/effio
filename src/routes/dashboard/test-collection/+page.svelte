@@ -20,7 +20,10 @@
 	};
 
 	let openModal: () => void;
-	let modalDeleteTitle = '';
+	let modalDeleteInfo: {
+		id?: string;
+		title?: string;
+	} = {};
 
 	onMount(async () => {
 		if (!data.session?.user?.id) return;
@@ -84,7 +87,7 @@
 <Dialog bind:open={openModal}>
 	<p class="text-center text-light_text_black">
 		Are you sure you want to delete test<br /><span class="font-semibold"
-			>{modalDeleteTitle}</span
+			>{modalDeleteInfo?.title || ''}</span
 		>
 	</p>
 	<Space />
@@ -92,13 +95,22 @@
 		<button class="btn">Cancel</button>
 		<button
 			class="text-white btn btn-error hover:bg-red-600"
-			on:click={() => {
-				// const response = await trpc($page).protected.deleteTest.mutate({
-				// 	testGroupId: test['id']
-				// });
-				// if (response['success']) {
-				// 	recentTests.data.filter((item) => item.id !== test['id']);
-				// }
+			on:click={async () => {
+				if (modalDeleteInfo?.id === undefined) return;
+				const response = await trpc($page).protected.deleteTest.mutate({
+					testGroupId: modalDeleteInfo.id
+				});
+				console.log(response);
+				if (!response['success']) {
+					if (response['message']) {
+						toast.error(response['message']);
+					}
+				}
+				if (response['success']) {
+					recentTests.data = recentTests.data.filter(
+						(item) => item.id !== modalDeleteInfo.id
+					);
+				}
 			}}>Delete</button
 		>
 	</div>
@@ -172,7 +184,8 @@
 					},
 					{
 						action: async () => {
-							modalDeleteTitle = test.testVersions[0].title;
+							modalDeleteInfo.id = test.id;
+							modalDeleteInfo.title = test.testVersions[0].title;
 							openModal();
 						},
 						text: 'Delete',
