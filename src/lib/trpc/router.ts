@@ -438,6 +438,46 @@ export const appRouter = router({
     if (!test) return null
     return test
   }),
+  getPopularTests: t.procedure.input(z.object({
+    take: z.number().optional(),
+    cursor: z.string().optional(),
+  })).query(async ({ ctx, input }) => {
+
+    let test = null
+    if (!input.cursor) {
+      test = await ctx.prisma.test.findFirst({
+        orderBy: {
+          stars: "desc"
+        },
+      })
+    }
+
+    if (input.cursor === undefined && !test) return {
+      success: true,
+      message: "No tests found"
+    }
+
+    const tests = await ctx.prisma.test.findMany({
+      take: input.take || 8,
+      skip: input.cursor ? 1 : 0,
+      cursor: {
+        id: input.cursor || test?.id
+      },
+      orderBy: {
+        stars: "desc"
+      }
+    })
+
+    if (!tests) return {
+      success: false,
+      message: "No tests found"
+    }
+
+    return {
+      success: true,
+      tests
+    }
+  }),
   protected: protectedRouter,
   records: recordsRouter,
 })

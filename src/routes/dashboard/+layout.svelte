@@ -50,7 +50,7 @@
 					<Icon icon="ic:round-history" class="text-2xl" /> Test History
 				</a>
 				<a
-					href="#"
+					href="/community"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
 				>
 					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community
