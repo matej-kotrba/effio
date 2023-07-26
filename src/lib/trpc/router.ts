@@ -465,6 +465,12 @@ export const appRouter = router({
       },
       orderBy: {
         stars: "desc"
+      },
+      include: {
+        testVersions: {
+          take: 1
+        },
+        owner: true,
       }
     })
 

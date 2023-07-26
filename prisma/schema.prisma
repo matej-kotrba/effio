@@ -85,6 +85,7 @@ model Test {
   updatedAt    DateTime      @updatedAt
   tags         Tag[]
   stars        Int           @default(0)
+  views        Int           @default(0)
   owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String
 
