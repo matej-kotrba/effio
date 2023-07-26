@@ -5,9 +5,9 @@
 
 	const REQUEST_AMOUNT = 8;
 
-	const displayedTests = trpc($page).getPopularTests.query({
-		take: REQUEST_AMOUNT
-	});
+	// const displayedTests = trpc($page).getPopularTests.query({
+	// 	take: REQUEST_AMOUNT
+	// });
 
 	// for (let i = 0; i < 40; i++) {
 	// 	await trpc($page).protected.saveTest.mutate({
@@ -35,14 +35,28 @@
 	// 	});
 	// }
 
-	console.log(displayedTests.then((data) => console.log(data)));
+	// console.log(displayedTests.then((data) => console.log(data)));
 </script>
 
-{#await displayedTests}
+<!-- {#await displayedTests}
 	<p>Loading...</p>
 {:then tests}
-	{#if tests['tests']}
-		{#each tests['tests'] as test}
+	{#if tests['tests']} -->
+<CardMinimalized
+	title={'asdac xjhcas dhaxjcajkxca js sads'}
+	description={'asdsj hxcjh yxjch uiaehdk jahxcjakd ashjaxcb aksh dkajhd ajcbkashdh axjcyxc hkajshd akjsd axjkcbkjash dc'}
+	author={'Anonymous'}
+	stars={23}
+	views={45}
+/>
+<CardMinimalized
+	title={'xjcajkxcaas'}
+	description={'axjkcb asd sdskjash dc'}
+	author={'Anonymous'}
+	stars={23}
+	views={45}
+/>
+<!-- {#each tests['tests'] as test}
 			<CardMinimalized
 				title={test.testVersions[0].title}
 				description={test.testVersions[0].description}
@@ -51,6 +65,6 @@
 				stars={test.stars}
 				views={test.views}
 			/>
-		{/each}
-	{/if}
-{/await}
+		{/each} -->
+<!-- {/if}
+{/await} -->
