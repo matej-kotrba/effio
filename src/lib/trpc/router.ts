@@ -439,7 +439,11 @@ export const appRouter = router({
     return test
   }),
   getTags: t.procedure.query(async ({ ctx }) => {
-    const tags = await ctx.prisma.tag.findMany()
+    const tags = await ctx.prisma.tag.findMany({
+      orderBy: {
+        name: "asc"
+      }
+    })
     if (!tags) {
       return { success: false, message: "No tags found" }
     }

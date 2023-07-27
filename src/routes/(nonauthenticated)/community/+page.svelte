@@ -6,11 +6,19 @@
 	import Space from '~components/separators/Space.svelte';
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
 
 	export let data;
 
 	const REQUEST_AMOUNT = 8;
+
+	let tags = data.tags.map((tag) => {
+		return {
+			tag: tag,
+			isActive: false
+		};
+	});
 
 	let displayedTests: ReturnType<
 		ReturnType<typeof trpc>['getPopularTests']['query']
@@ -59,8 +67,21 @@
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">
-			{#each data.tags as tag}
-				<TagContainer title={tag.name} color={tag.color} />
+			{#each tags as { tag, isActive }, index}
+				<button
+					type="button"
+					on:click={() => {
+						console.log('adasdasd');
+						goto('#');
+					}}
+				>
+					<TagContainer
+						title={tag.name}
+						color={tag.color}
+						{isActive}
+						on:activeToggle={(data) => (tags[index].isActive = data.detail)}
+					/>
+				</button>
 			{/each}
 		</div>
 		<Space gap={10} />
