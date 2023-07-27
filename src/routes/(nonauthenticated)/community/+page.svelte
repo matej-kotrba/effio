@@ -5,11 +5,21 @@
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
+	import { onMount } from 'svelte';
+	import TagContainer from '~components/containers/tag/TagContainer.svelte';
+
+	export let data;
 
 	const REQUEST_AMOUNT = 8;
 
-	const displayedTests = trpc($page).getPopularTests.query({
-		take: REQUEST_AMOUNT
+	let displayedTests: ReturnType<
+		ReturnType<typeof trpc>['getPopularTests']['query']
+	>;
+
+	onMount(() => {
+		displayedTests = trpc($page).getPopularTests.query({
+			take: REQUEST_AMOUNT
+		});
 	});
 
 	// for (let i = 0; i < 40; i++) {
@@ -47,6 +57,13 @@
 	>
 		<SearchBar />
 		<Space gap={10} />
+		<h4>Filter by a tag</h4>
+		<div class="flex flex-wrap gap-1">
+			{#each data.tags as tag}
+				<TagContainer title={tag.name} color={tag.color} />
+			{/each}
+		</div>
+		<Space gap={10} />
 	</div>
 	<div
 		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center"
@@ -56,7 +73,7 @@
 				<CardMinimalizedSkeleton />
 			{/each}
 		{:then tests}
-			{#if tests['tests']}
+			{#if tests && tests['tests']}
 				{#each tests['tests'] as test}
 					<CardMinimalized
 						title={test.testVersions[0].title}

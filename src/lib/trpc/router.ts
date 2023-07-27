@@ -438,6 +438,17 @@ export const appRouter = router({
     if (!test) return null
     return test
   }),
+  getTags: t.procedure.query(async ({ ctx }) => {
+    const tags = await ctx.prisma.tag.findMany()
+    if (!tags) {
+      return { success: false, message: "No tags found" }
+    }
+
+    return {
+      success: true,
+      tags
+    }
+  }),
   getPopularTests: t.procedure.input(z.object({
     take: z.number().optional(),
     cursor: z.string().optional(),
