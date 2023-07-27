@@ -8,13 +8,19 @@
 </script>
 
 <div
-	class="group flex flex-col justify-between gap-2 text-center bg-light_quaternary
-	 shadow-md max-w-[300px] text-light_text_black p-4 rounded-md mb-5 relative min-h-[180px]"
+	class="group flex flex-col justify-between gap-2 text-center bg-light_quaternary cursor-pointer
+	 shadow-md w-full max-w-[300px] text-light_text_black p-2 rounded-md relative min-h-[180px] overflow-hidden
+	 hover:scale-105 hover:shadow-lg duration-150"
 >
 	<div>
-		<span class="flex justify-end gap-1 mb-2 text-xs"
+		<span class="flex items-center justify-end gap-1 mb-2 text-xs"
 			>{author}
-			{#if authorImg}<img src={authorImg} alt="User Icon" />{/if}</span
+			{#if authorImg}<img
+					src={authorImg}
+					referrerpolicy="no-referrer"
+					alt="User Icon"
+					class="w-6 rounded-full"
+				/>{/if}</span
 		>
 		<h4
 			class="mb-2 overflow-hidden font-semibold overflow-ellipsis whitespace-nowrap"
@@ -22,9 +28,9 @@
 			{title}
 		</h4>
 		<p class="max-w-[80%] mx-auto description">{description}</p>
-		<div class="grid-icon">
+		<!-- <div class="grid-icon place-content-center">
 			<iconify-icon icon="iconamoon:enter" class="overflow-hidden text-3xl" />
-		</div>
+		</div> -->
 	</div>
 	<div class="flex justify-between">
 		<div class="flex items-center gap-1">
@@ -50,7 +56,35 @@
 		height: 3em;
 	}
 
-	.grid-icon {
+	.group::after {
+		content: '';
+		width: 12px;
+		height: 300%;
+		rotate: 45deg;
+		left: -100%;
+		top: -100%;
+		transform: translateY(-50%) translateX(-0%);
+		background-color: white;
+		filter: blur(8px);
+		position: absolute;
+		pointer-events: none;
+	}
+
+	.group:hover::after {
+		animation: slide 0.8s linear forwards;
+	}
+	@keyframes slide {
+		from {
+			left: -100%;
+			top: -100%;
+		}
+		to {
+			left: 100%;
+			top: 100%;
+		}
+	}
+
+	/* .grid-icon {
 		display: grid;
 		grid-template-rows: 0fr;
 		opacity: 0;
@@ -60,5 +94,5 @@
 	.group:hover .grid-icon {
 		grid-template-rows: 1fr;
 		opacity: 1;
-	}
+	} */
 </style>

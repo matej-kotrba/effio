@@ -2,6 +2,8 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
 	import CardMinimalized from '~components/containers/card/CardMinimalized.svelte';
+	import SearchBar from '~components/inputs/SearchBar.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	const REQUEST_AMOUNT = 8;
 
@@ -38,33 +40,31 @@
 	// console.log(displayedTests.then((data) => console.log(data)));
 </script>
 
-<!-- {#await displayedTests}
-	<p>Loading...</p>
-{:then tests}
-	{#if tests['tests']} -->
-<CardMinimalized
-	title={'asdac xjhcas dhaxjcajkxca js sads'}
-	description={'asdsj hxcjh yxjch uiaehdk jahxcjakd ashjaxcb aksh dkajhd ajcbkashdh axjcyxc hkajshd akjsd axjkcbkjash dc'}
-	author={'Anonymous'}
-	stars={23}
-	views={45}
-/>
-<CardMinimalized
-	title={'xjcajkxcaas'}
-	description={'axjkcb asd sdskjash dc'}
-	author={'Anonymous'}
-	stars={23}
-	views={45}
-/>
-<!-- {#each tests['tests'] as test}
-			<CardMinimalized
-				title={test.testVersions[0].title}
-				description={test.testVersions[0].description}
-				author={test.owner.name || 'Anonymous'}
-				authorImg={test.owner.image}
-				stars={test.stars}
-				views={test.views}
-			/>
-		{/each} -->
-<!-- {/if}
-{/await} -->
+<div>
+	<div
+		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
+	>
+		<SearchBar />
+		<Space gap={10} />
+	</div>
+	<!-- {#await displayedTests}
+		<p>Loading...</p>
+	{:then tests}
+		{#if tests['tests']}
+			<div
+				class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center"
+			>
+				{#each tests['tests'] as test}
+					<CardMinimalized
+						title={test.testVersions[0].title}
+						description={test.testVersions[0].description}
+						author={test.owner.name || 'Anonymous'}
+						authorImg={test.owner.image}
+						stars={test.stars}
+						views={test.views}
+					/>
+				{/each}
+			</div>
+		{/if}
+	{/await} -->
+</div>
