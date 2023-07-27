@@ -28,9 +28,6 @@
 			{title}
 		</h4>
 		<p class="max-w-[80%] mx-auto description">{description}</p>
-		<!-- <div class="grid-icon place-content-center">
-			<iconify-icon icon="iconamoon:enter" class="overflow-hidden text-3xl" />
-		</div> -->
 	</div>
 	<div class="flex justify-between">
 		<div class="flex items-center gap-1">
@@ -83,16 +80,4 @@
 			top: 100%;
 		}
 	}
-
-	/* .grid-icon {
-		display: grid;
-		grid-template-rows: 0fr;
-		opacity: 0;
-		transition: 200ms;
-	}
-
-	.group:hover .grid-icon {
-		grid-template-rows: 1fr;
-		opacity: 1;
-	} */
 </style>

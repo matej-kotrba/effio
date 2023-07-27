@@ -4,12 +4,13 @@
 	import CardMinimalized from '~components/containers/card/CardMinimalized.svelte';
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
 
 	const REQUEST_AMOUNT = 8;
 
-	// const displayedTests = trpc($page).getPopularTests.query({
-	// 	take: REQUEST_AMOUNT
-	// });
+	const displayedTests = trpc($page).getPopularTests.query({
+		take: REQUEST_AMOUNT
+	});
 
 	// for (let i = 0; i < 40; i++) {
 	// 	await trpc($page).protected.saveTest.mutate({
@@ -47,13 +48,15 @@
 		<SearchBar />
 		<Space gap={10} />
 	</div>
-	<!-- {#await displayedTests}
-		<p>Loading...</p>
-	{:then tests}
-		{#if tests['tests']}
-			<div
-				class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center"
-			>
+	<div
+		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center"
+	>
+		{#await displayedTests}
+			{#each Array(REQUEST_AMOUNT) as _}
+				<CardMinimalizedSkeleton />
+			{/each}
+		{:then tests}
+			{#if tests['tests']}
 				{#each tests['tests'] as test}
 					<CardMinimalized
 						title={test.testVersions[0].title}
@@ -64,7 +67,7 @@
 						views={test.views}
 					/>
 				{/each}
-			</div>
-		{/if}
-	{/await} -->
+			{/if}
+		{/await}
+	</div>
 </div>
