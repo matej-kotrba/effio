@@ -1,10 +1,13 @@
 <script lang="ts">
+	import type { Tag } from '@prisma/client';
+
 	export let title: string;
 	export let description: string;
 	export let stars: number;
 	export let views: number;
 	export let author: string;
 	export let authorImg: string | null = null;
+	export let tags: Tag[] = [];
 </script>
 
 <div
@@ -13,15 +16,21 @@
 	 hover:scale-105 hover:shadow-lg duration-150"
 >
 	<div>
-		<span class="flex items-center justify-end gap-1 mb-2 text-xs"
-			>{author}
-			{#if authorImg}<img
-					src={authorImg}
-					referrerpolicy="no-referrer"
-					alt="User Icon"
-					class="w-6 rounded-full"
-				/>{/if}</span
-		>
+		<div class="flex items-center justify-between">
+			<div class="flex items-center gap-1">
+				<span>{stars}</span>
+				<iconify-icon icon="ic:round-star-outline" />
+			</div>
+			<span class="flex items-center justify-end gap-1 mb-2 text-xs"
+				>{author}
+				{#if authorImg}<img
+						src={authorImg}
+						referrerpolicy="no-referrer"
+						alt="User Icon"
+						class="w-6 rounded-full"
+					/>{/if}</span
+			>
+		</div>
 		<h4
 			class="mb-2 overflow-hidden font-semibold overflow-ellipsis whitespace-nowrap"
 		>
@@ -29,15 +38,13 @@
 		</h4>
 		<p class="max-w-[80%] mx-auto description">{description}</p>
 	</div>
-	<div class="flex justify-between">
-		<div class="flex items-center gap-1">
-			<span>{stars}</span>
-			<iconify-icon icon="ic:round-star-outline" />
-		</div>
-		<div class="flex items-center gap-1">
+	<div class="flex items-center justify-center">
+		<span class="text-xs">{tags.map((tag) => tag.name).join(' | ')}</span>
+
+		<!-- <div class="flex items-center gap-1">
 			<iconify-icon icon="mdi:eye" />
 			<span>{views}</span>
-		</div>
+		</div> -->
 	</div>
 </div>
 

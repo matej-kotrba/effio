@@ -475,20 +475,28 @@ export const appRouter = router({
     const tests = await ctx.prisma.test.findMany({
       take: input.take || 8,
       skip: input.cursor ? 1 : 0,
-      cursor: {
-        id: input.cursor || test?.id
-      },
-      orderBy: {
-        stars: "desc"
-      },
+      cursor: input.cursor ? {
+        id: input.cursor
+      } : undefined,
+      orderBy: [
+        {
+          stars: "desc"
+        },
+        {
+          updatedAt: "desc"
+        }
+      ],
       include: {
         testVersions: {
           take: 1
         },
+        tags: true,
         owner: true,
       }
     })
 
+    console.log(tests)
+    // console.log(tests.forEach(item => console.log(item.id)))
     if (!tests) return {
       success: false,
       message: "No tests found"

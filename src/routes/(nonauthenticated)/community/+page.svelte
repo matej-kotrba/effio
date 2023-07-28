@@ -8,27 +8,78 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
+	import type { Tag } from '@prisma/client';
 
 	export let data;
 
 	const REQUEST_AMOUNT = 8;
 
-	let tags = data.tags.map((tag) => {
-		return {
-			tag: tag,
-			isActive: false
-		};
-	});
+	let isFetchingNewTests = true;
 
-	let displayedTests: ReturnType<
-		ReturnType<typeof trpc>['getPopularTests']['query']
-	>;
+	const unusedTags: Tag[] = data.tags;
+	const usedTags: Tag[] = [];
 
-	onMount(() => {
-		displayedTests = trpc($page).getPopularTests.query({
+	let requestedTests: Awaited<
+		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
+	>['tests'] = [];
+
+	let observer: IntersectionObserver;
+
+	onMount(async () => {
+		isFetchingNewTests = true;
+
+		let response = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT
 		});
+
+		isFetchingNewTests = false;
+
+		if (response.success === false || response.tests === undefined) return;
+
+		requestedTests = response.tests;
+
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach(async (entry) => {
+					if (entry.isIntersecting) {
+						if (requestedTests === undefined) return;
+
+						isFetchingNewTests = true;
+
+						let newData = await trpc($page).getPopularTests.query({
+							take: REQUEST_AMOUNT,
+							cursor: requestedTests[requestedTests.length - 1].id
+						});
+
+						console.log(newData);
+
+						if (!newData.tests) return;
+
+						requestedTests = [...requestedTests, ...newData.tests];
+
+						isFetchingNewTests = false;
+
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{
+				threshold: 0.5
+			}
+		);
 	});
+
+	function addIntersection(element: HTMLElement) {
+		observer.observe(element);
+
+		return {
+			destroy() {
+				observer.unobserve(element);
+			}
+		};
+	}
+
+	function changeToggleStatus(index: number) {}
 
 	// for (let i = 0; i < 40; i++) {
 	// 	await trpc($page).protected.saveTest.mutate({
@@ -67,7 +118,7 @@
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">
-			{#each tags as { tag, isActive }, index}
+			{#each unusedTags as tag, index}
 				<button
 					type="button"
 					on:click={() => {
@@ -75,27 +126,31 @@
 						goto('#');
 					}}
 				>
-					<TagContainer
-						title={tag.name}
-						color={tag.color}
-						{isActive}
-						on:activeToggle={(data) => (tags[index].isActive = data.detail)}
-					/>
+					<TagContainer title={tag.name} color={tag.color} isActive={false} />
 				</button>
+				<!-- on:activeToggle={(data) => (tags[index].isActive = data.detail)} -->
 			{/each}
 		</div>
 		<Space gap={10} />
 	</div>
 	<div
-		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center"
+		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 place-items-center"
 	>
-		{#await displayedTests}
-			{#each Array(REQUEST_AMOUNT) as _}
-				<CardMinimalizedSkeleton />
-			{/each}
-		{:then tests}
-			{#if tests && tests['tests']}
-				{#each tests['tests'] as test}
+		{#if requestedTests !== undefined}
+			{#each requestedTests as test, index}
+				{#if index === requestedTests.length - 1}
+					<div use:addIntersection>
+						<CardMinimalized
+							title={test.testVersions[0].title}
+							description={test.testVersions[0].description}
+							author={test.owner.name || 'Anonymous'}
+							authorImg={test.owner.image}
+							stars={test.stars}
+							views={test.views}
+							tags={test.tags}
+						/>
+					</div>
+				{:else}
 					<CardMinimalized
 						title={test.testVersions[0].title}
 						description={test.testVersions[0].description}
@@ -103,9 +158,15 @@
 						authorImg={test.owner.image}
 						stars={test.stars}
 						views={test.views}
+						tags={test.tags}
 					/>
-				{/each}
-			{/if}
-		{/await}
+				{/if}
+			{/each}
+		{/if}
+		{#if isFetchingNewTests}
+			{#each Array(REQUEST_AMOUNT) as _}
+				<CardMinimalizedSkeleton />
+			{/each}
+		{/if}
 	</div>
 </div>
