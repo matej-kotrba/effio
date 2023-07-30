@@ -456,16 +456,55 @@ export const appRouter = router({
   getPopularTests: t.procedure.input(z.object({
     take: z.number().optional(),
     cursor: z.string().optional(),
+    tags: z.array(z.string()).optional()
   })).query(async ({ ctx, input }) => {
 
     let test = null
     if (!input.cursor) {
       test = await ctx.prisma.test.findFirst({
-        orderBy: {
-          stars: "desc"
+        orderBy: [
+          {
+            stars: "desc"
+          },
+          {
+            updatedAt: "desc"
+          }
+        ],
+        include: {
+          tags: true,
         },
+        where: input.tags ? {
+          tags: {
+            some: {
+              name: {
+                in: input.tags
+              }
+            }
+          },
+          // AND: {
+          //   tags: {
+          //     some: {
+          //       name: {
+          //         startsWith: "A"
+          //       }
+          //     }
+          //   }
+          // }
+        } : undefined
       })
     }
+
+    console.log(test)
+
+    // where: {
+    //   tags: {
+    //     every: {
+    //       name: {
+    //             in: input.tags
+    //       }
+    //     }
+    //   }
+    // }
 
     if (input.cursor === undefined && !test) return {
       success: true,
@@ -492,11 +531,18 @@ export const appRouter = router({
         },
         tags: true,
         owner: true,
-      }
+      },
+      where: input.tags ? {
+        tags: {
+          every: {
+            name: {
+              in: input.tags
+            }
+          }
+        }
+      } : undefined
     })
 
-    console.log(tests)
-    // console.log(tests.forEach(item => console.log(item.id)))
     if (!tests) return {
       success: false,
       message: "No tests found"

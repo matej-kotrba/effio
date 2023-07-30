@@ -16,8 +16,8 @@
 
 	let isFetchingNewTests = true;
 
-	const unusedTags: Tag[] = data.tags;
-	const usedTags: Tag[] = [];
+	let unusedTags: Tag[] = data.tags;
+	let usedTags: Tag[] = [];
 
 	let requestedTests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
@@ -79,7 +79,20 @@
 		};
 	}
 
-	function changeToggleStatus(index: number) {}
+	async function changeToggleStatus(index: number, isActive: boolean) {
+		if (isActive === false) {
+			usedTags = usedTags.filter((tag) => tag.id !== unusedTags[index].id);
+		}
+		if (usedTags.includes(unusedTags[index])) return;
+		usedTags = [...usedTags, unusedTags[index]];
+
+		isFetchingNewTests = true;
+		requestedTests = (
+			await trpc($page).getPopularTests.query({
+				tags: usedTags.map((tag) => tag.name)
+			})
+		).tests;
+	}
 
 	// for (let i = 0; i < 40; i++) {
 	// 	await trpc($page).protected.saveTest.mutate({
@@ -122,15 +135,28 @@
 				<button
 					type="button"
 					on:click={() => {
-						console.log('adasdasd');
 						goto('#');
 					}}
 				>
-					<TagContainer title={tag.name} color={tag.color} isActive={false} />
+					<TagContainer
+						title={tag.name}
+						color={tag.color}
+						isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
+						on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
+					/>
 				</button>
-				<!-- on:activeToggle={(data) => (tags[index].isActive = data.detail)} -->
 			{/each}
 		</div>
+		<!-- <div class="flex flex-wrap gap-1">
+			{#each usedTags as tag, index}
+				<TagContainer
+					title={tag.name}
+					color={tag.color}
+					isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
+					on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
+				/>
+			{/each}
+		</div> -->
 		<Space gap={10} />
 	</div>
 	<div
@@ -139,7 +165,7 @@
 		{#if requestedTests !== undefined}
 			{#each requestedTests as test, index}
 				{#if index === requestedTests.length - 1}
-					<div use:addIntersection>
+					<div use:addIntersection class="w-full">
 						<CardMinimalized
 							title={test.testVersions[0].title}
 							description={test.testVersions[0].description}
