@@ -471,7 +471,7 @@ export const appRouter = router({
           }
         ],
         include: {
-          tags: true,
+          tags: true
         },
         where: input.tags ? {
           tags: {
@@ -493,18 +493,6 @@ export const appRouter = router({
         } : undefined
       })
     }
-
-    console.log(test)
-
-    // where: {
-    //   tags: {
-    //     every: {
-    //       name: {
-    //             in: input.tags
-    //       }
-    //     }
-    //   }
-    // }
 
     if (input.cursor === undefined && !test) return {
       success: true,
@@ -534,12 +522,12 @@ export const appRouter = router({
       },
       where: input.tags ? {
         tags: {
-          every: {
+          some: {
             name: {
               in: input.tags
             }
           }
-        }
+        },
       } : undefined
     })
 

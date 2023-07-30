@@ -48,16 +48,18 @@
 
 						let newData = await trpc($page).getPopularTests.query({
 							take: REQUEST_AMOUNT,
-							cursor: requestedTests[requestedTests.length - 1].id
+							cursor: requestedTests[requestedTests.length - 1].id,
+							tags:
+								usedTags.length !== 0
+									? usedTags.map((tag) => tag.name)
+									: undefined
 						});
 
-						console.log(newData);
+						isFetchingNewTests = false;
 
 						if (!newData.tests) return;
 
 						requestedTests = [...requestedTests, ...newData.tests];
-
-						isFetchingNewTests = false;
 
 						observer.unobserve(entry.target);
 					}
@@ -87,11 +89,14 @@
 		usedTags = [...usedTags, unusedTags[index]];
 
 		isFetchingNewTests = true;
+
 		requestedTests = (
 			await trpc($page).getPopularTests.query({
 				tags: usedTags.map((tag) => tag.name)
 			})
 		).tests;
+
+		isFetchingNewTests = false;
 	}
 
 	// for (let i = 0; i < 40; i++) {
@@ -132,19 +137,12 @@
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">
 			{#each unusedTags as tag, index}
-				<button
-					type="button"
-					on:click={() => {
-						goto('#');
-					}}
-				>
-					<TagContainer
-						title={tag.name}
-						color={tag.color}
-						isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
-						on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
-					/>
-				</button>
+				<TagContainer
+					title={tag.name}
+					color={tag.color}
+					isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
+					on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
+				/>
 			{/each}
 		</div>
 		<!-- <div class="flex flex-wrap gap-1">
@@ -166,6 +164,31 @@
 			{#each requestedTests as test, index}
 				{#if index === requestedTests.length - 1}
 					<div use:addIntersection class="w-full">
+						<button
+							type="button"
+							on:click={() => {
+								goto(`/tests/${test.id}`);
+							}}
+							class="w-full"
+						>
+							<CardMinimalized
+								title={test.testVersions[0].title}
+								description={test.testVersions[0].description}
+								author={test.owner.name || 'Anonymous'}
+								authorImg={test.owner.image}
+								stars={test.stars}
+								views={test.views}
+								tags={test.tags}
+							/>
+						</button>
+					</div>
+				{:else}
+					<button
+						type="button"
+						on:click={() => {
+							goto(`/tests/${test.id}`);
+						}}
+					>
 						<CardMinimalized
 							title={test.testVersions[0].title}
 							description={test.testVersions[0].description}
@@ -175,17 +198,7 @@
 							views={test.views}
 							tags={test.tags}
 						/>
-					</div>
-				{:else}
-					<CardMinimalized
-						title={test.testVersions[0].title}
-						description={test.testVersions[0].description}
-						author={test.owner.name || 'Anonymous'}
-						authorImg={test.owner.image}
-						stars={test.stars}
-						views={test.views}
-						tags={test.tags}
-					/>
+					</button>
 				{/if}
 			{/each}
 		{/if}
