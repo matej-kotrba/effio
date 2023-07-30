@@ -67,7 +67,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
   })
 }
 
-export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars">) {
+export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars" | "views">) {
   testObject.set({
     id: testData.id,
     versionId: testData.testVersions[0].versionId,

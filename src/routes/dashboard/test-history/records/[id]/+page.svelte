@@ -1,6 +1,5 @@
 <script lang="ts">
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
-	import { onMount } from 'svelte';
 	import {
 		initializeTestToTestStore,
 		questionContentFunctions
@@ -8,7 +7,7 @@
 	import { testObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
-	import type { QuestionType } from '@prisma/client';
+	import Back from '~components/navigation/Back.svelte';
 
 	export let data;
 
@@ -35,9 +34,11 @@
 	});
 </script>
 
+<Back link={'/dashboard/test-history/records'} />
+
 <DashboardTitle
-	title="Test History"
-	subtitle="Browser through your test records."
+	title={data.record.test.title}
+	subtitle={data.record.test.description}
 />
 
 {#if $testObject}

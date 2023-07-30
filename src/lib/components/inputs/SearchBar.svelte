@@ -10,7 +10,7 @@
 		inputRef.focus();
 	}
 
-	$: inputValue = inputRef.value;
+	$: inputValue = inputRef?.value ?? '';
 </script>
 
 <div
