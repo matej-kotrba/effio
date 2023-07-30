@@ -3,10 +3,14 @@
 
 	let inputRef: HTMLInputElement;
 
+	export let inputValue: string = '';
+
 	function eraseInputText() {
 		inputRef.value = '';
 		inputRef.focus();
 	}
+
+	$: inputValue = inputRef.value;
 </script>
 
 <div

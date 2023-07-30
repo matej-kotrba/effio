@@ -16,6 +16,8 @@
 
 	let isFetchingNewTests = true;
 
+	let searchQuery: string = '';
+
 	let unusedTags: Tag[] = data.tags;
 	let usedTags: Tag[] = [];
 
@@ -132,7 +134,7 @@
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
 	>
-		<SearchBar />
+		<SearchBar bind:inputValue={searchQuery} />
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">

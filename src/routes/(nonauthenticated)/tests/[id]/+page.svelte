@@ -8,22 +8,80 @@
 	} from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
+	import { fade } from 'svelte/transition';
 
 	export let data;
 
+	let isSubmitting = false;
 	let submitError: string = '';
 
 	let result: QuestionServerCheckResponse<QuestionContent>[] | null = null;
 
-	result = null;
+	let openDialog: () => void;
 
-	console.log(data.testContent);
+	// console.log(data.testContent);
 
 	initializeTestToTestStore(data.testContent);
 
-	$: console.log($testObject);
+	// $: console.log($testObject);
 </script>
 
+{#if result}
+	<div class="sticky top-0 left-0 flex gap-2" in:fade>
+		<a href="/community">
+			<button class="btn">Back to community</button>
+		</a>
+		{#if data.session?.user}
+			<a href="/dashboard">
+				<button class="btn">Back to dashboard</button>
+			</a>
+		{/if}
+	</div>
+{/if}
+<Dialog bind:open={openDialog}>
+	<p class="text-center text-light_text_black">
+		You are about to submit the test, after that you want be able to change your
+		answers, do you want to proceed?
+	</p>
+	<Space />
+	<div class="flex justify-center gap-3">
+		<button class="btn">Cancel</button>
+		<button
+			class="text-white btn btn-primary hover:bg-light_secondary"
+			on:click={async () => {
+				// Reset errors
+				for (let i in $testObject.questions) {
+					$testObject.questions[i].errors.content = '';
+				}
+
+				// Check test on the client first for all inputs filled and so on...
+				let clientCheck = checkTestClient($testObject);
+				if (!clientCheck['success']) {
+					$testObject = clientCheck['store'];
+					return;
+				}
+
+				isSubmitting = true;
+
+				// Then check the test on the server for the correct answers
+				console.log('TEST', $testObject);
+				let res = await checkTestServerAndRecordIt($testObject);
+				if (!res['success']) {
+					submitError = res['error'] || 'Something went wrong';
+				} else {
+					submitError = '';
+					console.log(res);
+					if (!res['questionData']) return;
+					result = res['questionData'];
+					// ...
+				}
+
+				isSubmitting = false;
+			}}>Submit</button
+		>
+	</div>
+</Dialog>
 {#if $testObject}
 	<div class="mx-auto max-w-[650px]">
 		<h2 class="font-thin text-h3">{data.testContent.testVersions[0].title}</h2>
@@ -57,31 +115,11 @@
 				<BasicButton
 					title={'Check'}
 					onClick={async () => {
-						// Reset errors
-						for (let i in $testObject.questions) {
-							$testObject.questions[i].errors.content = '';
-						}
-
-						// Check test on the client first for all inputs filled and so on...
-						let clientCheck = checkTestClient($testObject);
-						if (!clientCheck['success']) {
-							$testObject = clientCheck['store'];
-							return;
-						}
-
-						// Then check the test on the server for the correct answers
-						console.log('TEST', $testObject);
-						let res = await checkTestServerAndRecordIt($testObject);
-						if (!res['success']) {
-							submitError = res['error'] || 'Something went wrong';
-						} else {
-							submitError = '';
-							console.log(res);
-							if (!res['questionData']) return;
-							result = res['questionData'];
-							// ...
+						if (openDialog) {
+							openDialog();
 						}
 					}}
+					isLoading={isSubmitting}
 					class="ml-auto"
 				/>
 			{/if}

@@ -456,7 +456,8 @@ export const appRouter = router({
   getPopularTests: t.procedure.input(z.object({
     take: z.number().optional(),
     cursor: z.string().optional(),
-    tags: z.array(z.string()).optional()
+    tags: z.array(z.string()).optional(),
+    searchQuery: z.string().optional(),
   })).query(async ({ ctx, input }) => {
 
     let test = null
