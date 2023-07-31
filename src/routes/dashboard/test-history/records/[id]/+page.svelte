@@ -43,7 +43,9 @@
 <Back link={'/dashboard/test-history'} />
 
 {#await data.streaming.record}
-	Loading data ...
+	<div class="flex justify-center">
+		<span class="loading loading-spinner loading-lg" />
+	</div>
 {:then data}
 	{#if data.record}
 		<DashboardTitle

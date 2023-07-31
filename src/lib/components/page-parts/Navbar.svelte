@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
+	export let user: UpdatedSession | undefined;
 </script>
 
 <nav class="bg-transparent h-[70px] border-b-2 border-light_text_black_20">
@@ -7,58 +7,48 @@
 		<div class="flex items-center h-full">
 			<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 		</div>
-		<ul class="flex items-center justify-center h-full gap-6 nav__list text-light_text_black">
-			<a href="#" class="relative flex flex-col items-center justify-center h-full">
-				<Icon icon="heroicons:home-solid" class="text-2xl" />
+		<ul
+			class="flex items-center justify-center h-full gap-1 text-sm uppercase text-light_text_black"
+		>
+			<a
+				href="/"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+			>
 				<li>Home</li>
 			</a>
-			<a href="#" class="relative flex flex-col items-center justify-center h-full">
-				<Icon icon="fluent:people-community-24-filled" class="text-2xl" />
-				<li>Community</li>
-			</a>
-			<a href="#" class="relative flex flex-col items-center justify-center h-full">
-				<Icon icon="wpf:unlock-2" class="text-2xl" />
-				<li>Login</li>
-			</a>
-			<a href="#" class="relative flex flex-col items-center justify-center h-full">
-				<Icon icon="fluent:info-24-filled" class="text-2xl" />
-				<li>About</li>
-			</a>
-			<a href="#" class="relative flex flex-col items-center justify-center h-full">
-				<Icon icon="foundation:graph-pie" class="text-2xl" />
+			<a
+				href="/dashboard"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+			>
 				<li>Dashboard</li>
 			</a>
+			<a
+				href="/community"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+			>
+				<li>Community</li>
+			</a>
+			{#if !user}
+				<a
+					href="/login"
+					class="relative px-4 py-2 font-semibold text-white duration-200 rounded-md hover:bg-light_primary_dark bg-light_primary"
+				>
+					<li>Login</li>
+				</a>
+			{:else}
+				<!-- <img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" /> -->
+				<div class="dropdown dropdown-end">
+					<button tabindex="0" type="button">
+						<img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" />
+					</button>
+					<ul
+						class="menu dropdown-content z-[1] p-2 shadow-md bg-base-100 rounded-box w-52 mt-4 gap-1"
+					>
+						<li><a>Item 2</a></li>
+						<li><button on:click={() => {}}>Log out</button></li>
+					</ul>
+				</div>
+			{/if}
 		</ul>
 	</div>
 </nav>
-
-<style>
-	.grid__container {
-		--side-col-width: 70px;
-
-		display: grid;
-		grid-template-columns: 1fr 3fr 1fr;
-	}
-
-	.grid__container img {
-		width: var(--side-col-width);
-	}
-
-	.nav__list a::before {
-		content: '';
-		position: absolute;
-		width: 100%;
-		height: 3px;
-		border-radius: 50px;
-		background-color: var(--light-primary);
-		bottom: 0;
-		left: 0;
-		scale: 0 1;
-		transform-origin: center;
-		transition: 200ms;
-	}
-
-	.nav__list a:hover::before {
-		scale: 1 1;
-	}
-</style>

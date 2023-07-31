@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,7 @@
 
 :root {
 	--light-primary: #6433f0;
+	--light-primary-dark: #5521e4;
 	--light-secondary: #646fd4;
 	--light-terciary: #9ba3eb;
 	--light-quaternary: #dbdffd;

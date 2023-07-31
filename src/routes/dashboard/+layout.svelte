@@ -13,14 +13,16 @@
 		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
 	>
 		<div class="flex flex-col items-center">
-			<img src="/imgs/logo.png" alt="Effio logo" width="90" />
+			<div class="w-[90px] aspect-square">
+				<img src="/imgs/logo.png" alt="Effio logo" width="90" />
+			</div>
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
 					class:active={browser && $page.url.pathname === '/dashboard'}
 				>
-					<Icon icon="foundation:graph-pie" class="text-2xl" /> Overview
+					<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 				</a>
 				<a
 					href="/dashboard/test-creator"
@@ -28,7 +30,7 @@
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-creator'}
 				>
-					<Icon
+					<iconify-icon
 						icon="material-symbols:edit-square-outline-rounded"
 						class="text-2xl"
 					/> Create a new test
@@ -39,7 +41,8 @@
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-collection'}
 				>
-					<Icon icon="heroicons-solid:collection" class="text-2xl" /> Test collection
+					<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
+					collection
 				</a>
 				<a
 					href="/dashboard/test-history"
@@ -47,14 +50,16 @@
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-history'}
 				>
-					<Icon icon="ic:round-history" class="text-2xl" /> Test History
+					<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
 				</a>
 				<a
 					href="/community"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
 				>
-					<Icon icon="fluent:people-community-24-filled" class="text-2xl" /> Community
-					place
+					<iconify-icon
+						icon="fluent:people-community-24-filled"
+						class="text-2xl"
+					/> Community place
 				</a>
 			</div>
 		</div>
