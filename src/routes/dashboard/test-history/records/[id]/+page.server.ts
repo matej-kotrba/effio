@@ -8,11 +8,13 @@ export const load: ServerLoad = async (request) => {
   if (!id) throw redirect(302, "/dashboard")
 
   const context = await createContext(request)
-  const record = await appRouter.createCaller(context).records.getTestRecordById({ id: id });
+  const record = appRouter.createCaller(context).records.getTestRecordById({ id: id });
 
-  if (!record.record) throw redirect(302, "/dashboard")
+  // if (!record.record) throw redirect(302, "/dashboard")
 
   return {
-    record: record.record
+    streaming: {
+      record: record
+    }
   }
 }
