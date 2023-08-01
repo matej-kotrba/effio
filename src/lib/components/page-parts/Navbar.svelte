@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { signOut } from '@auth/sveltekit/client';
+
 	export let user: UpdatedSession | undefined;
 </script>
 
@@ -44,8 +46,20 @@
 					<ul
 						class="menu dropdown-content z-[1] p-2 shadow-md bg-base-100 rounded-box w-52 mt-4 gap-1"
 					>
-						<li><a>Item 2</a></li>
-						<li><button on:click={() => {}}>Log out</button></li>
+						<li>
+							<a href="/dashboard/test-collection" class="normal-case"
+								>My tests</a
+							>
+						</li>
+						<li>
+							<button
+								on:click={() => {
+									signOut();
+								}}
+								><iconify-icon icon="iconamoon:exit-light" class="text-lg" /> Log
+								out</button
+							>
+						</li>
 					</ul>
 				</div>
 			{/if}
