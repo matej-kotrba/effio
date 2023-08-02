@@ -12,7 +12,7 @@
 		).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		getTemplates();
 	});
 </script>
