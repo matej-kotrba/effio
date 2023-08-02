@@ -31,6 +31,7 @@
 	} from '~/lib/helpers/test';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
+	import toast from 'svelte-french-toast';
 	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
@@ -68,12 +69,27 @@
 			questions: $testObject.questions
 		});
 
-		$testObject.errors = result['store']['errors'];
-		if (result['store']['questions']) {
-			$testObject.questions = result['store']['questions'];
+		if (result['isError']) {
+			$testObject.errors = result['store']['errors'];
+			if (result['store']['questions']) {
+				$testObject.questions = result['store']['questions'];
+			}
+			return;
 		}
 
-		if (result['isError']) return;
+		const serverResponse = await isValidInputServer({
+			title: $testObject.title,
+			description: $testObject.description,
+			questions: $testObject.questions
+		});
+
+		if (serverResponse.success === false) {
+			$testObject.errors = result['store']['errors'];
+			if (result['store']['questions']) {
+				$testObject.questions = result['store']['questions'];
+			}
+			return;
+		}
 
 		isSubmitting = true;
 		try {
@@ -103,6 +119,11 @@
 				e.detail,
 				data.questionTemplates
 			);
+
+			if (questions.length === 0) {
+				toast.error('This import file seems empty or incorrect 😕');
+			}
+
 			$testObject.questions = questions;
 
 			testCreationProgress.templateDone = true;
@@ -322,6 +343,19 @@
 					/>
 					<BasicButton
 						onClick={() => {
+							const result = isTestValid({
+								title: $testObject.title,
+								description: $testObject.description,
+								questions: $testObject.questions
+							});
+
+							if (result['isError']) {
+								$testObject.errors = result['store']['errors'];
+								if (result['store']['questions']) {
+									$testObject.questions = result['store']['questions'];
+								}
+								return;
+							}
 							finishModal?.showModal();
 						}}
 						title={'Finish'}

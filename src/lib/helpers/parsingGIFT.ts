@@ -4,7 +4,7 @@ import type { QuestionTemplate } from "../trpc/router"
 const allowedTypes = ["MC"] as const
 
 export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questionTemplates: QuestionTemplate[]) {
-  const resultObject: QuestionClient[] = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
+  const result = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
     try {
 
       if (question.type === "MC") {
@@ -44,7 +44,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
                 }
               })
             }
-          } as QuestionClient
+          }
         }
 
         // Has only one correct answer -> Pick One
@@ -76,15 +76,18 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
               }),
               correctAnswerIndex: question.choices.findIndex(item => item.isCorrect || item.weight !== undefined)
             }
-          } as QuestionClient
+          }
         }
       }
 
     } catch (e) {
       console.log(e)
-      return []
     }
-  }) as QuestionClient[]
+  })
 
-  return resultObject
+  const filtered = result.filter(item => item !== undefined)
+
+  const resultArray: QuestionClient[] = (filtered.length !== 0 ? result : []) as QuestionClient[]
+
+  return resultArray
 }

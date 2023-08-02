@@ -160,7 +160,7 @@
 		<Space gap={10} />
 	</div>
 	<div
-		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 place-items-center"
+		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
 	>
 		{#if requestedTests !== undefined}
 			{#each requestedTests as test, index}

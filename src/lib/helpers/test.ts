@@ -1,6 +1,5 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
-import { dev } from "$app/environment"
 import { z, ZodError } from "zod"
 import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
@@ -92,15 +91,29 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
   })
 }
 
+type IsTestValid = {
+  title?: string,
+  description?: string,
+  questions?: QuestionClient[]
+}
+
 // Check the validity of the test object on the server
-export async function isValidInputServer(obj: TestObject): Promise<{ success: boolean, obj: TestObject }> {
-  const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
-    method: 'POST',
+export async function isValidInputServer(obj: IsTestValid): Promise<{ success: boolean, obj: IsTestValid }> {
+  const res = await enviromentFetch({
+    path: "validateTest",
+    method: "POST",
     body: JSON.stringify(obj),
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json"
     }
-  });
+  })
+  // const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
+  //   method: 'POST',
+  //   body: JSON.stringify(obj),
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  // });
   const data = (await res.json()) as { store: QuestionClient[]; error: boolean };
   obj.questions = data.store as QuestionClient[];
   return {
@@ -116,12 +129,6 @@ const asnwerSchema = z.object({
 const questionSchema = z.object({
   title: titleSchema//z.string().min(8, "Title has to be at least 8 character long.").max(250, "Title can be max 250 characters long."),
 })
-
-type IsTestValid = {
-  title?: string,
-  description?: string,
-  questions?: QuestionClient[]
-}
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
 // TODO: Rewrite this to use zod
@@ -206,7 +213,6 @@ export const checkTestClient = (test: TestObject) => {
       question.errors.content = "Please fill in the answer."
       isError = true
     }
-
   }
 
   return {
