@@ -15,6 +15,14 @@
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
 		'correctAnswerIndex'
 	] = selectedInput;
+
+	// Update the selectedInput based on the resultFormat
+	$: {
+		if (resultFormat) {
+			selectedInput = resultFormat.userAnswer.correctAnswerIndex;
+		}
+		console.log(selectedInput);
+	}
 </script>
 
 <div class="flex flex-col gap-2">
@@ -23,8 +31,10 @@
 			type="button"
 			disabled={!!resultFormat}
 			on:click|self={() => (selectedInput = index)}
-			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md {!resultFormat &&
-				'hover:bg-slate-50'} active:bg-slate-100
+			class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
+				null || resultFormat.isCorrect
+				? 'bg-white'
+				: ''} {!resultFormat && 'hover:bg-slate-50 active:bg-slate-100'} 
 			{resultFormat &&
 				resultFormat.isCorrect === false &&
 				selectedInput === index &&

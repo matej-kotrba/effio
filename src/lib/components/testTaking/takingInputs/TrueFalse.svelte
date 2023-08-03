@@ -20,7 +20,10 @@
 			disabled={!!resultFormat}
 			on:click|self={() =>
 				(checkBoxValues[index]['isTrue'] = !checkBoxValues[index]['isTrue'])}
-			class="flex justify-between px-6 py-3 duration-100 bg-white rounded-md shadow-md {!resultFormat &&
+			class="flex justify-between px-6 py-3 duration-100 {resultFormat ===
+				null || resultFormat.isCorrect
+				? 'bg-white'
+				: ''} rounded-md shadow-md {!resultFormat &&
 				'hover:bg-slate-50'} active:bg-slate-100
 			{resultFormat &&
 				resultFormat.isCorrect === false &&

@@ -10,7 +10,8 @@ type TestCreationActivity = {
 export const load = async ({ locals }) => {
   const id = (await locals.getSession() as Session & { user: { id: string } })?.user?.id as string
 
-  let summaryData;
+  let testCreationSummary;
+  let testTakenSummary;
 
   if (id) {
     const result: TestCreationActivity[] = await prisma.$queryRaw`
@@ -27,42 +28,57 @@ export const load = async ({ locals }) => {
     SELECT 
     COUNT(id) as "count",
     LEFT(createdAt, 7) as "period" 
-    FROM Test 
-    WHERE ownerId = ${id}
+    FROM TestRecord
+    WHERE userId = ${id}
     GROUP BY LEFT(createdAt, 7)
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
 
-    summaryData = result
-
     // Fill in the motnhs with no activity
-    for (let i = 0; i < summaryData.length; i++) {
-      if (summaryData[+i + 1]) {
-        const currentYear = +summaryData[+i].period.slice(0, 4)
-        const nextYear = +summaryData[+i + 1].period.slice(0, 4)
-        const currentMonth = +summaryData[+i].period.slice(5, 7)
-        const nextMonth = +summaryData[+i + 1].period.slice(5, 7)
+    for (let i = 0; i < result.length; i++) {
+      if (result[+i + 1]) {
+        const currentYear = +result[+i].period.slice(0, 4)
+        const nextYear = +result[+i + 1].period.slice(0, 4)
+        const currentMonth = +result[+i].period.slice(5, 7)
+        const nextMonth = +result[+i + 1].period.slice(5, 7)
 
         let iterator = 0
         for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
-          summaryData.splice(+i + 1 + iterator, 0, {
+          result.splice(+i + 1 + iterator, 0, {
             count: 0n,
             period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`
           })
           iterator++
-          // for (let k = 1; k < +summaryData[+i + 1].period.slice(5, 7) - +summaryData[i].period.slice(5, 7); k++) {
-          //   summaryData.splice(+i + 1, 0, {
-          //     count: 0n,
-          //     period: +summaryData[+i].period.slice(0, 4) + j + "-" + String((+summaryData[i].period.slice(5, 7) + k))
-          //   })
-          // }
         }
       }
     }
+
+    testCreationSummary = result
+
+    for (let i = 0; i < resultTestsTaken.length; i++) {
+      if (resultTestsTaken[+i + 1]) {
+        const currentYear = +resultTestsTaken[+i].period.slice(0, 4)
+        const nextYear = +resultTestsTaken[+i + 1].period.slice(0, 4)
+        const currentMonth = +resultTestsTaken[+i].period.slice(5, 7)
+        const nextMonth = +resultTestsTaken[+i + 1].period.slice(5, 7)
+
+        let iterator = 0
+        for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
+          resultTestsTaken.splice(+i + 1 + iterator, 0, {
+            count: 0n,
+            period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`
+          })
+          iterator++
+        }
+      }
+    }
+
+    testTakenSummary = resultTestsTaken
   }
 
   return {
-    testCreationData: summaryData
+    testCreationData: testCreationSummary,
+    testTakenData: testTakenSummary
   }
 }
 
