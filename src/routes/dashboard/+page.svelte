@@ -81,7 +81,7 @@
 	});
 </script>
 
-<div class="">
+<div class="mx-auto max-w-[1000px]">
 	<canvas class="w-2" bind:this={portfolio} width="400" />
 </div>
 <div class="text-primary">

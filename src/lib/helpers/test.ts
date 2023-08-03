@@ -19,6 +19,8 @@ type QuestionContentTransformation = {
   }
 }
 
+export const QUESTION_LIMIT = 25;
+
 // Transform the question into data which will not contain answers
 export const questionContentFunctions: QuestionContentTransformation = {
   "pickOne": {
@@ -136,6 +138,7 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
   const { title, description, questions } = inputsToValidate
   let isError = false
+  let message = ""
 
   const result: {
     errors: {
@@ -168,6 +171,10 @@ export function isTestValid(inputsToValidate: IsTestValid) {
   if (questions) {
     if (questions.length === 0) {
       isError = true
+      message = "You need to add at least one question."
+    }
+    else if (questions.length > QUESTION_LIMIT) {
+      message = "You can't have more than " + QUESTION_LIMIT + " questions."
     }
     for (const item of questions) {
 
@@ -198,7 +205,8 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
   return {
     store: result,
-    isError
+    isError,
+    message
   }
 }
 

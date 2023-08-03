@@ -59,6 +59,10 @@
 		$testObject.errors.description =
 			result['store']['errors']['description'] || undefined;
 
+		if (result['message']) {
+			toast.error(result['message']);
+		}
+
 		$testObject = $testObject;
 		if (result['isError']) return;
 

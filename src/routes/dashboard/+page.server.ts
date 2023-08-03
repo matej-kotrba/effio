@@ -23,6 +23,16 @@ export const load = async ({ locals }) => {
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
 
+    const resultTestsTaken: TestCreationActivity[] = await prisma.$queryRaw`
+    SELECT 
+    COUNT(id) as "count",
+    LEFT(createdAt, 7) as "period" 
+    FROM Test 
+    WHERE ownerId = ${id}
+    GROUP BY LEFT(createdAt, 7)
+    ORDER BY LEFT(createdAt, 7) ASC   
+    `;
+
     summaryData = result
 
     // Fill in the motnhs with no activity
@@ -34,7 +44,6 @@ export const load = async ({ locals }) => {
         const nextMonth = +summaryData[+i + 1].period.slice(5, 7)
 
         let iterator = 0
-        console.log(currentMonth, (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1)
         for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
           summaryData.splice(+i + 1 + iterator, 0, {
             count: 0n,

@@ -61,9 +61,8 @@
 	import Space from '~components/separators/Space.svelte';
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
 	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
-
-	// TODO: Poslat containter elment do sidebaru a tam udělat drop eventListener, asi posílat i index
-	// activatoru aby se tam rovnou mohl vytvořit input
+	import toast from 'svelte-french-toast';
+	import { QUESTION_LIMIT } from '~helpers/test';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -193,6 +192,12 @@
 	}
 
 	function onInputDrop(event: { detail: { input: QuestionTemplate } }) {
+		if ($testObject.questions.length >= QUESTION_LIMIT) {
+			toast.error(
+				`Sorry but you reached maximum question limit of ${QUESTION_LIMIT}!`
+			);
+			displayedActivatorId = -1;
+		}
 		if (displayedActivatorId !== -1) {
 			console.log(event.detail.input);
 			const input = createNewInput(event.detail.input);
