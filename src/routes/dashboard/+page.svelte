@@ -31,7 +31,8 @@
 							'--light-primary'
 						) || '#6722e6'
 					],
-					borderWidth: 2
+					borderWidth: 2,
+					minBarLength: 20
 				}
 			]
 		};
@@ -40,7 +41,7 @@
 			data: graphData,
 			options: {
 				clip: 1,
-				borderRadius: '10',
+				borderRadius: '5',
 				responsive: true,
 				spacing: 0,
 				scales: {
@@ -79,8 +80,8 @@
 	});
 </script>
 
-<div class="w-[400px]">
-	<canvas class="w-2" bind:this={portfolio} width="100" height="100" />
+<div class="">
+	<canvas class="w-2" bind:this={portfolio} width="400" />
 </div>
 <div class="text-primary">
 	{#each templates as template}

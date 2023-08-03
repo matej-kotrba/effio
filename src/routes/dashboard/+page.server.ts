@@ -25,7 +25,7 @@ export const load = async ({ locals }) => {
 
     summaryData = result
 
-    for (const i in summaryData) {
+    for (let i = 0; i < summaryData.length; i++) {
       if (summaryData[+i + 1]) {
         const currentYear = +summaryData[+i].period.slice(0, 4)
         const nextYear = +summaryData[+i + 1].period.slice(0, 4)
@@ -33,7 +33,8 @@ export const load = async ({ locals }) => {
         const nextMonth = +summaryData[+i + 1].period.slice(5, 7)
 
         let iterator = 0
-        for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth; k++) {
+        console.log(currentMonth, (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1)
+        for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
           summaryData.splice(+i + 1 + iterator, 0, {
             count: 0n,
             period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`
