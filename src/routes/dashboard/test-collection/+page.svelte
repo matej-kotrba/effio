@@ -124,7 +124,7 @@
 <h3 class="text-h4 text-light_text_black">Recent activity</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="flex items-center gap-4">
+<div class="grid__container">
 	<!-- <div class="w-full max-w-xs p-5 rounded-md shadow-lg aspect-[5/6] bg-light_white">
 		<div class="p-5 text-white rounded-md bg-light_text_black_40">
 			<Icon icon="ic:round-plus" class="text-6xl" />
@@ -211,3 +211,17 @@
 <h3 class="text-h4 text-light_text_black">Collection</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
+
+<style>
+	.grid__container {
+		display: grid;
+		gap: 12px;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 250px));
+		place-content: center;
+	}
+	@media screen and (min-width: 768px) {
+		.grid__container {
+			place-content: start;
+		}
+	}
+</style>

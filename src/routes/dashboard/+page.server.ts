@@ -25,6 +25,7 @@ export const load = async ({ locals }) => {
 
     summaryData = result
 
+    // Fill in the motnhs with no activity
     for (let i = 0; i < summaryData.length; i++) {
       if (summaryData[+i + 1]) {
         const currentYear = +summaryData[+i].period.slice(0, 4)

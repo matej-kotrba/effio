@@ -41,6 +41,7 @@
 			data: graphData,
 			options: {
 				clip: 1,
+				// @ts-ignore
 				borderRadius: '5',
 				responsive: true,
 				spacing: 0,
