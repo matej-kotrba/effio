@@ -19,7 +19,7 @@ const schema = z.object({
   properties: z.object({
     inputType: z.string(),
     question: z.array(z.string()),
-  }).and(z.record(z.unknown()))
+  }).and(z.record(z.unknown())).optional()
 })
 
 export type QuestionTemplate = z.infer<typeof schema>

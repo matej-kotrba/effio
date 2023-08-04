@@ -12,6 +12,7 @@ will be used in the test creator -->
 	import { createEventDispatcher } from 'svelte';
 	import { testObject } from '~stores/testObject';
 	import { titleSchema } from '~schemas/textInput';
+	import Connect from './creatorInputs/Connect.svelte';
 
 	let dispatch = createEventDispatcher();
 
@@ -24,7 +25,9 @@ will be used in the test creator -->
 	}
 </script>
 
-<div class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter">
+<div
+	class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter"
+>
 	<div class="grid grid-cols-3">
 		<p class="justify-self-start text-light_text_black_40 text-body2">
 			{$testObject['questions'][index].displayType}
@@ -35,7 +38,10 @@ will be used in the test creator -->
 			on:mousedown={dispatchDragEvent}
 			on:touchstart={dispatchDragEvent}
 		>
-			<Icon icon="akar-icons:drag-horizontal" class="text-3xl text-light_text_black_80" />
+			<Icon
+				icon="akar-icons:drag-horizontal"
+				class="text-3xl text-light_text_black_80"
+			/>
 		</div>
 		<button
 			on:click={() => {
@@ -61,7 +67,9 @@ will be used in the test creator -->
 		/>
 	</h6>
 	{#if titleError || $testObject.questions[index].errors.title}
-		<p class="text-error text-body2">{titleError || $testObject.questions[index].errors.title}</p>
+		<p class="text-error text-body2">
+			{titleError || $testObject.questions[index].errors.title}
+		</p>
 	{/if}
 	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
@@ -71,6 +79,8 @@ will be used in the test creator -->
 			<PickOneInput on:questionDetails indexParent={index} />
 		{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
 			<TrueFalseInput on:questionDetails indexParent={index} />
+		{:else if $testObject['questions'][index]['questionType'] === 'connect'}
+			<Connect on:questionDetails indexParent={index} />
 		{/if}
 	</div>
 </div>

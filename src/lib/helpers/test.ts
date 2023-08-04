@@ -9,6 +9,9 @@ import { trpc } from "../trpc/client";
 
 type QuestionContentTransformation = {
   [Key in keyof QuestionTypeMap]: {
+    // Creates new blank question of the specific type
+    "createNew": () => QuestionTypeMap[Key],
+
     // Type which takes the question and creates a question without the answer input
     // (PickOne without answer in answers array ...)
     "separateAnswer": (question: QuestionTypeMap[Key]) => object,
@@ -24,6 +27,20 @@ export const QUESTION_LIMIT = 25;
 // Transform the question into data which will not contain answers
 export const questionContentFunctions: QuestionContentTransformation = {
   "pickOne": {
+    "createNew": () => {
+      return {
+        type: 'pickOne',
+        correctAnswerIndex: 0,
+        answers: [
+          {
+            answer: ''
+          },
+          {
+            answer: ''
+          }
+        ]
+      }
+    },
     "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
       return {
         ...question,
@@ -38,6 +55,21 @@ export const questionContentFunctions: QuestionContentTransformation = {
     }
   },
   "true/false": {
+    "createNew": () => {
+      return {
+        type: 'true/false',
+        answers: [
+          {
+            answer: '',
+            isTrue: false
+          },
+          {
+            answer: '',
+            isTrue: false
+          }
+        ]
+      }
+    },
     "separateAnswer": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
     } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "error">[] } => {
       return {
@@ -56,7 +88,52 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
       return answer.answers.every((item, index) => item.isTrue === original.answers[index].isTrue)
     }
-  }
+  },
+  "connect": {
+    "createNew": () => {
+      return {
+        type: 'connect',
+        answers: [
+          {
+            answer: '',
+            matchedAnswerIndex: undefined,
+          },
+          {
+            answer: '',
+            matchedAnswerIndex: undefined,
+          }
+        ],
+        matchedAnswers: {
+          [crypto.randomUUID()]: "",
+          [crypto.randomUUID()]: ""
+        }
+      }
+    },
+    "separateAnswer": (question: ConnectQuestion): ConnectQuestion => {
+      return {
+        ...question,
+        answers: question.answers.map((item) => {
+          return {
+            answer: item.answer,
+            matchedAnswerIndex: undefined
+          }
+        })
+      }
+    },
+    "checkAnswerPresence": (question: ConnectQuestion): boolean => {
+      const answersCount = Object.keys(question.matchedAnswers).length
+      const userAnswersCount = question.answers.filter((item) => item.matchedAnswerIndex !== undefined).length
+
+      return answersCount === userAnswersCount
+    },
+    "checkAnswerCorrectness": (answer: ConnectQuestion, original: ConnectQuestion) => {
+      if (answer.answers.length !== original.answers.length) return false
+      for (const i in answer.answers) {
+        if (answer.answers[i].matchedAnswerIndex !== original.answers[i].matchedAnswerIndex) return false
+      }
+      return true
+    }
+  },
 }
 
 export function initializeNewTestToTestStore(testData: ClientTest) {

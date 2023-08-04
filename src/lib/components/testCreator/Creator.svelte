@@ -1,51 +1,54 @@
 <script lang="ts" context="module">
+	import { questionContentFunctions } from '~helpers/test';
+
 	export function createNewInput(
 		input: QuestionTemplate
 	): QuestionClient | void {
 		const newQuestionData: PartialPick<QuestionClient, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
-			questionType: input.properties
-				.inputType as QuestionClient['questionType'],
+			questionType: input.slug as QuestionClient['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
 			errors: {}
 		};
 
-		const questionType = input.properties
-			.inputType as QuestionClient['questionType'];
+		const questionType = input.slug as QuestionClient['questionType'];
 
-		if (questionType === 'pickOne') {
-			newQuestionData.content = {
-				type: 'pickOne',
-				correctAnswerIndex: 0,
-				answers: [
-					{
-						answer: ''
-					},
-					{
-						answer: ''
-					}
-				]
-			} as PickOneQuestion;
-		} else if (questionType === 'true/false') {
-			newQuestionData.content = {
-				type: 'true/false',
-				answers: [
-					{
-						answer: '',
-						isTrue: false
-					},
-					{
-						answer: '',
-						isTrue: false
-					}
-				]
-			} as TrueFalseQuestion;
-		} else {
-			console.error('This question type is not supported!');
-			return;
-		}
+		newQuestionData.content =
+			questionContentFunctions[questionType]['createNew']();
+
+		// if (questionType === 'pickOne') {
+		// 	newQuestionData.content = {
+		// 		type: 'pickOne',
+		// 		correctAnswerIndex: 0,
+		// 		answers: [
+		// 			{
+		// 				answer: ''
+		// 			},
+		// 			{
+		// 				answer: ''
+		// 			}
+		// 		]
+		// 	} as PickOneQuestion;
+		// } else if (questionType === 'true/false') {
+		// 	newQuestionData.content = {
+		// 		type: 'true/false',
+		// 		answers: [
+		// 			{
+		// 				answer: '',
+		// 				isTrue: false
+		// 			},
+		// 			{
+		// 				answer: '',
+		// 				isTrue: false
+		// 			}
+		// 		]
+		// 	} as TrueFalseQuestion;
+		// } else {
+		// 	console.error('This question type is not supported!');
+		// 	return;
+		// }
 
 		return newQuestionData as QuestionClient;
 	}
@@ -92,47 +95,17 @@
 		let newQuestionData: PartialPick<QuestionClient, 'content'> = {
 			id: crypto.randomUUID(),
 			title: '',
-			questionType: input.properties
-				.inputType as QuestionClient['questionType'],
+			questionType: input.slug as QuestionClient['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
 			errors: {}
 		};
 
-		let questionType = input.properties
-			.inputType as QuestionClient['questionType'];
+		let questionType = input.slug as QuestionClient['questionType'];
 
-		if (questionType === 'pickOne') {
-			newQuestionData.content = {
-				type: 'pickOne',
-				correctAnswerIndex: 0,
-				answers: [
-					{
-						answer: ''
-					},
-					{
-						answer: ''
-					}
-				]
-			} as PickOneQuestion;
-		} else if (questionType === 'true/false') {
-			newQuestionData.content = {
-				type: 'true/false',
-				answers: [
-					{
-						answer: '',
-						isTrue: false
-					},
-					{
-						answer: '',
-						isTrue: false
-					}
-				]
-			} as TrueFalseQuestion;
-		} else {
-			console.error('This question type is not supported!');
-			return;
-		}
+		newQuestionData.content =
+			questionContentFunctions[questionType]['createNew']();
+		// TODO: Tady byly if checky které jsou i nahoře v modulu
 
 		newInputModal.close();
 		addNewQuestion(
@@ -249,37 +222,6 @@
 				<button class="cursor-default">close</button>
 			</form>
 		</dialog>
-		<!-- <div
-		class="relative flex flex-row items-center w-full gap-4 px-4 mt-4 duration-150 group opacity-20 hover:opacity-100"
-		on:mouseleave={() => (isDropdownOpen = false)}
-	>
-		<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-		<button
-			type="button"
-			class="relative z-10 w-24 p-2 duration-200 rounded-full aspect-square bg-light_terciary text-whiter hover:bg-light_secondary"
-			on:click={() => (isDropdownOpen = !isDropdownOpen)}
-		>
-			<Icon icon="ic:round-plus" class="mx-auto text-3xl rounded-lg text-light_white" />
-		</button>
-		<div class="w-full rounded-full h-0.5 bg-light_text_black_40" />
-		<div
-			use:clickOutside
-			on:clickoutside={() => (isDropdownOpen = false)}
-			class="absolute right-0 w-full grid_layout gap-4 p-4 absoluteContainer z-30
-						rounded-md shadow-lg bottom-[calc(100%-5px)] bg-light_whiter duration-200 opacity-0
-						{isDropdownOpen ? 'group-hover:opacity-100 hover:opacity-100' : 'opacity-0 pointer-events-none'}"
-		>
-			{#each inputTemplates as input}
-				<button
-					type="button"
-					on:click={() => onDropdownInputClick(input)}
-					class="grid w-full rounded-md aspect-square text-light_whiter bg-light_primary place-content-center"
-				>
-					{input.name}
-				</button>
-			{/each}
-		</div>
-	</div> -->
 		<div
 			class="relative flex flex-col items-center justify-center gap-2 p-2 overflow-hidden"
 			on:dragleave|self={() => {
@@ -405,33 +347,4 @@
 	.new-input-button:hover {
 		transform: translateY(-5px);
 	}
-
-	/* .grid_layout {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		overflow-y: scroll;
-		max-height: 250px;
-	} */
-
-	/* width */
-	/* .absoluteContainer::-webkit-scrollbar {
-		width: 10px; */
-	/* } */
-
-	/* Track */
-	/* .absoluteContainer::-webkit-scrollbar-track {
-		background: var(--light-text-black-20);
-		border-radius: 50px;
-	} */
-
-	/* Handle */
-	/* .absoluteContainer::-webkit-scrollbar-thumb {
-		background: var(--light-terciary);
-		border-radius: 50px;
-	} */
-
-	/* Handle on hover */
-	/* .absoluteContainer::-webkit-scrollbar-thumb:hover {
-		background: var(--light-secondary);
-	} */
 </style>
