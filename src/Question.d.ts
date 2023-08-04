@@ -14,6 +14,16 @@ type PickOneQuestion = {
   correctAnswerIndex: number;
 };
 
+type ConnectQuestion = {
+  type: "connect";
+  answers: (Answer & {
+    matchedAnswerIndex: number | undefined;
+  })[];
+  matchedAnswers: {
+    [key: string]: string;
+  }
+}
+
 type Answer<T = string> = {
   answer: T;
   error?: string;
@@ -22,6 +32,7 @@ type Answer<T = string> = {
 type QuestionTypeMap = {
   'true/false': TrueFalseQuestion;
   'pickOne': PickOneQuestion;
+  'connect': ConnectQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];
