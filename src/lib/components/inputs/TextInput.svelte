@@ -2,6 +2,7 @@
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZodSchema } from 'zod';
 	import { createEventDispatcher } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
 	export let titleName: string;
@@ -26,10 +27,13 @@
 </script>
 
 <div
-	class="underline_effect w-full before:content-[''] relative before:absolute before:w-full
+	class={twMerge(
+		`underline_effect w-full before:content-[''] relative before:absolute before:w-full
   before:h-0.5 before:bg-light_primary before:top-full before:left-0 before:origin-center before:duration-200
 	 before:scale-0 before:focus-within:scale-100 border-b-[0.125rem]
-	 border-light_text_black_20 {customContainerStyles}"
+	 border-light_text_black_20`,
+		customContainerStyles
+	)}
 >
 	<input
 		bind:value={inputValue}
@@ -39,7 +43,10 @@
 		type="text"
 		autocomplete="off"
 		on:focusout={validateInput}
-		class="peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black px-2 py-4 rounded-t-md shadow-lg w-full {customStyles}"
+		class={twMerge(
+			'peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black px-2 py-4 rounded-t-md shadow-lg w-full',
+			customStyles
+		)}
 		{...inputProperties}
 	/>
 	<label

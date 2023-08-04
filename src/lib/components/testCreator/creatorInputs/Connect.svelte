@@ -11,7 +11,7 @@
 	export let indexParent: number;
 
 	// Reference to the test object content
-	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
+	$: content = $testObject.questions[indexParent].content as ConnectQuestion;
 	$: answersLength = content.answers.length;
 
 	const QUESTION_LIMIT = 10;
@@ -21,27 +21,27 @@
 	}
 
 	function onAddNew() {
-		if (!newQuestionConditionCheck()) {
-			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
-			return;
-		}
-		if ($testObject.questions[indexParent].content.answers) {
-			$testObject.questions[indexParent].content.answers = [
-				...content.answers,
-				{ answer: '' }
-			];
-		}
+		// if (!newQuestionConditionCheck()) {
+		// 	toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
+		// 	return;
+		// }
+		// if ($testObject.questions[indexParent].content.answers) {
+		// 	$testObject.questions[indexParent].content.answers = [
+		// 		...content.answers,
+		// 		{ answer: '' }
+		// 	];
+		// }
 	}
 
 	function deleteQuestion(index: number) {
-		$testObject.questions[indexParent].content.answers = content.answers.filter(
-			(_, i) => i !== index
-		);
-		if (content['correctAnswerIndex'] === index)
-			(
-				$testObject.questions[indexParent].content as PickOneQuestion
-			).correctAnswerIndex = 0;
-		toast.success(`Question ${index + 1} deleted`);
+		// $testObject.questions[indexParent].content.answers = content.answers.filter(
+		// 	(_, i) => i !== index
+		// );
+		// if (content['correctAnswerIndex'] === index)
+		// 	(
+		// 		$testObject.questions[indexParent].content as PickOneQuestion
+		// 	).correctAnswerIndex = 0;
+		// toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
 
@@ -94,20 +94,17 @@
 								(content.answers[index].error = event.detail)}
 							bind:inputValue={content.answers[index].answer}
 						/>
+						<TextInput
+							title="Option matched {index + 1}"
+							titleName="Matched option {index + 1}"
+							validationSchema={asnwerSchema}
+							customStyles={'rounded-t-none rounded-b-md'}
+							customContainerStyles={'border-t-[0.125rem] border-b-0 before:top-[-0.125rem]'}
+							on:error={(event) =>
+								(content.answers[index].error = event.detail)}
+							bind:inputValue={content.answers[index].answer}
+						/>
 					</div>
-					<button
-						type="button"
-						data-tip="Mark this as a correct answer"
-						class={`px-2 grid tooltip place-content-center rounded-r-md`}
-						style={`${
-							index === content.correctAnswerIndex
-								? 'background-color: var(--success); color: var(--light-white);'
-								: 'background-color: var(--light-white); color: var(--success);'
-						}}`}
-						on:click={() => (content['correctAnswerIndex'] = index)}
-					>
-						<Icon icon="charm:tick" class="text-3xl" />
-					</button>
 				</div>
 				<p
 					class={`text-body2 text-error ${
