@@ -45,14 +45,11 @@
 	}
 
 	function deleteQuestion(index: number) {
-		// $testObject.questions[indexParent].content.answers = content.answers.filter(
-		// 	(_, i) => i !== index
-		// );
-		// if (content['correctAnswerIndex'] === index)
-		// 	(
-		// 		$testObject.questions[indexParent].content as PickOneQuestion
-		// 	).correctAnswerIndex = 0;
-		// toast.success(`Question ${index + 1} deleted`);
+		$testObject.questions[indexParent].content.answers = content.answers.filter(
+			(_, i) => i !== index
+		);
+		delete ($testObject.questions[indexParent].content as ConnectQuestion).matchedAnswers[answerKeys[index]]
+		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
 
