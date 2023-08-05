@@ -16,21 +16,32 @@
 
 	const QUESTION_LIMIT = 10;
 
+	$: answerKeys = Object.keys(content.matchedAnswers) as string[];
+	$: (
+		$testObject.questions[indexParent].content as ConnectQuestion
+	).answers.forEach((answer, index) => {
+		answer.matchedAnswerIndex = answerKeys[index];
+	}),
+		answersLength;
+
+	$: console.log($testObject);
+
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
 
 	function onAddNew() {
-		// if (!newQuestionConditionCheck()) {
-		// 	toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
-		// 	return;
-		// }
-		// if ($testObject.questions[indexParent].content.answers) {
-		// 	$testObject.questions[indexParent].content.answers = [
-		// 		...content.answers,
-		// 		{ answer: '' }
-		// 	];
-		// }
+		if (!newQuestionConditionCheck()) {
+			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
+			return;
+		}
+		if ($testObject.questions[indexParent].content.answers) {
+			(
+				$testObject.questions[indexParent].content as ConnectQuestion
+			).matchedAnswers[crypto.randomUUID()] = '';
+			($testObject.questions[indexParent].content as ConnectQuestion).answers =
+				[...content.answers, { answer: '', matchedAnswerIndex: undefined }];
+		}
 	}
 
 	function deleteQuestion(index: number) {
@@ -85,7 +96,7 @@
 							style="transition: 200ms transform;"
 						/>
 					</button>
-					<div class="relative grow-[1]">
+					<div class="relative grow-[1] grid grid-cols-2 gap-1">
 						<TextInput
 							title="Option {index + 1}"
 							titleName="Option {index + 1}"
@@ -94,15 +105,15 @@
 								(content.answers[index].error = event.detail)}
 							bind:inputValue={content.answers[index].answer}
 						/>
+						<!-- customStyles={'rounded-t-none rounded-b-md'}
+							customContainerStyles={'border-t-[0.125rem] border-b-0 before:top-[-0.125rem]'} -->
 						<TextInput
 							title="Option matched {index + 1}"
 							titleName="Matched option {index + 1}"
 							validationSchema={asnwerSchema}
-							customStyles={'rounded-t-none rounded-b-md'}
-							customContainerStyles={'border-t-[0.125rem] border-b-0 before:top-[-0.125rem]'}
 							on:error={(event) =>
 								(content.answers[index].error = event.detail)}
-							bind:inputValue={content.answers[index].answer}
+							bind:inputValue={content.matchedAnswers[answerKeys[index]]}
 						/>
 					</div>
 				</div>

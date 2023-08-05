@@ -17,7 +17,7 @@ type PickOneQuestion = {
 type ConnectQuestion = {
   type: "connect";
   answers: (Answer & {
-    matchedAnswerIndex: number | undefined;
+    matchedAnswerIndex: string | undefined;
   })[];
   matchedAnswers: {
     [key: string]: string;
