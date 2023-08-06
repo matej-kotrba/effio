@@ -48,7 +48,8 @@
 		$testObject.questions[indexParent].content.answers = content.answers.filter(
 			(_, i) => i !== index
 		);
-		delete ($testObject.questions[indexParent].content as ConnectQuestion).matchedAnswers[answerKeys[index]]
+		delete ($testObject.questions[indexParent].content as ConnectQuestion)
+			.matchedAnswers[answerKeys[index]];
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>

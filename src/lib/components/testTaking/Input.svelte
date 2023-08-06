@@ -3,6 +3,7 @@
 	import { testObject } from '~stores/testObject';
 	import PickOne from './takingInputs/PickOne.svelte';
 	import TrueFalse from './takingInputs/TrueFalse.svelte';
+	import Connect from './takingInputs/Connect.svelte';
 
 	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let questionIndex: number;
@@ -41,6 +42,14 @@
 			/>
 		{:else if $testObject['questions'][questionIndex]['questionType'] === 'true/false'}
 			<TrueFalse
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'true/false'
+					? typedResultFormat
+					: null}
+			/>
+		{:else if $testObject['questions'][questionIndex]['questionType'] === 'connect'}
+			<Connect
 				{questionIndex}
 				resultFormat={resultFormat &&
 				resultFormat['userAnswer']['type'] === 'true/false'
