@@ -32,6 +32,20 @@
 		)
 	);
 
+	let attachPoints: {
+		[key: string]: {
+			ref: HTMLDivElement | undefined;
+			x: number | undefined;
+			y: number | undefined;
+		};
+	} = Object.fromEntries(
+		Object.keys(
+			($testObject.questions[questionIndex]['content'] as ConnectQuestion)[
+				'matchedAnswers'
+			]
+		).map((_, index) => [index, { x: undefined, y: undefined, ref: undefined }])
+	);
+
 	function onDrag(event: MouseEvent) {
 		for (let i in svgPositions) {
 			if (svgPositions[i].isDragging && svgPositions[i].ref) {
@@ -43,8 +57,47 @@
 	}
 
 	function onMouseUp(event: MouseEvent) {
+		let draggingPoint;
+
 		for (let i in svgPositions) {
-			svgPositions[i].isDragging = false;
+			if (svgPositions[i].isDragging) {
+				draggingPoint = svgPositions[i];
+				svgPositions[i].isDragging = false;
+			}
+		}
+
+		if (!draggingPoint) return;
+
+		// console.log(draggingPoint);
+
+		for (let k in attachPoints) {
+			const svgRef = draggingPoint.ref!.getBoundingClientRect();
+			console.log(
+				'CLIENTX ' + event.clientX,
+				'DRAGGINGPOINT.X ' + draggingPoint.x!,
+				'ATTACHPOINT.X ' + attachPoints[k].x!,
+				'SVGREF.LEFT ' + svgRef.left,
+				event.clientX - attachPoints[k].x!
+			);
+			if (
+				Math.abs(event.clientX - attachPoints[k].x!) < 20 &&
+				Math.abs(event.clientY - attachPoints[k].y!) < 20
+			) {
+				draggingPoint.x = attachPoints[k].x! - svgRef.left;
+				draggingPoint.y = attachPoints[k].y! - svgRef.top;
+				break;
+			}
+			console.log(attachPoints[k]);
+		}
+	}
+
+	$: {
+		for (let i in attachPoints) {
+			if (attachPoints[i].ref) {
+				const rect = attachPoints[i].ref!.getBoundingClientRect();
+				attachPoints[i].x = rect.left + rect.width / 2;
+				attachPoints[i].y = rect.top + rect.height / 2;
+			}
 		}
 	}
 
@@ -93,12 +146,12 @@
 						bind:this={inputElements[index]}
 					/> -->
 					<div
-						class="w-6 rounded-full pointer-events-none bg-light_secondary aspect-square"
+						class="w-6 border-2 rounded-full pointer-events-none bg-light_quaternary aspect-square border-light_secondary"
 					>
 						<svg
 							width="200"
 							height="100"
-							class="absolute top-[calc(50%)] left-[calc(50%)] overflow-visible"
+							class="absolute top-[calc(50%)] left-[calc(50%)] overflow-visible z-10"
 							bind:this={svgPositions[index].ref}
 						>
 							<line
@@ -106,14 +159,13 @@
 								y1="0"
 								x2={svgPositions[index]?.x || 0}
 								y2={svgPositions[index]?.y || 0}
-								style="stroke:var(--light-terciary);stroke-width:2"
+								style="stroke:var(--light-quaternary);stroke-width:3"
 							/>
 							<circle
 								cx={svgPositions[index]?.x || 0}
 								cy={svgPositions[index]?.y || 0}
 								r="8"
-								fill="red"
-								class="pointer-events-auto"
+								class="pointer-events-auto fill-light_primary"
 								on:mousedown={() => (svgPositions[index].isDragging = true)}
 							/>
 						</svg>
@@ -140,13 +192,20 @@
           resultFormat.isCorrect === false &&
           index === resultFormat.correctAnswer.correctAnswerIndex &&
           'bg-green-200'} -->
-				<input
-					type="radio"
-					class="radio radio-primary radio_button"
-					disabled={!!resultFormat}
-					name={$testObject.questions[questionIndex].title + '-radio'}
-					value={index}
-				/>
+				<div class="relative grid">
+					<!-- <input
+						type="radio"
+						class="radio radio-primary radio_button"
+						disabled={!!resultFormat}
+						name={$testObject.questions[questionIndex].title + '-radio'}
+						value={index}
+						bind:this={inputElements[index]}
+					/> -->
+					<div
+						class="w-6 bg-transparent border-2 rounded-full pointer-events-none aspect-square border-light_secondary"
+						bind:this={attachPoints[index].ref}
+					/>
+				</div>
 				<span>{answer}</span>
 			</button>
 		{/each}
