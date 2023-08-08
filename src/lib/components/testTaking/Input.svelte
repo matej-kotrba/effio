@@ -52,7 +52,7 @@
 			<Connect
 				{questionIndex}
 				resultFormat={resultFormat &&
-				resultFormat['userAnswer']['type'] === 'true/false'
+				resultFormat['userAnswer']['type'] === 'connect'
 					? typedResultFormat
 					: null}
 			/>
