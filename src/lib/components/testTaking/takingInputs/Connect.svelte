@@ -230,23 +230,17 @@
 					? 'bg-white'
 					: ''}
 			"
+				style="background-color: {resultFormat &&
+					resultFormat.isCorrect === false &&
+					wrongAnswerHiglightColors[
+						resultFormat['correctAnswer']['answers'].findIndex(
+							(item) =>
+								item.matchedAnswerIndex ===
+								Object.keys(content['matchedAnswers'])[index]
+						)
+					]};"
 			>
-				<!-- {resultFormat &&
-				resultFormat.isCorrect === false &&
-				selectedInput === index &&
-				'bg-red-200'} {resultFormat &&
-          resultFormat.isCorrect === false &&
-          index === resultFormat.correctAnswer.correctAnswerIndex &&
-          'bg-green-200'} -->
 				<div class="relative grid">
-					<!-- <input
-						type="radio"
-						class="radio radio-primary radio_button"
-						disabled={!!resultFormat}
-						name={$testObject.questions[questionIndex].title + '-radio'}
-						value={index}
-						bind:this={inputElements[index]}
-					/> -->
 					<div
 						class="w-6 bg-transparent border-2 rounded-full pointer-events-none aspect-square border-light_secondary"
 						bind:this={attachPoints[index].ref}
