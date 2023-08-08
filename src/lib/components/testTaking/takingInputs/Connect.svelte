@@ -5,7 +5,7 @@
 	export let resultFormat: QuestionServerCheckResponse<ConnectQuestion> | null =
 		null;
 
-	console.log(resultFormat);
+	// console.log(resultFormat);
 
 	type SvgPositions = {
 		ref: SVGElement | undefined;
@@ -58,37 +58,45 @@
 
 	function onMouseUp(event: MouseEvent) {
 		let draggingPoint;
+		let draggingIndex: number | undefined;
 
 		for (let i in svgPositions) {
 			if (svgPositions[i].isDragging) {
 				draggingPoint = svgPositions[i];
+				draggingIndex = +i;
 				svgPositions[i].isDragging = false;
 			}
 		}
 
-		if (!draggingPoint) return;
-
+		if (!draggingPoint || draggingIndex === undefined) return;
 		// console.log(draggingPoint);
 
+		// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
 		for (let k in attachPoints) {
 			const svgRef = draggingPoint.ref!.getBoundingClientRect();
-			console.log(
-				'CLIENTX ' + event.clientX,
-				'DRAGGINGPOINT.X ' + draggingPoint.x!,
-				'ATTACHPOINT.X ' + attachPoints[k].x!,
-				'SVGREF.LEFT ' + svgRef.left,
-				event.clientX - attachPoints[k].x!
-			);
 			if (
 				Math.abs(event.clientX - attachPoints[k].x!) < 20 &&
 				Math.abs(event.clientY - attachPoints[k].y!) < 20
 			) {
 				draggingPoint.x = attachPoints[k].x! - svgRef.left;
 				draggingPoint.y = attachPoints[k].y! - svgRef.top;
-				break;
+				const key = Object.keys(
+					($testObject.questions[questionIndex]['content'] as ConnectQuestion)
+						.matchedAnswers
+				)[+k];
+				// ($testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
+				(
+					$testObject.questions[questionIndex]['content'] as ConnectQuestion
+				).answers[draggingIndex].matchedAnswerIndex = key;
+				return;
 			}
-			console.log(attachPoints[k]);
 		}
+
+		(
+			$testObject.questions[questionIndex]['content'] as ConnectQuestion
+		).answers[draggingIndex].matchedAnswerIndex = undefined;
+		draggingPoint.x = undefined;
+		draggingPoint.y = undefined;
 	}
 
 	$: {
@@ -101,10 +109,9 @@
 		}
 	}
 
-	// Update the store based on the selection
-	// $: ($testObject.questions[questionIndex]['content'] as ConnectQuestion)[
-	// 	'correctAnswerIndex'
-	// ] = selectedInput;
+	$: content = $testObject.questions[questionIndex][
+		'content'
+	] as ConnectQuestion;
 
 	// Update the selectedInput based on the resultFormat
 	$: {
@@ -166,6 +173,7 @@
 								cy={svgPositions[index]?.y || 0}
 								r="8"
 								class="pointer-events-auto fill-light_primary"
+								class:duration-150={!svgPositions[index].isDragging}
 								on:mousedown={() => (svgPositions[index].isDragging = true)}
 							/>
 						</svg>
@@ -175,14 +183,14 @@
 		{/each}
 	</div>
 	<div class="flex flex-col gap-2">
-		{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
+		{#each Object.values(content['matchedAnswers']) as text, index}
 			<button
 				type="button"
 				disabled={!!resultFormat}
 				class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
 					null || resultFormat.isCorrect
 					? 'bg-white'
-					: ''} {!resultFormat && 'hover:bg-slate-50 active:bg-slate-100'} 
+					: ''}
 			"
 			>
 				<!-- {resultFormat &&
@@ -206,7 +214,7 @@
 						bind:this={attachPoints[index].ref}
 					/>
 				</div>
-				<span>{answer}</span>
+				<span>{text}</span>
 			</button>
 		{/each}
 	</div>
