@@ -148,12 +148,23 @@
 		'content'
 	] as ConnectQuestion;
 
-	// Update the selectedInput based on the resultFormat
 	$: {
-		// if (resultFormat) {
-		// 	selectedInput = resultFormat.userAnswer.correctAnswerIndex;
-		// }
-		// console.log(selectedInput);
+		if (resultFormat) {
+			const keys = Object.keys(resultFormat.userAnswer.matchedAnswers);
+
+			for (let i in svgPositions) {
+				if (!svgPositions[i].ref) continue;
+				const svgRef = svgPositions[i].ref!.getBoundingClientRect();
+				const pointToAttach =
+					attachPoints[
+						keys.indexOf(
+							resultFormat.userAnswer.answers[+i].matchedAnswerIndex!
+						)
+					];
+				svgPositions[i].x = pointToAttach.x! - svgRef.left;
+				svgPositions[i].y = pointToAttach.y! - svgRef.top;
+			}
+		}
 	}
 </script>
 
