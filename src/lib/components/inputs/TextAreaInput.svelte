@@ -4,6 +4,7 @@
 	import Limit from '~components/informatic/Limit.svelte';
 	import { getContext } from 'svelte';
 	import type { ZodSchema } from 'zod';
+	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
 	export let titleName: string;
@@ -66,11 +67,14 @@
 			id={titleName}
 			autocomplete="off"
 			maxlength={doesLimit ? max : undefined}
-			class="resize-none min-h-[150px] outline-none bg-white
+			class={twMerge(
+				`resize-none min-h-[150px] outline-none bg-white
 		overflow-hidden overflow-ellipsis text-light_text_black
 		px-2 py-4 rounded-md shadow-lg w-full
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
-     {customStyles}"
+     `,
+				customStyles
+			)}
 			{...inputProperties}
 		/>
 	</div>

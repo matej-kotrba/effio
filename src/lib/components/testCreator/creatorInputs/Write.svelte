@@ -6,6 +6,7 @@
 	import { testObject } from '~stores/testObject';
 	import { WRITE_AMSWER_MAX, WRITE_ANSWER_MIN } from '~schemas/textInput';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
+	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 
 	export let indexParent: number;
 
@@ -62,12 +63,12 @@
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
 				<div class="flex">
-					<TextAreaInput
+					<TextInputSimple
 						title="Answer option {index + 1}"
 						titleName="titleAnswer{indexParent}"
 						max={WRITE_AMSWER_MAX}
 						min={WRITE_ANSWER_MIN}
-						doesLimit
+						doesLimit={true}
 						on:error={(e) => {
 							$testObject.questions[indexParent].content.answers[index].error =
 								e.detail;

@@ -13,6 +13,7 @@
 	export let validationSchema: ZodSchema<any> | null = null;
 	export let min: number | undefined = undefined;
 	export let max: number | undefined = undefined;
+	export let doesLimit: boolean = false;
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 
@@ -26,7 +27,8 @@
 		const result = validationSchema?.safeParse(inputValue);
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);
-			if (typeof setError === 'function') setError(result?.error.errors[0].message);
+			if (typeof setError === 'function')
+				setError(result?.error.errors[0].message);
 		} else {
 			dispatch('error', null);
 			if (typeof setError === 'function') setError('');
@@ -38,7 +40,9 @@
 	}
 </script>
 
-<div class="group underline_effect w-full before:content-[''] relative {customContainerStyles}">
+<div
+	class="group underline_effect w-full before:content-[''] relative {customContainerStyles}"
+>
 	<label
 		for={titleName}
 		class="duration-150 text-light_text_black_80 text-body2 group-focus-within:text-light_primary"
@@ -46,7 +50,12 @@
 	>
 	<div class="relative">
 		{#if min && max}
-			<Limit current={inputValue.length} {min} {max} class="absolute bottom-full right-1" />
+			<Limit
+				current={inputValue.length}
+				{min}
+				{max}
+				class="absolute bottom-full right-1"
+			/>
 		{/if}
 		<input
 			bind:value={inputValue}
@@ -57,6 +66,7 @@
 			id={titleName}
 			type="text"
 			autocomplete="off"
+			maxlength={doesLimit ? max : undefined}
 			class="resize-none outline-none bg-white
      overflow-hidden overflow-ellipsis text-light_text_black
      px-2 py-4 rounded-md shadow-lg w-full
