@@ -24,6 +24,12 @@ type ConnectQuestion = {
   }
 }
 
+type WriteQuestion = {
+  type: "write";
+  wordCount?: number;
+  answers: Answer[];
+}
+
 type Answer<T = string> = {
   answer: T;
   error?: string;
@@ -33,6 +39,7 @@ type QuestionTypeMap = {
   'true/false': TrueFalseQuestion;
   'pickOne': PickOneQuestion;
   'connect': ConnectQuestion;
+  'write': WriteQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

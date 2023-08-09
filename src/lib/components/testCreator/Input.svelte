@@ -13,6 +13,7 @@ will be used in the test creator -->
 	import { testObject } from '~stores/testObject';
 	import { titleSchema } from '~schemas/textInput';
 	import Connect from './creatorInputs/Connect.svelte';
+	import Write from './creatorInputs/Write.svelte';
 
 	let dispatch = createEventDispatcher();
 
@@ -81,6 +82,8 @@ will be used in the test creator -->
 			<TrueFalseInput on:questionDetails indexParent={index} />
 		{:else if $testObject['questions'][index]['questionType'] === 'connect'}
 			<Connect on:questionDetails indexParent={index} />
+		{:else if $testObject['questions'][index]['questionType'] === 'write'}
+			<Write on:questionDetails indexParent={index} />
 		{/if}
 	</div>
 </div>

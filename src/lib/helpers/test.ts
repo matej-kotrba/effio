@@ -134,6 +134,30 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return true
     }
   },
+  "write": {
+    "createNew": () => {
+      return {
+        type: 'write',
+        answers: [
+          {
+            answer: ''
+          }
+        ]
+      }
+    },
+    "separateAnswer": (question: WriteQuestion): WriteQuestion => {
+      return {
+        ...question,
+        answers: [{ answer: "" }]
+      }
+    },
+    "checkAnswerPresence": (question: WriteQuestion): boolean => {
+      return !(question.answers[0].answer === "")
+    },
+    "checkAnswerCorrectness": (answer: WriteQuestion, original: WriteQuestion) => {
+      return original.answers.map(item => item.answer).includes(answer.answers[0].answer)
+    }
+  },
 }
 
 export function initializeNewTestToTestStore(testData: ClientTest) {

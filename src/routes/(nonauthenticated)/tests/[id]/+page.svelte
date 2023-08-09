@@ -50,6 +50,7 @@
 		<button
 			class="text-white btn btn-primary hover:bg-light_secondary"
 			on:click={async () => {
+				if (isSubmitting) return;
 				// Reset errors
 				for (let i in $testObject.questions) {
 					$testObject.questions[i].errors.content = '';
@@ -65,7 +66,7 @@
 				isSubmitting = true;
 
 				// Then check the test on the server for the correct answers
-				console.log('TEST', $testObject);
+				// console.log('TEST', $testObject);
 				let res = await checkTestServerAndRecordIt($testObject);
 				if (!res['success']) {
 					submitError = res['error'] || 'Something went wrong';
