@@ -150,6 +150,13 @@
 
 	$: {
 		if (resultFormat) {
+			for (let i in attachPoints) {
+				if (attachPoints[i].ref) {
+					const rect = attachPoints[i].ref!.getBoundingClientRect();
+					attachPoints[i].x = rect.left + rect.width / 2;
+					attachPoints[i].y = rect.top + rect.height / 2;
+				}
+			}
 			const keys = Object.keys(resultFormat.userAnswer.matchedAnswers);
 
 			for (let i in svgPositions) {
