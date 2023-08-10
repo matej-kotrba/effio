@@ -49,7 +49,7 @@
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1",
 		"chart.js": "^4.3.3",
-		"gift-format-generator": "^0.2.4",
+		"gift-format-generator": "^0.2.7",
 		"gift-pegjs": "^0.2.1",
 		"superjson": "^1.13.1",
 		"svelte-french-toast": "1.0.4-beta.0",

@@ -67,6 +67,35 @@
 						});
 						break;
 					}
+					case 'connect': {
+						questionType = 'CA' as const;
+
+						const questionContent = question['content'] as ConnectQuestion;
+						content = questionContent.answers.map((answer) => {
+							if (answer.matchedAnswerIndex === undefined) {
+								throw new Error(
+									'There has been issue with creating your file.'
+								);
+							}
+							return {
+								text: answer.answer,
+								answerPart:
+									questionContent.matchedAnswers[answer.matchedAnswerIndex]
+							};
+						});
+						break;
+					}
+					case 'write': {
+						questionType = 'SA' as const;
+
+						const questionContent = question['content'] as ConnectQuestion;
+						content = questionContent.answers.map((answer) => {
+							return {
+								text: answer.answer
+							};
+						});
+						break;
+					}
 					default: {
 						throw new Error('Unknown question type');
 					}
