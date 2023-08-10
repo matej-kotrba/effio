@@ -67,7 +67,7 @@
 			type="text"
 			autocomplete="off"
 			maxlength={doesLimit ? max : undefined}
-			class="resize-none outline-none bg-white
+			class="resize-none my-1 outline-none bg-white
      overflow-hidden overflow-ellipsis text-light_text_black
      px-2 py-4 rounded-md shadow-lg w-full
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150

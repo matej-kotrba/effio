@@ -155,7 +155,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return !(question.answers[0].answer === "")
     },
     "checkAnswerCorrectness": (answer: WriteQuestion, original: WriteQuestion) => {
-      return original.answers.map(item => item.answer).includes(answer.answers[0].answer)
+      return original.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(answer.answers[0].answer.toLowerCase().replace(/\s/g, ""))
     }
   },
 }

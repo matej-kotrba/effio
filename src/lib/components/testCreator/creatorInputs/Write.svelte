@@ -4,7 +4,11 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
-	import { WRITE_AMSWER_MAX, WRITE_ANSWER_MIN } from '~schemas/textInput';
+	import {
+		WRITE_AMSWER_MAX,
+		WRITE_ANSWER_MIN,
+		writeAnswerSchema
+	} from '~schemas/textInput';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 
@@ -68,7 +72,11 @@
 						titleName="titleAnswer{indexParent}"
 						max={WRITE_AMSWER_MAX}
 						min={WRITE_ANSWER_MIN}
+						validationSchema={writeAnswerSchema}
 						doesLimit={true}
+						inputProperties={{
+							placeholder: 'Your answer option ...'
+						}}
 						on:error={(e) => {
 							$testObject.questions[indexParent].content.answers[index].error =
 								e.detail;
