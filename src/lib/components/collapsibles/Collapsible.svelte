@@ -30,9 +30,14 @@
 		><Icon
 			icon="bxs:left-arrow"
 			rotate={2}
-			class="{isOpen ? 'rotate-90' : 'rotate-0'} duration-300 text-light_text_black"
+			class="{isOpen
+				? 'rotate-90'
+				: 'rotate-0'} duration-300 text-light_text_black dark:text-dark_text_white"
 		/>
-		<span class="text-body3 md:text-body1 text-light_text_black">{title}</span></button
+		<span
+			class="text-body3 md:text-body1 text-light_text_black dark:text-dark_text_white"
+			>{title}</span
+		></button
 	>
 	<div class="content" class:active={isOpen} bind:this={contentRef}>
 		<div class="px-4">

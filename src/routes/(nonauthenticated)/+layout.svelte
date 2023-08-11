@@ -7,6 +7,6 @@
 
 <Navbar user={data.session} />
 <Space gap={40} />
-<div class="container mx-auto text-light_text_black">
+<div class="container mx-auto text-light_text_black dark:text-dark_text_white">
 	<slot />
 </div>

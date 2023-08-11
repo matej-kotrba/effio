@@ -45,7 +45,7 @@
 >
 	<label
 		for={titleName}
-		class="duration-150 text-light_text_black_80 text-body2 group-focus-within:text-light_primary"
+		class="duration-150 text-light_text_black dark:text-dark_text_white_80 text-body2 group-focus-within:text-light_primary"
 		>{title}</label
 	>
 	<div class="relative">
@@ -68,7 +68,7 @@
 			autocomplete="off"
 			maxlength={doesLimit ? max : undefined}
 			class="resize-none my-1 outline-none bg-white
-     overflow-hidden overflow-ellipsis text-light_text_black
+     overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
      px-2 py-4 rounded-md shadow-lg w-full
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
      {customStyles}"

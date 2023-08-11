@@ -30,7 +30,9 @@ will be used in the test creator -->
 	class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter"
 >
 	<div class="grid grid-cols-3">
-		<p class="justify-self-start text-light_text_black_40 text-body2">
+		<p
+			class="justify-self-start text-light_text_black dark:text-dark_text_white_40 text-body2"
+		>
 			{$testObject['questions'][index].displayType}
 		</p>
 		<div
@@ -41,7 +43,7 @@ will be used in the test creator -->
 		>
 			<Icon
 				icon="akar-icons:drag-horizontal"
-				class="text-3xl text-light_text_black_80"
+				class="text-3xl text-light_text_black dark:text-dark_text_white_80"
 			/>
 		</div>
 		<button
@@ -52,13 +54,13 @@ will be used in the test creator -->
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
-				class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error"
+				class="text-3xl group-hover:rotate-90 text-light_text_black dark:text-dark_text_white group-hover:text-error"
 				style="transition: 200ms transform;"
 			/>
 		</button>
 	</div>
 	<Space gap={20} />
-	<h6 class="text-light_text_black">
+	<h6 class="text-light_text_black dark:text-dark_text_white">
 		<TextInput
 			title="Title"
 			titleName="title"

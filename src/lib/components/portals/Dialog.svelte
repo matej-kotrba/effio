@@ -13,7 +13,7 @@
 <dialog bind:this={modal} class="modal">
 	<form
 		method="dialog"
-		class="relative modal-box bg-light_whiter text-light_text_black"
+		class="relative modal-box bg-light_whiter text-light_text_black dark:text-dark_text_white"
 	>
 		<SuccessKeyframe
 			successMessage="Success!"

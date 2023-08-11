@@ -11,7 +11,11 @@
 	 {customClasses}"
 	on:click={(event) => onClick(event)}
 >
-	<h4 class="text-center text-h6 text-light_text_black">{title}</h4>
+	<h4
+		class="text-center text-h6 text-light_text_black dark:text-dark_text_white"
+	>
+		{title}
+	</h4>
 	<div class="grid place-content-center">
 		<img src={imageSrc} alt="Tempalte" class="object-cover" width="150" />
 	</div>

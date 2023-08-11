@@ -4,7 +4,7 @@
 
 <div
 	class="group flex flex-col justify-between gap-2 text-center bg-white
-	 shadow-md w-full max-w-[300px] text-light_text_black p-2 rounded-md relative min-h-[180px] overflow-hidden
+	 shadow-md w-full max-w-[300px] text-light_text_black dark:text-dark_text_white p-2 rounded-md relative min-h-[180px] overflow-hidden
 	 duration-150"
 >
 	<div>

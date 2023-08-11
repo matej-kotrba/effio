@@ -194,13 +194,15 @@
 </script>
 
 <div
-	class="relative h-full bg-light_white roudned-md text-light_text_black grid__container"
+	class="relative h-full bg-light_white roudned-md text-light_text_black dark:text-dark_text_white grid__container"
 >
 	<div class="p-4">
 		<!-- The dropdown for new input -->
 		<dialog class="modal" bind:this={newInputModal}>
 			<form method="dialog" class="modal-box max-w-[1000px] bg-light_whiter">
-				<h3 class="text-lg font-bold text-light_text_black">
+				<h3
+					class="text-lg font-bold text-light_text_black dark:text-dark_text_white"
+				>
 					Pick new input for your test!
 				</h3>
 				<Space gap={20} />
@@ -213,7 +215,9 @@
 							on:click={() => onNewInputClick(input)}
 							class="bg-white rounded-lg shadow-lg aspect-square new-input-button"
 						>
-							<span class="text-light_text_black">{input.name}</span>
+							<span class="text-light_text_black dark:text-dark_text_white"
+								>{input.name}</span
+							>
 						</button>
 					{/each}
 				</div>
@@ -231,7 +235,9 @@
 			<!-- Displaying the initial create button -->
 			{#if $testObject.questions.length === 0}
 				<div class="flex flex-col items-center gap-3">
-					<h4 class="font-semibold text-h6 text-light_text_black">
+					<h4
+						class="font-semibold text-h6 text-light_text_black dark:text-dark_text_white"
+					>
 						Start with the first question!
 					</h4>
 					<div class="grid grid-cols-2 grid-rows-2">

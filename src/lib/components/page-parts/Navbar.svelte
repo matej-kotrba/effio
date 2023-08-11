@@ -10,7 +10,7 @@
 			<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 		</div>
 		<ul
-			class="flex items-center justify-center h-full gap-1 text-sm uppercase text-light_text_black"
+			class="flex items-center justify-center h-full gap-1 text-sm uppercase text-light_text_black dark:text-dark_text_white"
 		>
 			<a
 				href="/"

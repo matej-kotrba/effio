@@ -114,7 +114,7 @@
 </script>
 
 <Dialog bind:open={openModal}>
-	<p class="text-center text-light_text_black">
+	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		Are you sure you want to delete test<br /><span class="font-semibold"
 			>{modalDeleteInfo?.title || ''}</span
 		>
@@ -145,12 +145,18 @@
 	</div>
 </Dialog>
 
-<h2 class="text-h3 font-extralight text-light_text_black">Test Collection</h2>
-<p class="text-body1 text-light_text_black_40">
+<h2
+	class="text-h3 font-extralight text-light_text_black dark:text-dark_text_white"
+>
+	Test Collection
+</h2>
+<p class="text-body1 text-light_text_black dark:text-dark_text_white_40">
 	Here you can see all your tests which you have created
 </p>
 <Space />
-<h3 class="text-h4 text-light_text_black">Recent activity</h3>
+<h3 class="text-h4 text-light_text_black dark:text-dark_text_white">
+	Recent activity
+</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
 <div class="grid__container">
@@ -237,7 +243,9 @@
 </div>
 
 <Space />
-<h3 class="text-h4 text-light_text_black">Collection</h3>
+<h3 class="text-h4 text-light_text_black dark:text-dark_text_white">
+	Collection
+</h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
 

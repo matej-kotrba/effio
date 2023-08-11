@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { intersection, onIntersect } from '../../../lib/use/intersectionObserver';
+	import {
+		intersection,
+		onIntersect
+	} from '../../../lib/use/intersectionObserver';
 
 	export let height: number = 600;
 	export let lineColor: string = 'var(--light-secondary)';
@@ -22,13 +25,18 @@
 			style="background-image: linear-gradient(to bottom, transparent 5%, {lineColor});"
 			bind:clientHeight={firstLineHeight}
 		/>
-		<div class="relative p-2 rounded-full duraion-300 opacity-0 group-[.active]:opacity-100">
+		<div
+			class="relative p-2 rounded-full duraion-300 opacity-0 group-[.active]:opacity-100"
+		>
 			<div
 				class="absolute w-[0.1px] aspect-square translate-x-[-50%] translate-y-[-50%] left-[50%] top-[50%] rounded-full z-[1]"
 				style="box-shadow: 0 0 30px 25px {lineColor};"
 			/>
 			<div class="relative z-10">
-				<Icon {icon} class="text-4xl text-light_text_black" />
+				<Icon
+					{icon}
+					class="text-4xl text-light_text_black dark:text-dark_text_white dark:text-dark_text_white"
+				/>
 			</div>
 		</div>
 		<div
@@ -37,7 +45,11 @@
 		/>
 	</div>
 	<div style="padding-top: {firstLineHeight}px;">
-		<h3 class="text-light_text_black text-h4">{title}</h3>
+		<h3
+			class="text-light_text_black dark:text-dark_text_white dark:text-dark_text_white text-h4"
+		>
+			{title}
+		</h3>
 		<slot />
 	</div>
 </div>

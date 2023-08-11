@@ -63,13 +63,13 @@
 		</a>
 		<Space gap={10} />
 		<h5
-			class="overflow-hidden font-bold text-center uppercase text-body1 overflow-ellipsis whitespace-nowrap text-light_text_black"
+			class="overflow-hidden font-bold text-center uppercase text-body1 overflow-ellipsis whitespace-nowrap text-light_text_black dark:text-dark_text_white"
 		>
 			{title}
 		</h5>
 		<Space gap={5} />
 		<p
-			class="overflow-hidden text-center text-body2 text-light_text_black_80 overflow-ellipsis line-clamp-2"
+			class="overflow-hidden text-center text-body2 text-light_text_black dark:text-dark_text_white_80 overflow-ellipsis line-clamp-2"
 		>
 			{description}
 		</p>
@@ -83,7 +83,8 @@
 	</div>
 	<div class="flex items-center justify-between">
 		{#if stars !== undefined}
-			<span class="flex items-center gap-2 text-light_text_black"
+			<span
+				class="flex items-center gap-2 text-light_text_black dark:text-dark_text_white"
 				><Icon
 					icon="ic:round-star-outline"
 					class="text-3xl duration-100 hover:text-yellow-400"
@@ -95,17 +96,17 @@
 			<button type="button" class="flex items-center settings-button">
 				<Icon
 					icon="fluent:settings-24-filled"
-					class="text-3xl text-light_text_black"
+					class="text-3xl text-light_text_black dark:text-dark_text_white"
 				/>
 			</button>
 			<ul
-				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black"
+				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black dark:text-dark_text_white"
 			>
 				{#each dropdownTabs as item}
 					<li class="group">
 						<button
 							type="button"
-							class="flex items-center justify-start group-hover:text-light_text_black"
+							class="flex items-center justify-start group-hover:text-light_text_black dark:text-dark_text_white"
 							on:click={(e) => item.action(e)}
 						>
 							{#if item['iconClass']}

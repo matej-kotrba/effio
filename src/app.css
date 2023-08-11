@@ -6,6 +6,7 @@
 
 :root {
 	--light-primary: #6433f0;
+	--light-primary-transparent: #6533f061;
 	--light-primary-dark: #5521e4;
 	--light-secondary: #646fd4;
 	--light-terciary: #9ba3eb;
@@ -30,7 +31,7 @@ html {
 }
 
 body {
-	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black bg-light_white;
+	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black dark:text-dark_text_white bg-light_white;
 	box-sizing: border-box;
 	overflow-x: hidden;
 }

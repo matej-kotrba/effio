@@ -1,32 +1,39 @@
 <script lang="ts">
+	import { applicationStates } from '~stores/applicationStates';
 	import Icon from '@iconify/svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 	import { signOut } from '@auth/sveltekit/client';
+	import { fly } from 'svelte/transition';
 
 	export let data: PageData;
 </script>
 
-<main class="h-full grid__layout">
+<main class="h-full duration-100 grid__layout dark:bg-black">
 	<aside
 		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
 	>
 		<div class="flex flex-col items-center">
 			<div class="w-[90px] aspect-square">
-				<img src="/imgs/logo.png" alt="Effio logo" width="90" />
+				<img
+					src="/imgs/logo.png"
+					alt="Effio logo"
+					width="90"
+					class="drop-shadow-primary"
+				/>
 			</div>
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser && $page.url.pathname === '/dashboard'}
 				>
 					<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 				</a>
 				<a
 					href="/dashboard/test-creator"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-creator'}
 				>
@@ -37,7 +44,7 @@
 				</a>
 				<a
 					href="/dashboard/test-collection"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-collection'}
 				>
@@ -46,7 +53,7 @@
 				</a>
 				<a
 					href="/dashboard/test-history"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-history'}
 				>
@@ -54,7 +61,7 @@
 				</a>
 				<a
 					href="/community"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
 				>
 					<iconify-icon
 						icon="fluent:people-community-24-filled"
@@ -66,7 +73,7 @@
 	</aside>
 	<div>
 		<nav
-			class="flex items-center justify-end gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
+			class="flex items-center justify-end gap-2 px-4 py-2 overflow-hidden border-b-2 border-light_text_black_20"
 		>
 			<img
 				src={data.session?.user?.image}
@@ -76,13 +83,55 @@
 				class="object-cover rounded-full aspect-square"
 			/>
 			<div class="flex flex-col">
-				<span class="font-semibold uppercase text-light_text_black"
+				<span
+					class="font-semibold uppercase text-light_text_black dark:text-dark_text_white"
 					>{data.session?.user?.name}</span
 				>
-				<span class="text-light_text_black_40 text-body3"
+				<span
+					class="text-light_text_black dark:text-dark_text_white_40 text-body3"
 					>{data.session?.user?.email}</span
 				>
 			</div>
+			<button
+				class="relative grid h-10 place-content-center"
+				type="button"
+				on:click={() =>
+					($applicationStates.isDarkMode = !$applicationStates.isDarkMode)}
+			>
+				{#if $applicationStates['isDarkMode']}
+					<iconify-icon
+						icon="lucide:moon"
+						class="text-4xl"
+						in:fly={{
+							y: -100,
+							x: 0,
+							duration: 150,
+							delay: 150
+						}}
+						out:fly={{
+							y: 100,
+							x: 0,
+							duration: 150
+						}}
+					/>
+				{:else}
+					<iconify-icon
+						icon="mi:sun"
+						class="text-4xl"
+						in:fly={{
+							y: -100,
+							x: 0,
+							duration: 150,
+							delay: 150
+						}}
+						out:fly={{
+							y: 100,
+							x: 0,
+							duration: 150
+						}}
+					/>
+				{/if}
+			</button>
 			<button
 				class="ml-4"
 				type="button"

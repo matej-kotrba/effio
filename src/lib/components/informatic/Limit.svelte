@@ -9,9 +9,11 @@
 </script>
 
 <p class={twMerge('text-body2', classes)}>
-	<span class={`${current > max || current < min ? 'text-error' : 'text-light_primary'}`}
-		>{current}</span
-	><span class="text-light_text_black text-body2">/</span><span class="text-light_text_black"
-		>{max}</span
-	>
+	<span
+		class={`${
+			current > max || current < min ? 'text-error' : 'text-light_primary'
+		}`}>{current}</span
+	><span class="text-light_text_black dark:text-dark_text_white text-body2"
+		>/</span
+	><span class="text-light_text_black dark:text-dark_text_white">{max}</span>
 </p>

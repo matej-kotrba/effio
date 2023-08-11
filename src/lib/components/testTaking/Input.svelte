@@ -25,11 +25,11 @@
 			: 'outline-transparent'
 	} ${classes}`}
 >
-	<p class="text-light_text_black_40 text-body2">
+	<p class="text-light_text_black dark:text-dark_text_white_40 text-body2">
 		{$testObject.questions[questionIndex].displayType}
 	</p>
 	<div class="p-2">
-		<h4 class="text-light_text_black text-h4">
+		<h4 class="text-light_text_black dark:text-dark_text_white text-h4">
 			{$testObject.questions[questionIndex].title}
 		</h4>
 		<Space gap={15} />

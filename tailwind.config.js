@@ -5,6 +5,7 @@ export default {
 		extend: {
 			colors: {
 				light_primary: '#6433F0',
+				light_primary_transparent: '#6433F025',
 				light_primary_dark: '#5521e4',
 				light_secondary: '#646FD4',
 				light_terciary: '#9BA3EB',
@@ -18,6 +19,17 @@ export default {
 				light_white: '#EFEFEF',
 				light_whiter: '#F5F5F5',
 				light_grey: '#999999',
+				dark_primary: '#7331FF',
+				dark_primary_light: '#844aff',
+				dark_secondary: '#5926C7',
+				dark_terciary: '#430297',
+				dark_quaternary: '#0E002B',
+				dark_text_white: '#F3F3F3',
+				dark_text_white_80: '#F3F3F3cc',
+				dark_text_white_60: '#F3F3F399',
+				dark_text_white_40: '#F3F3F366',
+				dark_text_white_20: '#F3F3F333',
+
 				success: '#5cb85c',
 				error: '#B00020'
 			},
@@ -57,11 +69,15 @@ export default {
 			boxShadowColor: {
 				primary: '#6533f053'
 			},
+			dropShadow: {
+				primary: '0 0 6px var(--light-primary-transparent)'
+			},
 			screens: {
 				xs: '420px'
 			}
 		}
 	},
+	darkMode: 'class',
 	plugins: [require('daisyui')],
 	daisyui: {
 		styled: true,

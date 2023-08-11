@@ -44,14 +44,14 @@
 		autocomplete="off"
 		on:focusout={validateInput}
 		class={twMerge(
-			'peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black px-2 py-4 rounded-t-md shadow-lg w-full',
+			'peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white px-2 py-4 rounded-t-md shadow-lg w-full',
 			customStyles
 		)}
 		{...inputProperties}
 	/>
 	<label
 		for={titleName}
-		class="label_decoration absolute text-body1 -translate-y-1/2 left-2 text-light_text_black_60 top-1/2 pointer-events-none
+		class="label_decoration absolute text-body1 -translate-y-1/2 left-2 text-light_text_black dark:text-dark_text_white_60 top-1/2 pointer-events-none
 		{inputValue
 			? 'text-body2 text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-primary'
 			: ''}">{title}</label

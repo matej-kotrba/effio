@@ -140,7 +140,7 @@
 <div class="text-sm breadcrumbs">
 	<ul>
 		<li
-			class="text-light_text_black_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
 			class:done={testCreationProgress.templateDone}
 		>
 			<button
@@ -153,7 +153,7 @@
 			>
 		</li>
 		<li
-			class="text-light_text_black_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
 			class:done={testCreationProgress.constructingDone}
 		>
 			<button
@@ -167,7 +167,7 @@
 			>
 		</li>
 		<li
-			class="text-light_text_black_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
 			class:done={testCreationProgress.detailsDone}
 		>
 			Details
@@ -182,7 +182,7 @@
 	]}
 	color={'var(--light-primary)'}
 /> -->
-<h3 class="text-h4 text-light_text_black">
+<h3 class="text-h4 text-light_text_black dark:text-dark_text_white">
 	{#if testCreationProgress.templateDone === false}
 		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
 			>Start with picking a template</span
@@ -364,7 +364,7 @@
 				<dialog bind:this={finishModal} class="modal">
 					<form
 						method="dialog"
-						class="relative modal-box bg-light_whiter text-light_text_black"
+						class="relative modal-box bg-light_whiter text-light_text_black dark:text-dark_text_white"
 					>
 						<SuccessKeyframe
 							successMessage="Success!"

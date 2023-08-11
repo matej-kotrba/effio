@@ -40,7 +40,7 @@
 	</div>
 {/if}
 <Dialog bind:open={openDialog}>
-	<p class="text-center text-light_text_black">
+	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		You are about to submit the test, after that you want be able to change your
 		answers, do you want to proceed?
 	</p>
@@ -86,7 +86,7 @@
 {#if $testObject}
 	<div class="mx-auto max-w-[650px]">
 		<h2 class="font-thin text-h3">{data.testContent.testVersions[0].title}</h2>
-		<p class="text-light_text_black_60">
+		<p class="text-light_text_black dark:text-dark_text_white_60">
 			{data.testContent.testVersions[0].description}
 		</p>
 		<Space gap={40} />

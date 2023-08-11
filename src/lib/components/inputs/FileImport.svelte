@@ -31,7 +31,11 @@
 	class="relative w-full p-5 duration-300 rounded-xl shadow-surrounding max-w-xxs aspect-square box"
 >
 	<div>
-		<h4 class="text-center text-h6 text-light_text_black">Import file</h4>
+		<h4
+			class="text-center text-h6 text-light_text_black dark:text-dark_text_white"
+		>
+			Import file
+		</h4>
 		<div class="grid place-content-center">
 			<img
 				src={'/imgs/svgs/import.svg'}
