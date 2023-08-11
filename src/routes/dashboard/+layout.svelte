@@ -10,7 +10,7 @@
 	export let data: PageData;
 </script>
 
-<main class="h-full duration-100 grid__layout dark:bg-black">
+<main class="h-full duration-100 grid__layout dark:bg-dark_black">
 	<aside
 		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
 	>
@@ -26,14 +26,16 @@
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser && $page.url.pathname === '/dashboard'}
+					class:dark={$applicationStates['isDarkMode']}
 				>
 					<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 				</a>
 				<a
 					href="/dashboard/test-creator"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-creator'}
 				>
@@ -44,7 +46,8 @@
 				</a>
 				<a
 					href="/dashboard/test-collection"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-collection'}
 				>
@@ -53,7 +56,8 @@
 				</a>
 				<a
 					href="/dashboard/test-history"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-history'}
 				>
@@ -61,7 +65,7 @@
 				</a>
 				<a
 					href="/community"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 				>
 					<iconify-icon
 						icon="fluent:people-community-24-filled"
@@ -161,8 +165,12 @@
 		max-width: 300px;
 	}
 
-	.active {
+	.active:not(.dark) {
 		background-color: var(--light-primary);
 		color: var(--light-white);
+	}
+	.active.dark {
+		background-color: var(--dark-primary);
+		color: var(--dark-text_white);
 	}
 </style>
