@@ -1,7 +1,7 @@
 import type { GIFTQuestion } from "gift-pegjs"
 import type { QuestionTemplate } from "../trpc/router"
 
-const allowedTypes = ["MC"] as const
+const allowedTypes: GIFTQuestion["type"][] = ["MC", "Matching", "Short"]
 
 export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questionTemplates: QuestionTemplate[]) {
   const result = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
@@ -78,6 +78,65 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             }
           }
         }
+      }
+
+      else if (question.type === "Matching") {
+        const template = questionTemplates.find(item => item.slug === "connect")
+        if (!template) throw new Error("Template not found")
+
+        const matchedPairs = Object.fromEntries(question.matchPairs.map(item => {
+          return [crypto.randomUUID(), item.subanswer]
+        }))
+
+        return {
+          id: crypto.randomUUID(),
+          title: question.title,
+          questionType: "connect",
+          questionTypeId: template.id,
+          displayType: template.name,
+          errors: {},
+          content: {
+            type: "connect",
+            matchedAnswers: matchedPairs,
+            answers: question.matchPairs.map(item => {
+              return {
+                answer: item.subquestion.text,
+                matchedAnswerIndex: Object.entries(matchedPairs).find((entry) => {
+                  return entry[1] === item.subanswer
+                })?.[0]
+              }
+            })
+          }
+        } as QuestionClient
+      }
+
+      else if (question.type === "Short") {
+        const template = questionTemplates.find(item => item.slug === "write")
+        if (!template) throw new Error("Template not found")
+
+        return {
+          id: crypto.randomUUID(),
+          title: question.title,
+          questionType: "write",
+          questionTypeId: template.id,
+          displayType: template.name,
+          errors: {},
+          content: {
+            type: "write",
+            answers: question.choices.map(item => {
+
+              let resultText = item.text.text
+
+              if (item.text.format === "html") {
+                resultText = resultText.replaceAll(/<[^>]+>/g, '')
+              }
+
+              return {
+                answer: resultText,
+              }
+            })
+          }
+        } as QuestionClient
       }
 
     } catch (e) {

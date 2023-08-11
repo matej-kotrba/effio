@@ -30,8 +30,8 @@ dependencies:
     specifier: ^4.3.3
     version: 4.3.3
   gift-format-generator:
-    specifier: ^0.2.7
-    version: 0.2.7
+    specifier: ^0.2.8
+    version: 0.2.8
   gift-pegjs:
     specifier: ^0.2.1
     version: 0.2.1
@@ -1489,8 +1489,8 @@ packages:
     resolution: {integrity: sha512-Hm0ixYtaSZ/V7C8FJrtZIuBBI+iSgL+1Aq82zSu8VQNB4S3Gk8e7Qs3VwBDJAhmRZcFqkl3tQu36g/Foh5I5ig==}
     dev: true
 
-  /gift-format-generator@0.2.7:
-    resolution: {integrity: sha512-pas4Ig7+SaCFE74bDzFfbgA2SmmyD5NFqTnzGWrY7XyKuxAbYb7kyQOf3QMUHFzc7nJ9jtAFUT41oRLgHN5INw==}
+  /gift-format-generator@0.2.8:
+    resolution: {integrity: sha512-xpBb5TI+RetDMGFVdwmyjE+bsEEq9qBJeJmKlewOi7u1uEaUOrmZR55LMbK7KGg+M7Qx0g+16hfiZGlQKE/fnQ==}
     dev: false
 
   /gift-pegjs@0.2.1:
