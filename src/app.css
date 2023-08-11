@@ -20,6 +20,16 @@
 	--light-white: #efefef;
 	--light-whiter: #f5f5f5;
 	--light-grey: #999999;
+	--dark-primary: #7331ff;
+	--dark-primary_light: #844aff;
+	--dark-secondary: #5926c7;
+	--dark-terciary: #430297;
+	--dark-quaternary: #0e002b;
+	--dark-text_white: #f3f3f3;
+	--dark-text_white_80: #f3f3f3cc;
+	--dark-text_white_60: #f3f3f399;
+	--dark-text_white_40: #f3f3f366;
+	--dark-text_white_20: #f3f3f333;
 	--success: #5cb85c;
 	--error: #b00020;
 
