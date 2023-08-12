@@ -19,7 +19,6 @@
 		class="font-semibold uppercase text-light_text_black dark:text-dark_text_white"
 		>{title}</span
 	>
-	<!-- <input type="checkbox" class={`toggle toggle-primary bg-white`} checked={isChecked} /> -->
 	<button
 		on:click={() => {
 			isChecked = !isChecked;
