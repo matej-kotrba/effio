@@ -46,7 +46,7 @@
 >
 	<label
 		for={titleName}
-		class="duration-150 text-light_text_black dark:text-dark_text_white_80 text-body2 group-focus-within:text-light_primary"
+		class="duration-150 text-light_text_black dark:text-dark_text_white_80 text-body2 dark:group-focus-within:text-dark_primary group-focus-within:text-light_primary"
 		>{title}</label
 	>
 	<div class="relative">
@@ -68,9 +68,9 @@
 			autocomplete="off"
 			maxlength={doesLimit ? max : undefined}
 			class={twMerge(
-				`resize-none min-h-[150px] outline-none bg-white
+				`resize-none min-h-[150px] outline-none bg-white dark:bg-dark_blackless
 		overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
-		px-2 py-4 rounded-md shadow-lg w-full
+		px-2 py-4 rounded-md shadow-lg w-full dark:group-focus-within:outline-dark_primary
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
      `,
 				customStyles

@@ -30,6 +30,7 @@ export default {
 				dark_text_white_60: '#F3F3F399',
 				dark_text_white_40: '#F3F3F366',
 				dark_text_white_20: '#F3F3F333',
+				dark_blackless: '#1e085b',
 				dark_black: '#0B021F',
 				dark_blacker: '#0E002B',
 				success: '#5cb85c',

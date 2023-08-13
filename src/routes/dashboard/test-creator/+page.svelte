@@ -48,7 +48,7 @@
 	// TODO: Change this back to false
 	let testCreationProgress = {
 		templateDone: true,
-		constructingDone: false,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -140,7 +140,7 @@
 <div class="text-sm breadcrumbs">
 	<ul>
 		<li
-			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.templateDone}
 		>
 			<button
@@ -153,7 +153,7 @@
 			>
 		</li>
 		<li
-			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.constructingDone}
 		>
 			<button
@@ -167,7 +167,7 @@
 			>
 		</li>
 		<li
-			class="text-light_text_black dark:text-dark_text_white_80 text-body2"
+			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.detailsDone}
 		>
 			Details
@@ -430,5 +430,9 @@
 <style>
 	.done {
 		color: var(--light-primary);
+	}
+
+	:global(.dark) .done {
+		color: var(--dark-primary);
 	}
 </style>
