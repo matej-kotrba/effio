@@ -20,7 +20,8 @@
 	--light-white: #efefef;
 	--light-whiter: #f5f5f5;
 	--light-grey: #999999;
-	--dark-primary: #7331ff;
+
+	--dark-primary: #9361ff;
 	--dark-primary_light: #844aff;
 	--dark-secondary: #5926c7;
 	--dark-terciary: #430297;
@@ -30,6 +31,8 @@
 	--dark-text_white_60: #f3f3f399;
 	--dark-text_white_40: #f3f3f366;
 	--dark-text_white_20: #f3f3f333;
+	--dark_black: #0b021f;
+	--dark_blacker: #070016;
 	--success: #5cb85c;
 	--error: #b00020;
 

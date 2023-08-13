@@ -194,12 +194,15 @@
 </script>
 
 <div
-	class="relative h-full bg-light_white roudned-md text-light_text_black dark:text-dark_text_white grid__container"
+	class="relative h-full bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white grid__container"
 >
 	<div class="p-4">
 		<!-- The dropdown for new input -->
 		<dialog class="modal" bind:this={newInputModal}>
-			<form method="dialog" class="modal-box max-w-[1000px] bg-light_whiter">
+			<form
+				method="dialog"
+				class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_blacker"
+			>
 				<h3
 					class="text-lg font-bold text-light_text_black dark:text-dark_text_white"
 				>
@@ -213,7 +216,7 @@
 						<button
 							type="button"
 							on:click={() => onNewInputClick(input)}
-							class="bg-white rounded-lg shadow-lg aspect-square new-input-button"
+							class="rounded-lg shadow-lg aspect-square new-input-button new-input-button-dark"
 						>
 							<span class="text-light_text_black dark:text-dark_text_white"
 								>{input.name}</span
@@ -342,11 +345,11 @@
 	}
 
 	.new-input-button {
-		background-image: radial-gradient(
+		/* background-image: radial-gradient(
 			ellipse at 50% 0,
 			white 60%,
 			var(--light-primary) 300%
-		);
+		); */
 		transition: 0.4s ease;
 	}
 

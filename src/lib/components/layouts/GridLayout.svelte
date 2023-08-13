@@ -5,42 +5,29 @@
 	export let darkColor: string = 'bg-dark_secondary';
 </script>
 
-<section>
-	<div class="a">
-		<HoverLeaning>
-			<div
-				class={`card ${color?.startsWith('bg-') ? color : `bg-[${color}]`} ${
+<!-- class={`card ${color?.startsWith('bg-') ? color : `bg-[${color}]`} ${
 					darkColor?.startsWith('bg-')
 						? 'dark:' + darkColor
 						: `dark:bg-[${darkColor}]`
-				}`}
-			>
+				}`} -->
+<section>
+	<div class="a">
+		<HoverLeaning>
+			<div class="card bg-light_secondary dark:bg-dark_secondary">
 				<slot name="a" />
 			</div>
 		</HoverLeaning>
 	</div>
 	<div class="b">
 		<HoverLeaning>
-			<div
-				class={`card ${color?.startsWith('bg-') ? color : `bg-[${color}]`} ${
-					darkColor?.startsWith('bg-')
-						? 'dark:' + darkColor
-						: `dark:bg-[${darkColor}]`
-				}`}
-			>
+			<div class="card bg-light_secondary dark:bg-dark_secondary">
 				<slot name="b" />
 			</div>
 		</HoverLeaning>
 	</div>
 	<div class="c">
 		<HoverLeaning>
-			<div
-				class={`card ${color?.startsWith('bg-') ? color : `bg-[${color}]`} ${
-					darkColor?.startsWith('bg-')
-						? 'dark:' + darkColor
-						: `dark:bg-[${darkColor}]`
-				}`}
-			>
+			<div class="card bg-light_secondary dark:bg-dark_secondary">
 				<slot name="c" />
 			</div>
 		</HoverLeaning>
