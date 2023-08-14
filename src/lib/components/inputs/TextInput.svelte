@@ -44,7 +44,7 @@
 		autocomplete="off"
 		on:focusout={validateInput}
 		class={twMerge(
-			'peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white px-2 py-4 rounded-t-md shadow-lg w-full',
+			'peer outline-none bg-white overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white px-2 py-4 shadow-lg w-full',
 			customStyles
 		)}
 		{...inputProperties}

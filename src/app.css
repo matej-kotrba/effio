@@ -26,12 +26,12 @@
 	--dark-secondary: #330071;
 	--dark-terciary: #150050;
 	--dark-quaternary: #0e002b;
-	--dark-text_white: #f3f3f3;
-	--dark-text_white_80: #f3f3f3cc;
-	--dark-text_white_60: #f3f3f399;
-	--dark-text_white_40: #f3f3f366;
-	--dark-text_white_20: #f3f3f333;
-	--dark_black: #121212;
+	--dark-text-white: #f3f3f3;
+	--dark-text-white-80: #f3f3f3cc;
+	--dark-text-white-60: #f3f3f399;
+	--dark-text-white-40: #f3f3f366;
+	--dark-text-white-20: #f3f3f333;
+	--dark_black: #111111;
 	--dark_blacker: #000000;
 	--success: #5cb85c;
 	--error: #b00020;

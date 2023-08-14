@@ -31,7 +31,7 @@ export default {
 				dark_text_white_40: '#F3F3F366',
 				dark_text_white_20: '#F3F3F333',
 				dark_blackless: '#5d5795',
-				dark_black: '#121212',
+				dark_black: '#111111',
 				dark_blacker: '#000000',
 				success: '#5cb85c',
 				error: '#B00020'

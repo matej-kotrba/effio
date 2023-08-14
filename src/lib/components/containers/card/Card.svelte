@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full p-3 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
+	class="flex flex-col justify-between w-full p-3 bg-white dark:bg-dark_secondary rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
 >
 	<div>
 		<a href={redirectLink} class="relative block group">

@@ -171,6 +171,6 @@
 	}
 	.active.dark {
 		background-color: var(--dark-primary);
-		color: var(--dark-text_white);
+		color: var(--dark-text-white);
 	}
 </style>

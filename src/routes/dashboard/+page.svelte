@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import type { ChartData, ChartConfiguration } from 'chart.js/auto/auto';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data;
 
@@ -29,7 +30,9 @@
 						data.testCreationData?.map((data) => Number(data.count) || 0) || [],
 					backgroundColor: [
 						getComputedStyle(document.documentElement).getPropertyValue(
-							'--light-primary'
+							$applicationStates.isDarkMode
+								? '--dark-primary'
+								: '--light-primary'
 						) || '#6722e6'
 					],
 					borderWidth: 2,
@@ -57,18 +60,32 @@
 				plugins: {
 					legend: {
 						position: 'bottom',
-						display: true,
+						display: false,
 						labels: {
 							usePointStyle: true,
 							padding: 10,
 							font: {
 								size: 14
-							}
+							},
+							color: window
+								.getComputedStyle(document.body)
+								.getPropertyValue(
+									$applicationStates.isDarkMode
+										? '--dark-text-white-80'
+										: '--light-text-black-80'
+								)
 						}
 					},
 					title: {
 						display: true,
-						text: 'Tests created monthly'
+						text: 'Tests created monthly',
+						color: window
+							.getComputedStyle(document.body)
+							.getPropertyValue(
+								$applicationStates.isDarkMode
+									? '--dark-text-white-80'
+									: '--light-text-black-80'
+							)
 					}
 				}
 			}
@@ -83,7 +100,9 @@
 						data.testTakenData?.map((data) => Number(data.count) || 0) || [],
 					backgroundColor: [
 						getComputedStyle(document.documentElement).getPropertyValue(
-							'--light-primary'
+							$applicationStates.isDarkMode
+								? '--dark-primary'
+								: '--light-primary'
 						) || '#6722e6'
 					],
 					borderWidth: 2,
@@ -117,12 +136,26 @@
 							padding: 10,
 							font: {
 								size: 14
-							}
+							},
+							color: window
+								.getComputedStyle(document.body)
+								.getPropertyValue(
+									$applicationStates.isDarkMode
+										? '--dark-text-white-80'
+										: '--light-text-black-80'
+								)
 						}
 					},
 					title: {
 						display: true,
-						text: 'Tests taken monthly'
+						text: 'Tests taken monthly',
+						color: window
+							.getComputedStyle(document.body)
+							.getPropertyValue(
+								$applicationStates.isDarkMode
+									? '--dark-text-white-80'
+									: '--light-text-black-80'
+							)
 					}
 				}
 			}

@@ -42,7 +42,7 @@
 		<table class="table">
 			<!-- head -->
 			<thead>
-				<tr>
+				<tr class="dark:text-dark_text_white">
 					<th>Name</th>
 					<th>Taken at</th>
 					<th>Description</th>
@@ -53,7 +53,7 @@
 
 				{#each records as record}
 					<tr
-						class="cursor-pointer hover:bg-base-200"
+						class="cursor-pointer hover:bg-base-200 dark:hover:bg-dark_text_white_20 dark:text-dark_text_white"
 						on:click={() => {
 							goto('/dashboard/test-history/records/' + record.id);
 						}}
