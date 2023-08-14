@@ -7,12 +7,15 @@
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
 	import { asnwerSchema } from '~schemas/textInput';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let indexParent: number;
 
 	// Reference to the test object content
 	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
 	$: answersLength = content.answers.length;
+
+	$: isDarkMode = $applicationStates.isDarkMode;
 
 	const QUESTION_LIMIT = 10;
 
@@ -70,7 +73,7 @@
 					<button
 						type="button"
 						data-tip="Delete answer"
-						class={`tooltip grid px-2 group place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md ${
+						class={`tooltip grid px-2 group place-content-center bg-light_white dark:bg-dark_black text-error hover:bg-error hover:text-white rounded-l-md ${
 							!(content.answers.length > 2)
 								? 'text-gray-500 hover:text-gray-500 hover:bg-light_white'
 								: ''
@@ -101,8 +104,12 @@
 						class={`px-2 grid tooltip place-content-center rounded-r-md`}
 						style={`${
 							index === content.correctAnswerIndex
-								? 'background-color: var(--success); color: var(--light-white);'
-								: 'background-color: var(--light-white); color: var(--success);'
+								? `background-color: var(--success); color: var(${
+										isDarkMode ? '--dark_black' : '--light-white'
+								  });`
+								: `background-color: var(${
+										isDarkMode ? '--dark_black' : '--light-white'
+								  }); color: var(--success);`
 						}}`}
 						on:click={() => (content['correctAnswerIndex'] = index)}
 					>

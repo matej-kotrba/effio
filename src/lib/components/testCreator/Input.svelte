@@ -27,7 +27,7 @@ will be used in the test creator -->
 </script>
 
 <div
-	class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter dark:bg-dark_terciary"
+	class="w-full p-4 rounded-lg shadow-lg shadow-light_text_black_20 bg-light_whiter dark:bg-dark_grey"
 >
 	<div class="grid grid-cols-3">
 		<p
