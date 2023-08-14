@@ -86,7 +86,7 @@
 							e.dataTransfer.effectAllowed = 'move';
 						}
 					}}
-					class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none dark:bg-dark_quaternary hover:text-light_primary dark:hover:text-dark_primary hover:bg-slate-100 shadow-light_text_black_40 aspect-square place-content-center border-light_primary dark:border-dark_primary"
+					class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none dark:bg-dark_quaternary hover:text-light_primary dark:hover:text-dark_primary hover:bg-slate-100 dark:hover:bg-dark_terciary shadow-light_text_black_40 aspect-square place-content-center border-light_primary dark:border-dark_primary"
 				>
 					{input.name}
 				</div>

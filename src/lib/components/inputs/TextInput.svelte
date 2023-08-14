@@ -29,7 +29,7 @@
 <div
 	class={twMerge(
 		`underline_effect w-full before:content-[''] relative before:absolute before:w-full
-  before:h-0.5 before:bg-light_primary before:top-full before:left-0 before:origin-center before:duration-200
+  before:h-0.5 before:bg-light_primary dark:before:bg-dark_primary before:top-full before:left-0 before:origin-center before:duration-200
 	 before:scale-0 before:focus-within:scale-100 border-b-[0.125rem]
 	 border-light_text_black_20`,
 		customContainerStyles
@@ -53,7 +53,7 @@
 		for={titleName}
 		class="label_decoration absolute text-body1 -translate-y-1/2 left-2 text-light_text_black dark:text-dark_text_white_60 top-1/2 pointer-events-none
 		{inputValue
-			? 'text-body2 text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-primary'
+			? 'text-body2 text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-primary dark:peer-focus-within:text-dark_primary'
 			: ''}">{title}</label
 	>
 </div>

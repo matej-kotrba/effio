@@ -15,14 +15,14 @@
 		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
 	>
 		<div class="flex flex-col items-center">
-			<div class="w-[90px] aspect-square">
+			<a class="w-[90px] aspect-square" href="/">
 				<img
 					src="/imgs/logo.png"
 					alt="Effio logo"
 					width="90"
 					class="drop-shadow-primary"
 				/>
-			</div>
+			</a>
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
