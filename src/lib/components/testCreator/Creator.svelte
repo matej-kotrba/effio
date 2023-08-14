@@ -216,7 +216,7 @@
 						<button
 							type="button"
 							on:click={() => onNewInputClick(input)}
-							class="rounded-lg shadow-lg aspect-square new-input-button new-input-button-dark"
+							class="rounded-lg shadow-lg aspect-square new-input-button dark:bg-dark_blackless bg-light_whiter"
 						>
 							<span class="text-light_text_black dark:text-dark_text_white"
 								>{input.name}</span

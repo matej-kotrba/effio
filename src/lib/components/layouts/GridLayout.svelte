@@ -1,8 +1,5 @@
 <script lang="ts">
 	import HoverLeaning from '../effects/HoverLeaning.svelte';
-
-	export let color: string = 'bg-light_secondary';
-	export let darkColor: string = 'bg-dark_secondary';
 </script>
 
 <!-- class={`card ${color?.startsWith('bg-') ? color : `bg-[${color}]`} ${
@@ -13,21 +10,21 @@
 <section>
 	<div class="a">
 		<HoverLeaning>
-			<div class="card bg-light_secondary dark:bg-dark_secondary">
+			<div class="card bg-light_terciary dark:bg-dark_terciary">
 				<slot name="a" />
 			</div>
 		</HoverLeaning>
 	</div>
 	<div class="b">
 		<HoverLeaning>
-			<div class="card bg-light_secondary dark:bg-dark_secondary">
+			<div class="card bg-light_terciary dark:bg-dark_terciary">
 				<slot name="b" />
 			</div>
 		</HoverLeaning>
 	</div>
 	<div class="c">
 		<HoverLeaning>
-			<div class="card bg-light_secondary dark:bg-dark_secondary">
+			<div class="card bg-light_terciary dark:bg-dark_terciary">
 				<slot name="c" />
 			</div>
 		</HoverLeaning>

@@ -44,13 +44,13 @@
 				<div class="flex items-center gap-4">
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="btn bg-light_primary dark:bg-light_primary_dark text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
+						class="btn bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
 					>
 						{data.session?.user ? 'Go to Dashboard' : 'Log In'}
 					</a>
 					<button
 						on:click={() => {}}
-						class="btn bg-light_white text-light_primary hover:bg-light_white hover:brightness-125"
+						class="btn bg-light_white dark:bg-dark_secondary text-light_primary dark:text-dark_text_white hover:bg-light_white hover:brightness-125"
 						type="button">Read More</button
 					>
 				</div>
@@ -75,7 +75,7 @@
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<img
 		src={$applicationStates.isDarkMode
-			? '/imgs/layer_dark.svg'
+			? '/imgs/layer_dark2.svg'
 			: '/imgs/layer2.svg'}
 		alt="Layer"
 		class="w-full"
@@ -203,11 +203,6 @@
 	}
 
 	.hero__section_dark {
-		background: linear-gradient(
-			134deg,
-			#6b37ff 0%,
-			#1a0e35 51.56%,
-			#8044ff 100%
-		);
+		background: linear-gradient(180deg, #330071 0%, #0e002b 100%);
 	}
 </style>
