@@ -11,7 +11,9 @@
 <p class={twMerge('text-body2', classes)}>
 	<span
 		class={`${
-			current > max || current < min ? 'text-error' : 'text-light_primary'
+			current > max || current < min
+				? 'text-error dark:text-dark_error'
+				: 'text-light_primary dark:text-dark_primary'
 		}`}>{current}</span
 	><span class="text-light_text_black dark:text-dark_text_white text-body2"
 		>/</span

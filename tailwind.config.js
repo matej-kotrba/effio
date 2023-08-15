@@ -35,7 +35,8 @@ export default {
 				dark_black: '#111111',
 				dark_blacker: '#000000',
 				success: '#5cb85c',
-				error: '#B00020'
+				error: '#B00020',
+				dark_error: '#e12345'
 			},
 			fontSize: {
 				h1: '65px',

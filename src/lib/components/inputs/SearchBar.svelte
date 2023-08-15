@@ -32,7 +32,7 @@
 	<button
 		type="button"
 		on:click={eraseInputText}
-		class="relative flex items-center gap-1 px-2 py-1 duration-150 rounded-md hover:text-error"
+		class="relative flex items-center gap-1 px-2 py-1 duration-150 rounded-md hover:text-error dark:text-dark_error"
 	>
 		<iconify-icon icon="ic:round-close" class="text-3xl" />
 	</button>

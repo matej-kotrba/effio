@@ -102,7 +102,7 @@
 			/>
 			<Space gap={10} />
 			{#if $testObject.questions[index].errors.content}
-				<p class="text-error text-body2">
+				<p class="text-error dark:text-dark_error text-body2">
 					{$testObject.questions[index].errors.content}
 				</p>
 			{/if}
@@ -110,7 +110,7 @@
 		<Space gap={40} />
 		<div class="flex items-center justify-between">
 			{#if submitError}
-				<p class="text-error text-body2">{submitError}</p>
+				<p class="text-error dark:text-dark_error text-body2">{submitError}</p>
 			{/if}
 			{#if result === null}
 				<BasicButton

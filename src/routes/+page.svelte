@@ -180,7 +180,7 @@
 					<div class="max-h-full mt-auto ml-auto w-fit">
 						<button
 							on:click={() => {}}
-							class="btn bg-light_primary text-light_white hover:bg-light_primary"
+							class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
 							type="button">Log In</button
 						>
 					</div>

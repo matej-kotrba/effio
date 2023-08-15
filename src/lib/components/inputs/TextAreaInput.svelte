@@ -68,7 +68,7 @@
 			autocomplete="off"
 			maxlength={doesLimit ? max : undefined}
 			class={twMerge(
-				`resize-none min-h-[150px] outline-none bg-white dark:bg-dark_blackless
+				`resize-none min-h-[150px] outline-none bg-white dark:bg-dark_light_grey dark:bg-dark_blackless
 		overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 		px-2 py-4 rounded-md shadow-lg w-full dark:group-focus-within:outline-dark_primary
      outline-1 outline-transparent outline group-focus-within:outline-primary duration-150

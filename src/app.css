@@ -36,6 +36,7 @@
 	--dark_black: #111111;
 	--success: #5cb85c;
 	--error: #b00020;
+	--dark-error: #e12345;
 
 	color: var(--light-text-black);
 }
@@ -51,5 +52,5 @@ body {
 }
 
 *::selection {
-	@apply bg-light_primary text-light_white;
+	@apply bg-light_primary text-light_white dark:bg-dark_primary;
 }

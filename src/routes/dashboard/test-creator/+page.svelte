@@ -354,7 +354,7 @@
 					}}
 				/>
 				<p
-					class={`text-body2 text-error ${
+					class={`text-body2 text-error dark:text-dark_error ${
 						$testObject.errors.title ? 'opacity-100' : 'opacity-0'
 					}`}
 				>
@@ -375,7 +375,7 @@
 					}}
 				/>
 				<p
-					class={`text-body2 text-error ${
+					class={`text-body2 text-error dark:text-dark_error ${
 						$testObject.errors.description ? 'opacity-100' : 'opacity-0'
 					}`}
 				>

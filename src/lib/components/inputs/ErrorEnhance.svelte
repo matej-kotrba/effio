@@ -12,7 +12,11 @@
 
 <div>
 	<slot />
-	<p class={`text-body2 text-error ${error ? 'opacity-100' : 'opacity-0'}`}>
+	<p
+		class={`text-body2 text-error dark:text-dark_error ${
+			error ? 'opacity-100' : 'opacity-0'
+		}`}
+	>
 		{error || 'Placeholder error'}
 	</p>
 </div>

@@ -7,6 +7,7 @@
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
 	import { asnwerSchema } from '~schemas/textInput';
+	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 
 	export let indexParent: number;
 
@@ -61,8 +62,8 @@
 			{#key answersLength}
 				<div
 					class={answersLength === QUESTION_LIMIT
-						? 'text-error'
-						: 'text-light_primary'}
+						? 'text-error dark:text-dark_error'
+						: 'text-light_primary dark:text-dark_primary'}
 					in:fly={{ x: 0, y: -20 }}
 				>
 					{answersLength}
@@ -76,24 +77,10 @@
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
 				<div class="flex">
-					<button
-						type="button"
-						data-tip="Delete answer"
-						class={`tooltip grid px-2 group place-content-center bg-light_white text-error hover:bg-error hover:text-white rounded-l-md ${
-							!(content.answers.length > 2)
-								? 'text-gray-500 hover:text-gray-500 hover:bg-light_white'
-								: ''
-						}`}
-						disabled={!(content.answers.length > 2)}
-						style="transition: 200ms background-color, 200ms color;"
-						on:click={() => deleteQuestion(index)}
-					>
-						<Icon
-							icon="material-symbols:close-rounded"
-							class="text-3xl group-hover:rotate-90"
-							style="transition: 200ms transform;"
-						/>
-					</button>
+					<RemoveButton
+						deleteQuestion={() => deleteQuestion(index)}
+						questionLength={content.answers.length}
+					/>
 					<div class="relative grow-[1] grid grid-cols-2 gap-1">
 						<TextInput
 							title="Option {index + 1}"
@@ -116,7 +103,7 @@
 					</div>
 				</div>
 				<p
-					class={`text-body2 text-error ${
+					class={`text-body2 text-error dark:text-dark_error ${
 						!content.answers[index].error ? 'opacity-0' : ''
 					}`}
 				>

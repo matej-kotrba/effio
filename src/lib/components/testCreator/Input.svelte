@@ -54,7 +54,7 @@ will be used in the test creator -->
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
-				class="text-3xl group-hover:rotate-90 text-light_text_black dark:text-dark_text_white group-hover:text-error"
+				class="text-3xl group-hover:rotate-90 text-light_text_black dark:text-dark_text_white group-hover:text-error dark:text-dark_error"
 				style="transition: 200ms transform;"
 			/>
 		</button>
@@ -70,7 +70,7 @@ will be used in the test creator -->
 		/>
 	</h6>
 	{#if titleError || $testObject.questions[index].errors.title}
-		<p class="text-error text-body2">
+		<p class="text-error dark:text-dark_error text-body2">
 			{titleError || $testObject.questions[index].errors.title}
 		</p>
 	{/if}

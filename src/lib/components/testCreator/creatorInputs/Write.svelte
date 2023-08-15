@@ -52,8 +52,8 @@
 			{#key answersLength}
 				<div
 					class={answersLength === QUESTION_LIMIT
-						? 'text-error'
-						: 'text-light_primary'}
+						? 'text-error dark:text-dark_error'
+						: 'text-light_primary dark:text-dark_primary'}
 					in:fly={{ x: 0, y: -20 }}
 				>
 					{answersLength}
@@ -87,7 +87,7 @@
 					/>
 				</div>
 				<p
-					class={`text-body2 text-error ${
+					class={`text-body2 text-error dark:text-dark_error ${
 						!content.answers[index].error ? 'opacity-0' : ''
 					}`}
 				>
