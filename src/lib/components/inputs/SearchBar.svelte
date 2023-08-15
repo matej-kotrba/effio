@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class="flex w-full overflow-hidden rounded-md bg-light_whiter max-w-[700px] mx-auto shadow-md"
+	class="flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_grey max-w-[700px] mx-auto shadow-md"
 >
 	<button
 		type="button"

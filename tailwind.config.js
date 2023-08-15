@@ -75,7 +75,8 @@ export default {
 				primary: '#6533f053'
 			},
 			dropShadow: {
-				primary: '0 0 6px var(--light-primary-transparent)'
+				primary: '0 0 6px var(--light-primary-transparent)',
+				primary_dark: '0 0 6px var(--dark-primary-transparent)'
 			},
 			screens: {
 				xs: '420px'

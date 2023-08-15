@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="w-[90%] mx-auto h-1 rounded-full bg-light_primary duration-150 {isVisible
+	class="w-[90%] mx-auto h-1 rounded-full bg-light_primary dark:bg-dark_primary duration-150 {isVisible
 		? 'opacity-100'
 		: 'opacity-0'} {classes}"
 />

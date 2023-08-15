@@ -16,8 +16,8 @@
 	type="button"
 	on:click={onButtonClick}
 	class="px-6 py-2 duration-150 text-sm {isActive
-		? 'bg-light_terciary text-white'
-		: 'bg-white text-light_text_black dark:text-dark_text_white'} rounded-md shadow-md"
+		? 'bg-light_terciary dark:bg-dark_secondary text-white'
+		: 'bg-white text-light_text_black dark:text-dark_text_white dark:bg-dark_light_grey'} rounded-md shadow-md"
 >
 	{title}
 </button>

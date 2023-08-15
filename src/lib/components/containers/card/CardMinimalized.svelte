@@ -11,7 +11,7 @@
 </script>
 
 <div
-	class="group flex flex-col justify-between gap-2 text-center bg-light_quaternary cursor-pointer
+	class="group flex flex-col justify-between gap-2 text-center bg-light_quaternary dark:bg-dark_quaternary cursor-pointer
 	 shadow-md w-full max-w-[300px] text-light_text_black dark:text-dark_text_white p-2 rounded-md relative min-h-[180px] overflow-hidden
 	 hover:scale-105 hover:shadow-lg duration-150"
 >
@@ -74,8 +74,12 @@
 		pointer-events: none;
 	}
 
+	:global(.dark) .group::after {
+		background-color: var(--dark-text-white-60);
+	}
+
 	.group:hover::after {
-		animation: slide 0.8s linear forwards;
+		animation: slide 0.6s linear forwards;
 	}
 	@keyframes slide {
 		from {

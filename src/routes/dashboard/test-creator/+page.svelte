@@ -218,7 +218,7 @@
 						imageSrc={templates[index].image}
 						onClick={() => (templatesActive = index)}
 						customClasses={index === templatesActive
-							? ' border-light_primary border-4 border-solid shadow-primary shadow-2xl'
+							? ' border-light_primary dark:border-dark_primary border-4 border-solid shadow-primary dark:shadow-primary_dark shadow-2xl'
 							: ' border-transparent border-4 border-solid'}
 					/>
 				{/each}
@@ -362,7 +362,7 @@
 				<dialog bind:this={finishModal} class="modal">
 					<form
 						method="dialog"
-						class="relative modal-box bg-light_whiter text-light_text_black dark:text-dark_text_white"
+						class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
 					>
 						<SuccessKeyframe
 							successMessage="Success!"
@@ -408,13 +408,13 @@
 							<button
 								type="button"
 								disabled={isSubmitting}
-								class="btn btn-outline text-light_secondary outline-light_primary hover:text-light_primary hover:bg-gray-200"
+								class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
 								on:click={() => postTestToDB(false)}>Saved as draft</button
 							>
 							<button
 								type="button"
 								disabled={isSubmitting}
-								class="btn bg-light_primary text-light_whiter hover:bg-light_secondary"
+								class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
 								on:click={() => postTestToDB(true)}>Published</button
 							>
 						</div>

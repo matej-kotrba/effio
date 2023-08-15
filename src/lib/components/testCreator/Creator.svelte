@@ -201,7 +201,7 @@
 		<dialog class="modal" bind:this={newInputModal}>
 			<form
 				method="dialog"
-				class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_blacker"
+				class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_grey"
 			>
 				<h3
 					class="text-lg font-bold text-light_text_black dark:text-dark_text_white"
@@ -216,7 +216,7 @@
 						<button
 							type="button"
 							on:click={() => onNewInputClick(input)}
-							class="rounded-lg shadow-lg aspect-square new-input-button dark:bg-dark_blackless bg-light_whiter"
+							class="rounded-lg shadow-lg aspect-square new-input-button dark:bg-dark_blackless bg-light_whiter dark:bg-dark_light_grey"
 						>
 							<span class="text-light_text_black dark:text-dark_text_white"
 								>{input.name}</span
