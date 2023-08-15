@@ -17,7 +17,7 @@
 	$: content = $testObject.questions[indexParent].content as TrueFalseQuestion;
 	$: answersLength = content.answers.length;
 
-	$: isDarkMode = $applicationStates.isDarkMode;
+	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
 
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);

@@ -9,8 +9,9 @@
 		WRITE_ANSWER_MIN,
 		writeAnswerSchema
 	} from '~schemas/textInput';
-	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
+
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 
 	export let indexParent: number;
 
@@ -66,7 +67,13 @@
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
-				<div class="flex">
+				<div class="flex items-start gap-1">
+					<RemoveButton
+						questionLimit={1}
+						deleteQuestion={() => deleteQuestion(index)}
+						questionLength={answersLength}
+						class="w-10 h-10 rounded-full"
+					/>
 					<TextInputSimple
 						title="Answer option {index + 1}"
 						titleName="titleAnswer{indexParent}"

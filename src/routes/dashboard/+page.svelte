@@ -30,7 +30,7 @@
 						data.testCreationData?.map((data) => Number(data.count) || 0) || [],
 					backgroundColor: [
 						getComputedStyle(document.documentElement).getPropertyValue(
-							$applicationStates.isDarkMode
+							$applicationStates.darkMode.isDarkMode
 								? '--dark-primary'
 								: '--light-primary'
 						) || '#6722e6'
@@ -70,7 +70,7 @@
 							color: window
 								.getComputedStyle(document.body)
 								.getPropertyValue(
-									$applicationStates.isDarkMode
+									$applicationStates.darkMode.isDarkMode
 										? '--dark-text-white-80'
 										: '--light-text-black-80'
 								)
@@ -82,7 +82,7 @@
 						color: window
 							.getComputedStyle(document.body)
 							.getPropertyValue(
-								$applicationStates.isDarkMode
+								$applicationStates.darkMode.isDarkMode
 									? '--dark-text-white-80'
 									: '--light-text-black-80'
 							)
@@ -100,7 +100,7 @@
 						data.testTakenData?.map((data) => Number(data.count) || 0) || [],
 					backgroundColor: [
 						getComputedStyle(document.documentElement).getPropertyValue(
-							$applicationStates.isDarkMode
+							$applicationStates.darkMode.isDarkMode
 								? '--dark-primary'
 								: '--light-primary'
 						) || '#6722e6'
@@ -140,7 +140,7 @@
 							color: window
 								.getComputedStyle(document.body)
 								.getPropertyValue(
-									$applicationStates.isDarkMode
+									$applicationStates.darkMode.isDarkMode
 										? '--dark-text-white-80'
 										: '--light-text-black-80'
 								)
@@ -152,7 +152,7 @@
 						color: window
 							.getComputedStyle(document.body)
 							.getPropertyValue(
-								$applicationStates.isDarkMode
+								$applicationStates.darkMode.isDarkMode
 									? '--dark-text-white-80'
 									: '--light-text-black-80'
 							)

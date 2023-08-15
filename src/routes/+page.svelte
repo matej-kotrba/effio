@@ -20,7 +20,9 @@
 <header>
 	<section
 		class={`px-2 py-20 xl:px-8 ${
-			$applicationStates.isDarkMode ? 'hero__section_dark' : 'hero__section'
+			$applicationStates.darkMode.isDarkMode
+				? 'hero__section_dark'
+				: 'hero__section'
 		}`}
 	>
 		<div class="container flex w-full py-10 mx-auto h-fit">
@@ -74,7 +76,7 @@
 </header>
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<img
-		src={$applicationStates.isDarkMode
+		src={$applicationStates.darkMode.isDarkMode
 			? '/imgs/layer_dark2.svg'
 			: '/imgs/layer2.svg'}
 		alt="Layer"

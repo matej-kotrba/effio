@@ -16,7 +16,7 @@
 	$: content = $testObject.questions[indexParent].content as PickOneQuestion;
 	$: answersLength = content.answers.length;
 
-	$: isDarkMode = $applicationStates.isDarkMode;
+	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
 
 	const QUESTION_LIMIT = 10;
 

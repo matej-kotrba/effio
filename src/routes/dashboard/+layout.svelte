@@ -28,7 +28,7 @@
 					href="/dashboard"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser && $page.url.pathname === '/dashboard'}
-					class:dark={$applicationStates['isDarkMode']}
+					class:dark={$applicationStates['darkMode']['isDarkMode']}
 				>
 					<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 				</a>
@@ -99,10 +99,9 @@
 			<button
 				class="relative grid h-10 place-content-center"
 				type="button"
-				on:click={() =>
-					($applicationStates.isDarkMode = !$applicationStates.isDarkMode)}
+				on:click={() => $applicationStates.darkMode.setIsDarkMode()}
 			>
-				{#if $applicationStates['isDarkMode']}
+				{#if $applicationStates['darkMode']['isDarkMode']}
 					<iconify-icon
 						icon="lucide:moon"
 						class="text-4xl"
