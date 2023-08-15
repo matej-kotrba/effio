@@ -3,7 +3,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full p-3 bg-white rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
+	class="flex flex-col justify-between w-full p-3 bg-white dark:bg-dark_light_grey rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
 >
 	<div>
 		<div class="relative block group">
@@ -36,6 +36,10 @@
 		position: relative;
 	}
 
+	:global(.dark) .skeleton {
+		@apply bg-dark_grey;
+	}
+
 	.skeleton::before {
 		content: '';
 		position: absolute;
@@ -47,6 +51,10 @@
 		animation: move-x 2.5s infinite linear;
 		rotate: 12deg;
 		filter: blur(20px);
+	}
+
+	:global(.dark) .skeleton::before {
+		background-color: var(--dark-text-white-20);
 	}
 
 	@keyframes move-x {

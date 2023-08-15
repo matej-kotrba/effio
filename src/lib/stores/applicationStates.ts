@@ -4,7 +4,7 @@ import { writable } from "svelte/store";
 type ApplicationStates = {
   darkMode: {
     isDarkMode: boolean;
-    setIsDarkMode: (isDarkMode: boolean) => void;
+    setIsDarkMode: (isDarkMode?: boolean) => void;
   }
 }
 

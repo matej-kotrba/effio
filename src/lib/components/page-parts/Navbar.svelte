@@ -10,23 +10,23 @@
 			<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 		</div>
 		<ul
-			class="flex items-center justify-center h-full gap-1 text-sm uppercase text-light_text_black dark:text-dark_text_white"
+			class="flex items-center justify-center h-full gap-2 text-sm uppercase text-light_text_black dark:text-dark_text_white"
 		>
 			<a
 				href="/"
-				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
 			>
 				<li>Home</li>
 			</a>
 			<a
 				href="/dashboard"
-				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
 			>
 				<li>Dashboard</li>
 			</a>
 			<a
 				href="/community"
-				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 hover:text-light_primary"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
 			>
 				<li>Community</li>
 			</a>
@@ -44,10 +44,12 @@
 						<img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" />
 					</button>
 					<ul
-						class="menu dropdown-content z-[1] p-2 shadow-md bg-base-100 rounded-box w-52 mt-4 gap-1"
+						class="menu dropdown-content z-[1] p-2 shadow-md bg-base-100 rounded-box w-52 mt-4 gap-1 dark:bg-dark_light_grey"
 					>
-						<li>
-							<a href="/dashboard/test-collection" class="normal-case"
+						<li class="">
+							<a
+								href="/dashboard/test-collection"
+								class="normal-case dark:hover:bg-dark_text_white_20 dark:hover:text-white"
 								>My tests</a
 							>
 						</li>
@@ -56,6 +58,7 @@
 								on:click={() => {
 									signOut();
 								}}
+								class="dark:hover:bg-dark_text_white_20 dark:hover:text-white"
 								><iconify-icon icon="iconamoon:exit-light" class="text-lg" /> Log
 								out</button
 							>

@@ -12,6 +12,6 @@
 >
 	<iconify-icon
 		icon="line-md:arrow-small-left"
-		class="text-5xl duration-150 rounded-md hover:bg-gray-200"
+		class="text-5xl duration-150 rounded-md hover:bg-gray-200 dark:hover:bg-dark_text_white_20"
 	/>
 </button>

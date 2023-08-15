@@ -32,68 +32,20 @@
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';
-	// TODO: Implement isValidInputServer function instead of the local one
 
 	export let data;
 
 	const SECTION_TRANSITION_DURATION = 400;
 
 	initializeNewTestToTestStore({
-		title: 'This is title',
-		description: 'This is description',
+		title: '',
+		description: '',
 		errors: {},
-		questions: [
-			{
-				id: crypto.randomUUID(),
-				title: 'What is the capital of France?',
-				displayType: 'Pick one',
-				questionType: 'pickOne',
-				questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8',
-				content: {
-					correctAnswerIndex: 1,
-					answers: [
-						{
-							answer: 'PRAHAAAA'
-						},
-						{
-							answer: 'Paris'
-						},
-						{
-							answer: 'Paris'
-						}
-					]
-				},
-				errors: {}
-			},
-			{
-				id: crypto.randomUUID(),
-				title: 'What facts about Earh are true ?',
-				displayType: 'True/False',
-				questionType: 'true/false',
-				questionTypeId: '6100faf8-8f10-415d-92cd-e908828bcc25',
-				content: {
-					answers: [
-						{
-							isTrue: false,
-							answer: 'Is the earth flat?'
-						}
-					]
-				},
-				errors: {}
-			}
-		]
-	} as TestObject);
+		questions: []
+	});
 
-	// initializeNewTestToTestStore({
-	// 	title: '',
-	// 	description: '',
-	// 	errors: {},
-	// 	questions: []
-	// });
-
-	// TODO: Change this back to false
 	let testCreationProgress = {
-		templateDone: true,
+		templateDone: false,
 		constructingDone: false,
 		detailsDone: false
 	};

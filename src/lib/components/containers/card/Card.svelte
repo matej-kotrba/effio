@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between w-full p-3 bg-white dark:bg-dark_secondary rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
+	class="flex flex-col justify-between w-full p-3 bg-white dark:bg-dark_light_grey rounded-lg card_bg shadow-surrounding aspect-[3/4] max-w-[280px]"
 >
 	<div>
 		<a href={redirectLink} class="relative block group">
@@ -100,13 +100,13 @@
 				/>
 			</button>
 			<ul
-				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black dark:text-dark_text_white"
+				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
 			>
 				{#each dropdownTabs as item}
 					<li class="group">
 						<button
 							type="button"
-							class="flex items-center justify-start group-hover:text-light_text_black dark:text-dark_text_white"
+							class="flex items-center justify-start group-hover:text-light_text_black dark:text-dark_text_white dark:hover:bg-dark_text_white_20 dark:hover:text-white"
 							on:click={(e) => item.action(e)}
 						>
 							{#if item['iconClass']}

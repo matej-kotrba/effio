@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { applicationStates } from '~stores/applicationStates';
 	import { testObject } from '~stores/testObject';
 
 	const wrongAnswerHiglightColors = [
@@ -189,7 +190,7 @@
 				disabled={!!resultFormat}
 				class="w-full flex justify-between px-6 py-3 duration-100 rounded-md shadow-md items-center {resultFormat ===
 					null || resultFormat.isCorrect
-					? 'bg-white'
+					? 'bg-white dark:bg-dark_light_grey'
 					: ''} {!resultFormat && 'hover:bg-slate-50 active:bg-slate-100'}"
 				style="background-color: {resultFormat &&
 					resultFormat.isCorrect === false &&
@@ -206,7 +207,7 @@
 						bind:this={inputElements[index]}
 					/> -->
 					<div
-						class="w-6 border-2 rounded-full pointer-events-none bg-light_quaternary aspect-square border-light_secondary"
+						class="w-6 border-2 rounded-full pointer-events-none bg-light_quaternary dark:bg-dark_quaternary aspect-square border-light_secondary dark:border-dark_secondary"
 					>
 						<svg
 							width="200"
@@ -219,13 +220,17 @@
 								y1="0"
 								x2={svgPositions[index]?.x || 0}
 								y2={svgPositions[index]?.y || 0}
-								style="stroke:var(--light-quaternary);stroke-width:3"
+								style={`stroke:var(${
+									$applicationStates['darkMode']['isDarkMode']
+										? '--dark-quaternary'
+										: '--light-quaternary'
+								});stroke-width:3`}
 							/>
 							<circle
 								cx={svgPositions[index]?.x || 0}
 								cy={svgPositions[index]?.y || 0}
 								r="8"
-								class="pointer-events-auto fill-light_primary"
+								class="pointer-events-auto fill-light_primary dark:fill-dark_primary"
 								class:duration-150={!svgPositions[index].isDragging}
 								on:mousedown={() => {
 									svgPositions[index].isDragging = true;
@@ -245,7 +250,7 @@
 				disabled={!!resultFormat}
 				class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
 					null || resultFormat.isCorrect
-					? 'bg-white'
+					? 'bg-white dark:bg-dark_light_grey'
 					: ''}
 			"
 				style="background-color: {resultFormat &&
@@ -260,7 +265,7 @@
 			>
 				<div class="relative grid">
 					<div
-						class="w-6 bg-transparent border-2 rounded-full pointer-events-none aspect-square border-light_secondary"
+						class="w-6 bg-transparent border-2 rounded-full pointer-events-none aspect-square border-light_secondary dark:border-dark_secondary"
 						bind:this={attachPoints[index].ref}
 					/>
 				</div>

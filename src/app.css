@@ -46,7 +46,7 @@ html {
 }
 
 body {
-	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black dark:text-dark_text_white bg-light_white;
+	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black dark:text-dark_text_white bg-light_white dark:bg-dark_black;
 	box-sizing: border-box;
 	overflow-x: hidden;
 }

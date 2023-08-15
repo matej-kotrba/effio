@@ -17,7 +17,7 @@
 </script>
 
 <div
-	class={`p-3 rounded-md shadow-md bg-light_whiter outline-2 outline ${
+	class={`p-3 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey outline-2 outline ${
 		resultFormat
 			? resultFormat.isCorrect
 				? 'outline-success'
@@ -61,7 +61,7 @@
 			<Write
 				{questionIndex}
 				resultFormat={resultFormat &&
-				resultFormat['userAnswer']['type'] === 'connect'
+				resultFormat['userAnswer']['type'] === 'write'
 					? typedResultFormat
 					: null}
 			/>
