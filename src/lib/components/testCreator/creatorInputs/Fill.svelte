@@ -20,9 +20,7 @@
 	$: content = $testObject.questions[indexParent].content as FillQuestion;
 	$: answersLength = content.answers.length;
 
-	$: content.answers.forEach((item) => {
-		item.answer.errors.options = [];
-	});
+	$: console.log($testObject.questions[indexParent].content.answers);
 
 	const QUESTION_LIMIT = 10;
 
@@ -82,8 +80,8 @@
 						class="w-10 h-10 rounded-full"
 					/> -->
 					<TextInputSimple
-						title="Answer option {index + 1}"
-						titleName="titleAnswer{indexParent}"
+						title="Precedent"
+						titleName="precedentAnswer{indexParent}"
 						max={WRITE_AMSWER_MAX}
 						min={WRITE_ANSWER_MIN}
 						validationSchema={writeAnswerSchema}
@@ -96,10 +94,20 @@
 						}}
 						bind:inputValue={content.answers[index].answer.precedent}
 					/>
+					<p
+						class={`text-body2 text-error dark:text-dark_error ${
+							!content.answers[index].answer.errors['precedent']
+								? 'opacity-0'
+								: ''
+						}`}
+					>
+						{content.answers[index].answer.errors['precedent'] ||
+							'Placeholder error'}
+					</p>
 					{#each content['answers'][index]['answer']['options'] as option, idx}
 						<TextInputSimple
 							title="Answer option {idx + 1}"
-							titleName="titleAnswer{idx}"
+							titleName="fillAnswer{crypto.randomUUID()}"
 							max={WRITE_AMSWER_MAX}
 							min={WRITE_ANSWER_MIN}
 							validationSchema={writeAnswerSchema}
@@ -108,41 +116,58 @@
 								placeholder: 'Your answer option ...'
 							}}
 							on:error={(e) => {
-								let options =
-									content.answers[index].answer['errors']['options'];
-								if (options !== undefined) {
-									options[idx] = e.detail;
-								}
+								content.answers[index].answer['errors']['options'][idx] =
+									e.detail;
 							}}
 							bind:inputValue={content.answers[index].answer['options'][idx]}
 						/>
+						<p
+							class={`text-body2 text-error dark:text-dark_error ${
+								!content.answers[index].answer.errors.options[idx]
+									? 'opacity-0'
+									: ''
+							}`}
+						>
+							{content.answers[index].answer.errors.options[idx] ||
+								'Placeholder error'}
+						</p>
 					{/each}
+					<div class="mx-auto">
+						<AddNew onClick={onAddNew} />
+					</div>
 					<TextInputSimple
-						title="Answer option {index + 1}"
-						titleName="titleAnswer{indexParent}"
+						title="Sequent"
+						titleName="sequentAnswer{indexParent}"
 						max={WRITE_AMSWER_MAX}
 						min={WRITE_ANSWER_MIN}
 						validationSchema={writeAnswerSchema}
 						doesLimit={true}
 						inputProperties={{
-							placeholder: 'Your answer option ...'
+							placeholder: 'Your sequence ...'
 						}}
 						on:error={(e) => {
-							$testObject.questions[indexParent].content.answers[index].error =
-								e.detail;
+							content.answers[index].answer['errors']['sequent'] = e.detail;
 						}}
-						bind:inputValue={$testObject.questions[indexParent].content.answers[
-							index
-						].answer}
+						bind:inputValue={content.answers[index].answer.sequent}
 					/>
+					<p
+						class={`text-body2 text-error dark:text-dark_error ${
+							!content.answers[index].answer.errors['sequent']
+								? 'opacity-0'
+								: ''
+						}`}
+					>
+						{content.answers[index].answer.errors['sequent'] ||
+							'Placeholder error'}
+					</p>
 				</div>
-				<p
+				<!-- <p
 					class={`text-body2 text-error dark:text-dark_error ${
-						!content.answers[index].error ? 'opacity-0' : ''
+						!content.answers[index].answer ? 'opacity-0' : ''
 					}`}
 				>
 					{content.answers[index].error || 'Placeholder error'}
-				</p>
+				</p> -->
 				<Separator w="100%" h="2px" color="var(--dark-text-white-20)" />
 			</div>
 		</div>

@@ -13,7 +13,7 @@
 		class={`${
 			current > max || current < min
 				? 'text-error dark:text-dark_error'
-				: 'text-light_primary dark:text-dark_primary'
+				: 'text-light_primary dark:text-success'
 		}`}>{current}</span
 	><span class="text-light_text_black dark:text-dark_text_white text-body2"
 		>/</span

@@ -165,10 +165,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
         answers: [
           {
             answer: {
-              options: [],
+              options: [""],
               precedent: "",
               sequent: "",
-              errors: {}
+              errors: {
+                options: []
+              }
             }
           }
         ]
@@ -183,7 +185,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
               options: [""],
               precedent: item.answer.precedent,
               sequent: item.answer.sequent,
-              errors: {}
+              errors: {
+                options: []
+              }
             }
           }
         })

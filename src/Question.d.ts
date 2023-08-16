@@ -39,7 +39,7 @@ type FillQuestion = {
     errors: {
       precedent?: string;
       sequent?: string;
-      options?: string[
+      options: string[
       ];
     }
   }>[];

@@ -164,12 +164,13 @@
 		max-width: 300px;
 	}
 
-	.active:not(.dark) {
-		background-color: var(--light-primary);
-		color: var(--light-white);
-	}
-	.active.dark {
+	:global(.dark) .active {
 		background-color: var(--dark-primary);
 		color: var(--dark-text-white);
+	}
+
+	.active {
+		background-color: var(--light-primary);
+		color: var(--light-white);
 	}
 </style>
