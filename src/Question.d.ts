@@ -30,6 +30,21 @@ type WriteQuestion = {
   answers: Answer[];
 }
 
+type FillQuestion = {
+  type: "fill";
+  answers: Answer<{
+    precedent: string;
+    options: string[];
+    sequent: string;
+    errors: {
+      precedent?: string;
+      sequent?: string;
+      options?: string[
+      ];
+    }
+  }>[];
+}
+
 type Answer<T = string> = {
   answer: T;
   error?: string;
@@ -40,6 +55,7 @@ type QuestionTypeMap = {
   'pickOne': PickOneQuestion;
   'connect': ConnectQuestion;
   'write': WriteQuestion;
+  'fill': FillQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

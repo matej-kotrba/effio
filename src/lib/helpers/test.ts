@@ -158,6 +158,44 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return original.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(answer.answers[0].answer.toLowerCase().replace(/\s/g, ""))
     }
   },
+  "fill": {
+    "createNew": () => {
+      return {
+        type: 'fill',
+        answers: [
+          {
+            answer: {
+              options: [],
+              precedent: "",
+              sequent: "",
+              errors: {}
+            }
+          }
+        ]
+      }
+    },
+    "separateAnswer": (question: FillQuestion): FillQuestion => {
+      return {
+        ...question,
+        answers: question.answers.map(item => {
+          return {
+            answer: {
+              options: [""],
+              precedent: item.answer.precedent,
+              sequent: item.answer.sequent,
+              errors: {}
+            }
+          }
+        })
+      }
+    },
+    "checkAnswerPresence": (question: FillQuestion): boolean => {
+      return !(question.answers.every(item => item.answer.options[0] !== undefined))
+    },
+    "checkAnswerCorrectness": (answer: FillQuestion, original: FillQuestion) => {
+      return original.answers.every((item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")))
+    }
+  }
 }
 
 export function initializeNewTestToTestStore(testData: ClientTest) {
