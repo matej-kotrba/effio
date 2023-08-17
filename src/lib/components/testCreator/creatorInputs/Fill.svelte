@@ -13,6 +13,7 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import Separator from '~components/separators/Separator.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	export let indexParent: number;
 
@@ -20,19 +21,41 @@
 	$: content = $testObject.questions[indexParent].content as FillQuestion;
 	$: answersLength = content.answers.length;
 
-	$: console.log($testObject.questions[indexParent].content.answers);
-
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
 
-	function onAddNew() {
+	function onAddNewPart() {
+		($testObject.questions[indexParent].content as FillQuestion).answers = [
+			...content.answers,
+			{
+				answer: {
+					precedent: '',
+					options: [''],
+					sequent: '',
+					errors: {
+						options: []
+					}
+				}
+			}
+		];
+	}
+
+	function onAddNewOption(index: number) {
 		if (!newQuestionConditionCheck()) {
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
+
+		if ($testObject.questions[indexParent].content.answers[index]) {
+			$testObject.questions[indexParent].content.answers;
+		}
+
+		($testObject.questions[indexParent].content as FillQuestion).answers[
+			index
+		].answer.options = [...content.answers[index].answer.options, ''];
 		// if ($testObject.questions[indexParent].content.answers) {
 		// 	$testObject.questions[indexParent].content.answers = [
 		// 		...content.answers,
@@ -41,11 +64,17 @@
 		// }
 	}
 
-	function deleteQuestion(index: number) {
-		$testObject.questions[indexParent].content.answers = content.answers.filter(
-			(_, i) => i !== index
-		);
-		toast.success(`Question ${index + 1} deleted`);
+	function deleteSubQuestion(questionIndex: number, index: number) {
+		if (index === undefined || questionIndex === undefined) return;
+
+		($testObject.questions[indexParent].content as FillQuestion).answers[
+			questionIndex
+		].answer.options = (
+			$testObject.questions[indexParent].content as FillQuestion
+		).answers[questionIndex].answer.options.filter((_, idx) => {
+			return idx !== index;
+		});
+		toast.success(`Question option ${index + 1} deleted`);
 	}
 </script>
 
@@ -73,12 +102,6 @@
 				<p>Part {index + 1}</p>
 				<Separator w="100%" h="2px" color="var(--dark-text-white-20)" />
 				<div class="flex flex-col items-start gap-1">
-					<!-- <RemoveButton
-						questionLimit={1}
-						deleteQuestion={() => deleteQuestion(index)}
-						questionLength={answersLength}
-						class="w-10 h-10 rounded-full"
-					/> -->
 					<TextInputSimple
 						title="Precedent"
 						titleName="precedentAnswer{indexParent}"
@@ -104,23 +127,34 @@
 						{content.answers[index].answer.errors['precedent'] ||
 							'Placeholder error'}
 					</p>
+					<Space gap={10} />
+					<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
 					{#each content['answers'][index]['answer']['options'] as option, idx}
-						<TextInputSimple
-							title="Answer option {idx + 1}"
-							titleName="fillAnswer{crypto.randomUUID()}"
-							max={WRITE_AMSWER_MAX}
-							min={WRITE_ANSWER_MIN}
-							validationSchema={writeAnswerSchema}
-							doesLimit={true}
-							inputProperties={{
-								placeholder: 'Your answer option ...'
-							}}
-							on:error={(e) => {
-								content.answers[index].answer['errors']['options'][idx] =
-									e.detail;
-							}}
-							bind:inputValue={content.answers[index].answer['options'][idx]}
-						/>
+						<div class="flex items-start w-full gap-2">
+							<TextInputSimple
+								title="Answer option {idx + 1}"
+								titleName="fillAnswer{crypto.randomUUID()}"
+								max={WRITE_AMSWER_MAX}
+								min={WRITE_ANSWER_MIN}
+								validationSchema={writeAnswerSchema}
+								doesLimit={true}
+								inputProperties={{
+									placeholder: 'Your answer option ...'
+								}}
+								customContainerStyles="grow"
+								on:error={(e) => {
+									content.answers[index].answer['errors']['options'][idx] =
+										e.detail;
+								}}
+								bind:inputValue={content.answers[index].answer['options'][idx]}
+							/>
+							<RemoveButton
+								questionLimit={1}
+								deleteQuestion={() => deleteSubQuestion(index, idx)}
+								questionLength={content.answers[index].answer.options.length}
+								class="w-10 rounded-md aspect-square"
+							/>
+						</div>
 						<p
 							class={`text-body2 text-error dark:text-dark_error ${
 								!content.answers[index].answer.errors.options[idx]
@@ -133,8 +167,10 @@
 						</p>
 					{/each}
 					<div class="mx-auto">
-						<AddNew onClick={onAddNew} />
+						<AddNew onClick={() => onAddNewOption(index)} />
 					</div>
+					<Space gap={10} />
+					<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
 					<TextInputSimple
 						title="Sequent"
 						titleName="sequentAnswer{indexParent}"
@@ -173,7 +209,7 @@
 		</div>
 	{/each}
 	<div class="flex justify-center">
-		<AddNew onClick={onAddNew} />
+		<AddNew onClick={onAddNewPart} title="Add new part" />
 	</div>
 	<Toaster />
 </form>

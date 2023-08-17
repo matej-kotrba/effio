@@ -1,14 +1,13 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-
 	export let onClick = () => {};
+	export let title: string = '';
 </script>
 
 <button
 	type="button"
 	on:click={onClick}
 	class="px-8 text-white border-none shadow-lg btn bg-success hover:scale-105 hover:bg-white dark:hover:bg-dark_light_grey hover:text-success"
-	>Add</button
+	>{title || 'Add'}</button
 >
 <!-- <button
 	type="button"

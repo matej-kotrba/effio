@@ -60,7 +60,9 @@
 	let isSubmitting = false;
 	let isSuccess = false;
 
-	async function postTestToDB(isPublished: boolean) {
+	async function checkTestOnClientAndServerAndPostTestToDB(
+		isPublished: boolean
+	) {
 		const result = isTestValid({
 			title: $testObject.title,
 			description: $testObject.description,
@@ -263,6 +265,7 @@
 						const result = isTestValid({
 							questions: $testObject.questions
 						});
+						console.log('aaaa');
 
 						if (result['store']['questions']) {
 							$testObject['questions'] = result['store']['questions'];
@@ -409,13 +412,16 @@
 								type="button"
 								disabled={isSubmitting}
 								class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
-								on:click={() => postTestToDB(false)}>Saved as draft</button
+								on:click={() =>
+									checkTestOnClientAndServerAndPostTestToDB(false)}
+								>Saved as draft</button
 							>
 							<button
 								type="button"
 								disabled={isSubmitting}
 								class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
-								on:click={() => postTestToDB(true)}>Published</button
+								on:click={() => checkTestOnClientAndServerAndPostTestToDB(true)}
+								>Published</button
 							>
 						</div>
 					</form>
