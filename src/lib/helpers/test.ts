@@ -173,6 +173,36 @@ export const questionContentFunctions: QuestionContentTransformation = {
         if (answer.answers[i].matchedAnswerIndex !== original.answers[i].matchedAnswerIndex) return false
       }
       return true
+    },
+    "checkCreatorCorrectFormat": (content: ConnectQuestion) => {
+      let isError = false
+
+      for (const item in content.answers) {
+        if (content.answers[item].matchedAnswerIndex == undefined) {
+          isError = true
+          content.answers[item].error = "Please select the correct answer."
+          continue
+        }
+        const result = answerSchema.safeParse(content.answers[item].answer)
+        if (result.success === false) {
+          isError = true
+          content.answers[item].error = result.error.errors[0].message
+        }
+      }
+
+      for (const item in content.matchedAnswers) {
+        const result = answerSchema.safeParse(content.matchedAnswers[item])
+        if (result.success === false) {
+          isError = true
+          content.matchedAnswers[item] = result.error.errors[0].message
+        }
+      }
+
+      return {
+        isError: isError,
+        message: "",
+        store: content
+      }
     }
   },
   "write": {
@@ -198,7 +228,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "checkAnswerCorrectness": (answer: WriteQuestion, original: WriteQuestion) => {
       return original.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(answer.answers[0].answer.toLowerCase().replace(/\s/g, ""))
     },
-    "checkCreatorCorrectFormat": (content: ConnectQuestion) => {
+    "checkCreatorCorrectFormat": (content: WriteQuestion) => {
       let isError = false
 
       for (const item in content.answers) {
@@ -256,6 +286,39 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: FillQuestion, original: FillQuestion) => {
       return original.answers.every((item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")))
+    },
+    "checkCreatorCorrectFormat": (content: FillQuestion) => {
+      let isError = false
+
+      for (const answer in content.answers) {
+        for (const option in content.answers[answer].answer.options) {
+          const result = answerSchema.safeParse(content.answers[answer].answer.options[option])
+          if (result.success === false) {
+            isError = true
+            content.answers[answer].answer.errors.options[option] = result.error.errors[0].message
+          }
+        }
+
+        const prec = answerSchema.safeParse(content.answers[answer].answer.precedent)
+        const seq = answerSchema.safeParse(content.answers[answer].answer.sequent)
+
+        if (prec.success === false) {
+          isError = true
+          content.answers[answer].answer.errors.precedent = prec.error.errors[0].message
+        }
+
+        if (seq.success === false) {
+          isError = true
+          content.answers[answer].answer.errors.sequent = seq.error.errors[0].message
+        }
+
+      }
+
+      return {
+        isError: isError,
+        message: "",
+        store: content
+      }
     }
   }
 }
