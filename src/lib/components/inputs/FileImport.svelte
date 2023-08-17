@@ -51,7 +51,7 @@
 		on:dragover={() => console.log('asdasd')}
 		on:input={readFile}
 		type="file"
-		class="absolute w-full h-full input-styled"
+		class="absolute w-full h-full opacity-0 input-styled"
 	/>
 </div>
 

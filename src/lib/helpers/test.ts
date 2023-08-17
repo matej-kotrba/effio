@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z, ZodError } from "zod"
-import { asnwerSchema as answerObjectSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -18,7 +18,8 @@ type QuestionContentTransformation = {
 
     // Type which takes the question and checks if the answer of the specific question type is present
     "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
-    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean
+    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean,
+    "checkCreatorCorrectFormat": (question: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
   }
 }
 
@@ -52,6 +53,29 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: PickOneQuestion, original: PickOneQuestion) => {
       return answer.correctAnswerIndex === original.correctAnswerIndex
+    },
+    "checkCreatorCorrectFormat": (content: PickOneQuestion) => {
+      let isError = false
+      let message = ""
+
+      if (content.correctAnswerIndex === undefined || content.correctAnswerIndex > content.answers.length - 1 || content.correctAnswerIndex < 0) {
+        isError = true
+        message = "Please select the correct answer."
+      }
+
+      for (const item in content.answers) {
+        const result = answerSchema.safeParse(content.answers[item].answer)
+        if (result.success === false) {
+          isError = true
+          content.answers[item].error = result.error.errors[0].message
+        }
+      }
+
+      return {
+        isError: isError,
+        message: message,
+        store: content
+      }
     }
   },
   "true/false": {
@@ -87,6 +111,23 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
       return answer.answers.every((item, index) => item.isTrue === original.answers[index].isTrue)
+    },
+    "checkCreatorCorrectFormat": (content: TrueFalseQuestion) => {
+      let isError = false
+
+      for (const item in content.answers) {
+        const result = answerSchema.safeParse(content.answers[item].answer)
+        if (result.success === false) {
+          isError = true
+          content.answers[item].error = result.error.errors[0].message
+        }
+      }
+
+      return {
+        isError: isError,
+        message: "",
+        store: content
+      }
     }
   },
   "connect": {
@@ -156,6 +197,23 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: WriteQuestion, original: WriteQuestion) => {
       return original.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(answer.answers[0].answer.toLowerCase().replace(/\s/g, ""))
+    },
+    "checkCreatorCorrectFormat": (content: ConnectQuestion) => {
+      let isError = false
+
+      for (const item in content.answers) {
+        const result = answerSchema.safeParse(content.answers[item].answer)
+        if (result.success === false) {
+          isError = true
+          content.answers[item].error = result.error.errors[0].message
+        }
+      }
+
+      return {
+        isError: isError,
+        message: "",
+        store: content
+      }
     }
   },
   "fill": {
@@ -345,6 +403,12 @@ export function isTestValid(inputsToValidate: IsTestValid) {
       }
     }
   }
+
+  console.log({
+    store: result,
+    isError,
+    message
+  })
 
   return {
     store: result,

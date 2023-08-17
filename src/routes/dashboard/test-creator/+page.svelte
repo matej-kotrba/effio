@@ -262,11 +262,12 @@
 						// $testObject['questions'] = result['obj']['questions'];
 						// if (!result['success']) return;
 						// testCreationProgress.constructingDone = true;
+
 						const result = isTestValid({
 							questions: $testObject.questions
 						});
-						console.log('aaaa');
 
+						console.log(result);
 						if (result['store']['questions']) {
 							$testObject['questions'] = result['store']['questions'];
 						}

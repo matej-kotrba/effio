@@ -6,7 +6,7 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
-	import { asnwerSchema } from '~schemas/textInput';
+	import { answerSchema } from '~schemas/textInput';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 
 	export let indexParent: number;
@@ -85,7 +85,7 @@
 						<TextInput
 							title="Option {index + 1}"
 							titleName="Option {index + 1}"
-							validationSchema={asnwerSchema}
+							validationSchema={answerSchema}
 							on:error={(event) =>
 								(content.answers[index].error = event.detail)}
 							bind:inputValue={content.answers[index].answer}
@@ -95,7 +95,7 @@
 						<TextInput
 							title="Option matched {index + 1}"
 							titleName="Matched option {index + 1}"
-							validationSchema={asnwerSchema}
+							validationSchema={answerSchema}
 							on:error={(event) =>
 								(content.answers[index].error = event.detail)}
 							bind:inputValue={content.matchedAnswers[answerKeys[index]]}

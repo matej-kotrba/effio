@@ -12,7 +12,7 @@ export const TITLE_MAX = 40
 export const WRITE_ANSWER_MIN = 1
 export const WRITE_AMSWER_MAX = 30
 
-export const asnwerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")
+export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")
 export const titleSchema = z.string().min(TITLE_MIN, `Title has to be at least ${TITLE_MIN} character long.`).max(TITLE_MAX, `Title can be max ${TITLE_MAX} characters long.`)
 export const descriptionSchema = z.string().min(DESCRIPTION_MIN, "Tell the users what your test will be about with at least 15 characters.").max(DESCRIPTION_MAX, "Description can be max 255 characters long.")
-export const writeAnswerSchema = z.string().min(WRITE_ANSWER_MIN, "Answer has to be at least 1 character long.").max(WRITE_AMSWER_MAX, "Answer can be max 30 characters long.")
+export const writeAnswerSchema = z.string().min(WRITE_ANSWER_MIN, "Write answer has to be at least 1 character long.").max(WRITE_AMSWER_MAX, "Answer can be max 30 characters long.")

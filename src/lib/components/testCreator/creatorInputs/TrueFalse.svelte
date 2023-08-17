@@ -6,7 +6,7 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
-	import { asnwerSchema } from '~schemas/textInput';
+	import { answerSchema } from '~schemas/textInput';
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 
@@ -70,7 +70,7 @@
 					<TextInput
 						title="Option {index + 1}"
 						titleName="Option {index + 1}"
-						validationSchema={asnwerSchema}
+						validationSchema={answerSchema}
 						on:error={(event) => (content.answers[index].error = event.detail)}
 						bind:inputValue={q.answer}
 					/>
