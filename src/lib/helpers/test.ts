@@ -19,7 +19,7 @@ type QuestionContentTransformation = {
     // Type which takes the question and checks if the answer of the specific question type is present
     "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
     "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean,
-    "checkCreatorCorrectFormat": (question: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
+    "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
   }
 }
 
@@ -442,27 +442,19 @@ export function isTestValid(inputsToValidate: IsTestValid) {
     }
     for (const item of questions) {
 
-      try {
-        questionSchema.parse(item)
-        item.errors = {}
-      }
-      catch (e) {
-        const error = e as ZodError<typeof asnwerSchema>
-        item.errors.title = error.errors[0].message
+      const titleResult = titleSchema.safeParse(item.title)
+
+      if (titleResult.success === false) {
         isError = true
+        item.errors.title = titleResult.error.errors[0].message
       }
 
-      if (item.content && item.content.answers) {
-        for (const asnwer of item.content.answers)
-          try {
-            asnwerSchema.parse(asnwer)
-            asnwer.error = ""
-          }
-          catch (e: unknown) {
-            const error = e as ZodError<typeof asnwerSchema>
-            asnwer.error = error.errors[0].message
-            isError = true
-          }
+      const returnResult = questionContentFunctions[item.questionType]["checkCreatorCorrectFormat"](item.content as any)
+
+      item.content = returnResult.store
+
+      if (returnResult.isError) {
+        isError = true
       }
     }
   }
@@ -581,7 +573,6 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     })
   })
 
-  // TODO: UNCOMMENT
   await trpc().records.createTestRecord.mutate({
     testId: test.versionId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
