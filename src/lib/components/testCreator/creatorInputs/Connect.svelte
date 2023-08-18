@@ -25,7 +25,9 @@
 	}),
 		answersLength;
 
-	$: console.log($testObject);
+	$: console.log(
+		content.matchedAnswers[Object.keys(content.matchedAnswers)[0]]
+	);
 
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
@@ -39,7 +41,9 @@
 		if ($testObject.questions[indexParent].content.answers) {
 			(
 				$testObject.questions[indexParent].content as ConnectQuestion
-			).matchedAnswers[crypto.randomUUID()].answer = '';
+			).matchedAnswers[crypto.randomUUID()] = {
+				answer: ''
+			};
 			($testObject.questions[indexParent].content as ConnectQuestion).answers =
 				[...content.answers, { answer: '', matchedAnswerIndex: undefined }];
 		}
@@ -96,18 +100,28 @@
 							title="Option matched {index + 1}"
 							titleName="Matched option {index + 1}"
 							validationSchema={answerSchema}
-							on:error={(event) =>
-								(content.answers[index].error = event.detail)}
+							on:error={(event) => {
+								content.matchedAnswers[
+									Object.keys(content.matchedAnswers)[index]
+								].error = event.detail;
+							}}
 							bind:inputValue={content.matchedAnswers[answerKeys[index]].answer}
 						/>
 					</div>
 				</div>
 				<p
 					class={`text-body2 text-error dark:text-dark_error ${
-						!content.answers[index].error ? 'opacity-0' : ''
+						!content.answers[index].error &&
+						!content.matchedAnswers[Object.keys(content.matchedAnswers)[index]]
+							.error
+							? 'opacity-0'
+							: ''
 					}`}
 				>
-					{content.answers[index].error || 'Placeholder error'}
+					{content.answers[index].error ||
+						content.matchedAnswers[Object.keys(content.matchedAnswers)[index]]
+							.error ||
+						'Placeholder error'}
 				</p>
 			</div>
 		</div>
