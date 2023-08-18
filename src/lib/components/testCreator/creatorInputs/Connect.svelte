@@ -39,7 +39,7 @@
 		if ($testObject.questions[indexParent].content.answers) {
 			(
 				$testObject.questions[indexParent].content as ConnectQuestion
-			).matchedAnswers[crypto.randomUUID()] = '';
+			).matchedAnswers[crypto.randomUUID()].answer = '';
 			($testObject.questions[indexParent].content as ConnectQuestion).answers =
 				[...content.answers, { answer: '', matchedAnswerIndex: undefined }];
 		}
@@ -98,7 +98,7 @@
 							validationSchema={answerSchema}
 							on:error={(event) =>
 								(content.answers[index].error = event.detail)}
-							bind:inputValue={content.matchedAnswers[answerKeys[index]]}
+							bind:inputValue={content.matchedAnswers[answerKeys[index]].answer}
 						/>
 					</div>
 				</div>

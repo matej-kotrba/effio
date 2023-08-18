@@ -85,7 +85,9 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
         if (!template) throw new Error("Template not found")
 
         const matchedPairs = Object.fromEntries(question.matchPairs.map(item => {
-          return [crypto.randomUUID(), item.subanswer]
+          return [crypto.randomUUID(), {
+            answer: item.subanswer
+          }]
         }))
 
         return {
@@ -102,7 +104,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
               return {
                 answer: item.subquestion.text,
                 matchedAnswerIndex: Object.entries(matchedPairs).find((entry) => {
-                  return entry[1] === item.subanswer
+                  return entry[1].answer === item.subanswer
                 })?.[0]
               }
             })

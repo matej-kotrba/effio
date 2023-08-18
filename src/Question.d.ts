@@ -20,7 +20,10 @@ type ConnectQuestion = {
     matchedAnswerIndex: string | undefined;
   })[];
   matchedAnswers: {
-    [key: string]: string;
+    [key: string]: {
+      answer: string;
+      error?: string;
+    };
   }
 }
 

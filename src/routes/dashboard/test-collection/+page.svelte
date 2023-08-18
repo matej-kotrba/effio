@@ -81,6 +81,7 @@
 								text: answer.answer,
 								answerPart:
 									questionContent.matchedAnswers[answer.matchedAnswerIndex]
+										.answer
 							};
 						});
 						break;

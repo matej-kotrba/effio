@@ -20,8 +20,6 @@ will be used in the test creator -->
 
 	export let index: number;
 
-	let titleError: string | null;
-
 	function dispatchDragEvent() {
 		dispatch('dnddrag');
 	}
@@ -67,14 +65,19 @@ will be used in the test creator -->
 			titleName="title"
 			bind:inputValue={$testObject.questions[index].title}
 			validationSchema={titleSchema}
-			on:error={(data) => (titleError = data.detail)}
+			on:error={(data) => {
+				console.log(data.detail);
+				$testObject.questions[index]['errors']['title'] = data.detail;
+			}}
 		/>
 	</h6>
-	{#if titleError || $testObject.questions[index].errors.title}
-		<p class="text-error dark:text-dark_error text-body2">
-			{titleError || $testObject.questions[index].errors.title}
-		</p>
-	{/if}
+	<p
+		class={`text-error dark:text-dark_error text-body2 ${
+			$testObject.questions[index].errors.title ? '' : 'opacity-0'
+		}`}
+	>
+		{$testObject.questions[index].errors.title || 'Placeholder error'}
+	</p>
 	<Space gap={10} />
 	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
 	<Space gap={10} />

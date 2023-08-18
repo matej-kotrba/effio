@@ -1,6 +1,6 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
-import { z, ZodError } from "zod"
+import { z } from "zod"
 import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
@@ -145,8 +145,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
           }
         ],
         matchedAnswers: {
-          [crypto.randomUUID()]: "",
-          [crypto.randomUUID()]: ""
+          [crypto.randomUUID()]: {
+            answer: ""
+          },
+          [crypto.randomUUID()]: {
+            answer: ""
+          }
         }
       }
     },
@@ -191,10 +195,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
 
       for (const item in content.matchedAnswers) {
-        const result = answerSchema.safeParse(content.matchedAnswers[item])
+        const result = answerSchema.safeParse(content.matchedAnswers[item].answer)
         if (result.success === false) {
           isError = true
-          content.matchedAnswers[item] = result.error.errors[0].message
+          content.matchedAnswers[item].error = result.error.errors[0].message
         }
       }
 
@@ -442,13 +446,18 @@ export function isTestValid(inputsToValidate: IsTestValid) {
     }
     for (const item of questions) {
 
+      // Checking the title of the question
       const titleResult = titleSchema.safeParse(item.title)
 
       if (titleResult.success === false) {
         isError = true
         item.errors.title = titleResult.error.errors[0].message
       }
+      else {
+        item.errors.title = ""
+      }
 
+      // Checking the content of the question
       const returnResult = questionContentFunctions[item.questionType]["checkCreatorCorrectFormat"](item.content as any)
 
       item.content = returnResult.store

@@ -21,6 +21,7 @@
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);
 		} else {
+			console.log('SUPER');
 			dispatch('error', null);
 		}
 	}
