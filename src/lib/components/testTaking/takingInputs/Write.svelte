@@ -3,7 +3,7 @@
 	import { testObject } from '~stores/testObject';
 
 	export let questionIndex: number;
-	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
+	export let resultFormat: QuestionServerCheckResponse<WriteQuestion> | null =
 		null;
 </script>
 
