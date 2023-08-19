@@ -2,6 +2,8 @@
 	import { parse, type GIFTQuestion } from 'gift-pegjs';
 	import { createEventDispatcher } from 'svelte';
 
+	export let additionalText: string = '';
+
 	const dispatch = createEventDispatcher();
 
 	let fileRef: HTMLInputElement | null = null;
@@ -34,7 +36,8 @@
 		<h4
 			class="text-center text-h6 text-light_text_black dark:text-dark_text_white"
 		>
-			Import file
+			Import file<br />
+			<span class="text-xs">({additionalText})</span>
 		</h4>
 		<div class="grid place-content-center">
 			<img

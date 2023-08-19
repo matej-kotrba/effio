@@ -224,7 +224,10 @@
 							: ' border-transparent border-4 border-solid'}
 					/>
 				{/each}
-				<FileImport on:parsedFile={handleParsedData} />
+				<FileImport
+					on:parsedFile={handleParsedData}
+					additionalText={'In GIFT format'}
+				/>
 			</div>
 			<Space />
 

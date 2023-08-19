@@ -76,6 +76,17 @@
 		});
 		toast.success(`Question option ${index + 1} deleted`);
 	}
+
+	function deletePart(questionIndex: number) {
+		if (questionIndex === undefined) return;
+
+		($testObject.questions[indexParent].content as FillQuestion).answers = (
+			$testObject.questions[indexParent].content as FillQuestion
+		).answers.filter((_, idx) => {
+			return idx !== questionIndex;
+		});
+		toast.success(`Question part ${questionIndex + 1} deleted`);
+	}
 </script>
 
 <form class="relative flex flex-col gap-4">
@@ -99,6 +110,12 @@
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
+				<RemoveButton
+					deleteQuestion={() => deletePart(index)}
+					questionLength={content.answers.length}
+					questionLimit={1}
+					class="ml-auto rounded-md aspect-square"
+				/>
 				<p>Part {index + 1}</p>
 				<Separator w="100%" h="2px" color="var(--dark-text-white-20)" />
 				<div class="flex flex-col items-start gap-1">

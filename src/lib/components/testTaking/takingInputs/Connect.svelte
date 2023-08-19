@@ -269,7 +269,7 @@
 						bind:this={attachPoints[index].ref}
 					/>
 				</div>
-				<span>{text}</span>
+				<span>{text.answer}</span>
 			</button>
 		{/each}
 	</div>

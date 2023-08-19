@@ -11,7 +11,7 @@
 </script>
 
 <div>
-	{#each content['answers'] as question}
+	{#each content['answers'] as question, index}
 		<span>{question.answer.precedent}</span>
 		<!-- <TextInputSimple
 			title="Your answer"
@@ -37,21 +37,29 @@
 					disabled={!!resultFormat}
 				/>
 			</button>
-			<ul
-				tabindex="0"
-				class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-			>
-				<li><a>Item 1</a></li>
-				<li><a>Item 2</a></li>
-			</ul>
+			{#if resultFormat}
+				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+				<ul
+					tabindex="0"
+					class="dropdown-content z-[1] menu p-2 shadow-dark_text_white_20 shadow-sm bg-light_white dark:bg-dark_quaternary rounded-md w-52"
+				>
+					<li
+						class="px-2 py-1 rounded-lg text-light_text_black dark:text-dark_text_white"
+					>
+						{resultFormat['correctAnswer']['answers'][index]['answer'][
+							'options'
+						].join(', ')}
+					</li>
+				</ul>
+			{/if}
 		</div>
-		{#if resultFormat && resultFormat['isCorrect'] === false}
+		<!-- {#if resultFormat && resultFormat['isCorrect'] === false}
 			<p class="p-2 rounded-md bg-error dark:bg-dark_error">
 				{resultFormat.correctAnswer.answers
 					.map((item) => item['answer']['options'])
 					.join(', ')}
 			</p>
-		{/if}
+		{/if} -->
 		<span>{question.answer.sequent}</span>
 	{/each}
 </div>
