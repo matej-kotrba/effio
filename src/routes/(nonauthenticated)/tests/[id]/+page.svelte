@@ -48,7 +48,7 @@
 	<div class="flex justify-center gap-3">
 		<button class="btn">Cancel</button>
 		<button
-			class="text-white btn btn-primary hover:bg-light_secondary"
+			class="text-white btn btn-primary dark:bg-dark_primary dark:border-dark_primary hover:bg-light_secondary dark:hover:bg-dark_secondary"
 			on:click={async () => {
 				if (isSubmitting) return;
 				// Reset errors

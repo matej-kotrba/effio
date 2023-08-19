@@ -286,7 +286,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "checkAnswerPresence": (question: FillQuestion): boolean => {
-      return !(question.answers.every(item => item.answer.options[0] !== undefined))
+      return question.answers.every(item => item.answer.options[0] !== "")
     },
     "checkAnswerCorrectness": (answer: FillQuestion, original: FillQuestion) => {
       return original.answers.every((item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")))

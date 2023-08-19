@@ -22,7 +22,7 @@
 		resultFormat
 			? resultFormat.isCorrect
 				? 'outline-success'
-				: 'outline-error'
+				: 'outline-error dark:outline-dark_error'
 			: 'outline-transparent'
 	} ${classes}`}
 >

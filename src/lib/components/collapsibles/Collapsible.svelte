@@ -20,13 +20,17 @@
 	}
 </script>
 
-<div class="parent w-fit {positionsClasses[position]} rounded-md bg-gray-100">
+<div
+	class="parent w-fit {positionsClasses[
+		position
+	]} rounded-md bg-gray-100 dark:bg-black"
+>
 	<button
 		on:click={toggleCollapsible}
 		type={'button'}
 		class="{positionsClasses[
 			position
-		]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200"
+		]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_grey"
 		><Icon
 			icon="bxs:left-arrow"
 			rotate={2}

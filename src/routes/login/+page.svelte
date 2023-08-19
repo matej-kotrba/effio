@@ -10,9 +10,11 @@
 </script>
 
 <div class="py-2 bg">
-	<div class="relative px-6 py-3 bg-white w-[95vw] max-w-[450px] rounded-md">
+	<div
+		class="relative px-6 py-3 bg-white dark:bg-dark_black w-[95vw] max-w-[450px] rounded-md"
+	>
 		<div
-			class="absolute inset-0 z-10 rounded-md bg-light_text_black_40 place-content-center {isProcessing
+			class="absolute inset-0 z-10 rounded-md bg-light_text_black_40 dark:bg-dark_text_white_40 place-content-center {isProcessing
 				? 'grid'
 				: 'hidden'}"
 		>
@@ -76,7 +78,7 @@
 					signIn('github');
 					isProcessing = true;
 				}}
-				class="flex items-center gap-3 px-6 py-2 text-black duration-100 border-2 border-black border-solid rounded-md active:scale-90 hover:scale-105"
+				class="flex items-center gap-3 px-6 py-2 text-black duration-100 border-2 border-black border-solid rounded-md dark:border-white dark:text-white active:scale-90 hover:scale-105"
 				><Icon icon="mdi:github" /><span class="font-semibold text-body2"
 					>GitHub</span
 				></button
@@ -95,5 +97,9 @@
 		);
 		display: grid;
 		place-content: center;
+	}
+
+	:global(.dark) .bg {
+		background-image: linear-gradient(180deg, #330071 0%, #0e002b 100%);
 	}
 </style>
