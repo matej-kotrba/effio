@@ -26,7 +26,7 @@
 			<div class="flex flex-col items-center gap-2">
 				<a
 					href="/dashboard"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser && $page.url.pathname === '/dashboard'}
 					class:dark={$applicationStates['darkMode']['isDarkMode']}
 				>
@@ -34,7 +34,7 @@
 				</a>
 				<a
 					href="/dashboard/test-creator"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-creator'}
@@ -46,7 +46,7 @@
 				</a>
 				<a
 					href="/dashboard/test-collection"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-collection'}
@@ -56,7 +56,7 @@
 				</a>
 				<a
 					href="/dashboard/test-history"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:dark={$applicationStates}
 					class:active={browser &&
 						$page.url.pathname === '/dashboard/test-history'}
@@ -65,7 +65,7 @@
 				</a>
 				<a
 					href="/community"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 				>
 					<iconify-icon
 						icon="fluent:people-community-24-filled"
@@ -162,6 +162,7 @@
 
 	.grid__layout > aside {
 		max-width: 300px;
+		min-width: 220px;
 	}
 
 	:global(.dark) .active {

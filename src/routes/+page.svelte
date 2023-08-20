@@ -103,7 +103,7 @@
 	/>
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">
-			<h2 class="font-bold text-h1 text-light_primary">
+			<h2 class="font-bold md:text-h2 lg:text-h1 text-light_primary">
 				CREATE<span class="text-light_text_black dark:text-dark_text_white"
 					>,</span
 				>
@@ -126,7 +126,11 @@
 						Explore what have community created!
 					</h3>
 					<div>
-						<img src="/imgs/community_place.svg" alt="Community place" />
+						<img
+							src="/imgs/community_place.svg"
+							alt="Community place"
+							class="max-w-[300px] mx-auto"
+						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
 							<Icon icon="material-symbols:arrow-right-alt-rounded" />
@@ -156,7 +160,7 @@
 			</slot>
 		</GridLayout>
 		<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
-			<h2 class="font-bold text-h1 text-success">
+			<h2 class="font-bold md:text-h2 lg:text-h1 text-success">
 				<span
 					class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
 					>The</span
@@ -178,7 +182,11 @@
 					</h3>
 					<Space gap={10} />
 					<div>
-						<img src="/imgs/online_test.svg" alt="Community place" />
+						<img
+							src="/imgs/online_test.svg"
+							alt="Community place"
+							class="max-w-[300px] mx-auto"
+						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
 							<Icon icon="material-symbols:arrow-right-alt-rounded" />

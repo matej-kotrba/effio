@@ -35,7 +35,7 @@
 			<div class="relative z-10">
 				<Icon
 					{icon}
-					class="text-4xl text-light_text_black dark:text-dark_text_white dark:text-dark_text_white"
+					class="text-4xl text-light_text_black dark:text-dark_text_white"
 				/>
 			</div>
 		</div>
@@ -46,7 +46,7 @@
 	</div>
 	<div style="padding-top: {firstLineHeight}px;">
 		<h3
-			class="text-light_text_black dark:text-dark_text_white dark:text-dark_text_white text-h4"
+			class="text-light_text_black dark:text-dark_text_white text-body1 md:text-h6 lg:text-h4"
 		>
 			{title}
 		</h3>

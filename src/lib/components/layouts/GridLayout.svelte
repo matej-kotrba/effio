@@ -7,7 +7,7 @@
 						? 'dark:' + darkColor
 						: `dark:bg-[${darkColor}]`
 				}`} -->
-<section>
+<section class="flex flex-col lg:grid lg:max-h-[700px]">
 	<div class="a">
 		<HoverLeaning>
 			<div class="card bg-light_terciary dark:bg-dark_terciary">
@@ -33,12 +33,11 @@
 
 <style>
 	section {
-		max-height: 700px;
-		display: grid;
 		gap: 40px;
 		grid-template-columns: repeat(5, 1fr);
 		grid-template-rows: repeat(2, 1fr);
 	}
+
 	section .card {
 		height: 100%;
 		border-radius: 40px;
