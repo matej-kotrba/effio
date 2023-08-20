@@ -6,79 +6,115 @@
 	import type { PageData } from './$types';
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
+
+	$: isSidebarShown = false;
+	$: isSidebarCollapsible = false;
+
+	onMount(() => {
+		const width = getComputedStyle(document.documentElement).width;
+		if (+width.slice(0, width.length - 2) < 768) {
+			isSidebarCollapsible = true;
+		} else {
+			isSidebarCollapsible = false;
+		}
+		window.addEventListener('resize', (e) => {
+			const width = getComputedStyle(document.documentElement).width;
+			if (+width.slice(0, width.length - 2) < 768) {
+				isSidebarCollapsible = true;
+			} else {
+				isSidebarCollapsible = false;
+			}
+		});
+	});
 </script>
 
-<main class="h-full duration-100 grid__layout dark:bg-dark_black">
-	<aside
-		class="sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
-	>
-		<div class="flex flex-col items-center">
-			<a class="w-[90px] aspect-square" href="/">
-				<img
-					src="/imgs/logo.png"
-					alt="Effio logo"
-					width="90"
-					class="drop-shadow-primary"
-				/>
-			</a>
-			<div class="flex flex-col items-center gap-2">
-				<a
-					href="/dashboard"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-					class:active={browser && $page.url.pathname === '/dashboard'}
-					class:dark={$applicationStates['darkMode']['isDarkMode']}
-				>
-					<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
+<main
+	class="h-full duration-100 grid__layout dark:bg-dark_black"
+	class:layout__hidden={isSidebarCollapsible && !isSidebarShown}
+>
+	<div class="overflow-hidden">
+		<aside
+			class="bg-light_white dark:bg-dark_grey sm:bg-none sm:max-w-[300px] sm:min-w-[220px] absolute sm:block w-full sm:sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
+		>
+			<div class="flex flex-col items-center">
+				<a class="w-[90px] aspect-square" href="/">
+					<img
+						src="/imgs/logo.png"
+						alt="Effio logo"
+						width="90"
+						class="drop-shadow-primary"
+					/>
 				</a>
-				<a
-					href="/dashboard/test-creator"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-					class:dark={$applicationStates}
-					class:active={browser &&
-						$page.url.pathname === '/dashboard/test-creator'}
-				>
-					<iconify-icon
-						icon="material-symbols:edit-square-outline-rounded"
-						class="text-2xl"
-					/> Create a new test
-				</a>
-				<a
-					href="/dashboard/test-collection"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-					class:dark={$applicationStates}
-					class:active={browser &&
-						$page.url.pathname === '/dashboard/test-collection'}
-				>
-					<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
-					collection
-				</a>
-				<a
-					href="/dashboard/test-history"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-					class:dark={$applicationStates}
-					class:active={browser &&
-						$page.url.pathname === '/dashboard/test-history'}
-				>
-					<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
-				</a>
-				<a
-					href="/community"
-					class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-				>
-					<iconify-icon
-						icon="fluent:people-community-24-filled"
-						class="text-2xl"
-					/> Community place
-				</a>
+				<div class="flex flex-col items-center gap-2">
+					<a
+						href="/dashboard"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class:active={browser && $page.url.pathname === '/dashboard'}
+						class:dark={$applicationStates['darkMode']['isDarkMode']}
+					>
+						<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
+					</a>
+					<a
+						href="/dashboard/test-creator"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class:dark={$applicationStates}
+						class:active={browser &&
+							$page.url.pathname === '/dashboard/test-creator'}
+					>
+						<iconify-icon
+							icon="material-symbols:edit-square-outline-rounded"
+							class="text-2xl"
+						/> Create a new test
+					</a>
+					<a
+						href="/dashboard/test-collection"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class:dark={$applicationStates}
+						class:active={browser &&
+							$page.url.pathname === '/dashboard/test-collection'}
+					>
+						<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
+						collection
+					</a>
+					<a
+						href="/dashboard/test-history"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class:dark={$applicationStates}
+						class:active={browser &&
+							$page.url.pathname === '/dashboard/test-history'}
+					>
+						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
+					</a>
+					<a
+						href="/community"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					>
+						<iconify-icon
+							icon="fluent:people-community-24-filled"
+							class="text-2xl"
+						/> Community place
+					</a>
+				</div>
 			</div>
-		</div>
-	</aside>
+		</aside>
+	</div>
+
 	<div>
 		<nav
 			class="flex items-center justify-end gap-2 px-4 py-2 overflow-hidden border-b-2 border-light_text_black_20"
 		>
+			{#if isSidebarCollapsible}
+				<button
+					on:click={() => (isSidebarShown = !isSidebarShown)}
+					class="mr-auto"
+					type="button"
+				>
+					<iconify-icon icon="charm:menu-hamburger" class="text-3xl" />
+				</button>
+			{/if}
 			<img
 				src={data.session?.user?.image}
 				alt="Icon"
@@ -160,9 +196,8 @@
 		grid-template-rows: 1fr;
 	}
 
-	.grid__layout > aside {
-		max-width: 300px;
-		min-width: 220px;
+	.grid__layout.layout__hidden {
+		grid-template-columns: 0 1fr;
 	}
 
 	:global(.dark) .active {
