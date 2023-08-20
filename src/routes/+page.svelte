@@ -41,11 +41,11 @@
 					> - online test creation tool which will help you achieve all of that.
 				</p>
 				<Space gap={80} />
-				<p class="text-light_white text-body1">
+				<p class="text-light_white text-body3 md:text-body1">
 					All you need is Github or Google account!
 				</p>
 				<Space gap={10} />
-				<div class="flex items-center gap-4">
+				<div class="flex flex-col gap-4 xs:items-center xs:flex-row">
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
 						class="btn bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
@@ -77,7 +77,7 @@
 					<p>Create, share, explore</p>
 				</div>
 				<Space />
-				<div class="flex gap-4 lg:hidden">
+				<div class="flex flex-col gap-4 sm:flex-row lg:hidden">
 					<div
 						class="w-full p-4 text-center bg-white rounded-md dark:bg-dark_secondary"
 					>
@@ -99,11 +99,13 @@
 			? '/imgs/layer_dark2.svg'
 			: '/imgs/layer2.svg'}
 		alt="Layer"
-		class="w-full"
+		class="w-full min-h-[120px] object-cover sm:object-contain"
 	/>
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">
-			<h2 class="font-bold md:text-h2 lg:text-h1 text-light_primary">
+			<h2
+				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary"
+			>
 				CREATE<span class="text-light_text_black dark:text-dark_text_white"
 					>,</span
 				>
@@ -114,7 +116,7 @@
 				> EXPLORE
 			</h2>
 			<p
-				class="pl-4 text-body1 text-light_text_black dark:text-dark_text_white"
+				class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 			>
 				Browse and share your own created tests for all other users here
 			</p>
@@ -122,14 +124,14 @@
 		<GridLayout>
 			<slot slot="a">
 				<div class="flex flex-col justify-between h-full">
-					<h3 class="mb-auto font-light text-h4 text-light_white">
+					<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
 						Explore what have community created!
 					</h3>
 					<div>
 						<img
 							src="/imgs/community_place.svg"
 							alt="Community place"
-							class="max-w-[300px] mx-auto"
+							class="max-w-[300px] mx-auto w-full xs:w-auto"
 						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
@@ -139,13 +141,15 @@
 				</div>
 			</slot>
 			<slot slot="b">
-				<h3 class="max-w-[50%] text-light_white text-h5">
+				<h3
+					class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+				>
 					Read more about the community place and all its features.
 				</h3>
 			</slot>
 			<slot slot="c">
 				<div class="flex flex-col justify-between h-full">
-					<h3 class="text-light_white text-h5">
+					<h3 class="text-light_white text-body1 md:text-h5">
 						Want to create tests of you own?<br />All you need is to Log In
 						using one of these providers: GitHub, Google
 					</h3>
@@ -160,7 +164,9 @@
 			</slot>
 		</GridLayout>
 		<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
-			<h2 class="font-bold md:text-h2 lg:text-h1 text-success">
+			<h2
+				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
+			>
 				<span
 					class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
 					>The</span
@@ -168,7 +174,7 @@
 				Ultimate Generator
 			</h2>
 			<p
-				class="pl-4 text-body1 text-light_text_black dark:text-dark_text_white"
+				class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 			>
 				Create tests using simple and user friendly enviroment with plenty of
 				options
@@ -177,7 +183,7 @@
 		<GridLayout>
 			<slot slot="a">
 				<div class="flex flex-col justify-between h-full">
-					<h3 class="mb-auto font-light text-h4 text-light_white">
+					<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
 						Create your own tests using simple enviroment!
 					</h3>
 					<Space gap={10} />
@@ -185,7 +191,7 @@
 						<img
 							src="/imgs/online_test.svg"
 							alt="Community place"
-							class="max-w-[300px] mx-auto"
+							class="max-w-[300px] mx-auto w-full xs:w-auto"
 						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
@@ -195,14 +201,16 @@
 				</div>
 			</slot>
 			<slot slot="b">
-				<h3 class="max-w-[50%] text-light_white text-h5">
+				<h3
+					class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+				>
 					Import and export in GIFT format compatible with other popular
 					platforms like Moodle.
 				</h3>
 			</slot>
 			<slot slot="c">
 				<div class="flex flex-col justify-between h-full">
-					<h3 class="text-light_white text-h5">
+					<h3 class="text-light_white text-body1 md:text-h5">
 						Want to create tests of you own?<br />All you need is to Log In
 						using one of these providers: GitHub, Google
 					</h3>
@@ -217,7 +225,7 @@
 			</slot>
 		</GridLayout>
 	</div>
-	<Space gap={500} />
+	<Space gap={50} />
 	<Footer />
 </main>
 

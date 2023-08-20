@@ -6,9 +6,11 @@
 
 <footer class=" bg-slate-200 dark:bg-dark_secondary">
 	<div
-		class="container relative flex items-start justify-between gap-10 px-10 py-20 mx-auto"
+		class="container relative flex flex-col items-start justify-between gap-10 px-10 py-20 mx-auto md:flex-row"
 	>
-		<div class="grid__container">
+		<div
+			class="flex flex-col items-center gap-4 mx-auto md:flex-row md:items-start md:mx-0"
+		>
 			<div class="flex flex-col justify-center w-max">
 				<h5
 					class="text-center text-light_text_black dark:text-dark_text_white text-h5"
@@ -30,7 +32,12 @@
 					/>
 				</a>
 			</div>
-			<Separator h="80%" w="4px" color="white" class="self-center" />
+			<Separator
+				h="120px"
+				w="4px"
+				color="white"
+				class="self-center hidden md:block"
+			/>
 			<div class="flex flex-col items-start">
 				<h6 class="text-h6">Page links</h6>
 				<a
@@ -51,7 +58,7 @@
 				>
 			</div>
 		</div>
-		<div>
+		<div class="mx-auto md:mx-0">
 			<h6 class="text-center text-h6">Contact</h6>
 			<Space gap={5} />
 			<div class="flex justify-center gap-2">
@@ -68,10 +75,3 @@
 		</div>
 	</div>
 </footer>
-
-<style>
-	.grid__container {
-		display: grid;
-		grid-template-columns: 1fr 40px 1fr;
-	}
-</style>

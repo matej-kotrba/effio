@@ -5,7 +5,7 @@
 		onIntersect
 	} from '../../../lib/use/intersectionObserver';
 
-	export let height: number = 600;
+	// export let height: number = 500;
 	export let lineColor: string = 'var(--light-secondary)';
 	export let icon: string = 'fluent:people-community-28-regular';
 	export let title: string = 'Sample title';
@@ -14,8 +14,8 @@
 </script>
 
 <div
-	class="flex gap-6 px-12 duration-500 opacity-0 box group"
-	style="min-height: {height}px; --line-color: {lineColor};"
+	class="flex gap-6 px-4 duration-500 opacity-0 sm:px-8 md:px-12 box group lg:min-h-[500px] md:min-h-[400px] min-h-[300px]"
+	style="--line-color: {lineColor};"
 	use:intersection={true}
 	on:intersect={(event) => onIntersect(event, ['opacity-100', 'active'])}
 >
@@ -35,7 +35,7 @@
 			<div class="relative z-10">
 				<Icon
 					{icon}
-					class="text-4xl text-light_text_black dark:text-dark_text_white"
+					class="text-2xl sm:text-4xl text-light_text_black dark:text-dark_text_white"
 				/>
 			</div>
 		</div>
@@ -57,7 +57,7 @@
 <style>
 	.grid__line {
 		display: grid;
-		grid-template-rows: 1fr auto 1fr;
+		grid-template-rows: 1fr auto 3fr;
 		justify-items: center;
 	}
 </style>
