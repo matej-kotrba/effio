@@ -7,6 +7,7 @@
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import { SM } from '~/utils/responsive';
 
 	export let data: PageData;
 
@@ -22,24 +23,34 @@
 		}
 		window.addEventListener('resize', (e) => {
 			const width = getComputedStyle(document.documentElement).width;
-			if (+width.slice(0, width.length - 2) < 768) {
+			if (+width.slice(0, width.length - 2) <= SM) {
 				isSidebarCollapsible = true;
 			} else {
 				isSidebarCollapsible = false;
 			}
 		});
 	});
+
+	$: console.log(isSidebarCollapsible, isSidebarShown);
 </script>
 
 <main
 	class="h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible && !isSidebarShown}
 >
-	<div class="overflow-hidden">
+	<div class="overflow-hidden sm:overflow-visible">
 		<aside
-			class="bg-light_white dark:bg-dark_grey sm:bg-none sm:max-w-[300px] sm:min-w-[220px] absolute sm:block w-full sm:sticky top-0 z-[100] min-h-screen max-h-screen px-2 border-r-2 border-solid xl:px-4 border-light_text_black_20"
+			class="overflow-hidden bg-light_white dark:bg-dark_grey sm:bg-none md:min-w-[210px] md:max-w-[210px] lg:max-w-[260px] absolute sm:block w-full sm:sticky top-0 z-[100] min-h-screen max-h-screen border-r-2 border-solid border-light_text_black_20"
 		>
-			<div class="flex flex-col items-center">
+			{#if isSidebarCollapsible}
+				<button
+					type="button"
+					on:click={() => (isSidebarShown = !isSidebarShown)}
+				>
+					s
+				</button>
+			{/if}
+			<div class="flex flex-col items-center px-2 xl:px-4">
 				<a class="w-[90px] aspect-square" href="/">
 					<img
 						src="/imgs/logo.png"
@@ -51,7 +62,7 @@
 				<div class="flex flex-col items-center gap-2">
 					<a
 						href="/dashboard"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:active={browser && $page.url.pathname === '/dashboard'}
 						class:dark={$applicationStates['darkMode']['isDarkMode']}
 					>
@@ -59,7 +70,7 @@
 					</a>
 					<a
 						href="/dashboard/test-creator"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-creator'}
@@ -71,7 +82,7 @@
 					</a>
 					<a
 						href="/dashboard/test-collection"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-collection'}
@@ -81,7 +92,7 @@
 					</a>
 					<a
 						href="/dashboard/test-history"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-history'}
@@ -90,7 +101,7 @@
 					</a>
 					<a
 						href="/community"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 md:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					>
 						<iconify-icon
 							icon="fluent:people-community-24-filled"
@@ -197,7 +208,7 @@
 	}
 
 	.grid__layout.layout__hidden {
-		grid-template-columns: 0 1fr;
+		grid-template-columns: 0px 1fr;
 	}
 
 	:global(.dark) .active {
