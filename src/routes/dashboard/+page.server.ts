@@ -14,7 +14,7 @@ export const load = async ({ locals }) => {
   let testTakenSummary;
 
   if (id) {
-    const result: TestCreationActivity[] = await prisma.$queryRaw`
+    const resultPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
     SELECT 
     COUNT(id) as "count",
     LEFT(createdAt, 7) as "period" 
@@ -24,7 +24,7 @@ export const load = async ({ locals }) => {
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
 
-    const resultTestsTaken: TestCreationActivity[] = await prisma.$queryRaw`
+    const resultTestsTakenPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
     SELECT 
     COUNT(id) as "count",
     LEFT(createdAt, 7) as "period" 
@@ -33,6 +33,8 @@ export const load = async ({ locals }) => {
     GROUP BY LEFT(createdAt, 7)
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
+
+    const [result, resultTestsTaken] = await Promise.all([resultPromise, resultTestsTakenPromise])
 
     // Fill in the motnhs with no activity
     for (let i = 0; i < result.length; i++) {

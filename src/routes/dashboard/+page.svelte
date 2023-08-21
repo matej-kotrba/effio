@@ -173,9 +173,15 @@
 	});
 </script>
 
-<div class="mx-auto max-w-[1000px]">
-	<canvas bind:this={portfolio} width="400" />
-	<canvas bind:this={portfolioRecords} width="400" />
+<div
+	class="mx-auto max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 place-items-center"
+>
+	<div class="w-full">
+		<canvas bind:this={portfolio} width="400" class="w-full" />
+	</div>
+	<div class="w-full">
+		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
+	</div>
 </div>
 <!-- <div class="text-primary">
 	{#each templates as template}

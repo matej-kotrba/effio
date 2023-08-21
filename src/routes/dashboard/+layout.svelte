@@ -36,6 +36,7 @@
 	class="h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible}
 >
+	<!-- TODO: FIXNI TO -->
 	<div class={isSidebarShown ? '' : 'overflow-hidden'}>
 		<aside
 			class="bg-light_white dark:bg-dark_grey sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
@@ -129,7 +130,7 @@
 
 	<div>
 		<nav
-			class="flex items-center justify-end gap-2 px-4 py-2 overflow-hidden border-b-2 border-light_text_black_20"
+			class="flex items-center justify-end gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
 		>
 			{#if isSidebarCollapsible}
 				<button
@@ -140,23 +141,7 @@
 					<iconify-icon icon="charm:menu-hamburger" class="text-3xl" />
 				</button>
 			{/if}
-			<img
-				src={data.session?.user?.image}
-				alt="Icon"
-				width="50"
-				referrerpolicy="no-referrer"
-				class="object-cover rounded-full aspect-square"
-			/>
-			<div class="flex flex-col">
-				<span
-					class="font-semibold uppercase text-light_text_black dark:text-dark_text_white"
-					>{data.session?.user?.name}</span
-				>
-				<span
-					class="text-light_text_black dark:text-dark_text_white_40 text-body3"
-					>{data.session?.user?.email}</span
-				>
-			</div>
+
 			<button
 				class="relative grid h-10 place-content-center"
 				type="button"
@@ -196,17 +181,39 @@
 					/>
 				{/if}
 			</button>
-			<button
-				class="ml-4"
-				type="button"
-				on:click={async () =>
-					await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
-			>
-				<Icon
-					icon="iconamoon:exit-light"
-					class="text-4xl duration-150 text-slate-500 hover:text-red-600 hover:scale-x-110"
-				/></button
-			>
+			<div class="dropdown dropdown-hover dropdown-end dropdown-bottom">
+				<img
+					src={data.session?.user?.image}
+					alt="Icon"
+					width="50"
+					referrerpolicy="no-referrer"
+					class="object-cover rounded-full aspect-square"
+				/>
+				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+				<ul
+					tabindex="0"
+					class="dropdown-content z-[1] menu p-3 shadow bg-base-100 dark:bg-dark_light_grey rounded-box w-52"
+				>
+					<div class="flex flex-col">
+						<span
+							class="font-semibold text-center uppercase text-light_text_black dark:text-dark_text_white"
+							>{data.session?.user?.name}</span
+						>
+						<span
+							class="text-center text-light_text_black dark:text-dark_text_white_40 text-body3"
+							>{data.session?.user?.email}</span
+						>
+					</div>
+					<button
+						class="flex items-center gap-1 px-2 py-1 mt-4 ml-auto duration-100 rounded-md hover:bg-light_grey dark:hover:bg-dark_text_white_20"
+						type="button"
+						on:click={async () =>
+							await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
+						>Log out
+						<iconify-icon icon="mingcute:exit-line" class="text-2xl" />
+					</button>
+				</ul>
+			</div>
 		</nav>
 		<div class="px-4 pt-6 md:px-8 xl:px-16 content">
 			<slot />
@@ -226,12 +233,12 @@
 	}
 
 	:global(.dark) .active {
-		background-color: var(--dark-primary);
-		color: var(--dark-text-white);
+		background-color: var(--dark-primary) !important;
+		color: var(--dark-text-white) !important;
 	}
 
 	.active {
-		background-color: var(--light-primary);
-		color: var(--light-white);
+		background-color: var(--light-primary) !important;
+		color: var(--light-white) !important;
 	}
 </style>
