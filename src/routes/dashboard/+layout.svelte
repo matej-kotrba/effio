@@ -7,7 +7,7 @@
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import { SM } from '~/utils/responsive';
+	import { LG } from '~/utils/responsive';
 
 	export let data: PageData;
 
@@ -16,42 +16,51 @@
 
 	onMount(() => {
 		const width = getComputedStyle(document.documentElement).width;
-		if (+width.slice(0, width.length - 2) < 768) {
+		if (+width.slice(0, width.length - 2) < LG) {
 			isSidebarCollapsible = true;
 		} else {
 			isSidebarCollapsible = false;
 		}
 		window.addEventListener('resize', (e) => {
 			const width = getComputedStyle(document.documentElement).width;
-			if (+width.slice(0, width.length - 2) <= SM) {
+			if (+width.slice(0, width.length - 2) <= LG) {
 				isSidebarCollapsible = true;
 			} else {
 				isSidebarCollapsible = false;
 			}
 		});
 	});
-
-	$: console.log(isSidebarCollapsible, isSidebarShown);
 </script>
 
 <main
 	class="h-full duration-100 grid__layout dark:bg-dark_black"
-	class:layout__hidden={isSidebarCollapsible && !isSidebarShown}
+	class:layout__hidden={isSidebarCollapsible}
 >
-	<div class="overflow-hidden sm:overflow-visible">
+	<div class={isSidebarShown ? '' : 'overflow-hidden'}>
 		<aside
-			class="overflow-hidden bg-light_white dark:bg-dark_grey sm:bg-none md:min-w-[210px] md:max-w-[210px] lg:max-w-[260px] absolute sm:block w-full sm:sticky top-0 z-[100] min-h-screen max-h-screen border-r-2 border-solid border-light_text_black_20"
+			class="bg-light_white dark:bg-dark_grey sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
+			 lg:max-w-[260px] md:block sticky top-0 z-[100] min-h-screen max-h-screen
+			  border-r-2 border-solid border-light_text_black_20 {isSidebarShown
+				? 'w-full'
+				: ''}"
 		>
 			{#if isSidebarCollapsible}
-				<button
-					type="button"
-					on:click={() => (isSidebarShown = !isSidebarShown)}
-				>
-					s
-				</button>
+				<div class="flex justify-end">
+					<button
+						type="button"
+						class="ml-auto"
+						on:click={() => (isSidebarShown = !isSidebarShown)}
+					>
+						<iconify-icon icon="ic:round-close" class="text-3xl" />
+					</button>
+				</div>
 			{/if}
 			<div class="flex flex-col items-center px-2 xl:px-4">
-				<a class="w-[90px] aspect-square" href="/">
+				<a
+					class="w-[90px] aspect-square"
+					on:click={() => (isSidebarShown = false)}
+					href="/"
+				>
 					<img
 						src="/imgs/logo.png"
 						alt="Effio logo"
@@ -61,6 +70,7 @@
 				</a>
 				<div class="flex flex-col items-center gap-2">
 					<a
+						on:click={() => (isSidebarShown = false)}
 						href="/dashboard"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:active={browser && $page.url.pathname === '/dashboard'}
@@ -69,6 +79,7 @@
 						<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
 					</a>
 					<a
+						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-creator"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
@@ -81,6 +92,7 @@
 						/> Create a new test
 					</a>
 					<a
+						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-collection"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
@@ -91,6 +103,7 @@
 						collection
 					</a>
 					<a
+						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-history"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
@@ -100,6 +113,7 @@
 						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
 					</a>
 					<a
+						on:click={() => (isSidebarShown = false)}
 						href="/community"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					>
