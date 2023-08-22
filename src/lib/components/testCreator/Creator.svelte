@@ -194,9 +194,9 @@
 </script>
 
 <div
-	class="relative h-full bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white grid__container"
+	class="relative grid h-full grid-cols-12 bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div class="p-4">
+	<div class="col-span-8 p-4">
 		<!-- The dropdown for new input -->
 		<dialog class="modal" bind:this={newInputModal}>
 			<form
@@ -260,7 +260,7 @@
 				</div>
 			{:else}
 				<div
-					class="flex flex-col w-full gap-3 lg:w-3/4 xl:w-2/3"
+					class="flex flex-col w-full gap-3 lg:w-4/5 xl:w-full max-w-[600px]"
 					use:dndzone={{
 						items: $testObject['questions'],
 						flipDurationMs: 300,
@@ -328,12 +328,14 @@
 		</div>
 	</div>
 	{#if $testObject.questions.length > 0}
-		<CreatorInputSidebar
-			inputs={inputTemplates}
-			{containerRef}
-			class="self-start"
-			on:drop={onInputDrop}
-		/>
+		<div class="col-span-4">
+			<CreatorInputSidebar
+				inputs={inputTemplates}
+				{containerRef}
+				class="self-start"
+				on:drop={onInputDrop}
+			/>
+		</div>
 	{/if}
 	<!-- on:drag={(event) => (newInputDrag = event.detail.isDragging)} -->
 </div>
@@ -341,7 +343,6 @@
 <style>
 	.grid__container {
 		display: grid;
-		grid-template-columns: 1fr 180px;
 	}
 
 	.new-input-button {

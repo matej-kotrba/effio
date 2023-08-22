@@ -53,7 +53,7 @@ will be used in the test creator -->
 		>
 			<Icon
 				icon="material-symbols:close-rounded"
-				class="text-3xl group-hover:rotate-90 text-light_text_black dark:text-dark_text_white group-hover:text-error dark:text-dark_error"
+				class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error dark:text-dark_error"
 				style="transition: 200ms transform;"
 			/>
 		</button>

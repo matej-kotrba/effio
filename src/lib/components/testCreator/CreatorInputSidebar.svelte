@@ -13,6 +13,8 @@
 	export { classes as class };
 	let classes = '';
 
+	let asideWidth: number;
+
 	const dispatch = createEventDispatcher();
 
 	// let isDragging = false;
@@ -71,8 +73,12 @@
 	});
 </script>
 
-<aside class="relative">
-	<div class="sticky top-0 flex flex-col gap-2 p-2 {classes}">
+<aside class="relative sticky top-0" bind:clientWidth={asideWidth}>
+	<div
+		class=" grid gap-2 p-2 {asideWidth > 260
+			? 'grid-cols-2'
+			: 'grid-cols-1'} {classes}"
+	>
 		{#each inputs as input, index (index)}
 			<div
 				class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500"
