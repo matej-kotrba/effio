@@ -96,7 +96,7 @@
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<img
 		src={$applicationStates.darkMode.isDarkMode
-			? '/imgs/layer_dark2.svg'
+			? '/imgs/layer_dark3.svg'
 			: '/imgs/layer2.svg'}
 		alt="Layer"
 		class="w-full min-h-[120px] object-cover sm:object-contain"
@@ -240,6 +240,6 @@
 	}
 
 	.hero__section_dark {
-		background: linear-gradient(180deg, #330071 0%, #0e002b 100%);
+		background: linear-gradient(180deg, #1c065c 0%, #0092ca 100%);
 	}
 </style>

@@ -36,8 +36,7 @@
 	class="h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible}
 >
-	<!-- TODO: FIXNI TO -->
-	<div class={isSidebarShown ? '' : 'overflow-hidden'}>
+	<div class={isSidebarShown ? '' : ''}>
 		<aside
 			class="bg-light_white dark:bg-dark_grey sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
 			 lg:max-w-[260px] md:block sticky top-0 z-[100] min-h-screen max-h-screen
@@ -112,6 +111,14 @@
 							$page.url.pathname === '/dashboard/test-history'}
 					>
 						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
+					</a>
+					<a
+						on:click={() => (isSidebarShown = false)}
+						href="/groups"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+					>
+						<iconify-icon icon="ion:share-social" class="text-2xl" />
+						My Groups
 					</a>
 					<a
 						on:click={() => (isSidebarShown = false)}
