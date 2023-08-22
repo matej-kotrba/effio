@@ -5,9 +5,29 @@
 
 	export let inputValue: string = '';
 
+	let searchRequest: Promise<string> | string;
+
 	function eraseInputText() {
 		inputRef.value = '';
 		inputRef.focus();
+	}
+
+	async function searchForResults() {
+		if (searchRequest instanceof Promise) {
+			// searchRequest.
+		}
+		searchRequest = await delayResults(1000, inputRef.value);
+	}
+
+	function delayResults(
+		timeInMs: number,
+		searchParams: string
+	): Promise<string> {
+		return new Promise((res) => {
+			setTimeout(() => {
+				res(searchParams);
+			}, timeInMs);
+		});
 	}
 
 	$: inputValue = inputRef?.value ?? '';
