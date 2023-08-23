@@ -126,12 +126,20 @@ const protectedRouter = router({
         }
       })
 
+      if (!test) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+      }
+
       const testData = await ctx.prisma.testVersion.create({
         data: {
           testId: input.testGroupId,
           version: version + 1
         }
       })
+
+      if (!testData) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Test version not created" })
+      }
 
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 

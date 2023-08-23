@@ -27,6 +27,7 @@
 	import { getContext } from 'svelte';
 	import type { toast as Toast } from 'svelte-french-toast';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
+	import { TRPCError } from '@trpc/server';
 
 	export let data;
 
@@ -66,13 +67,21 @@
 		$testObject = $testObject;
 		if (result['isError']) return;
 
-		const data = await trpc($page).protected.updateTest.mutate({
-			testGroupId: $testObject.id as string,
-			title: $testObject.title,
-			description: $testObject.description,
-			isPublished: $testObject.published as boolean,
-			questionContent: JSON.stringify($testObject.questions)
-		});
+		let data;
+		try {
+			data = await trpc($page).protected.updateTest.mutate({
+				testGroupId: $testObject.id as string,
+				title: $testObject.title,
+				description: $testObject.description,
+				isPublished: $testObject.published as boolean,
+				questionContent: JSON.stringify($testObject.questions)
+			});
+		} catch (e) {
+			if (e instanceof TRPCError) {
+				toast['error'](e.message);
+			}
+			return;
+		}
 		if (data['success']) {
 			isSubmitting = true;
 			await new Promise((resolve) => setTimeout(resolve, 2000));
