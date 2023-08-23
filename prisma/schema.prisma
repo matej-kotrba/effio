@@ -81,6 +81,8 @@ model QuestionType {
 model Test {
   id           String        @id @default(uuid())
   testVersions TestVersion[]
+  title        String
+  description  String
   published    Boolean       @default(false)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -94,16 +96,14 @@ model Test {
 }
 
 model TestVersion {
-  versionId   String       @id @default(uuid())
-  title       String
-  description String       @default("")
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  version     Int
-  testId      String
-  testGroup   Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
-  questions   Question[]
-  records     TestRecord[]
+  versionId String       @id @default(uuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  version   Int
+  testId    String
+  testGroup Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions Question[]
+  records   TestRecord[]
 
   @@index([testId])
   @@index([version])
@@ -127,6 +127,8 @@ model Question {
 
 model TestRecord {
   id              String           @id @default(uuid())
+  title           String
+  description     String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   test            TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)

@@ -174,8 +174,8 @@
 		{#each recentTests.data as test}
 			<Card
 				redirectLink={`/tests/${test.id}`}
-				title={test.testVersions[0].title}
-				description={test.testVersions[0].description}
+				title={test.title}
+				description={test.description}
 				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.name)}
@@ -206,10 +206,7 @@
 								'href',
 								'data:text/plain;charset=utf-8,' + encodeURIComponent(gift)
 							);
-							element.setAttribute(
-								'download',
-								`${test['testVersions'][0]['title']}.txt`
-							);
+							element.setAttribute('download', `${test['title']}.txt`);
 							element.style.display = 'none';
 							document.body.appendChild(element);
 							element.click();
@@ -221,7 +218,7 @@
 					{
 						action: async () => {
 							modalDeleteInfo.id = test.id;
-							modalDeleteInfo.title = test.testVersions[0].title;
+							modalDeleteInfo.title = test.title;
 							openModal();
 						},
 						text: 'Delete',

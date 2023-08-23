@@ -340,8 +340,8 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
   testObject.set({
     id: testData.id,
     versionId: testData.testVersions[0].versionId,
-    title: testData.testVersions[0].title,
-    description: testData.testVersions[0].description,
+    title: testData.title,
+    description: testData.description,
     published: testData.published,
     errors: {},
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -584,6 +584,8 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
 
   await trpc().records.createTestRecord.mutate({
     testId: test.versionId,
+    title: test.title,
+    description: test.description,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     answerContent: questionData.map((item, index) => {
       return {

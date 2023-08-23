@@ -3,31 +3,18 @@
 
 	let inputRef: HTMLInputElement;
 
-	export let inputValue: string = '';
+	export let searchFunction: (value: string) => unknown;
 
-	let searchRequest: Promise<string> | string;
+	export let inputValue: string = '';
 
 	function eraseInputText() {
 		inputRef.value = '';
 		inputRef.focus();
+		searchFunction(inputRef.value);
 	}
 
-	async function searchForResults() {
-		if (searchRequest instanceof Promise) {
-			// searchRequest.
-		}
-		searchRequest = await delayResults(1000, inputRef.value);
-	}
-
-	function delayResults(
-		timeInMs: number,
-		searchParams: string
-	): Promise<string> {
-		return new Promise((res) => {
-			setTimeout(() => {
-				res(searchParams);
-			}, timeInMs);
-		});
+	function onChange() {
+		searchFunction(inputRef.value);
 	}
 
 	$: inputValue = inputRef?.value ?? '';
@@ -45,6 +32,7 @@
 	</button>
 	<input
 		bind:this={inputRef}
+		on:input={onChange}
 		type="text"
 		class="w-full p-3 font-normal bg-transparent outline-none"
 		placeholder="Search..."

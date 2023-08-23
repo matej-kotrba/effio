@@ -73,7 +73,7 @@
 	});
 </script>
 
-<aside class="relative sticky top-0" bind:clientWidth={asideWidth}>
+<aside class="sticky top-0" bind:clientWidth={asideWidth}>
 	<div
 		class=" grid gap-2 p-2 {asideWidth > 260
 			? 'grid-cols-2'

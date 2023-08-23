@@ -5,7 +5,6 @@
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
 	import type { Tag } from '@prisma/client';
@@ -25,63 +24,63 @@
 		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
 	>['tests'] = [];
 
-	let observer: IntersectionObserver;
+	// let observer: IntersectionObserver;
 
-	onMount(async () => {
-		isFetchingNewTests = true;
+	// onMount(async () => {
+	// 	isFetchingNewTests = true;
 
-		let response = await trpc($page).getPopularTests.query({
-			take: REQUEST_AMOUNT
-		});
+	// 	let response = await trpc($page).getPopularTests.query({
+	// 		take: REQUEST_AMOUNT
+	// 	});
 
-		isFetchingNewTests = false;
+	// 	isFetchingNewTests = false;
 
-		if (response.success === false || response.tests === undefined) return;
+	// 	if (response.success === false || response.tests === undefined) return;
 
-		requestedTests = response.tests;
+	// 	requestedTests = response.tests;
 
-		observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach(async (entry) => {
-					if (entry.isIntersecting) {
-						if (requestedTests === undefined) return;
+	// 	observer = new IntersectionObserver(
+	// 		(entries) => {
+	// 			entries.forEach(async (entry) => {
+	// 				if (entry.isIntersecting) {
+	// 					if (requestedTests === undefined) return;
 
-						isFetchingNewTests = true;
+	// 					isFetchingNewTests = true;
 
-						let newData = await trpc($page).getPopularTests.query({
-							take: REQUEST_AMOUNT,
-							cursor: requestedTests[requestedTests.length - 1].id,
-							tags:
-								usedTags.length !== 0
-									? usedTags.map((tag) => tag.name)
-									: undefined
-						});
+	// 					let newData = await trpc($page).getPopularTests.query({
+	// 						take: REQUEST_AMOUNT,
+	// 						cursor: requestedTests[requestedTests.length - 1].id,
+	// 						tags:
+	// 							usedTags.length !== 0
+	// 								? usedTags.map((tag) => tag.name)
+	// 								: undefined
+	// 					});
 
-						isFetchingNewTests = false;
+	// 					isFetchingNewTests = false;
 
-						if (!newData.tests) return;
+	// 					if (!newData.tests) return;
 
-						requestedTests = [...requestedTests, ...newData.tests];
+	// 					requestedTests = [...requestedTests, ...newData.tests];
 
-						observer.unobserve(entry.target);
-					}
-				});
-			},
-			{
-				threshold: 0.5
-			}
-		);
-	});
+	// 					observer.unobserve(entry.target);
+	// 				}
+	// 			});
+	// 		},
+	// 		{
+	// 			threshold: 0.5
+	// 		}
+	// 	);
+	// });
 
-	function addIntersection(element: HTMLElement) {
-		observer.observe(element);
+	// function addIntersection(element: HTMLElement) {
+	// 	observer.observe(element);
 
-		return {
-			destroy() {
-				observer.unobserve(element);
-			}
-		};
-	}
+	// 	return {
+	// 		destroy() {
+	// 			observer.unobserve(element);
+	// 		}
+	// 	};
+	// }
 
 	async function changeToggleStatus(index: number, isActive: boolean) {
 		if (isActive === false) {
@@ -128,13 +127,48 @@
 	// }
 
 	// console.log(displayedTests.then((data) => console.log(data)));
+
+	let searchRequests: Array<Promise<string> | string> = [];
+
+	async function searchForResults(value: string) {
+		//searchRequests.unshift(await delayResults(1000, value));
+		const searchQueryPromise = delayResults(1000, value);
+		searchRequests.unshift(searchQueryPromise);
+		const searchQuery = await searchQueryPromise;
+		if (searchRequests.length === 1) {
+			console.log(searchRequests[0]);
+		}
+		searchRequests.pop();
+
+		// if (typeof searchRequest === 'string') {
+		// 	searchRequest = await delayResults(1000, value);
+		// 	console.log("aaaa")
+		// }
+		// else {
+		// 	searchRequest
+		// }
+	}
+
+	function delayResults(
+		timeInMs: number,
+		searchParams: string
+	): Promise<string> {
+		return new Promise((res) => {
+			setTimeout(() => {
+				res(searchParams);
+			}, timeInMs);
+		});
+	}
 </script>
 
 <div>
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
 	>
-		<SearchBar bind:inputValue={searchQuery} />
+		<SearchBar
+			bind:inputValue={searchQuery}
+			searchFunction={searchForResults}
+		/>
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">

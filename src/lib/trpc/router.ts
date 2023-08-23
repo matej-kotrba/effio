@@ -50,13 +50,13 @@ const protectedRouter = router({
         data: {
           ownerId: ctx.userId,
           published: input.isPublished,
+          title: input.title,
+          description: input.description,
         }
       })
 
       const testData = await ctx.prisma.testVersion.create({
         data: {
-          title: input.title,
-          description: input.description,
           version: 1,
           testId: testGroupData.id,
         }
@@ -116,10 +116,18 @@ const protectedRouter = router({
 
       console.log("VERSION", version)
 
-      const testData = await ctx.prisma.testVersion.create({
+      const test = await ctx.prisma.test.update({
+        where: {
+          id: input.testGroupId
+        },
         data: {
           title: input.title,
           description: input.description,
+        }
+      })
+
+      const testData = await ctx.prisma.testVersion.create({
+        data: {
           testId: input.testGroupId,
           version: version + 1
         }
@@ -127,19 +135,17 @@ const protectedRouter = router({
 
       const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
-      // TODO: use createMany
-      const questionsPromise = questions.map(async (question) => {
-        return ctx.prisma.question.create({
-          data: {
-            title: question.title,
-            content: question.content,
-            typeId: question.questionTypeId,
-            testId: testData.versionId,
-          }
+      const questionsData =
+        await ctx.prisma.question.createMany({
+          data: questions.map((question) => {
+            return {
+              title: question.title,
+              content: question.content,
+              typeId: question.questionTypeId,
+              testId: testData.versionId,
+            }
+          })
         })
-      })
-
-      const questionsData = await Promise.all(questionsPromise)
 
       return {
         test: testData,
@@ -200,6 +206,8 @@ const protectedRouter = router({
 export const recordsRouter = router({
   createTestRecord: loggedInProcedure.input(z.object({
     testId: z.string(),
+    title: z.string(),
+    description: z.string(),
     answerContent: z.array(
       z.object({
         questionId: z.string(),
@@ -218,7 +226,8 @@ export const recordsRouter = router({
       data: {
         userId: ctx.userId,
         testId: input.testId,
-
+        title: input.title,
+        description: input.description,
       }
     })
 

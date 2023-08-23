@@ -58,10 +58,10 @@
 							goto('/dashboard/test-history/records/' + record.id);
 						}}
 					>
-						<td>{record.test.title}</td>
+						<td>{record.title}</td>
 						<td>{new Date(record.createdAt).toLocaleDateString('en-GB')}</td>
 						<td class="max-w-lg overflow-hidden text-ellipsis whitespace-nowrap"
-							>{record.test.description}</td
+							>{record.description}</td
 						>
 					</tr>
 				{/each}

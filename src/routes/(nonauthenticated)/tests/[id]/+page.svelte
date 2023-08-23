@@ -85,9 +85,9 @@
 </Dialog>
 {#if $testObject}
 	<div class="mx-auto max-w-[650px]">
-		<h2 class="font-thin text-h3">{data.testContent.testVersions[0].title}</h2>
+		<h2 class="font-thin text-h3">{data.testContent.title}</h2>
 		<p class="text-light_text_black dark:text-dark_text_white_60">
-			{data.testContent.testVersions[0].description}
+			{data.testContent.description}
 		</p>
 		<Space gap={40} />
 		{#each data.testContent.testVersions[0].questions as _, index}

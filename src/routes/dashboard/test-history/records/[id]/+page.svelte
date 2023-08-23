@@ -18,6 +18,8 @@
 
 		initializeTestToTestStore({
 			id: data.record.id,
+			title: data.record.title,
+			description: data.record.description,
 			createdAt: data.record.createdAt,
 			updatedAt: data.record.updatedAt,
 			ownerId: data.record.userId,
@@ -49,8 +51,8 @@
 {:then data}
 	{#if data.record}
 		<DashboardTitle
-			title={data.record.test.title}
-			subtitle={data.record.test.description}
+			title={data.record.title}
+			subtitle={data.record.description}
 		/>
 
 		{#if $testObject}

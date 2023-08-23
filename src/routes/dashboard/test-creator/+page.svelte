@@ -51,8 +51,9 @@
 	};
 
 	let templates: { title: string; image: string }[] = [
-		{ title: 'Blank test', image: '/imgs/svgs/empty.svg' }
+		{ title: 'Blank', image: '/imgs/svgs/empty.svg' }
 	];
+
 	let templatesActive: number;
 
 	let finishModal: HTMLDialogElement;
@@ -214,9 +215,9 @@
 			class=""
 		>
 			<div class="flex items-center gap-4">
-				{#each data.templates as template, index}
+				{#each templates as template, index}
 					<TemplateCard
-						title={template.name}
+						title={template.title}
 						imageSrc={templates[index].image}
 						onClick={() => (templatesActive = index)}
 						customClasses={index === templatesActive
