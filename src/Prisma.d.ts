@@ -3,7 +3,11 @@ import type { Prisma } from "@prisma/client"
 type TestFullType = Prisma.TestGetPayload<{
   include: {
     owner: true,
-    tags: true,
+    tags: {
+      include: {
+        tag: true
+      }
+    },
     testVersions: {
       include: {
         questions: {

@@ -130,7 +130,7 @@
 				plugins: {
 					legend: {
 						position: 'bottom',
-						display: true,
+						display: false,
 						labels: {
 							usePointStyle: true,
 							padding: 10,

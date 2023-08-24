@@ -7,7 +7,10 @@
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
+	import { onMount } from 'svelte';
 	import type { Tag } from '@prisma/client';
+	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
+	import type { TestFullType } from '~/Prisma.js';
 
 	export let data;
 
@@ -24,63 +27,63 @@
 		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
 	>['tests'] = [];
 
-	// let observer: IntersectionObserver;
+	let observer: IntersectionObserver;
 
-	// onMount(async () => {
-	// 	isFetchingNewTests = true;
+	onMount(async () => {
+		isFetchingNewTests = true;
 
-	// 	let response = await trpc($page).getPopularTests.query({
-	// 		take: REQUEST_AMOUNT
-	// 	});
+		let response = await trpc($page).getPopularTests.query({
+			take: REQUEST_AMOUNT
+		});
 
-	// 	isFetchingNewTests = false;
+		isFetchingNewTests = false;
 
-	// 	if (response.success === false || response.tests === undefined) return;
+		if (response.success === false || response.tests === undefined) return;
 
-	// 	requestedTests = response.tests;
+		requestedTests = response.tests;
 
-	// 	observer = new IntersectionObserver(
-	// 		(entries) => {
-	// 			entries.forEach(async (entry) => {
-	// 				if (entry.isIntersecting) {
-	// 					if (requestedTests === undefined) return;
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach(async (entry) => {
+					if (entry.isIntersecting) {
+						if (requestedTests === undefined) return;
 
-	// 					isFetchingNewTests = true;
+						isFetchingNewTests = true;
 
-	// 					let newData = await trpc($page).getPopularTests.query({
-	// 						take: REQUEST_AMOUNT,
-	// 						cursor: requestedTests[requestedTests.length - 1].id,
-	// 						tags:
-	// 							usedTags.length !== 0
-	// 								? usedTags.map((tag) => tag.name)
-	// 								: undefined
-	// 					});
+						let newData = await trpc($page).getPopularTests.query({
+							take: REQUEST_AMOUNT,
+							cursor: requestedTests[requestedTests.length - 1].id,
+							tags:
+								usedTags.length !== 0
+									? usedTags.map((tag) => tag.name)
+									: undefined
+						});
 
-	// 					isFetchingNewTests = false;
+						isFetchingNewTests = false;
 
-	// 					if (!newData.tests) return;
+						if (!newData.tests) return;
 
-	// 					requestedTests = [...requestedTests, ...newData.tests];
+						requestedTests = [...requestedTests, ...newData.tests];
 
-	// 					observer.unobserve(entry.target);
-	// 				}
-	// 			});
-	// 		},
-	// 		{
-	// 			threshold: 0.5
-	// 		}
-	// 	);
-	// });
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{
+				threshold: 0.5
+			}
+		);
+	});
 
-	// function addIntersection(element: HTMLElement) {
-	// 	observer.observe(element);
+	function addIntersection(element: HTMLElement) {
+		observer.observe(element);
 
-	// 	return {
-	// 		destroy() {
-	// 			observer.unobserve(element);
-	// 		}
-	// 	};
-	// }
+		return {
+			destroy() {
+				observer.unobserve(element);
+			}
+		};
+	}
 
 	async function changeToggleStatus(index: number, isActive: boolean) {
 		if (isActive === false) {
@@ -135,6 +138,7 @@
 		const searchQueryPromise = delayResults(1000, value);
 		searchRequests.unshift(searchQueryPromise);
 		const searchQuery = await searchQueryPromise;
+
 		if (searchRequests.length === 1) {
 			console.log(searchRequests[0]);
 		}
@@ -158,6 +162,10 @@
 				res(searchParams);
 			}, timeInMs);
 		});
+	}
+
+	function getTypesafeTags(tags: TestFullType['tags']) {
+		return tags.map((item) => item.tag) as Tag[];
 	}
 </script>
 
@@ -208,13 +216,13 @@
 							class="w-full"
 						>
 							<CardMinimalized
-								title={test.testVersions[0].title}
-								description={test.testVersions[0].description}
+								title={test.title}
+								description={test.description}
 								author={test.owner.name || 'Anonymous'}
 								authorImg={test.owner.image}
 								stars={test.stars}
 								views={test.views}
-								tags={test.tags}
+								tags={getTypesafeTags(test.tags)}
 							/>
 						</button>
 					</div>
@@ -226,13 +234,13 @@
 						}}
 					>
 						<CardMinimalized
-							title={test.testVersions[0].title}
-							description={test.testVersions[0].description}
+							title={test.title}
+							description={test.description}
 							author={test.owner.name || 'Anonymous'}
 							authorImg={test.owner.image}
 							stars={test.stars}
 							views={test.views}
-							tags={test.tags}
+							tags={getTypesafeTags(test.tags)}
 						/>
 					</button>
 				{/if}

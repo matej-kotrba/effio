@@ -483,7 +483,12 @@ export const appRouter = router({
           }
         ],
         include: {
-          tags: true
+          tags: {
+            include: {
+              tag: true
+            }
+          },
+          owner: true,
         },
         where: input.tags ? {
           tags: {
@@ -531,7 +536,11 @@ export const appRouter = router({
         testVersions: {
           take: 1
         },
-        tags: true,
+        tags: {
+          include: {
+            tag: true
+          }
+        },
         owner: true,
       },
       where: input.tags ? {
