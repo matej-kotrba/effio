@@ -5,8 +5,6 @@
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
 
-	console.log(resultFormat);
-
 	let selectedInput: number = (
 		$testObject.questions[questionIndex]['content'] as PickOneQuestion
 	)['correctAnswerIndex'];
@@ -21,7 +19,6 @@
 		if (resultFormat) {
 			selectedInput = resultFormat.userAnswer.correctAnswerIndex;
 		}
-		console.log(selectedInput);
 	}
 </script>
 
@@ -33,8 +30,9 @@
 			on:click|self={() => (selectedInput = index)}
 			class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
 				null || resultFormat.isCorrect
-				? 'bg-white'
-				: ''} {!resultFormat && 'hover:bg-slate-50 active:bg-slate-100'} 
+				? 'bg-white dark:bg-dark_light_grey'
+				: ''} {!resultFormat &&
+				'hover:bg-slate-50 dark:hover:bg-dark_terciary active:bg-slate-100 dark:active:bg-dark_quaternary'} 
 			{resultFormat &&
 				resultFormat.isCorrect === false &&
 				selectedInput === index &&
@@ -49,7 +47,7 @@
 			</div>
 			<input
 				type="radio"
-				class="radio radio-primary radio_button"
+				class="radio radio-primary dark:border-dark_primary dark:checked:bg-dark_primary radio_button"
 				disabled={!!resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				value={index}
@@ -60,6 +58,9 @@
 </div>
 
 <style>
+	:global(.dark) .radio {
+		--b1: 30 0% 20%;
+	}
 	.grid__container {
 		display: grid;
 		grid-template-columns: 25px 1fr;

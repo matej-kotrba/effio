@@ -2,6 +2,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import { z } from "zod"
 import type { Context } from "./context";
 import superjson from "superjson"
+import type { Prisma, Question } from "@prisma/client";
 
 export const t = initTRPC.context<Context>().create(
   {
@@ -45,6 +46,7 @@ const protectedRouter = router({
     isPublished: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
     try {
+      const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
       const testGroupData = await ctx.prisma.test.create({
         data: {
@@ -52,44 +54,35 @@ const protectedRouter = router({
           published: input.isPublished,
           title: input.title,
           description: input.description,
-        }
-      })
-
-      const testData = await ctx.prisma.testVersion.create({
-        data: {
-          version: 1,
-          testId: testGroupData.id,
-        }
-      })
-
-      const questions = JSON.parse(input.questionContent) as QuestionClient[]
-
-      // const questionData = questions.map(async (question) => {
-      //   return ctx.prisma.question.create({
-      //     data: {
-      //       title: question.title,
-      //       content: question.content,
-      //       typeId: question.questionTypeId,
-      //       testId: testData.versionId,
-      //     }
-      //   })
-      // })
-
-      const questionsData = await ctx.prisma.question.createMany({
-        data: questions.map((question) => {
-          return {
-            title: question.title,
-            content: question.content,
-            typeId: question.questionTypeId,
-            testId: testData.versionId,
-
+          testVersions: {
+            create: {
+              version: 1,
+              questions: {
+                createMany: {
+                  data: questions.map((question) => {
+                    return {
+                      title: question.title,
+                      content: question.content,
+                      typeId: question.questionTypeId,
+                    }
+                  }) as PartialPick<Prisma.QuestionCreateManyInput, "testId" | "createdAt" | "updatedAt" | "id">[],
+                }
+              }
+            },
           }
-        })
+        },
+        include: {
+          testVersions: {
+            include: {
+              questions: true
+            }
+          }
+        }
       })
 
       return {
-        test: testData,
-        questions: questionsData,
+        test: testGroupData.testVersions[0],
+        questions: testGroupData.testVersions[0].questions,
         success: true
       }
     }
@@ -495,8 +488,10 @@ export const appRouter = router({
         where: input.tags ? {
           tags: {
             some: {
-              name: {
-                in: input.tags
+              tag: {
+                name: {
+                  in: input.tags
+                }
               }
             }
           },
@@ -542,8 +537,10 @@ export const appRouter = router({
       where: input.tags ? {
         tags: {
           some: {
-            name: {
-              in: input.tags
+            tag: {
+              name: {
+                in: input.tags
+              }
             }
           }
         },
