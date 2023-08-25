@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -94,9 +93,7 @@ model Test {
   ownerId      String
 
   @@index([ownerId])
-  @@fulltext([title])
-  @@fulltext([description])
-  @@fulltext([title, description])
+  @@index([title, description])
 }
 
 model TestVersion {

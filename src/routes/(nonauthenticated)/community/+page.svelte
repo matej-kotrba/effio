@@ -30,9 +30,9 @@
 	let observer: IntersectionObserver;
 
 	// Fetching new data
-	async function getTests(searchQuery?: string) {
+	async function getTests(shouldReset: boolean = false) {
 		if (requestedTests === undefined) return;
-		if (searchQuery) {
+		if (shouldReset) {
 			requestedTests = [];
 		}
 
@@ -108,10 +108,11 @@
 		//searchRequests.unshift(await delayResults(1000, value));
 		const searchQueryPromise = delayResults(1000, value);
 		searchRequests.unshift(searchQueryPromise);
-		const searchQuery = await searchQueryPromise;
+		const searchQueryResult = await searchQueryPromise;
+		searchQuery = searchQueryResult;
 
 		if (searchRequests.length === 1) {
-			getTests(searchQuery);
+			getTests(true);
 		}
 		searchRequests.pop();
 

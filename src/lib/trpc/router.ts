@@ -471,6 +471,7 @@ export const appRouter = router({
     searchQuery: z.string().optional(),
   })).query(async ({ ctx, input }) => {
     let test = null
+    console.log(input.searchQuery)
     if (!input.cursor) {
       test = await ctx.prisma.test.findFirst({
         orderBy: [
@@ -489,8 +490,8 @@ export const appRouter = router({
           },
           owner: true,
         },
-        where: input.tags ? {
-          tags: {
+        where: (input.tags || input.searchQuery) ? {
+          tags: input.tags ? {
             some: {
               tag: {
                 name: {
@@ -498,9 +499,9 @@ export const appRouter = router({
                 }
               }
             }
-          },
+          } : undefined,
           title: {
-            search: input.searchQuery
+            contains: input.searchQuery,
           }
           // AND: {
           //   tags: {
@@ -545,8 +546,8 @@ export const appRouter = router({
         },
         owner: true,
       },
-      where: input.tags ? {
-        tags: {
+      where: (input.tags || input.searchQuery) ? {
+        tags: input.tags ? {
           some: {
             tag: {
               name: {
@@ -554,12 +555,13 @@ export const appRouter = router({
               }
             }
           }
-        },
+        } : undefined,
         title: {
-          search: input.searchQuery
+          contains: input.searchQuery
         }
       } : undefined
     })
+
 
     if (!tests) return {
       success: false,
