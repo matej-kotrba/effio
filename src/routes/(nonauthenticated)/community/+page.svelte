@@ -29,41 +29,38 @@
 
 	let observer: IntersectionObserver;
 
-	onMount(async () => {
+	// Fetching new data
+	async function getTests(searchQuery?: string) {
+		if (requestedTests === undefined) return;
+		if (searchQuery) {
+			requestedTests = [];
+		}
+
 		isFetchingNewTests = true;
 
-		let response = await trpc($page).getPopularTests.query({
-			take: REQUEST_AMOUNT
+		let newData = await trpc($page).getPopularTests.query({
+			take: REQUEST_AMOUNT,
+			cursor: requestedTests[requestedTests.length - 1]?.id ?? undefined,
+			tags: usedTags.length !== 0 ? usedTags.map((tag) => tag.name) : undefined,
+			searchQuery: searchQuery ?? undefined
 		});
 
 		isFetchingNewTests = false;
 
-		if (response.success === false || response.tests === undefined) return;
+		if (!newData.tests) return;
 
-		requestedTests = response.tests;
+		requestedTests = [...requestedTests, ...newData.tests];
+	}
 
+	onMount(async () => {
+		getTests();
+
+		// Observing last element to fetch more tests, then unobserving it
 		observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach(async (entry) => {
 					if (entry.isIntersecting) {
-						if (requestedTests === undefined) return;
-
-						isFetchingNewTests = true;
-
-						let newData = await trpc($page).getPopularTests.query({
-							take: REQUEST_AMOUNT,
-							cursor: requestedTests[requestedTests.length - 1].id,
-							tags:
-								usedTags.length !== 0
-									? usedTags.map((tag) => tag.name)
-									: undefined
-						});
-
-						isFetchingNewTests = false;
-
-						if (!newData.tests) return;
-
-						requestedTests = [...requestedTests, ...newData.tests];
+						getTests();
 
 						observer.unobserve(entry.target);
 					}
@@ -103,32 +100,6 @@
 		isFetchingNewTests = false;
 	}
 
-	// for (let i = 0; i < 40; i++) {
-	// 	await trpc($page).protected.saveTest.mutate({
-	// 		title: 'example',
-	// 		description: 'example description which is a bit longer',
-	// 		isPublished: true,
-	// 		questionContent: JSON.stringify({
-	// 			title: 'example question',
-	// 			displayType: 'Pick One',
-	// 			errors: {},
-	// 			id: crypto.randomUUID(),
-	// 			content: {
-	// 				answers: [
-	// 					{
-	// 						answer: 'asdasd'
-	// 					},
-	// 					{
-	// 						answer: 'asdasasdadadasdasdd'
-	// 					}
-	// 				]
-	// 			} as PickOneQuestion,
-	// 			questionType: 'pickOne',
-	// 			questionTypeId: 'edec0330-59a3-45a9-a932-599ccf3c9fe8'
-	// 		} as QuestionClient)
-	// 	});
-	// }
-
 	// console.log(displayedTests.then((data) => console.log(data)));
 
 	let searchRequests: Array<Promise<string> | string> = [];
@@ -140,7 +111,7 @@
 		const searchQuery = await searchQueryPromise;
 
 		if (searchRequests.length === 1) {
-			console.log(searchRequests[0]);
+			getTests(searchQuery);
 		}
 		searchRequests.pop();
 

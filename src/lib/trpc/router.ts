@@ -470,7 +470,6 @@ export const appRouter = router({
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
   })).query(async ({ ctx, input }) => {
-
     let test = null
     if (!input.cursor) {
       test = await ctx.prisma.test.findFirst({
@@ -500,6 +499,9 @@ export const appRouter = router({
               }
             }
           },
+          title: {
+            search: input.searchQuery
+          }
           // AND: {
           //   tags: {
           //     some: {
@@ -553,6 +555,9 @@ export const appRouter = router({
             }
           }
         },
+        title: {
+          search: input.searchQuery
+        }
       } : undefined
     })
 

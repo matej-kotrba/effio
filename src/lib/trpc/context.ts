@@ -6,9 +6,10 @@ import type { inferAsyncReturnType } from "@trpc/server";
 
 // Creates trpc context
 export async function createContext(event: RequestEvent) {
+  const session = await event.locals.getSession()
   return {
     prisma: prisma,
-    user: (await event.locals.getSession() as (UpdatedSession | null))?.user
+    user: (session as (UpdatedSession | null))?.user
   }
 }
 
