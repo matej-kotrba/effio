@@ -18,7 +18,10 @@
 
 	let isFetchingNewTests = true;
 
-	let searchQuery: string = '';
+	// TODO: Fix search bar glithich
+
+	// const query = new URLSearchParams($page.);
+	let searchQuery: string = $page.url.searchParams.get('search') || '';
 
 	let unusedTags: Tag[] = data.tags;
 	let usedTags: Tag[] = [];
@@ -30,7 +33,10 @@
 	let observer: IntersectionObserver;
 
 	// Fetching new data
-	async function getTests(shouldReset: boolean = false) {
+	async function getTests(
+		shouldReset: boolean = false,
+		specificQuery: string | undefined = undefined
+	) {
 		if (requestedTests === undefined) return;
 		if (shouldReset) {
 			requestedTests = [];
@@ -42,7 +48,7 @@
 			take: REQUEST_AMOUNT,
 			cursor: requestedTests[requestedTests.length - 1]?.id ?? undefined,
 			tags: usedTags.length !== 0 ? usedTags.map((tag) => tag.name) : undefined,
-			searchQuery: searchQuery ?? undefined
+			searchQuery: specificQuery ?? searchQuery ?? undefined
 		});
 
 		isFetchingNewTests = false;
@@ -53,7 +59,8 @@
 	}
 
 	onMount(async () => {
-		getTests();
+		// Get initial state of the tests (by search params if available)
+		getTests(false, $page.url.searchParams.get('search') || undefined);
 
 		// Observing last element to fetch more tests, then unobserving it
 		observer = new IntersectionObserver(
@@ -104,11 +111,12 @@
 
 	let searchRequests: Array<Promise<string> | string> = [];
 
+	// Search for results on inpput change, wait 500ms befor sending request for optimization
 	async function searchForResults(value: string) {
-		//searchRequests.unshift(await delayResults(1000, value));
-		const searchQueryPromise = delayResults(1000, value);
+		const searchQueryPromise = delayResults(500, value);
 		searchRequests.unshift(searchQueryPromise);
 		const searchQueryResult = await searchQueryPromise;
+		// await goto('/community/?search=' + value);
 		searchQuery = searchQueryResult;
 
 		if (searchRequests.length === 1) {
@@ -148,6 +156,7 @@
 		<SearchBar
 			bind:inputValue={searchQuery}
 			searchFunction={searchForResults}
+			initialValue={searchQuery}
 		/>
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>

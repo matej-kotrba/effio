@@ -15,6 +15,16 @@ import type { AdapterUser } from "@auth/core/adapters";
 const handleTRPCContext: Handle = createTRPCHandle({
   router: appRouter,
   createContext: createContext,
+  responseMeta(opts) {
+    if (opts.paths?.includes("getPopularTests")) {
+      return {
+        headers: {
+          "Cache-Control": "public, max-age=60"
+        }
+      }
+    }
+    return {}
+  }
 })
 
 const prismaAdapter = PrismaAdapter(prisma)

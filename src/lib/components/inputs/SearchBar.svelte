@@ -4,6 +4,7 @@
 	let inputRef: HTMLInputElement;
 
 	export let searchFunction: (value: string) => unknown;
+	export let initialValue: string = '';
 
 	export let inputValue: string = '';
 
@@ -33,6 +34,7 @@
 	<input
 		bind:this={inputRef}
 		on:input={onChange}
+		value={initialValue}
 		type="text"
 		class="w-full p-3 font-normal bg-transparent outline-none"
 		placeholder="Search..."

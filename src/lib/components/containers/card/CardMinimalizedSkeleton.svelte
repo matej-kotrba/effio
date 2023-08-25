@@ -3,22 +3,29 @@
 </script>
 
 <div
-	class="group flex flex-col justify-between gap-2 text-center bg-white
+	class="group flex flex-col justify-between gap-2 text-center bg-white dark:bg-dark_grey
 	 shadow-md w-full max-w-[300px] text-light_text_black dark:text-dark_text_white p-2 rounded-md relative min-h-[180px] overflow-hidden
 	 duration-150"
 >
 	<div>
-		<div class="w-[30%] h-5 ml-auto mb-2 rounded-md skeleton" />
+		<div
+			class="w-[30%] h-5 ml-auto mb-2 rounded-md skeleton bg-zinc-200 dark:bg-dark_light_grey"
+		/>
 		<Space gap={30} />
-		<div class="skeleton w-[60%] h-5 mx-auto mb-2 rounded-md" />
-		<p class="max-w-[80%] w-[80%] h-4 mx-auto skeleton mb-1 rounded-md" />
-		<p class="max-w-[80%] w-[80%] h-4 mx-auto skeleton rounded-md" />
+		<div
+			class="skeleton w-[60%] h-5 mx-auto mb-2 rounded-md bg-zinc-200 dark:bg-dark_light_grey"
+		/>
+		<p
+			class="max-w-[80%] w-[80%] h-4 mx-auto skeleton mb-1 rounded-md bg-zinc-200 dark:bg-dark_light_grey"
+		/>
+		<p
+			class="max-w-[80%] w-[80%] h-4 mx-auto skeleton rounded-md bg-zinc-200 dark:bg-dark_light_grey"
+		/>
 	</div>
 </div>
 
 <style>
 	.skeleton {
-		@apply bg-zinc-200;
 		overflow: hidden;
 		position: relative;
 	}
