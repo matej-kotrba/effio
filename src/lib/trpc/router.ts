@@ -379,7 +379,11 @@ export const appRouter = router({
             },
           }
         },
-        tags: true,
+        tags: {
+          include: {
+            tag: true
+          }
+        },
         owner: true,
       },
       take: input.limit,

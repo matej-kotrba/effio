@@ -11,6 +11,7 @@
 	import { generateGIFT, type GIFTQuestion } from 'gift-format-generator';
 	import { toast } from 'svelte-french-toast';
 	import Dialog from '~components/portals/Dialog.svelte';
+	import TestCollectionSearch from '~components/page-parts/TestCollectionSearch.svelte';
 
 	export let data;
 
@@ -178,7 +179,7 @@
 				description={test.description}
 				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
-				tags={test.tags.map((tag) => tag.name)}
+				tags={test.tags.map((tag) => tag.tag?.name || '')}
 				dropdownTabs={[
 					{
 						action: () => {
@@ -246,6 +247,7 @@
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
+<TestCollectionSearch />
 
 <style>
 	.grid__container {
