@@ -4,26 +4,84 @@
 	import Space from '~components/separators/Space.svelte';
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { delayResults } from '~helpers/delay';
+
+	let observer: IntersectionObserver;
 
 	let searchQuery: string = '';
-	let tests = [];
+	let isFetchingNewTests: boolean = false;
+	let tests: Awaited<
+		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
+	> = [];
 
-	function searchFunction(value: string) {
-		searchQuery = value;
-	}
+	async function getTests(shouldReset: boolean = false) {
+		if (tests === undefined) return;
+		if (shouldReset) {
+			tests = [];
+		}
 
-	// TODO: DOdělat tohle
-	async function getTests() {
+		isFetchingNewTests = true;
+
+		console.log(tests[tests.length - 1]?.id);
 		const data = await trpc($page).getUserTestsById.query({
 			// @ts-ignore
 			id: $page.data.session?.user?.id,
-			limit: 4
+			limit: 4,
+			cursor: tests[tests.length - 1] ? tests[tests.length - 1].id : undefined,
+			searchQuery: searchQuery
 		});
+		tests = [...tests, ...data];
 	}
+
+	function addIntersection(element: HTMLElement) {
+		observer.observe(element);
+
+		return {
+			destroy() {
+				observer.unobserve(element);
+			}
+		};
+	}
+
+	let searchRequests: Array<Promise<string> | string> = [];
+
+	async function searchForResults(value: string) {
+		const searchQueryPromise = delayResults(500, value);
+		searchRequests.unshift(searchQueryPromise);
+		const searchQueryResult = await searchQueryPromise;
+
+		if (searchRequests.length === 1) {
+			searchQuery = searchQueryResult;
+			getTests(true);
+		}
+		searchRequests.pop();
+	}
+
+	onMount(async () => {
+		// Get initial state of the tests
+		getTests(false);
+
+		// Observing last element to fetch more tests, then unobserving it
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach(async (entry) => {
+					if (entry.isIntersecting) {
+						getTests();
+
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{
+				threshold: 0.5
+			}
+		);
+	});
 </script>
 
 <div class="flex items-center justify-center gap-2 px-12">
-	<SearchBar {searchFunction} />
+	<SearchBar searchFunction={searchForResults} />
 	<FilterButton
 		options={[
 			{
@@ -53,7 +111,13 @@
 			>
 		</div>
 	{:else}
-		Tady budou testy
+		{#each tests as test}
+			{#if test === tests[tests.length - 1]}
+				<p use:addIntersection>{test.title}</p>
+			{:else}
+				<p>{test.title}</p>
+			{/if}
+		{/each}
 	{/if}
 </div>
 <Space />

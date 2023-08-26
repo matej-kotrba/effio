@@ -51,7 +51,9 @@ export const appRouter = router({
       where: {
         published: input.isPublished,
         ownerId: input.id,
-
+        title: {
+          contains: input.searchQuery ? input.searchQuery : undefined
+        }
       },
       include: {
         testVersions: {
@@ -75,6 +77,10 @@ export const appRouter = router({
         owner: true,
       },
       take: input.limit,
+      skip: input.cursor ? 1 : 0,
+      cursor: input.cursor ? {
+        id: input.cursor
+      } : undefined,
       orderBy: {
         updatedAt: "desc"
       }

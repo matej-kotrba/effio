@@ -11,6 +11,7 @@
 	import type { Tag } from '@prisma/client';
 	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
 	import type { TestFullType } from '~/Prisma.js';
+	import { delayResults } from '~helpers/delay.js';
 
 	export let data;
 
@@ -128,17 +129,6 @@
 		// else {
 		// 	searchRequest
 		// }
-	}
-
-	function delayResults(
-		timeInMs: number,
-		searchParams: string
-	): Promise<string> {
-		return new Promise((res) => {
-			setTimeout(() => {
-				res(searchParams);
-			}, timeInMs);
-		});
 	}
 
 	function getTypesafeTags(tags: TestFullType['tags']) {
