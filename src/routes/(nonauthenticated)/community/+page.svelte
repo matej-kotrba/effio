@@ -18,9 +18,6 @@
 
 	let isFetchingNewTests = true;
 
-	// TODO: Fix search bar glithich
-
-	// const query = new URLSearchParams($page.);
 	let searchQuery: string = $page.url.searchParams.get('search') || '';
 
 	let unusedTags: Tag[] = data.tags;
@@ -117,9 +114,9 @@
 		searchRequests.unshift(searchQueryPromise);
 		const searchQueryResult = await searchQueryPromise;
 		// await goto('/community/?search=' + value);
-		searchQuery = searchQueryResult;
 
 		if (searchRequests.length === 1) {
+			searchQuery = searchQueryResult;
 			getTests(true);
 		}
 		searchRequests.pop();

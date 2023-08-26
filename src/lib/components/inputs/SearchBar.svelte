@@ -19,6 +19,13 @@
 	}
 
 	$: inputValue = inputRef?.value ?? '';
+
+	$: {
+		console.log(initialValue);
+		if (inputRef?.defaultValue) {
+			inputRef.defaultValue = initialValue;
+		}
+	}
 </script>
 
 <div
@@ -34,7 +41,6 @@
 	<input
 		bind:this={inputRef}
 		on:input={onChange}
-		value={initialValue}
 		type="text"
 		class="w-full p-3 font-normal bg-transparent outline-none"
 		placeholder="Search..."
