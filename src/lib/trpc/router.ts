@@ -1,5 +1,3 @@
-import { TRPCError, initTRPC } from "@trpc/server";
-
 import { z } from "zod"
 import { protectedRouter } from "./subrouters/protected";
 import { recordsRouter } from "./subrouters/records";
@@ -44,6 +42,9 @@ export const appRouter = router({
     id: z.string(),
     limit: z.number(),
     isPublished: z.boolean().optional(),
+    cursor: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    searchQuery: z.string().optional(),
   })).query(async ({ ctx, input }) => {
     // let tests: TestFullType[] = []
     const groupTests = await ctx.prisma.test.findMany({
@@ -131,56 +132,56 @@ export const appRouter = router({
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
   })).query(async ({ ctx, input }) => {
-    let test = null
-    console.log(input.searchQuery)
-    if (!input.cursor) {
-      test = await ctx.prisma.test.findFirst({
-        orderBy: [
-          {
-            stars: "desc"
-          },
-          {
-            updatedAt: "desc"
-          }
-        ],
-        include: {
-          tags: {
-            include: {
-              tag: true
-            }
-          },
-          owner: true,
-        },
-        where: (input.tags || input.searchQuery) ? {
-          tags: input.tags ? {
-            some: {
-              tag: {
-                name: {
-                  in: input.tags
-                }
-              }
-            }
-          } : undefined,
-          title: {
-            contains: input.searchQuery,
-          }
-          // AND: {
-          //   tags: {
-          //     some: {
-          //       name: {
-          //         startsWith: "A"
-          //       }
-          //     }
-          //   }
-          // }
-        } : undefined
-      })
-    }
+    // let test = null
+    // console.log(input.searchQuery)
+    // if (!input.cursor) {
+    //   test = await ctx.prisma.test.findFirst({
+    //     orderBy: [
+    //       {
+    //         stars: "desc"
+    //       },
+    //       {
+    //         updatedAt: "desc"
+    //       }
+    //     ],
+    //     include: {
+    //       tags: {
+    //         include: {
+    //           tag: true
+    //         }
+    //       },
+    //       owner: true,
+    //     },
+    //     where: (input.tags || input.searchQuery) ? {
+    //       tags: input.tags ? {
+    //         some: {
+    //           tag: {
+    //             name: {
+    //               in: input.tags
+    //             }
+    //           }
+    //         }
+    //       } : undefined,
+    //       title: {
+    //         contains: input.searchQuery,
+    //       }
+    //       // AND: {
+    //       //   tags: {
+    //       //     some: {
+    //       //       name: {
+    //       //         startsWith: "A"
+    //       //       }
+    //       //     }
+    //       //   }
+    //       // }
+    //     } : undefined
+    //   })
+    // }
 
-    if (input.cursor === undefined && !test) return {
-      success: true,
-      message: "No tests found"
-    }
+    // if (input.cursor === undefined && !test) return {
+    //   success: true,
+    //   message: "No tests found"
+    // }
 
     const tests = await ctx.prisma.test.findMany({
       take: input.take || 8,
