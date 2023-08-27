@@ -4,14 +4,15 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Card from '~components/containers/card/Card.svelte';
 	import CardSkeleton from '~components/containers/card/CardSkeleton.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { TestFullType } from '~/Prisma';
-	import { generateGIFT, type GIFTQuestion } from 'gift-format-generator';
 	import { toast } from 'svelte-french-toast';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TestCollectionSearch from '~components/page-parts/TestCollectionSearch.svelte';
+	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
+	import { modalStore } from './modalStore';
 
 	export let data;
 
@@ -20,11 +21,60 @@
 		isLoading: true
 	};
 
-	let openModal: () => void;
-	let modalDeleteInfo: {
-		id?: string;
-		title?: string;
-	} = {};
+	const modalTabsGenerator = (test: TestFullType) => [
+		{
+			action: () => {
+				goto('test-collection/edit/' + test['id']);
+			},
+			text: 'Edit',
+			iconClass: 'iconamoon:edit-light'
+		},
+		{
+			action: () => {
+				const element = document.createElement('a');
+
+				let gift;
+				console.log(test);
+				try {
+					gift = createExportedFileAndMakeItDownloadable(test);
+				} catch (e) {
+					console.error(e);
+					toast.error('Unknown question type');
+				}
+
+				if (!gift) return;
+
+				element.setAttribute(
+					'href',
+					'data:text/plain;charset=utf-8,' + encodeURIComponent(gift)
+				);
+				element.setAttribute('download', `${test['title']}.txt`);
+				element.style.display = 'none';
+				document.body.appendChild(element);
+				element.click();
+				document.body.removeChild(element);
+			},
+			text: 'Export',
+			iconClass: 'mdi:export'
+		},
+		{
+			action: async () => onTestDelete(test.id, test.title),
+			text: 'Delete',
+			iconClass: 'fluent:delete-28-filled'
+		}
+	];
+
+	setContext('modalTabsGenerator', modalTabsGenerator);
+
+	function modalDeleteInfoChange(id: string, title: string) {
+		$modalStore.modalDeleteInfo.id = id;
+		$modalStore.modalDeleteInfo.title = title;
+	}
+
+	function onTestDelete(id: string, title: string) {
+		modalDeleteInfoChange(id, title);
+		$modalStore.openModal();
+	}
 
 	onMount(async () => {
 		if (!data.session?.user?.id) return;
@@ -35,90 +85,12 @@
 		recentTests.data = res;
 		recentTests.isLoading = false;
 	});
-
-	function createExportedFileAndMakeItDownloadable(test: TestFullType) {
-		return generateGIFT(
-			test.testVersions[0]['questions'].map((question) => {
-				let questionType;
-				let content: GIFTQuestion['answers'];
-				console.log(question);
-
-				switch (question['type']['slug'] as keyof QuestionTypeMap) {
-					case 'pickOne': {
-						questionType = 'SC' as const;
-
-						const questionContent = question['content'] as PickOneQuestion;
-						content = questionContent.answers.map((answer, index) => {
-							return {
-								text: answer.answer,
-								isCorrect: index === questionContent.correctAnswerIndex
-							};
-						});
-						break;
-					}
-					case 'true/false': {
-						questionType = 'MC' as const;
-
-						const questionContent = question['content'] as TrueFalseQuestion;
-						content = questionContent.answers.map((answer) => {
-							return {
-								text: answer.answer,
-								isCorrect: answer.isTrue
-							};
-						});
-						break;
-					}
-					case 'connect': {
-						questionType = 'CA' as const;
-
-						const questionContent = question['content'] as ConnectQuestion;
-						content = questionContent.answers.map((answer) => {
-							if (answer.matchedAnswerIndex === undefined) {
-								throw new Error(
-									'There has been issue with creating your file.'
-								);
-							}
-							return {
-								text: answer.answer,
-								answerPart:
-									questionContent.matchedAnswers[answer.matchedAnswerIndex]
-										.answer
-							};
-						});
-						break;
-					}
-					case 'write': {
-						questionType = 'SA' as const;
-
-						const questionContent = question['content'] as ConnectQuestion;
-						content = questionContent.answers.map((answer) => {
-							return {
-								text: answer.answer
-							};
-						});
-						break;
-					}
-					default: {
-						throw new Error('Unknown question type');
-					}
-				}
-
-				return {
-					title: question.title,
-					questionName: question.title,
-					formatter: 'plain',
-					type: questionType,
-					answers: content
-				};
-			})
-		);
-	}
 </script>
 
-<Dialog bind:open={openModal}>
+<Dialog bind:open={$modalStore.openModal}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		Are you sure you want to delete test<br /><span class="font-semibold"
-			>{modalDeleteInfo?.title || ''}</span
+			>{$modalStore.modalDeleteInfo?.title || ''}</span
 		>
 	</p>
 	<Space />
@@ -127,9 +99,9 @@
 		<button
 			class="text-white btn btn-error hover:bg-red-600"
 			on:click={async () => {
-				if (modalDeleteInfo?.id === undefined) return;
+				if ($modalStore.modalDeleteInfo?.id === undefined) return;
 				const response = await trpc($page).protected.deleteTest.mutate({
-					testGroupId: modalDeleteInfo.id
+					testGroupId: $modalStore.modalDeleteInfo.id
 				});
 				console.log(response);
 				if (!response['success']) {
@@ -139,7 +111,7 @@
 				}
 				if (response['success']) {
 					recentTests.data = recentTests.data.filter(
-						(item) => item.id !== modalDeleteInfo.id
+						(item) => item.id !== $modalStore.modalDeleteInfo.id
 					);
 				}
 			}}>Delete</button
@@ -180,52 +152,7 @@
 				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
 				tags={test.tags.map((tag) => tag.tag?.name || '')}
-				dropdownTabs={[
-					{
-						action: () => {
-							goto('test-collection/edit/' + test['id']);
-						},
-						text: 'Edit',
-						iconClass: 'iconamoon:edit-light'
-					},
-					{
-						action: () => {
-							const element = document.createElement('a');
-
-							let gift;
-							console.log(test);
-							try {
-								gift = createExportedFileAndMakeItDownloadable(test);
-							} catch (e) {
-								console.error(e);
-								toast.error('Unknown question type');
-							}
-
-							if (!gift) return;
-
-							element.setAttribute(
-								'href',
-								'data:text/plain;charset=utf-8,' + encodeURIComponent(gift)
-							);
-							element.setAttribute('download', `${test['title']}.txt`);
-							element.style.display = 'none';
-							document.body.appendChild(element);
-							element.click();
-							document.body.removeChild(element);
-						},
-						text: 'Export',
-						iconClass: 'mdi:export'
-					},
-					{
-						action: async () => {
-							modalDeleteInfo.id = test.id;
-							modalDeleteInfo.title = test.title;
-							openModal();
-						},
-						text: 'Delete',
-						iconClass: 'fluent:delete-28-filled'
-					}
-				]}
+				dropdownTabs={modalTabsGenerator(test)}
 			/>
 		{/each}
 	{/if}

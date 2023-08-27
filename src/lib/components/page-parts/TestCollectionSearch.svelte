@@ -6,6 +6,14 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { delayResults } from '~helpers/delay';
+	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
+	import { goto } from '$app/navigation';
+	import toast from 'svelte-french-toast';
+	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
+	import { getContext } from 'svelte';
+	import type { TestFullType } from '~/Prisma';
+
+	const modalTabsGenerator = getContext('modalTabsGenerator');
 
 	let observer: IntersectionObserver;
 
@@ -78,6 +86,10 @@
 			}
 		);
 	});
+
+	const TypesafeTabs = (test: TestFullType) => {
+		return (modalTabsGenerator as Function)(test);
+	};
 </script>
 
 <div class="flex items-center justify-center gap-2 px-12">
@@ -111,13 +123,38 @@
 			>
 		</div>
 	{:else}
-		{#each tests as test}
-			{#if test === tests[tests.length - 1]}
-				<p use:addIntersection>{test.title}</p>
-			{:else}
-				<p>{test.title}</p>
-			{/if}
-		{/each}
+		<div class="grid grid-cols-4 gap-2">
+			{#each tests as test}
+				<div
+					class="relative grid rounded-md aspect-video dark:bg-dark_grey place-content-center"
+				>
+					{#if test === tests[tests.length - 1]}
+						<p class="text-center" use:addIntersection>{test.title}</p>
+					{:else}
+						<div class="absolute flex items-center left-1 top-1">
+							<iconify-icon
+								icon="ic:round-star-outline"
+								class="text-3xl duration-100 hover:text-yellow-400"
+							/>
+							<span class="text-sm">{test.stars}</span>
+						</div>
+						<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
+							<iconify-icon
+								icon="fluent:settings-24-filled"
+								class="text-xl text-light_text_black dark:text-dark_text_white"
+							/>
+						</DropdownSelect>
+
+						<h6>{test.title}</h6>
+						<p
+							class="text-center text-body3 text-dark_text_white_40 whitespace-nowrap overflow-ellipsis"
+						>
+							{test.description}
+						</p>
+					{/if}
+				</div>
+			{/each}
+		</div>
 	{/if}
 </div>
 <Space />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import Space from '~components/separators/Space.svelte';
+	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 
 	export let redirectLink: string = '#';
 	export let imageLink: string = ''; //'/imgs/content_imgs/liska.avif';
@@ -12,7 +13,7 @@
 	export let dropdownTabs: {
 		iconClass?: string;
 		text: string;
-		action: Function;
+		action: (e: MouseEvent) => void;
 	}[] = [];
 	export let createdAt: Date | undefined = undefined;
 </script>
@@ -85,39 +86,20 @@
 		{#if stars !== undefined}
 			<span
 				class="flex items-center gap-2 text-light_text_black dark:text-dark_text_white"
-				><Icon
+				><iconify-icon
 					icon="ic:round-star-outline"
 					class="text-3xl duration-100 hover:text-yellow-400"
-				/>{stars}</span
+				/>
+				{stars}</span
 			>
 		{/if}
 
-		<div class="dropdown dropdown-hover dropdown-top">
-			<button type="button" class="flex items-center settings-button">
-				<Icon
-					icon="fluent:settings-24-filled"
-					class="text-3xl text-light_text_black dark:text-dark_text_white"
-				/>
-			</button>
-			<ul
-				class="dropdown-content z-[1] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
-			>
-				{#each dropdownTabs as item}
-					<li class="group">
-						<button
-							type="button"
-							class="flex items-center justify-start group-hover:text-light_text_black dark:text-dark_text_white dark:hover:bg-dark_text_white_20 dark:hover:text-white"
-							on:click={(e) => item.action(e)}
-						>
-							{#if item['iconClass']}
-								<iconify-icon icon={item['iconClass']} class="text-md" />
-							{/if}
-							{item.text}</button
-						>
-					</li>
-				{/each}
-			</ul>
-		</div>
+		<DropdownSelect {dropdownTabs}>
+			<iconify-icon
+				icon="fluent:settings-24-filled"
+				class="text-3xl text-light_text_black dark:text-dark_text_white"
+			/>
+		</DropdownSelect>
 	</div>
 </div>
 
