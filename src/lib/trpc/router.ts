@@ -45,8 +45,25 @@ export const appRouter = router({
     cursor: z.string().optional(),
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
+    order: z.enum(["stars", "date"]).optional()
   })).query(async ({ ctx, input }) => {
-    // let tests: TestFullType[] = []
+
+    const ordering = input.order === "stars" ? [
+      {
+        stars: "desc"
+      },
+      {
+        createdAt: "desc"
+      }
+    ] as const : [
+      {
+        createdAt: "desc"
+      },
+      {
+        stars: "desc"
+      }
+    ] as const
+
     const groupTests = await ctx.prisma.test.findMany({
       where: {
         published: input.isPublished,
@@ -81,9 +98,7 @@ export const appRouter = router({
       cursor: input.cursor ? {
         id: input.cursor
       } : undefined,
-      orderBy: {
-        updatedAt: "desc"
-      }
+      orderBy: ordering as any
     })
 
     return groupTests

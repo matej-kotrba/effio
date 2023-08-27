@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SearchBar from '~components/inputs/SearchBar.svelte';
-	import FilterButton from '~components/inputs/FilterButton.svelte';
+	import OrderButton from '~components/inputs/OrderButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
@@ -22,6 +22,7 @@
 	let tests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
 	> = [];
+	let orderOption = '';
 
 	async function getTests(shouldReset: boolean = false) {
 		if (tests === undefined) return;
@@ -94,7 +95,8 @@
 
 <div class="flex items-center justify-center gap-2 px-12">
 	<SearchBar searchFunction={searchForResults} />
-	<FilterButton
+	<OrderButton
+		bind:selectValue={orderOption}
 		options={[
 			{
 				value: 'Date'
@@ -123,27 +125,57 @@
 			>
 		</div>
 	{:else}
-		<div class="grid grid-cols-4 gap-2">
+		<div
+			class="grid grid-cols-1 gap-2 xl:grid-cols-4 md:grid-cols-3 xs:grid-cols-2"
+		>
 			{#each tests as test}
 				<div
-					class="relative grid rounded-md aspect-video dark:bg-dark_grey place-content-center"
+					class="relative grid rounded-md aspect-video dark:bg-dark_light_grey place-content-center"
 				>
 					{#if test === tests[tests.length - 1]}
-						<p class="text-center" use:addIntersection>{test.title}</p>
-					{:else}
-						<div class="absolute flex items-center left-1 top-1">
-							<iconify-icon
-								icon="ic:round-star-outline"
-								class="text-3xl duration-100 hover:text-yellow-400"
-							/>
-							<span class="text-sm">{test.stars}</span>
+						<div
+							class="absolute top-0 left-0 flex items-center justify-between w-full p-1"
+							use:addIntersection
+						>
+							<div class="flex items-center">
+								<iconify-icon
+									icon="ic:round-star-outline"
+									class="text-3xl duration-100"
+								/>
+								<span class="text-sm">{test.stars}</span>
+							</div>
+							<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
+								<iconify-icon
+									icon="fluent:settings-24-filled"
+									class="text-xl text-light_text_black dark:text-dark_text_white"
+								/>
+							</DropdownSelect>
 						</div>
-						<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
-							<iconify-icon
-								icon="fluent:settings-24-filled"
-								class="text-xl text-light_text_black dark:text-dark_text_white"
-							/>
-						</DropdownSelect>
+
+						<h6>{test.title}</h6>
+						<p
+							class="text-center text-body3 text-dark_text_white_40 whitespace-nowrap overflow-ellipsis"
+						>
+							{test.description}
+						</p>
+					{:else}
+						<div
+							class="absolute top-0 left-0 flex items-center justify-between w-full p-1"
+						>
+							<div class="flex items-center">
+								<iconify-icon
+									icon="ic:round-star-outline"
+									class="text-3xl duration-100"
+								/>
+								<span class="text-sm">{test.stars}</span>
+							</div>
+							<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
+								<iconify-icon
+									icon="fluent:settings-24-filled"
+									class="text-xl text-light_text_black dark:text-dark_text_white"
+								/>
+							</DropdownSelect>
+						</div>
 
 						<h6>{test.title}</h6>
 						<p

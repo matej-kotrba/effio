@@ -16,7 +16,7 @@ const handleTRPCContext: Handle = createTRPCHandle({
   router: appRouter,
   createContext: createContext,
   responseMeta(opts) {
-    if (opts.paths?.includes("getPopularTests")) {
+    if (opts.paths?.includes("getPopularTests") || opts.paths?.includes("getUserTestsById")) {
       return {
         headers: {
           "Cache-Control": "public, max-age=60"
