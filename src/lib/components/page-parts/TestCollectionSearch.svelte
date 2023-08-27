@@ -7,9 +7,6 @@
 	import { onMount } from 'svelte';
 	import { delayResults } from '~helpers/delay';
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
-	import { goto } from '$app/navigation';
-	import toast from 'svelte-french-toast';
-	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
 	import { getContext } from 'svelte';
 	import type { TestFullType } from '~/Prisma';
 
@@ -22,9 +19,12 @@
 	let tests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
 	> = [];
-	let orderOption = '';
+	let orderRef: HTMLSelectElement | null = null;
 
-	async function getTests(shouldReset: boolean = false) {
+	async function getTests(
+		shouldReset: boolean = false,
+		orderBy: 'stars' | 'date' = 'date'
+	) {
 		if (tests === undefined) return;
 		if (shouldReset) {
 			tests = [];
@@ -32,13 +32,13 @@
 
 		isFetchingNewTests = true;
 
-		console.log(tests[tests.length - 1]?.id);
 		const data = await trpc($page).getUserTestsById.query({
 			// @ts-ignore
 			id: $page.data.session?.user?.id,
 			limit: 4,
 			cursor: tests[tests.length - 1] ? tests[tests.length - 1].id : undefined,
-			searchQuery: searchQuery
+			searchQuery: searchQuery,
+			order: orderBy
 		});
 		tests = [...tests, ...data];
 	}
@@ -53,6 +53,25 @@
 		};
 	}
 
+	function getOrderType(value: string | undefined) {
+		switch (value) {
+			case 'date': {
+				return 'date';
+			}
+			case 'stars': {
+				return 'stars';
+			}
+			default: {
+				return 'date';
+			}
+		}
+	}
+
+	function onOrderByChange() {
+		const orderBy = getOrderType(orderRef?.value);
+		getTests(true, orderBy);
+	}
+
 	let searchRequests: Array<Promise<string> | string> = [];
 
 	async function searchForResults(value: string) {
@@ -62,7 +81,8 @@
 
 		if (searchRequests.length === 1) {
 			searchQuery = searchQueryResult;
-			getTests(true);
+			const orderBy = getOrderType(orderRef?.value);
+			getTests(true, orderBy);
 		}
 		searchRequests.pop();
 	}
@@ -76,7 +96,7 @@
 			(entries) => {
 				entries.forEach(async (entry) => {
 					if (entry.isIntersecting) {
-						getTests();
+						getTests(false, getOrderType(orderRef?.value));
 
 						observer.unobserve(entry.target);
 					}
@@ -91,12 +111,17 @@
 	const TypesafeTabs = (test: TestFullType) => {
 		return (modalTabsGenerator as Function)(test);
 	};
+
+	$: if (orderRef?.value) {
+		onOrderByChange();
+	}
+	$: console.log(orderRef?.value);
 </script>
 
 <div class="flex items-center justify-center gap-2 px-12">
 	<SearchBar searchFunction={searchForResults} />
 	<OrderButton
-		bind:selectValue={orderOption}
+		bind:selectRef={orderRef}
 		options={[
 			{
 				value: 'Date'
