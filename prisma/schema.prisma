@@ -52,6 +52,7 @@ model User {
   sessions      Session[]
   tests         Test[]
   testRecords   TestRecord[]
+  markSystems   MarkSystem[]
 }
 
 model VerificationToken {
@@ -97,17 +98,21 @@ model Test {
 }
 
 model TestVersion {
-  versionId String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  version   Int
-  testId    String
-  testGroup Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
-  questions Question[]
-  records   TestRecord[]
+  versionId    String       @id @default(uuid())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  version      Int
+  testId       String
+  testGroup    Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions    Question[]
+  records      TestRecord[]
+  points       Int          @default(0)
+  markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
+  markSystemId String?
 
   @@index([testId])
   @@index([version])
+  @@index([markSystemId])
 }
 
 model Question {
@@ -121,9 +126,23 @@ model Question {
   testId    String
   records   QuestionRecord[]
   content   Json             @default("{}")
+  points    Int              @default(0)
 
   @@index([typeId])
   @@index([testId])
+}
+
+model MarkSystem {
+  id                String        @id @default(uuid())
+  name              String
+  markInterfaceJSON Json
+  owner             User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId           String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  tests             TestVersion[]
+
+  @@index([ownerId])
 }
 
 model TestRecord {
@@ -137,6 +156,7 @@ model TestRecord {
   questionRecords QuestionRecord[]
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
+  userPoints      Int              @default(0)
 
   @@index([testId])
   @@index([userId])
@@ -149,6 +169,7 @@ model QuestionRecord {
   question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId   String
   content      Json
+  userPoints   Int        @default(0)
 
   @@index([testRecordId])
   @@index([questionId])
