@@ -62,18 +62,26 @@
 					doesLimit
 					customContainerStyles="col-span-2"
 				/>
-				<TextInputSimple
-					title={'Limit ' + (index + 1)}
-					titleName={'Limit ' + (index + 1)}
-					validationSchema={markLimitSchema}
-					min={MARK_LIMIT_MIN}
-					max={MARK_LIMIT_MAX}
-					doesLimit
-					customContainerStyles="col-span-2"
-					inputProperties={{
-						type: 'number'
-					}}
-				/>
+				<div class="flex items-center col-span-2 gap-1">
+					<TextInputSimple
+						title={'Limit ' + (index + 1)}
+						titleName={'Limit ' + (index + 1)}
+						validationSchema={markLimitSchema}
+						min={MARK_LIMIT_MIN}
+						max={MARK_LIMIT_MAX}
+						doesLimit
+						trailing="%"
+						customContainerStyles="col-span-2"
+						inputProperties={{
+							type: 'number',
+							min: MARK_LIMIT_MIN,
+							max: MARK_LIMIT_MAX
+						}}
+						on:inputChange={(e) => {
+							// console.log(e.detail);
+						}}
+					/>
+				</div>
 			</div>
 		{/each}
 	</div>

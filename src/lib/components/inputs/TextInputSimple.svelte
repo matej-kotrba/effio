@@ -4,6 +4,7 @@
 	import Limit from '~components/informatic/Limit.svelte';
 	import { getContext } from 'svelte';
 	import type { ZodSchema } from 'zod';
+	import { MARK_LIMIT_MAX } from '~schemas/textInput';
 
 	export let title: string;
 	export let titleName: string;
@@ -14,6 +15,7 @@
 	export let min: number | undefined = undefined;
 	export let max: number | undefined = undefined;
 	export let doesLimit: boolean = false;
+	export let trailing: string = '';
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 
@@ -35,8 +37,18 @@
 		}
 	}
 
-	function dispatchInputChange() {
+	function dispatchInputChange(
+		e: Event & { currentTarget: EventTarget & HTMLInputElement }
+	) {
 		dispatch('inputChange', inputRef.value);
+	}
+
+	function keyDownFiltering(e: KeyboardEvent) {
+		if (inputRef.type === 'number') {
+			if (e.key === 'Backspace') return;
+			if (isNaN(Number(e.key))) e.preventDefault();
+			if (Number(inputRef.value + e.key) > MARK_LIMIT_MAX) e.preventDefault();
+		}
 	}
 </script>
 
@@ -57,23 +69,27 @@
 				class="absolute bottom-full right-1"
 			/>
 		{/if}
-		<input
-			bind:value={inputValue}
-			bind:this={inputRef}
-			on:input={dispatchInputChange}
-			on:focusout={validateInput}
-			name={titleName}
-			id={titleName}
-			type="text"
-			autocomplete="off"
-			maxlength={doesLimit ? max : undefined}
-			class="resize-none my-1 outline-none bg-white dark:bg-dark_light_grey
-     overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
-     px-2 py-4 rounded-md shadow-lg w-full
-     outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150
-     {customStyles}"
-			{...inputProperties}
-		/>
+		<div class="flex items-center gap-1">
+			<input
+				bind:value={inputValue}
+				bind:this={inputRef}
+				on:keydown={keyDownFiltering}
+				on:input={dispatchInputChange}
+				on:focusout={validateInput}
+				name={titleName}
+				id={titleName}
+				type="text"
+				autocomplete="off"
+				maxlength={doesLimit ? max : undefined}
+				class="resize-none my-1 outline-none bg-white dark:bg-dark_light_grey
+			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
+			px-2 py-4 rounded-md shadow-lg w-full
+			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150
+			{customStyles}"
+				{...inputProperties}
+			/>
+			{trailing}
+		</div>
 	</div>
 </div>
 
