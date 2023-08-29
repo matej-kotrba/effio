@@ -45,9 +45,12 @@
 
 	function keyDownFiltering(e: KeyboardEvent) {
 		if (inputRef.type === 'number') {
-			if (e.key === 'Backspace') return;
+			if (e.key === 'Backspace' || e.key === 'Tab') return;
 			if (isNaN(Number(e.key))) e.preventDefault();
 			if (Number(inputRef.value + e.key) > MARK_LIMIT_MAX) e.preventDefault();
+			if (inputRef.value.length >= 2 && inputRef.value[0] === '0') {
+				inputRef.value = inputRef.value.slice(1);
+			}
 		}
 	}
 </script>

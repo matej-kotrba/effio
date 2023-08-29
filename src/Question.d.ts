@@ -93,6 +93,11 @@ type QuestionServerCheckResponse<T extends QuestionContent> = {
   userAnswer: T;
 }
 
+type MarkSystem = {
+  id: string;
+  name: string;
+}
+
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field
 // type QuestionTemplate = {

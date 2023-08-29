@@ -8,12 +8,13 @@
 		markLimitSchema,
 		markSchema
 	} from '~schemas/textInput';
+	import AddNew from './AddNew.svelte';
 
 	export let isAdded = true;
 
 	type Mark = {
 		name: string;
-		limitInPercent: number;
+		limitInPercent: number | undefined;
 	};
 
 	let marks: Mark[] = [
@@ -34,7 +35,7 @@
 			type="button"
 			tabindex="0"
 			class="m-1"
-			on:click={() => (isAdded = !isAdded)}>Enable mark system?</button
+			on:click={() => (isAdded = !isAdded)}>Enable marking?</button
 		>
 		<p
 			class="dropdown-content z-[1] menu p-2 shadow bg-base-100 dark:bg-dark_grey rounded-box w-52"
@@ -50,13 +51,14 @@
 	/>
 </div>
 {#if isAdded}
-	<div class="flex flex-col gap-1">
+	<div class="flex flex-col gap-1 max-w-[400px]">
 		{#each marks as mark, index}
-			<div class="grid grid-cols-4 max-w-[400px] gap-2">
+			<div class="grid w-full grid-cols-4 gap-3">
 				<TextInputSimple
 					title={'Mark ' + (index + 1)}
 					titleName={'Mark ' + (index + 1)}
 					validationSchema={markSchema}
+					inputValue={mark.name}
 					min={MARK_MIN}
 					max={MARK_MAX}
 					doesLimit
@@ -67,6 +69,7 @@
 						title={'Limit ' + (index + 1)}
 						titleName={'Limit ' + (index + 1)}
 						validationSchema={markLimitSchema}
+						inputValue={mark.limitInPercent}
 						min={MARK_LIMIT_MIN}
 						max={MARK_LIMIT_MAX}
 						doesLimit
@@ -84,5 +87,13 @@
 				</div>
 			</div>
 		{/each}
+		<button
+			type="button"
+			on:click={() => {
+				marks = [...marks, { name: '', limitInPercent: 0 }];
+			}}
+			class="py-2 mt-2 font-semibold uppercase duration-100 rounded-md bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
+			>Add</button
+		>
 	</div>
 {/if}
