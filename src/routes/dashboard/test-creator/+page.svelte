@@ -32,6 +32,7 @@
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';
+	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 
 	export let data;
 
@@ -44,9 +45,10 @@
 		questions: []
 	});
 
+	// TODO: CHANGE
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -341,7 +343,7 @@
 				>
 					{$testObject.errors.description || 'Placeholder error'}
 				</p>
-
+				<MarkSystem />
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton
 						onClick={() => {}}

@@ -89,12 +89,12 @@ export default {
 		styled: true,
 		themes: [
 			{
-				mytheme: {
+				effio: {
 					primary: '#6433f0',
 
 					secondary: '#d926a9',
 
-					accent: '#1fb2a6',
+					accent: '#0092ca',
 
 					neutral: '#2a323c',
 
