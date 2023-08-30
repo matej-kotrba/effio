@@ -98,21 +98,22 @@ model Test {
 }
 
 model TestVersion {
-  versionId    String       @id @default(uuid())
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  version      Int
-  testId       String
-  testGroup    Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
-  questions    Question[]
-  records      TestRecord[]
-  points       Int          @default(0)
-  markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
-  markSystemId String?
+  versionId      String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  version        Int
+  testId         String
+  testGroup      Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questions      Question[]
+  records        TestRecord[]
+  points         Int          @default(0)
+  markSystemJSON Json         @default("{}")
+  // markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
+  // markSystemId String?
+  // @@index([markSystemId])
 
   @@index([testId])
   @@index([version])
-  @@index([markSystemId])
 }
 
 model Question {
@@ -133,14 +134,14 @@ model Question {
 }
 
 model MarkSystem {
-  id                String        @id @default(uuid())
+  id                String   @id @default(uuid())
   name              String
   markInterfaceJSON Json
-  owner             User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId           String
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-  tests             TestVersion[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  // tests             TestVersion[]
 
   @@index([ownerId])
 }

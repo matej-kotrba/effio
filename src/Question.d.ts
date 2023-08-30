@@ -93,9 +93,11 @@ type QuestionServerCheckResponse<T extends QuestionContent> = {
   userAnswer: T;
 }
 
-type MarkSystem = {
-  id: string;
-  name: string;
+type MarkSystemJSON = { [key: string]: never } | {
+  marks: {
+    name?: string;
+    limit?: number;
+  }[]
 }
 
 // Type with name and its properties retrieved from DB

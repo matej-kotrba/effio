@@ -332,7 +332,8 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
     title: testData.title,
     description: testData.description,
     questions: testData.questions,
-    errors: testData.errors
+    errors: testData.errors,
+    markSystem: {}
   })
 }
 
@@ -343,6 +344,7 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
     title: testData.title,
     description: testData.description,
     published: testData.published,
+    markSystem: testData.testVersions[0].markSystemJSON as MarkSystemJSON,
     errors: {},
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -365,6 +367,7 @@ type IsTestValid = {
   title?: string,
   description?: string,
   questions?: QuestionClient[]
+  markSystem?: MarkSystemJSON
 }
 
 // Check the validity of the test object on the server

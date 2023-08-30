@@ -1,5 +1,6 @@
 <script lang="ts">
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import { testObject } from '~stores/testObject';
 	import {
 		MARK_LIMIT_MAX,
 		MARK_LIMIT_MIN,
@@ -8,7 +9,6 @@
 		markLimitSchema,
 		markSchema
 	} from '~schemas/textInput';
-	import AddNew from './AddNew.svelte';
 
 	export let isAdded = true;
 
@@ -27,6 +27,23 @@
 			limitInPercent: 50
 		}
 	];
+
+	$: {
+		if (isAdded === false) {
+			$testObject.markSystem = {};
+		} else {
+			$testObject.markSystem = {
+				marks: marks.map((item) => {
+					return {
+						name: item.name,
+						limit: item.limitInPercent
+					};
+				})
+			};
+		}
+	}
+
+	$: console.log($testObject);
 </script>
 
 <div class="flex items-center gap-2">
@@ -58,7 +75,7 @@
 					title={'Mark ' + (index + 1)}
 					titleName={'Mark ' + (index + 1)}
 					validationSchema={markSchema}
-					inputValue={mark.name}
+					bind:inputValue={$testObject.markSystem.marks[index].name}
 					min={MARK_MIN}
 					max={MARK_MAX}
 					doesLimit
@@ -69,7 +86,7 @@
 						title={'Limit ' + (index + 1)}
 						titleName={'Limit ' + (index + 1)}
 						validationSchema={markLimitSchema}
-						inputValue={mark.limitInPercent}
+						bind:inputValue={$testObject.markSystem.marks[index].limit}
 						min={MARK_LIMIT_MIN}
 						max={MARK_LIMIT_MAX}
 						doesLimit

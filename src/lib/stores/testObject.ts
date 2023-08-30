@@ -8,6 +8,7 @@ export type TestObject = {
   versionId?: string;
   published?: boolean;
   questions: QuestionClient[];
+  markSystem: MarkSystemJSON;
   errors: {
     title?: string;
     description?: string;

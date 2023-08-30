@@ -100,7 +100,16 @@
 				title: $testObject.title,
 				description: $testObject.description,
 				questionContent: JSON.stringify($testObject.questions),
-				isPublished: isPublished
+				isPublished: isPublished,
+				// TODO: Fix this :)
+				markSystem: {
+					marks: $testObject.markSystem.marks.map((item) => {
+						return {
+							name: item.name,
+							limit: item.limitInPercent
+						};
+					})
+				}
 			});
 			isSuccess = response.success;
 			isSubmitting = false;

@@ -1,8 +1,7 @@
-import { z } from "zod"
+import { z, type ZodRawShape } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import type { Prisma } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
-
 
 
 export const protectedRouter = router({
@@ -10,6 +9,12 @@ export const protectedRouter = router({
     title: z.string(),
     description: z.string(),
     questionContent: z.string(),
+    markSystem: z.object({
+      marks: z.array(z.object({
+        name: z.string(),
+        limit: z.number()
+      }))
+    }),
     isPublished: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
     try {
@@ -24,6 +29,7 @@ export const protectedRouter = router({
           testVersions: {
             create: {
               version: 1,
+              markSystemJSON: JSON.stringify(input.markSystem) ?? "{}",
               questions: {
                 createMany: {
                   data: questions.map((question) => {
@@ -31,6 +37,8 @@ export const protectedRouter = router({
                       title: question.title,
                       content: question.content,
                       typeId: question.questionTypeId,
+                      // TODO: CHANGE THIS TO DYNAMIC VALUE
+                      points: 0
                     }
                   }) as PartialPick<Prisma.QuestionCreateManyInput, "testId" | "createdAt" | "updatedAt" | "id">[],
                 }
