@@ -18,38 +18,6 @@
 		newQuestionData.content =
 			questionContentFunctions[questionType]['createNew']();
 
-		// if (questionType === 'pickOne') {
-		// 	newQuestionData.content = {
-		// 		type: 'pickOne',
-		// 		correctAnswerIndex: 0,
-		// 		answers: [
-		// 			{
-		// 				answer: ''
-		// 			},
-		// 			{
-		// 				answer: ''
-		// 			}
-		// 		]
-		// 	} as PickOneQuestion;
-		// } else if (questionType === 'true/false') {
-		// 	newQuestionData.content = {
-		// 		type: 'true/false',
-		// 		answers: [
-		// 			{
-		// 				answer: '',
-		// 				isTrue: false
-		// 			},
-		// 			{
-		// 				answer: '',
-		// 				isTrue: false
-		// 			}
-		// 		]
-		// 	} as TrueFalseQuestion;
-		// } else {
-		// 	console.error('This question type is not supported!');
-		// 	return;
-		// }
-
 		return newQuestionData as QuestionClient;
 	}
 </script>
