@@ -14,7 +14,7 @@
 
 	type Mark = {
 		name: string;
-		limitInPercent: number | undefined;
+		limitInPercent: number;
 	};
 
 	let marks: Mark[] = [
@@ -36,14 +36,14 @@
 				marks: marks.map((item) => {
 					return {
 						name: item.name,
-						limit: item.limitInPercent
+						limit: +item.limitInPercent
 					};
 				})
 			};
 		}
 	}
 
-	$: console.log($testObject);
+	$: console.log($testObject.markSystem);
 </script>
 
 <div class="flex items-center gap-2">
@@ -70,32 +70,44 @@
 {#if isAdded}
 	<div class="flex flex-col gap-1 max-w-[400px]">
 		{#each marks as mark, index}
+			{@const isDisabled = !(
+				index === 0 || marks[index - 1]['limitInPercent'] > 0
+			)}
 			<div class="grid w-full grid-cols-4 gap-3">
 				<TextInputSimple
 					title={'Mark ' + (index + 1)}
 					titleName={'Mark ' + (index + 1)}
 					validationSchema={markSchema}
-					bind:inputValue={$testObject.markSystem.marks[index].name}
+					bind:inputValue={mark.name}
 					min={MARK_MIN}
 					max={MARK_MAX}
 					doesLimit
 					customContainerStyles="col-span-2"
+					inputProperties={{
+						disabled: isDisabled
+					}}
 				/>
 				<div class="flex items-center col-span-2 gap-1">
 					<TextInputSimple
 						title={'Limit ' + (index + 1)}
 						titleName={'Limit ' + (index + 1)}
 						validationSchema={markLimitSchema}
-						bind:inputValue={$testObject.markSystem.marks[index].limit}
+						bind:inputValue={mark.limitInPercent}
 						min={MARK_LIMIT_MIN}
-						max={MARK_LIMIT_MAX}
+						max={index === 0
+							? MARK_LIMIT_MAX
+							: marks[index - 1].limitInPercent - 1}
 						doesLimit
 						trailing="%"
 						customContainerStyles="col-span-2"
 						inputProperties={{
 							type: 'number',
+							disabled: isDisabled,
 							min: MARK_LIMIT_MIN,
-							max: MARK_LIMIT_MAX
+							max:
+								index === 0
+									? MARK_LIMIT_MAX
+									: marks[index - 1].limitInPercent - 1
 						}}
 						on:inputChange={(e) => {
 							// console.log(e.detail);

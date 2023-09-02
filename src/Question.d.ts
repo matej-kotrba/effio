@@ -95,8 +95,8 @@ type QuestionServerCheckResponse<T extends QuestionContent> = {
 
 type MarkSystemJSON = { [key: string]: never } | {
   marks: {
-    name?: string;
-    limit?: number;
+    name: string;
+    limit: number;
   }[]
 }
 

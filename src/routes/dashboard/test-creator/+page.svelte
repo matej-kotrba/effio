@@ -106,7 +106,7 @@
 					marks: $testObject.markSystem.marks.map((item) => {
 						return {
 							name: item.name,
-							limit: item.limitInPercent
+							limit: item.limit
 						};
 					})
 				}

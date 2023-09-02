@@ -4,7 +4,7 @@
 	import Limit from '~components/informatic/Limit.svelte';
 	import { getContext } from 'svelte';
 	import type { ZodSchema } from 'zod';
-	import { MARK_LIMIT_MAX } from '~schemas/textInput';
+	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
 	export let titleName: string;
@@ -16,6 +16,8 @@
 	export let max: number | undefined = undefined;
 	export let doesLimit: boolean = false;
 	export let trailing: string = '';
+
+	$: console.log(title, max);
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 
@@ -47,11 +49,20 @@
 		if (inputRef.type === 'number') {
 			if (e.key === 'Backspace' || e.key === 'Tab') return;
 			if (isNaN(Number(e.key))) e.preventDefault();
-			if (Number(inputRef.value + e.key) > MARK_LIMIT_MAX) e.preventDefault();
-			if (inputRef.value.length >= 2 && inputRef.value[0] === '0') {
+			if (max && Number(inputRef.value + e.key) > max) e.preventDefault();
+			if (inputRef.value.length >= 1 && inputRef.value[0] == '0') {
 				inputRef.value = inputRef.value.slice(1);
 			}
 		}
+	}
+
+	$: if (
+		inputRef &&
+		inputRef.type === 'number' &&
+		max &&
+		+inputRef.value > max
+	) {
+		inputRef.value = '' + max;
 	}
 </script>
 
@@ -84,11 +95,15 @@
 				type="text"
 				autocomplete="off"
 				maxlength={doesLimit ? max : undefined}
-				class="resize-none my-1 outline-none bg-white dark:bg-dark_light_grey
+				class={twMerge(
+					`resize-none my-1 outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full
-			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150
-			{customStyles}"
+			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150`,
+					inputRef?.disabled
+						? 'bg-gray-400 text-light_text_black_40 dark:bg-stone-900 dark:text-dark_text_white_40 '
+						: ' ' + customStyles
+				)}
 				{...inputProperties}
 			/>
 			{trailing}
