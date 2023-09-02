@@ -18,7 +18,7 @@ export const MARK_LIMIT_MIN = 0
 export const MARK_LIMIT_MAX = 100
 export const LIMIT_OPTIONS = [
   100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10,
-  5, 0
+  5
 ] as const;
 
 export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")

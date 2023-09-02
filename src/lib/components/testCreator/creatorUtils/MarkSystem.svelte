@@ -16,17 +16,17 @@
 
 	type Mark = {
 		name: string;
-		limitInPercent: number;
+		limitInPercent: number | undefined;
 	};
 
 	let marks: Mark[] = [
 		{
-			name: 'Failed',
-			limitInPercent: 0
-		},
-		{
 			name: 'Passed',
 			limitInPercent: 50
+		},
+		{
+			name: 'Failed',
+			limitInPercent: 0
 		}
 	];
 
@@ -38,7 +38,7 @@
 				marks: marks.map((item) => {
 					return {
 						name: item.name,
-						limit: +item.limitInPercent
+						limit: item.limitInPercent
 					};
 				})
 			};
@@ -71,6 +71,10 @@
 		/>
 	</div>
 	{#if isAdded}
+		<p class="text-sm">
+			* Mark with limit 0% is the fallback mark which will be applied when user
+			has 0 and more points.
+		</p>
 		<div class="flex flex-col gap-1 max-w-[400px]">
 			{#each marks as mark, index}
 				<!-- {@const isDisabled = !(
@@ -92,15 +96,20 @@
 							<select
 								class="w-full max-w-xs bg-white shadow-md select"
 								bind:value={mark.limitInPercent}
+								disabled={index === marks.length - 1}
 							>
 								{#if index === 0}
 									{#each LIMIT_OPTIONS as option}
 										<option value={option}>{option}%</option>
 									{/each}
-								{:else}
-									{#each LIMIT_OPTIONS.filter((limit) => limit < marks[index - 1]?.limitInPercent) as option}
+								{:else if index === marks.length - 1}
+									<option value={0}>{0}%</option>
+								{:else if marks[index - 1].limitInPercent !== undefined && marks[index - 1].limitInPercent > 0}
+									{#each LIMIT_OPTIONS.filter((limit) => limit < marks[index - 1].limitInPercent) as option}
 										<option value={option}>{option}%</option>
 									{/each}
+								{:else}
+									<option disabled selected>Please fill previous limit</option>
 								{/if}
 							</select>
 							<!-- <TextInputSimple
@@ -142,7 +151,11 @@
 			<button
 				type="button"
 				on:click={() => {
-					marks = [...marks, { name: '', limitInPercent: 0 }];
+					marks.splice(marks.length - 1, 0, {
+						name: '',
+						limitInPercent: undefined
+					});
+					marks = marks;
 				}}
 				class="py-2 mt-2 font-semibold uppercase duration-100 rounded-md bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
 				>Add</button
