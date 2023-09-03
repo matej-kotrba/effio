@@ -9,10 +9,7 @@ export type TestObject = {
   published?: boolean;
   questions: QuestionClient[];
   markSystem: MarkSystemJSON;
-  errors: {
-    title?: string;
-    description?: string;
-  }
+  errors: ClientTest["errors"]
 };
 
 export const testObject = writable<TestObject>();

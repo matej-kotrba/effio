@@ -25,6 +25,14 @@
 			limitInPercent: 50
 		},
 		{
+			name: 'Passed',
+			limitInPercent: undefined
+		},
+		{
+			name: 'Passed',
+			limitInPercent: undefined
+		},
+		{
 			name: 'Failed',
 			limitInPercent: 0
 		}
@@ -45,7 +53,19 @@
 		}
 	}
 
-	$: console.log($testObject.markSystem);
+	function onSelect(index: number, value: number) {
+		console.log(value);
+		for (let i = index + 1; i < marks.length - 1; i++) {
+			if (marks[i]?.limitInPercent === undefined) continue;
+
+			// @ts-ignore
+			if (marks[i].limitInPercent >= value) {
+				marks[i].limitInPercent = undefined;
+			}
+		}
+	}
+
+	$: console.log(marks);
 </script>
 
 <div class="p-2 rounded-md shadow-sm bg-light_whiter dark:bg-dark_grey">
@@ -75,77 +95,103 @@
 			* Mark with limit 0% is the fallback mark which will be applied when user
 			has 0 and more points.
 		</p>
-		<div class="flex flex-col gap-1 max-w-[400px]">
+		<div class="flex flex-col gap-1 max-w-[500px]">
 			{#each marks as mark, index}
 				<!-- {@const isDisabled = !(
 					index === 0 || marks[index - 1]['limitInPercent'] > 0
 				)} -->
 				<div class="flex gap-1">
-					<div class="grid w-full grid-cols-4 gap-3">
-						<TextInputSimple
-							title={'Mark ' + (index + 1)}
-							titleName={'Mark ' + (index + 1)}
-							validationSchema={markSchema}
-							bind:inputValue={mark.name}
-							min={MARK_MIN}
-							max={MARK_MAX}
-							doesLimit
-							customContainerStyles="col-span-2"
-						/>
-						<div class="flex items-center col-span-2 gap-1">
-							<select
-								class="w-full max-w-xs bg-white shadow-md select"
-								bind:value={mark.limitInPercent}
-								disabled={index === marks.length - 1}
-							>
-								{#if index === 0}
-									{#each LIMIT_OPTIONS as option}
-										<option value={option}>{option}%</option>
-									{/each}
-								{:else if index === marks.length - 1}
-									<option value={0}>{0}%</option>
-								{:else if marks[index - 1].limitInPercent !== undefined && marks[index - 1].limitInPercent > 0}
-									{#each LIMIT_OPTIONS.filter((limit) => limit < marks[index - 1].limitInPercent) as option}
-										<option value={option}>{option}%</option>
-									{/each}
-								{:else}
-									<option disabled selected>Please fill previous limit</option>
-								{/if}
-							</select>
-							<!-- <TextInputSimple
-								title={'Limit ' + (index + 1)}
-								titleName={'Limit ' + (index + 1)}
-								validationSchema={markLimitSchema}
-								bind:inputValue={mark.limitInPercent}
-								min={MARK_LIMIT_MIN}
-								max={index === 0
-									? MARK_LIMIT_MAX
-									: marks[index - 1].limitInPercent - 1}
+					<div class="grid w-full grid-cols-5 gap-3">
+						<div class="flex flex-col w-full">
+							<TextInputSimple
+								title={'Mark ' + (index + 1)}
+								titleName={'Mark ' + (index + 1)}
+								validationSchema={markSchema}
+								bind:inputValue={mark.name}
+								min={MARK_MIN}
+								max={MARK_MAX}
 								doesLimit
-								trailing="%"
 								customContainerStyles="col-span-2"
-								inputProperties={{
-									type: 'number',
-									disabled: isDisabled,
-									min: MARK_LIMIT_MIN,
-									max:
-										index === 0
-											? MARK_LIMIT_MAX
-											: marks[index - 1].limitInPercent - 1
-								}}
-								on:inputChange={(e) => {
-									// console.log(e.detail);
-								}}
-							/> -->
+							/>
+							{#if $testObject.errors.markSystem?.marks[index]?.name}
+								<p class="text-xs text-red-500">
+									{$testObject.errors.markSystem?.marks[index]?.name}
+								</p>
+							{/if}
 						</div>
+						<div class="flex flex-col w-full">
+							<div class="flex items-center col-span-3 gap-1">
+								<select
+									class="w-full max-w-xs bg-white shadow-md select"
+									bind:value={mark.limitInPercent}
+									disabled={index === marks.length - 1}
+									on:change={(e) => {
+										onSelect(index, +e.currentTarget.value);
+									}}
+								>
+									{#if index === 0}
+										{#each LIMIT_OPTIONS as option}
+											<option value={option}>{option}%</option>
+										{/each}
+									{:else if index === marks.length - 1}
+										<option value={0}>{0}%</option>
+									{:else if marks[index - 1].limitInPercent !== undefined && marks[index - 1].limitInPercent > 0}
+										{#each [undefined, ...LIMIT_OPTIONS.filter((limit) => limit < marks[index - 1].limitInPercent)] as option}
+											<option value={option} disabled={option === undefined}
+												>{option ? option : ''}{option
+													? '%'
+													: 'Please select a value'}</option
+											>
+										{/each}
+									{:else}
+										<p>dasdsad</p>
+										<option disabled value={undefined}
+											>Please fill previous limit</option
+										>
+									{/if}
+								</select>
+								<!-- <TextInputSimple
+										title={'Limit ' + (index + 1)}
+										titleName={'Limit ' + (index + 1)}
+										validationSchema={markLimitSchema}
+										bind:inputValue={mark.limitInPercent}
+										min={MARK_LIMIT_MIN}
+										max={index === 0
+											? MARK_LIMIT_MAX
+											: marks[index - 1].limitInPercent - 1}
+											doesLimit
+											trailing="%"
+											customContainerStyles="col-span-2"
+											inputProperties={{
+												type: 'number',
+												disabled: isDisabled,
+												min: MARK_LIMIT_MIN,
+												max:
+												index === 0
+												? MARK_LIMIT_MAX
+												: marks[index - 1].limitInPercent - 1
+											}}
+											on:inputChange={(e) => {
+												// console.log(e.detail);
+											}}
+											/> -->
+							</div>
+						</div>
+						{#if $testObject.errors.markSystem?.marks[index]?.limit}
+							<p class="text-xs text-red-500">
+								{$testObject.errors.markSystem?.marks[index]?.limit}
+							</p>
+						{/if}
 					</div>
-					<RemoveButton
-						deleteQuestion={() =>
-							(marks = marks.filter((_, idx) => idx !== index))}
-						questionLength={marks.length}
-						questionLimit={2}
-						class="w-12 my-2 rounded-md aspect-square"
-					/>
+					{#if index !== marks.length - 1}
+						<RemoveButton
+							deleteQuestion={() =>
+								(marks = marks.filter((_, idx) => idx !== index))}
+							questionLength={marks.length}
+							questionLimit={2}
+							class="w-12 my-2 rounded-md aspect-square"
+						/>
+					{/if}
 				</div>
 			{/each}
 			<button
@@ -157,7 +203,7 @@
 					});
 					marks = marks;
 				}}
-				class="py-2 mt-2 font-semibold uppercase duration-100 rounded-md bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
+				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
 				>Add</button
 			>
 		</div>

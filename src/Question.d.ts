@@ -84,6 +84,11 @@ type ClientTest = {
   errors: {
     title?: string;
     description?: string;
+    markSystem?: {
+      marks: {
+        [Key in keyof MarkSystemJSON["marks"][number]]?: string;
+      }[]
+    }
   };
 }
 
