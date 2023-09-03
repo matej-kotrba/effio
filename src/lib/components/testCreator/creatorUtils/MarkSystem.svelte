@@ -102,7 +102,7 @@
 				)} -->
 				<div class="flex gap-1">
 					<div class="grid w-full grid-cols-5 gap-3">
-						<div class="flex flex-col w-full">
+						<div class="flex flex-col w-full col-span-2">
 							<TextInputSimple
 								title={'Mark ' + (index + 1)}
 								titleName={'Mark ' + (index + 1)}
@@ -111,7 +111,6 @@
 								min={MARK_MIN}
 								max={MARK_MAX}
 								doesLimit
-								customContainerStyles="col-span-2"
 							/>
 							{#if $testObject.errors.markSystem?.marks[index]?.name}
 								<p class="text-xs text-red-500">
@@ -119,8 +118,8 @@
 								</p>
 							{/if}
 						</div>
-						<div class="flex flex-col w-full">
-							<div class="flex items-center col-span-3 gap-1">
+						<div class="flex flex-col w-full col-span-3">
+							<div class="flex items-center gap-1">
 								<select
 									class="w-full max-w-xs bg-white shadow-md select"
 									bind:value={mark.limitInPercent}
@@ -135,8 +134,11 @@
 										{/each}
 									{:else if index === marks.length - 1}
 										<option value={0}>{0}%</option>
-									{:else if marks[index - 1].limitInPercent !== undefined && marks[index - 1].limitInPercent > 0}
-										{#each [undefined, ...LIMIT_OPTIONS.filter((limit) => limit < marks[index - 1].limitInPercent)] as option}
+									{:else if marks[index - 1].limitInPercent !== undefined}
+										{@const item = marks[index - 1].limitInPercent}
+										{#each [undefined, ...LIMIT_OPTIONS.filter((limit) => {
+												return limit !== undefined && item !== undefined && limit < item;
+											})] as option}
 											<option value={option} disabled={option === undefined}
 												>{option ? option : ''}{option
 													? '%'
@@ -144,7 +146,6 @@
 											>
 										{/each}
 									{:else}
-										<p>dasdsad</p>
 										<option disabled value={undefined}
 											>Please fill previous limit</option
 										>
