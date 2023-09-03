@@ -97,11 +97,8 @@
 		</p>
 		<div class="flex flex-col gap-1 max-w-[500px]">
 			{#each marks as mark, index}
-				<!-- {@const isDisabled = !(
-					index === 0 || marks[index - 1]['limitInPercent'] > 0
-				)} -->
 				<div class="flex gap-1">
-					<div class="grid w-full grid-cols-5 gap-3">
+					<div class="grid w-full grid-cols-5 gap-1">
 						<div class="flex flex-col w-full col-span-2">
 							<TextInputSimple
 								title={'Mark ' + (index + 1)}
@@ -111,15 +108,22 @@
 								min={MARK_MIN}
 								max={MARK_MAX}
 								doesLimit
+								on:error={(e) => {
+									if (!$testObject.errors.markSystem)
+										$testObject.errors.markSystem = {
+											marks: []
+										};
+
+									if (!$testObject.errors.markSystem.marks[index]) {
+										$testObject.errors.markSystem.marks[index] = {};
+									}
+
+									$testObject.errors.markSystem.marks[index].name = e.detail;
+								}}
 							/>
-							{#if $testObject.errors.markSystem?.marks[index]?.name}
-								<p class="text-xs text-red-500">
-									{$testObject.errors.markSystem?.marks[index]?.name}
-								</p>
-							{/if}
 						</div>
 						<div class="flex flex-col w-full col-span-3">
-							<div class="flex items-center gap-1">
+							<div class="flex items-center h-full gap-1">
 								<select
 									class="w-full max-w-xs bg-white shadow-md select"
 									bind:value={mark.limitInPercent}
@@ -151,38 +155,20 @@
 										>
 									{/if}
 								</select>
-								<!-- <TextInputSimple
-										title={'Limit ' + (index + 1)}
-										titleName={'Limit ' + (index + 1)}
-										validationSchema={markLimitSchema}
-										bind:inputValue={mark.limitInPercent}
-										min={MARK_LIMIT_MIN}
-										max={index === 0
-											? MARK_LIMIT_MAX
-											: marks[index - 1].limitInPercent - 1}
-											doesLimit
-											trailing="%"
-											customContainerStyles="col-span-2"
-											inputProperties={{
-												type: 'number',
-												disabled: isDisabled,
-												min: MARK_LIMIT_MIN,
-												max:
-												index === 0
-												? MARK_LIMIT_MAX
-												: marks[index - 1].limitInPercent - 1
-											}}
-											on:inputChange={(e) => {
-												// console.log(e.detail);
-											}}
-											/> -->
 							</div>
 						</div>
-						{#if $testObject.errors.markSystem?.marks[index]?.limit}
-							<p class="text-xs text-red-500">
-								{$testObject.errors.markSystem?.marks[index]?.limit}
-							</p>
-						{/if}
+						<div class="grid grid-cols-5 col-span-5">
+							{#if $testObject.errors.markSystem?.marks[index]?.name}
+								<p class="col-span-2 text-xs text-red-500">
+									{$testObject.errors.markSystem?.marks[index]?.name}
+								</p>
+							{/if}
+							{#if $testObject.errors.markSystem?.marks[index]?.limit}
+								<p class="col-span-3 text-xs text-red-500">
+									{$testObject.errors.markSystem?.marks[index]?.limit}
+								</p>
+							{/if}
+						</div>
 					</div>
 					{#if index !== marks.length - 1}
 						<RemoveButton
@@ -190,7 +176,7 @@
 								(marks = marks.filter((_, idx) => idx !== index))}
 							questionLength={marks.length}
 							questionLimit={2}
-							class="w-12 my-2 rounded-md aspect-square"
+							class="w-12 my-2 ml-1 rounded-md aspect-square"
 						/>
 					{/if}
 				</div>

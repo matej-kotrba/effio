@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -407,14 +407,15 @@ const questionSchema = z.object({
 // TODO: Rewrite this to use zod
 export function isTestValid(inputsToValidate: IsTestValid) {
 
-  const { title, description, questions } = inputsToValidate
+  const { title, description, questions, markSystem } = inputsToValidate
   let isError = false
   let message = ""
 
   const result: {
     errors: {
       title?: string,
-      description?: string
+      description?: string;
+      markSystem?: ClientTest["errors"]["markSystem"]
     };
     questions?: QuestionClient[];
   } = {
@@ -467,6 +468,24 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
       if (returnResult.isError) {
         isError = true
+      }
+    }
+  }
+
+  if (markSystem !== undefined && markSystem.marks) {
+    result.errors.markSystem = {
+      marks: []
+    }
+    for (const i in markSystem.marks) {
+      const parsedName = markSchema.safeParse(markSystem.marks[i].name)
+      if (parsedName.success === false) {
+        isError = true
+        result.errors.markSystem.marks[i]["name"] = parsedName.error.errors[0].message
+      }
+      const parsedLimit = markLimitSchema.safeParse(markSystem.marks[i].limit)
+      if (parsedLimit.success === false) {
+        isError = true
+        result.errors.markSystem.marks[i]["limit"] = parsedLimit.error.errors[0].message
       }
     }
   }
