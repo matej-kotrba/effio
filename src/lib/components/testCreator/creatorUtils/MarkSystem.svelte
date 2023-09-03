@@ -125,7 +125,7 @@
 						<div class="flex flex-col w-full col-span-3">
 							<div class="flex items-center h-full gap-1">
 								<select
-									class="w-full max-w-xs bg-white shadow-md select"
+									class="w-full max-w-xs bg-white shadow-md dark:bg-dark_light_grey select"
 									bind:value={mark.limitInPercent}
 									disabled={index === marks.length - 1}
 									on:change={(e) => {
@@ -159,12 +159,12 @@
 						</div>
 						<div class="grid grid-cols-5 col-span-5">
 							{#if $testObject.errors.markSystem?.marks[index]?.name}
-								<p class="col-span-2 text-xs text-red-500">
+								<p class="col-span-2 text-xs text-error dark:text-dark_error">
 									{$testObject.errors.markSystem?.marks[index]?.name}
 								</p>
 							{/if}
 							{#if $testObject.errors.markSystem?.marks[index]?.limit}
-								<p class="col-span-3 text-xs text-red-500">
+								<p class="col-span-3 text-xs text-error dark:text-dark_error">
 									{$testObject.errors.markSystem?.marks[index]?.limit}
 								</p>
 							{/if}

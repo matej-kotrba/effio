@@ -69,7 +69,8 @@
 		const result = isTestValid({
 			title: $testObject.title,
 			description: $testObject.description,
-			questions: $testObject.questions
+			questions: $testObject.questions,
+			markSystem: $testObject.markSystem
 		});
 
 		if (result['isError']) {
@@ -77,13 +78,15 @@
 			if (result['store']['questions']) {
 				$testObject.questions = result['store']['questions'];
 			}
+			// TODO: Fix why the errors of markSystem are not showing up on checking the test
 			return;
 		}
 
 		const serverResponse = await isValidInputServer({
 			title: $testObject.title,
 			description: $testObject.description,
-			questions: $testObject.questions
+			questions: $testObject.questions,
+			markSystem: $testObject.markSystem
 		});
 
 		if (serverResponse.success === false) {
@@ -101,12 +104,12 @@
 				description: $testObject.description,
 				questionContent: JSON.stringify($testObject.questions),
 				isPublished: isPublished,
-				// TODO: Fix this :)
 				markSystem: {
 					marks: $testObject.markSystem.marks.map((item) => {
 						return {
 							name: item.name,
-							limit: item.limit
+							// Checked in the isTestValid
+							limit: item.limit as number
 						};
 					})
 				}
