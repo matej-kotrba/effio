@@ -164,7 +164,11 @@
 <div
 	class="relative grid h-full grid-cols-12 bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div class="col-span-8 p-4">
+	<div
+		class="{$testObject.questions.length === 0
+			? 'col-span-12'
+			: 'col-span-8'} p-4 mx-auto"
+	>
 		<!-- The dropdown for new input -->
 		<dialog class="modal" bind:this={newInputModal}>
 			<form
@@ -205,7 +209,7 @@
 		>
 			<!-- Displaying the initial create button -->
 			{#if $testObject.questions.length === 0}
-				<div class="flex flex-col items-center gap-3">
+				<div class="flex flex-col items-center gap-3 mx-auto">
 					<h4
 						class="font-semibold text-h6 text-light_text_black dark:text-dark_text_white"
 					>

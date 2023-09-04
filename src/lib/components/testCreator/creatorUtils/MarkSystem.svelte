@@ -25,14 +25,7 @@
 			name: 'Passed',
 			limitInPercent: 50
 		},
-		{
-			name: 'Passed',
-			limitInPercent: undefined
-		},
-		{
-			name: 'Passed',
-			limitInPercent: undefined
-		},
+
 		{
 			name: 'Failed',
 			limitInPercent: 0
