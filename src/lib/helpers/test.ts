@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -486,8 +486,12 @@ export function isTestValid(inputsToValidate: IsTestValid) {
         }
         result.errors.markSystem.marks[i]["name"] = parsedName.error.errors[0].message
       }
+      if (markSystem.marks.length > MARK_LIMIT_MAX_MARK_COUNT) {
+        isError = true
+        result.errors.markSystem.message = "You can't have more than " + MARK_LIMIT_MAX_MARK_COUNT + " marks."
+      }
+
       const parsedLimit = markLimitSchema.safeParse(markSystem.marks[i].limit)
-      console.log(parsedLimit)
       if (parsedLimit.success === false) {
         isError = true
         if (result.errors.markSystem.marks[i] === undefined) {

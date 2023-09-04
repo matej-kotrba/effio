@@ -85,6 +85,9 @@ type ClientTest = {
     title?: string;
     description?: string;
     markSystem?: {
+      [Key in keyof MarkSystemJSON as Key extends "marks" ? never : Key]?: string;
+
+    } & {
       marks: {
         [Key in keyof MarkSystemJSON["marks"][number]]?: string;
       }[]
@@ -102,7 +105,8 @@ type MarkSystemJSON = { [key: string]: never } | {
   marks: {
     name: string;
     limit?: number;
-  }[]
+  }[],
+  message?: string;
 }
 
 // Type with name and its properties retrieved from DB

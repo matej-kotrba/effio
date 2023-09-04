@@ -29,7 +29,7 @@ export const protectedRouter = router({
           testVersions: {
             create: {
               version: 1,
-              markSystemJSON: JSON.stringify(input.markSystem) ?? "{}",
+              markSystemJSON: JSON.stringify(input.markSystem.marks) ?? "{}",
               questions: {
                 createMany: {
                   data: questions.map((question) => {

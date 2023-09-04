@@ -200,6 +200,13 @@
 				>Add</button
 			>
 		</div>
+		{#if $testObject.errors?.markSystem?.message}
+			<div>
+				<p class="text-sm text-error dark:text-dark_error">
+					{$testObject.errors.markSystem.message}
+				</p>
+			</div>
+		{/if}
 	{/if}
 </div>
 

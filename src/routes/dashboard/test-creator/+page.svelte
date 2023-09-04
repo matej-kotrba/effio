@@ -47,10 +47,9 @@
 
 	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
 
-	// TODO: CHANGE
 	let testCreationProgress = {
-		templateDone: true,
-		constructingDone: true,
+		templateDone: false,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -68,7 +67,6 @@
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean
 	) {
-		console.log('DATA', $testObject.markSystem);
 		const result = isTestValid({
 			title: $testObject.title,
 			description: $testObject.description,
@@ -81,7 +79,6 @@
 			if (result['store']['questions']) {
 				$testObject.questions = result['store']['questions'];
 			}
-			// TODO: Fix why the errors of markSystem are not showing up on checking the test
 			return;
 		}
 
