@@ -157,17 +157,21 @@
 								</select>
 							</div>
 						</div>
-						<div class="grid grid-cols-5 col-span-5">
-							{#if $testObject.errors.markSystem?.marks[index]?.name}
-								<p class="col-span-2 text-xs text-error dark:text-dark_error">
-									{$testObject.errors.markSystem?.marks[index]?.name}
-								</p>
-							{/if}
-							{#if $testObject.errors.markSystem?.marks[index]?.limit}
-								<p class="col-span-3 text-xs text-error dark:text-dark_error">
-									{$testObject.errors.markSystem?.marks[index]?.limit}
-								</p>
-							{/if}
+						<div class="grid grid-cols-5 col-span-5 mx-2">
+							<div class="col-span-2">
+								{#if $testObject.errors.markSystem?.marks[index]?.name}
+									<p class="text-xs text-error dark:text-dark_error">
+										{$testObject.errors.markSystem?.marks[index]?.name}
+									</p>
+								{/if}
+							</div>
+							<div class="col-span-3">
+								{#if $testObject.errors.markSystem?.marks[index]?.limit}
+									<p class="text-xs text-error dark:text-dark_error">
+										{$testObject.errors.markSystem?.marks[index]?.limit}
+									</p>
+								{/if}
+							</div>
 						</div>
 					</div>
 					{#if index !== marks.length - 1}
@@ -176,7 +180,7 @@
 								(marks = marks.filter((_, idx) => idx !== index))}
 							questionLength={marks.length}
 							questionLimit={2}
-							class="w-12 my-2 ml-1 rounded-md aspect-square"
+							class="w-12 my-2 ml-1 rounded-md max-h-16 aspect-square"
 						/>
 					{/if}
 				</div>

@@ -45,6 +45,8 @@
 		questions: []
 	});
 
+	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
+
 	// TODO: CHANGE
 	let testCreationProgress = {
 		templateDone: true,
@@ -66,6 +68,7 @@
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean
 	) {
+		console.log('DATA', $testObject.markSystem);
 		const result = isTestValid({
 			title: $testObject.title,
 			description: $testObject.description,
@@ -367,7 +370,8 @@
 							const result = isTestValid({
 								title: $testObject.title,
 								description: $testObject.description,
-								questions: $testObject.questions
+								questions: $testObject.questions,
+								markSystem: $testObject.markSystem
 							});
 
 							if (result['isError']) {

@@ -472,6 +472,7 @@ export function isTestValid(inputsToValidate: IsTestValid) {
     }
   }
 
+  console.log(markSystem)
   if (markSystem !== undefined && markSystem.marks) {
     result.errors.markSystem = {
       marks: []
@@ -480,11 +481,18 @@ export function isTestValid(inputsToValidate: IsTestValid) {
       const parsedName = markSchema.safeParse(markSystem.marks[i].name)
       if (parsedName.success === false) {
         isError = true
+        if (result.errors.markSystem.marks[i] === undefined) {
+          result.errors.markSystem.marks[i] = {}
+        }
         result.errors.markSystem.marks[i]["name"] = parsedName.error.errors[0].message
       }
       const parsedLimit = markLimitSchema.safeParse(markSystem.marks[i].limit)
+      console.log(parsedLimit)
       if (parsedLimit.success === false) {
         isError = true
+        if (result.errors.markSystem.marks[i] === undefined) {
+          result.errors.markSystem.marks[i] = {}
+        }
         result.errors.markSystem.marks[i]["limit"] = parsedLimit.error.errors[0].message
       }
     }
