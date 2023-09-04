@@ -8,7 +8,8 @@
 		MARK_MIN,
 		LIMIT_OPTIONS,
 		markLimitSchema,
-		markSchema
+		markSchema,
+		MARK_LIMIT_MAX_MARK_COUNT
 	} from '~schemas/textInput';
 	import RemoveButton from './RemoveButton.svelte';
 
@@ -64,8 +65,6 @@
 			}
 		}
 	}
-
-	$: console.log(marks);
 </script>
 
 <div class="p-2 rounded-md shadow-sm bg-light_whiter dark:bg-dark_grey">
@@ -188,13 +187,16 @@
 			<button
 				type="button"
 				on:click={() => {
-					marks.splice(marks.length - 1, 0, {
-						name: '',
-						limitInPercent: undefined
-					});
-					marks = marks;
+					if (marks.length < MARK_LIMIT_MAX_MARK_COUNT) {
+						marks.splice(marks.length - 1, 0, {
+							name: '',
+							limitInPercent: undefined
+						});
+						marks = marks;
+					}
 				}}
-				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
+				disabled={marks.length >= MARK_LIMIT_MAX_MARK_COUNT}
+				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md disabled:bg-gray-500 dark:disabled:bg-gray-700 bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
 				>Add</button
 			>
 		</div>

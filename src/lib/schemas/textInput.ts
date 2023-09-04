@@ -17,6 +17,7 @@ export const MARK_MIN = 1
 export const MARK_MAX = 15
 export const MARK_LIMIT_MIN = 0
 export const MARK_LIMIT_MAX = 100
+export const MARK_LIMIT_MAX_MARK_COUNT = 10
 export const LIMIT_OPTIONS = [
   100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10,
   5
