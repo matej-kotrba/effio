@@ -9,17 +9,9 @@
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
-	import { fade } from 'svelte/transition';
-	import type { TestVersion } from '@prisma/client';
-	import Collapsible from '~components/collapsibles/Collapsible.svelte';
-	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
-	import { MARK_LIMIT_MAX, MARK_MAX } from '~schemas/textInput.js';
-	import Separator from '~components/separators/Separator.svelte';
-	import { applicationStates } from '~stores/applicationStates';
+	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 
 	export let data;
-
-	let isTakingTest = false;
 
 	let isSubmitting = false;
 	let submitError: string = '';
@@ -42,23 +34,10 @@
 		markSystem = null;
 	}
 
-	function startTest() {
-		isTakingTest = true;
-	}
+	let questionContainerRef: HTMLDivElement | null = null;
 </script>
 
-{#if result}
-	<div class="sticky top-0 left-0 flex gap-2" in:fade>
-		<a href="/community">
-			<button class="btn">Back to community</button>
-		</a>
-		{#if data.session?.user}
-			<a href="/dashboard">
-				<button class="btn">Back to dashboard</button>
-			</a>
-		{/if}
-	</div>
-{/if}
+<TestTakingNavigation session={data.session} {questionContainerRef} />
 <Dialog bind:open={openDialog}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		You are about to submit the test, after that you want be able to change your
@@ -110,23 +89,25 @@
 			{data.testContent.description}
 		</p>
 		<Space gap={40} />
-		{#each data.testContent.testVersions[0].questions as _, index}
-			<Input
-				questionIndex={index}
-				class={`border-2 border-solid ${
-					$testObject.questions[index].errors.content
-						? ' border-error'
-						: 'border-transparent'
-				}`}
-				resultFormat={result === null ? null : result[index]}
-			/>
-			<Space gap={10} />
-			{#if $testObject.questions[index].errors.content}
-				<p class="text-error dark:text-dark_error text-body2">
-					{$testObject.questions[index].errors.content}
-				</p>
-			{/if}
-		{/each}
+		<div bind:this={questionContainerRef}>
+			{#each data.testContent.testVersions[0].questions as _, index}
+				<Input
+					questionIndex={index}
+					class={`border-2 border-solid ${
+						$testObject.questions[index].errors.content
+							? ' border-error'
+							: 'border-transparent'
+					}`}
+					resultFormat={result === null ? null : result[index]}
+				/>
+				<Space gap={10} />
+				{#if $testObject.questions[index].errors.content}
+					<p class="text-error dark:text-dark_error text-body2">
+						{$testObject.questions[index].errors.content}
+					</p>
+				{/if}
+			{/each}
+		</div>
 		<Space gap={40} />
 		<div class="flex items-center justify-between">
 			{#if submitError}
@@ -149,3 +130,4 @@
 		</div>
 	</div>
 {/if}
+<div class="h-[1200px]" />

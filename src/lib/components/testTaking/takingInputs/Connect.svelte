@@ -222,7 +222,7 @@
 								y2={svgPositions[index]?.y || 0}
 								style={`stroke:var(${
 									$applicationStates['darkMode']['isDarkMode']
-										? '--dark-quaternary'
+										? '--dark-terciary'
 										: '--light-quaternary'
 								});stroke-width:3`}
 							/>

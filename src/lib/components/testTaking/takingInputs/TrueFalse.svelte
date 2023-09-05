@@ -22,9 +22,9 @@
 				(checkBoxValues[index]['isTrue'] = !checkBoxValues[index]['isTrue'])}
 			class="flex justify-between px-6 py-3 duration-100 {resultFormat ===
 				null || resultFormat.isCorrect
-				? 'bg-white'
+				? 'bg-white dark:bg-dark_light_grey'
 				: ''} rounded-md shadow-md {!resultFormat &&
-				'hover:bg-slate-50'} active:bg-slate-100
+				'hover:bg-slate-50 dark:hover:bg-dark_terciary dark:active:bg-dark_quaternary active:bg-slate-100'} 
 			{resultFormat &&
 				resultFormat.isCorrect === false &&
 				resultFormat.correctAnswer.answers[index].isTrue ===
@@ -41,7 +41,7 @@
 			</div>
 			<input
 				type="checkbox"
-				class="checkbox checkbox-primary radio_button"
+				class="checkbox checkbox-primary radio_button dark:checkbox-accent"
 				disabled={!!resultFormat}
 				name={$testObject.questions[questionIndex].title + '-radio'}
 				bind:checked={checkBoxValues[index]['isTrue']}
