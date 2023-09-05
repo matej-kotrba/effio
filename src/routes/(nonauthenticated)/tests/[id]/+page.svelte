@@ -16,6 +16,7 @@
 	import { MARK_LIMIT_MAX, MARK_MAX } from '~schemas/textInput.js';
 	import Separator from '~components/separators/Separator.svelte';
 	import { applicationStates } from '~stores/applicationStates';
+	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -39,12 +40,11 @@
 
 	function startTest() {
 		isTakingTest = true;
+		goto(`/tests/${data.testContent.id}/take`);
 	}
 </script>
 
-<div
-	class="max-w-[1200px] mx-auto dark:bg-dark_light_grey p-3 rounded-md shadow-md"
->
+<div class="max-w-[1200px] mx-auto p-3 rounded-md">
 	<h3 class="text-h3 font-extralight">Test overview</h3>
 	<div class="p-2">
 		<p class="mb-3">
@@ -59,17 +59,30 @@
 				>Test description:</span
 			><br />{data.testContent.description}
 		</p>
-		<p class="flex items-center gap-2 mb-3">
+		<div class="flex items-center gap-2 mb-3">
 			<span
 				class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
 				>Author:</span
 			>
-			<img
-				src={data.testContent.owner.image}
-				class="w-16 rounded-full"
-				alt="Author"
-			/>
-		</p>
+			<div class="dropdown dropdown-hover dropdown-top">
+				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+				<!-- svelte-ignore a11y-label-has-associated-control -->
+				<label tabindex="0">
+					<img
+						src={data.testContent.owner.image}
+						class="w-12 rounded-full"
+						alt="Author"
+					/>
+				</label>
+				<div
+					class="dropdown-content z-[1] menu p-2 bg-base-100 dark:bg-dark_light_grey rounded-box w-52 shadow-md"
+				>
+					<p class="text-light_text_black dark:text-dark_text_white">
+						{data.testContent.owner.name}
+					</p>
+				</div>
+			</div>
+		</div>
 	</div>
 	<p class="flex items-center gap-1">
 		{#if markSystem}
@@ -123,7 +136,7 @@
 		{/if}
 	</p>
 	<Space gap={30} />
-	<BasicButton title="Take test" />
+	<BasicButton title="Take test" onClick={startTest} />
 </div>
 
 <style>

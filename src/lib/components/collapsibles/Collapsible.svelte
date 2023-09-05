@@ -23,7 +23,7 @@
 <div
 	class="parent w-fit {positionsClasses[
 		position
-	]} rounded-md bg-gray-100 dark:bg-black"
+	]} rounded-md bg-gray-100 dark:bg-dark_terciary"
 >
 	<button
 		on:click={toggleCollapsible}
