@@ -8,8 +8,11 @@
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import Back from '~components/navigation/Back.svelte';
+	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 
 	export let data;
+
+	let questionContainerRef: HTMLDivElement | null = null;
 
 	data.streaming.record.then((data) => {
 		if (!data.record) {
@@ -43,21 +46,35 @@
 </script>
 
 <Back link={'/dashboard/test-history'} />
-
 {#await data.streaming.record}
 	<div class="flex justify-center">
 		<span class="loading loading-spinner loading-lg" />
 	</div>
-{:then data}
-	{#if data.record}
+{:then res}
+	{@const questionData = res.record?.questionRecords.map((question) => {
+		return {
+			// @ts-ignore
+			isCorrect: questionContentFunctions[question['question']['type']['slug']][
+				'checkAnswerCorrectness'
+			](question['question']['content'], question['content']),
+			userAnswer: question['content'],
+			correctAnswer: question['question']['content']
+		};
+	})}
+	{#if res.record}
+		<TestTakingNavigation
+			session={data.session}
+			{questionContainerRef}
+			result={questionData}
+		/>
 		<DashboardTitle
-			title={data.record.title}
-			subtitle={data.record.description}
+			title={res.record.title}
+			subtitle={res.record.description}
 		/>
 
 		{#if $testObject}
-			<div class="mx-auto max-w-[650px]">
-				{#each data.record['questionRecords'] as question, index}
+			<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
+				{#each res.record['questionRecords'] as question, index}
 					<Input
 						questionIndex={index}
 						class={`border-2 border-solid ${

@@ -5,7 +5,8 @@
 
 	export let session: Session | null = null;
 
-	let result: QuestionServerCheckResponse<QuestionContent>[] | null = null;
+	export let result: QuestionServerCheckResponse<QuestionContent>[] | null =
+		null;
 
 	export let questionContainerRef: HTMLDivElement | null = null;
 
