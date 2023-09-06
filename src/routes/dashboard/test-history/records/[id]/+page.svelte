@@ -9,6 +9,8 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import Back from '~components/navigation/Back.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
+	import type { Prisma } from '@prisma/client';
+	import { z } from 'zod';
 
 	export let data;
 
@@ -43,6 +45,20 @@
 			// questions: data.record.questionRecords.map((item) => item.content)
 		});
 	});
+
+	function checkJSONQuestionData(
+		isCorrect: unknown,
+		correctAnswer: Prisma.JsonValue,
+		userAnswer: Prisma.JsonValue
+	) {
+		return {
+			isCorrect: isCorrect as boolean,
+			userAnswer:
+				userAnswer as QuestionServerCheckResponse<QuestionContent>['userAnswer'],
+			correctAnswer:
+				correctAnswer as QuestionServerCheckResponse<QuestionContent>['correctAnswer']
+		};
+	}
 </script>
 
 <Back link={'/dashboard/test-history'} />
@@ -52,21 +68,23 @@
 	</div>
 {:then res}
 	{@const questionData = res.record?.questionRecords.map((question) => {
-		return {
+		return checkJSONQuestionData(
 			// @ts-ignore
-			isCorrect: questionContentFunctions[question['question']['type']['slug']][
+			questionContentFunctions[question['question']['type']['slug']][
 				'checkAnswerCorrectness'
 			](question['question']['content'], question['content']),
-			userAnswer: question['content'],
-			correctAnswer: question['question']['content']
-		};
+			question['content'],
+			question['question']['content']
+		);
 	})}
 	{#if res.record}
-		<TestTakingNavigation
-			session={data.session}
-			{questionContainerRef}
-			result={questionData}
-		/>
+		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false}
+			<TestTakingNavigation
+				session={data.session}
+				{questionContainerRef}
+				result={questionData}
+			/>
+		{/if}
 		<DashboardTitle
 			title={res.record.title}
 			subtitle={res.record.description}

@@ -29,34 +29,40 @@
 			class="container flex flex-col w-full gap-10 py-10 mx-auto lg:flex-row h-fit lg:gap-0"
 		>
 			<div
-				class="rounded-3xl bg-light_transparent_blue dark:bg-dark_quaternary lg:w-[60%] container mx-auto p-8"
+				class="rounded-3xl bg-light_transparent_blue dark:bg-dark_quaternary lg:w-[60%] container mx-auto p-8 flex flex-col justify-between"
 			>
-				<h1 class="font-bold text-h3 md:text-h2 xl:text-h1 text-light_white">
-					Effio
-				</h1>
-				<p class="text-light_white w-[80%] text-body2 md:text-body1 xl:text-h6">
-					Boost yout productivity, create tests for yourself and others and
-					learn all in a modern user friendly enviroment. Introducing <b
-						>Effio</b
-					> - online test creation tool which will help you achieve all of that.
-				</p>
-				<Space gap={80} />
-				<p class="text-light_white text-body3 md:text-body1">
-					All you need is Github or Google account!
-				</p>
-				<Space gap={10} />
-				<div class="flex flex-col gap-4 xs:items-center xs:flex-row">
-					<a
-						href={data.session?.user ? '/dashboard' : '/login'}
-						class="btn bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+				<div>
+					<h1 class="font-bold text-h3 md:text-h2 xl:text-h1 text-light_white">
+						Effio
+					</h1>
+					<p
+						class="text-light_white w-[80%] text-body2 md:text-body1 xl:text-h6"
 					>
-						{data.session?.user ? 'Go to Dashboard' : 'Log In'}
-					</a>
-					<button
-						on:click={() => {}}
-						class="btn bg-light_white dark:bg-dark_secondary text-light_primary dark:text-dark_text_white hover:bg-light_white hover:brightness-125"
-						type="button">Read More</button
-					>
+						Boost yout productivity, create tests for yourself and others and
+						learn all in a modern user friendly enviroment. Introducing <b
+							>Effio</b
+						> - online test creation tool which will help you achieve all of that.
+					</p>
+					<Space gap={80} />
+				</div>
+				<div>
+					<p class="text-light_white text-body3 md:text-body1">
+						All you need is Github or Google account!
+					</p>
+					<Space gap={10} />
+					<div class="flex flex-col gap-4 xs:items-center xs:flex-row">
+						<a
+							href={data.session?.user ? '/dashboard' : '/login'}
+							class="btn bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+						>
+							{data.session?.user ? 'Go to Dashboard' : 'Log In'}
+						</a>
+						<button
+							on:click={() => {}}
+							class="btn bg-light_white dark:bg-dark_secondary text-light_primary dark:text-dark_text_white hover:bg-light_white hover:brightness-125"
+							type="button">Read More</button
+						>
+					</div>
 				</div>
 			</div>
 			<div class="lg:translate-x-[-13%] lg:translate-y-[15%] relative">
