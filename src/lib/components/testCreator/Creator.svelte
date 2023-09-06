@@ -10,6 +10,7 @@
 			questionType: input.slug as QuestionClient['questionType'],
 			displayType: input.name,
 			questionTypeId: input.id,
+			points: 2,
 			errors: {}
 		};
 
@@ -60,20 +61,7 @@
 	}
 
 	function onNewInputClick(input: QuestionTemplate) {
-		let newQuestionData: PartialPick<QuestionClient, 'content'> = {
-			id: crypto.randomUUID(),
-			title: '',
-			questionType: input.slug as QuestionClient['questionType'],
-			displayType: input.name,
-			questionTypeId: input.id,
-			errors: {}
-		};
-
-		let questionType = input.slug as QuestionClient['questionType'];
-
-		newQuestionData.content =
-			questionContentFunctions[questionType]['createNew']();
-		// TODO: Tady byly if checky které jsou i nahoře v modulu
+		const newQuestionData = createNewInput(input);
 
 		newInputModal.close();
 		addNewQuestion(
@@ -202,7 +190,7 @@
 			</form>
 		</dialog>
 		<div
-			class="relative flex flex-col items-center justify-center gap-2 p-2 overflow-hidden"
+			class="relative flex flex-col items-center justify-center gap-2 p-2"
 			on:dragleave|self={() => {
 				displayedActivatorId = -1;
 			}}

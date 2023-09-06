@@ -94,4 +94,16 @@ will be used in the test creator -->
 			<Fill on:questionDetails indexParent={index} />
 		{/if}
 	</div>
+	<details class="mb-32 dropdown dropdown-top">
+		<summary class="m-1 btn">Edit points</summary>
+		<div
+			class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+		>
+			<div>
+				<button>-1</button>
+				<input type="text" class="w-full max-w-xs input" />
+				<button>+1</button>
+			</div>
+		</div>
+	</details>
 </div>

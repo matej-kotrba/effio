@@ -106,7 +106,6 @@ model TestVersion {
   testGroup      Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
   questions      Question[]
   records        TestRecord[]
-  points         Int          @default(0)
   markSystemJSON Json         @default("{}")
   // markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
   // markSystemId String?
@@ -157,7 +156,6 @@ model TestRecord {
   questionRecords QuestionRecord[]
   user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
-  userPoints      Int              @default(0)
 
   @@index([testId])
   @@index([userId])

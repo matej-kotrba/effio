@@ -30,7 +30,8 @@
 			<button
 				type="button"
 				on:click={() => navigateToQuestion(index)}
-				class="relative w-16 text-2xl font-bold rounded-md shadow-md bg-light_whiter aspect-square dark:bg-dark_grey dark:hover:bg-dark_light_grey hover:bg-light_white"
+				class="relative z-[100] w-16 text-2xl font-bold rounded-md shadow-md lg:tooltip bg-light_whiter aspect-square dark:bg-dark_grey dark:hover:bg-dark_light_grey hover:bg-light_white"
+				data-tip="Go to {$testObject.questions[index].title}"
 			>
 				<div class="absolute top-0 right-0 text-xl">
 					{#if question.isCorrect}

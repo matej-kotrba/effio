@@ -155,7 +155,7 @@
 		>
 			{#each tests as test}
 				<div
-					class="relative grid rounded-md aspect-video dark:bg-dark_light_grey place-content-center"
+					class="relative grid rounded-md shadow-md aspect-video bg-light_whiter dark:bg-dark_light_grey place-content-center"
 				>
 					{#if test === tests[tests.length - 1]}
 						<div

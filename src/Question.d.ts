@@ -71,6 +71,7 @@ type QuestionClient = {
     questionType: Key;
     questionTypeId: string;
     content: QuestionTypeMap[Key];
+    points: number;
     errors: {
       [ErrorKey in keyof QuestionClient as ErrorKey extends "errors" ? never : ErrorKey]?: string;
     }
