@@ -74,7 +74,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:active={browser && $page.url.pathname === '/dashboard'}
 						class:dark={$applicationStates['darkMode']['isDarkMode']}
 					>
@@ -83,7 +83,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-creator"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-creator'}
@@ -96,7 +96,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-collection"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-collection'}
@@ -107,7 +107,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/test-history"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
 							$page.url.pathname === '/dashboard/test-history'}
@@ -117,7 +117,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/my-groups"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					>
 						<iconify-icon icon="ion:share-social" class="text-2xl" />
 						My Groups
@@ -125,7 +125,7 @@
 					<a
 						on:click={() => (isSidebarShown = false)}
 						href="/community"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					>
 						<iconify-icon
 							icon="fluent:people-community-24-filled"

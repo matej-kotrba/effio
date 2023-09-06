@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class={`p-3 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey outline-2 outline ${
+	class={`relative p-3 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey outline-2 outline ${
 		resultFormat
 			? resultFormat.isCorrect
 				? 'outline-success'
@@ -26,6 +26,11 @@
 			: 'outline-transparent'
 	} ${classes}`}
 >
+	<div
+		class="absolute grid w-8 translate-x-1/2 translate-y-1/2 rounded-full shadow-md bg-light_whiter right-full bottom-full aspect-square place-content-center dark:bg-dark_light_grey"
+	>
+		{questionIndex + 1}
+	</div>
 	<p class="text-light_text_black dark:text-dark_text_white_40 text-body2">
 		{$testObject.questions[questionIndex].displayType}
 	</p>
