@@ -23,6 +23,21 @@ will be used in the test creator -->
 	function dispatchDragEvent() {
 		dispatch('dnddrag');
 	}
+
+	let questionPoints: number = 0;
+
+	const MIN_RANGE_VALUE: number = 0;
+	const MAX_RANGE_VALUE: number = 10;
+
+	function onButtonClick(value: number) {
+		if (questionPoints + value < MIN_RANGE_VALUE) return;
+		if (questionPoints + value > MAX_RANGE_VALUE) return;
+		questionPoints += value;
+	}
+
+	$: {
+		$testObject.questions[index].points = questionPoints;
+	}
 </script>
 
 <div
@@ -94,15 +109,31 @@ will be used in the test creator -->
 			<Fill on:questionDetails indexParent={index} />
 		{/if}
 	</div>
-	<details class="mb-32 dropdown dropdown-top">
+	<details class="dropdown dropdown-top">
 		<summary class="m-1 btn">Edit points</summary>
 		<div
-			class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+			class="p-3 shadow menu dropdown-content z-[1] bg-base-100 dark:bg-dark_terciary rounded-box w-52"
 		>
-			<div>
-				<button>-1</button>
-				<input type="text" class="w-full max-w-xs input" />
-				<button>+1</button>
+			<h6 class="font-semibold text-center">Points for this question?</h6>
+			<p class="text-2xl font-semibold text-center">
+				{questionPoints}
+			</p>
+			<div class="flex items-center gap-1">
+				<button
+					class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+					on:click={() => onButtonClick(-1)}>-1</button
+				>
+				<input
+					bind:value={questionPoints}
+					type="range"
+					min={MIN_RANGE_VALUE}
+					max={MAX_RANGE_VALUE}
+					class="range range-xs dark:bg-dark_text_white_20"
+				/>
+				<button
+					class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+					on:click={() => onButtonClick(1)}>+1</button
+				>
 			</div>
 		</div>
 	</details>
