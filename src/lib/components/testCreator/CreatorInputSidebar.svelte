@@ -75,7 +75,7 @@
 
 <aside class="sticky top-0" bind:clientWidth={asideWidth}>
 	<div
-		class=" grid gap-2 p-2 {asideWidth > 260
+		class="grid gap-2 p-2 {asideWidth > 260
 			? 'grid-cols-2'
 			: 'grid-cols-1'} {classes}"
 	>

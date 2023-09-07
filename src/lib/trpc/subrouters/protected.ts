@@ -37,8 +37,7 @@ export const protectedRouter = router({
                       title: question.title,
                       content: question.content,
                       typeId: question.questionTypeId,
-                      // TODO: CHANGE THIS TO DYNAMIC VALUE
-                      points: 0
+                      points: question.points
                     }
                   }) as PartialPick<Prisma.QuestionCreateManyInput, "testId" | "createdAt" | "updatedAt" | "id">[],
                 }
@@ -119,7 +118,8 @@ export const protectedRouter = router({
               content: question.content,
               typeId: question.questionTypeId,
               testId: testData.versionId,
-            }
+              points: question.points
+            } as Prisma.QuestionCreateManyInput
           })
         })
 
