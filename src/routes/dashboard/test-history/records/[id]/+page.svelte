@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import {
+		getMarkBasedOnPoints,
 		initializeTestToTestStore,
 		questionContentFunctions
 	} from '~helpers/test.js';
@@ -10,7 +11,6 @@
 	import Back from '~components/navigation/Back.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 	import type { Prisma } from '@prisma/client';
-	import { z } from 'zod';
 
 	export let data;
 
@@ -59,6 +59,12 @@
 				correctAnswer as QuestionServerCheckResponse<QuestionContent>['correctAnswer']
 		};
 	}
+
+	function getMarkSystemMarks(markSystem: Prisma.JsonValue) {
+		const string = markSystem?.toString();
+		if (string === undefined) return undefined;
+		return JSON.parse(string) as MarkSystemJSON['marks'];
+	}
 </script>
 
 <Back link={'/dashboard/test-history'} />
@@ -78,11 +84,21 @@
 		);
 	})}
 	{#if res.record}
-		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false}
+		{@const marks = getMarkSystemMarks(res.record['test']['markSystemJSON'])}
+		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
+			{@const maxPoints = res.record['questionRecords'].reduce((acc, item) => {
+				return acc + item.question.points;
+			}, 0)}
+			{@const userPoints = res.record['questionRecords'].reduce((acc, item) => {
+				return acc + item.userPoints;
+			}, 0)}
 			<TestTakingNavigation
 				session={data.session}
 				{questionContainerRef}
 				result={questionData}
+				{maxPoints}
+				{userPoints}
+				mark={getMarkBasedOnPoints(marks, userPoints, maxPoints).name}
 			/>
 		{/if}
 		<DashboardTitle

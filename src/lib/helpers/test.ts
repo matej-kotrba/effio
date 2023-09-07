@@ -337,6 +337,8 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
   })
 }
 
+// TODO: FIX THE TYPES
+
 export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars" | "views">) {
   testObject.set({
     id: testData.id,
@@ -352,13 +354,13 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
       return {
         id: question.id,
         title: question.title,
-        content: question.content,
+        content: question.content as QuestionTypeMap[keyof QuestionTypeMap],
         questionTypeId: question.typeId,
-        questionType: question.type.slug as unknown as keyof QuestionTypeMap,
+        questionType: question.type.slug as keyof QuestionTypeMap,
         displayType: question.type.name,
-
+        points: question.points,
         errors: {}
-      }
+      } satisfies QuestionClient
     })
   })
 }
@@ -394,14 +396,6 @@ export async function isValidInputServer(obj: IsTestValid): Promise<{ success: b
     obj: obj
   };
 }
-
-const asnwerSchema = z.object({
-  answer: answerObjectSchema//z.string().min(1, "Answer has to be at least 1 character long.").max(100, "Answer can be max 100 characters long.")
-}).passthrough()
-
-const questionSchema = z.object({
-  title: titleSchema//z.string().min(8, "Title has to be at least 8 character long.").max(250, "Title can be max 250 characters long."),
-})
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
 // TODO: Rewrite this to use zod
@@ -624,7 +618,8 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     answerContent: questionData.map((item, index) => {
       return {
         questionId: test.questions[index].id,
-        userContent: item.userAnswer
+        userContent: item.userAnswer,
+        points: item.isCorrect ? test.questions[index].points : 0
       }
     })
   })
@@ -634,4 +629,19 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     success: responseData?.success ?? false,
     questionData
   }
+}
+
+
+// Returns corresponding mark for the test based on points
+export function getMarkBasedOnPoints(marks: MarkSystemJSON["marks"], userPoints: number, maxPoints: number) {
+  const percentigeValue = userPoints / maxPoints * 100
+
+  for (let i = 0; i < marks.length - 1; i++) {
+    console.log(i)
+    const mark = marks[i]
+    if (mark.limit === undefined) continue
+    if (percentigeValue >= mark.limit) return mark
+  }
+
+  return marks[marks.length - 1]
 }

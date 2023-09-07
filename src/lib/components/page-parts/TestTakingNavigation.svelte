@@ -10,6 +10,11 @@
 		null;
 
 	export let questionContainerRef: HTMLDivElement | null = null;
+	export let maxPoints: number | null = null;
+	export let userPoints: number | null = null;
+	export let mark: string | null = null;
+
+	console.log(maxPoints, userPoints, mark);
 
 	function navigateToQuestion(index: number) {
 		if (!questionContainerRef) return;
@@ -24,7 +29,14 @@
 
 {#if result}
 	<div class="mb-3">
-		<h3 class="text-h4">Test results</h3>
+		{#if maxPoints !== null && userPoints !== null && mark !== null}
+			<h3 class="text-h4">
+				Your result is: {mark}, {userPoints}/{maxPoints} - {(userPoints /
+					maxPoints || 0) * 100}%
+			</h3>
+		{:else}
+			<h3 class="text-h4">Your results</h3>
+		{/if}
 		<Space gap={5} />
 		{#each result as question, index}
 			<button

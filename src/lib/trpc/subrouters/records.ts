@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
+import type { Prisma } from "@prisma/client"
 
 export const recordsRouter = router({
   createTestRecord: loggedInProcedure.input(z.object({
@@ -9,7 +10,8 @@ export const recordsRouter = router({
     answerContent: z.array(
       z.object({
         questionId: z.string(),
-        userContent: z.object({}).passthrough()
+        userContent: z.object({}).passthrough(),
+        points: z.number()
       })
     ),
   })).mutation(async ({ ctx, input }) => {
@@ -40,8 +42,9 @@ export const recordsRouter = router({
         return {
           testRecordId: createdTest.id,
           questionId: item.questionId,
-          content: item.userContent
-        }
+          content: item.userContent,
+          userPoints: item.points
+        } satisfies Prisma.QuestionRecordCreateManyInput
       })
     })
 
