@@ -10,6 +10,20 @@
 	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let questionIndex: number;
 	export let resultFormat: ResultFormat = null;
+	export let isHighlighted = false;
+
+	$: {
+		if (isHighlighted === true) {
+			highlight();
+		}
+	}
+
+	const highlight = () => {
+		isHighlighted = true;
+		setTimeout(() => {
+			isHighlighted = false;
+		}, 1500);
+	};
 
 	export { classes as class };
 	let classes = '';
@@ -27,7 +41,10 @@
 	} ${classes}`}
 >
 	<div
-		class="absolute grid w-8 translate-x-1/2 translate-y-1/2 rounded-full shadow-md bg-light_whiter right-full bottom-full aspect-square place-content-center dark:bg-dark_light_grey"
+		class="absolute grid w-8 translate-x-1/2 translate-y-1/2 rounded-full shadow-md right-full bottom-full aspect-square place-content-center duration-150
+		{isHighlighted
+			? 'bg-light_primary dark:bg-dark_primary'
+			: 'bg-light_whiter dark:bg-dark_light_grey'}"
 	>
 		{questionIndex + 1}
 	</div>

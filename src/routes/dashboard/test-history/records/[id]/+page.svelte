@@ -16,6 +16,8 @@
 
 	let questionContainerRef: HTMLDivElement | null = null;
 
+	let higlightedInputIndex: number | null = null;
+
 	data.streaming.record.then((data) => {
 		if (!data.record) {
 			return;
@@ -99,6 +101,7 @@
 				{maxPoints}
 				{userPoints}
 				mark={getMarkBasedOnPoints(marks, userPoints, maxPoints).name}
+				bind:markedIndex={higlightedInputIndex}
 			/>
 		{/if}
 		<DashboardTitle
@@ -129,6 +132,7 @@
 							// @ts-ignore
 							userAnswer: question['content']
 						}}
+						isHighlighted={index === higlightedInputIndex}
 					/>
 					<Space gap={20} />
 				{/each}
