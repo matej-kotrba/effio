@@ -1,54 +1,7 @@
-<script lang="ts">
-	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
-	import {
-		getMarkBasedOnPoints,
-		initializeTestToTestStore,
-		questionContentFunctions
-	} from '~helpers/test.js';
-	import { testObject } from '~stores/testObject';
-	import Space from '~components/separators/Space.svelte';
-	import Input from '~components/testTaking/Input.svelte';
-	import Back from '~components/navigation/Back.svelte';
-	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
+<script lang="ts" context="module">
 	import type { Prisma } from '@prisma/client';
 
-	export let data;
-
-	let questionContainerRef: HTMLDivElement | null = null;
-
-	let higlightedInputIndex: number | null = null;
-
-	data.streaming.record.then((data) => {
-		if (!data.record) {
-			return;
-		}
-
-		initializeTestToTestStore({
-			id: data.record.id,
-			title: data.record.title,
-			description: data.record.description,
-			createdAt: data.record.createdAt,
-			updatedAt: data.record.updatedAt,
-			ownerId: data.record.userId,
-			published: data.record.test.testGroup.published,
-			testVersions: [
-				{
-					...data.record.test,
-					questions: data.record.questionRecords.map((item) => {
-						return {
-							...item.question,
-							content: item.content
-						};
-					})
-				}
-			]
-
-			// ...data.record.test,
-			// questions: data.record.questionRecords.map((item) => item.content)
-		});
-	});
-
-	function checkJSONQuestionData(
+	export function checkJSONQuestionData(
 		isCorrect: unknown,
 		correctAnswer: Prisma.JsonValue,
 		userAnswer: Prisma.JsonValue
@@ -62,11 +15,21 @@
 		};
 	}
 
-	function getMarkSystemMarks(markSystem: Prisma.JsonValue) {
+	export function getMarkSystemMarksByJSON(markSystem: Prisma.JsonValue) {
 		const string = markSystem?.toString();
 		if (string === undefined) return undefined;
 		return JSON.parse(string) as MarkSystemJSON['marks'];
 	}
+</script>
+
+<script lang="ts">
+	import Back from '~components/navigation/Back.svelte';
+	import {
+		getMarkBasedOnPoints,
+		questionContentFunctions
+	} from '~helpers/test';
+
+	export let data;
 </script>
 
 <Back link={'/dashboard/test-history'} />
@@ -86,7 +49,9 @@
 		);
 	})}
 	{#if res.record}
-		{@const marks = getMarkSystemMarks(res.record['test']['markSystemJSON'])}
+		{@const marks = getMarkSystemMarksByJSON(
+			res.record['test']['markSystemJSON']
+		)}
 		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
 			{@const maxPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.question.points;
@@ -94,48 +59,36 @@
 			{@const userPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.userPoints;
 			}, 0)}
-			<TestTakingNavigation
-				session={data.session}
-				{questionContainerRef}
-				result={questionData}
-				{maxPoints}
-				{userPoints}
-				mark={getMarkBasedOnPoints(marks, userPoints, maxPoints).name}
-				bind:markedIndex={higlightedInputIndex}
-			/>
-		{/if}
-		<DashboardTitle
-			title={res.record.title}
-			subtitle={res.record.description}
-		/>
-
-		{#if $testObject}
-			<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
-				{#each res.record['questionRecords'] as question, index}
-					<Input
-						questionIndex={index}
-						class={`border-2 border-solid ${
-							$testObject.questions[index].errors.content
-								? ' border-error'
-								: 'border-transparent'
-						}`}
-						resultFormat={{
-							// @ts-ignore
-							isCorrect: questionContentFunctions[
-								question['question']['type']['slug']
-							]['checkAnswerCorrectness'](
-								question['question']['content'],
-								question['content']
-							),
-							// @ts-ignore
-							correctAnswer: question['question']['content'],
-							// @ts-ignore
-							userAnswer: question['content']
-						}}
-						isHighlighted={index === higlightedInputIndex}
-					/>
-					<Space gap={20} />
-				{/each}
+			{@const marks = getMarkSystemMarksByJSON(
+				res.record['test']['markSystemJSON']
+			)}
+			{@const mark = marks
+				? getMarkBasedOnPoints(marks, userPoints, maxPoints)
+				: undefined}
+			<div class="overflow-x-auto">
+				<table class="table">
+					<!-- head -->
+					<thead>
+						<tr>
+							<th>Mark</th>
+							<th>Your Points</th>
+							<th>Max Points</th>
+							<th>Percentage</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{#if mark !== undefined}
+								<td>{mark.name}</td>
+							{:else}
+								<td>Unknown</td>
+							{/if}
+							<td>{userPoints}</td>
+							<td>{maxPoints}</td>
+							<td>{(userPoints / maxPoints || 0) * 100}%</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		{/if}
 	{/if}
