@@ -37,6 +37,7 @@
 	--dark_black: #111111;
 	--success: #5cb85c;
 	--error: #b00020;
+	--warning: #fbbd23;
 	--dark-error: #e12345;
 
 	color: var(--light-text-black);

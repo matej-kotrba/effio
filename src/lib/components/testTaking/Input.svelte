@@ -28,6 +28,18 @@
 	export { classes as class };
 	let classes = '';
 
+	let outlineStyles;
+
+	// switch(resultFormat?.isCorrect) {
+	// 	case true: {
+	// 		break;
+	// 	}
+	// 	case false: {
+	// 		break;
+	// 	}
+	// 	resultFormat?.isCorrect satisfies never
+	// }
+
 	$: typedResultFormat = resultFormat as any;
 </script>
 

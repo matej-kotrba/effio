@@ -34,8 +34,10 @@ export default {
 				dark_grey: '#1f1f1f',
 				dark_black: '#111111',
 				dark_blacker: '#000000',
+
 				success: '#5cb85c',
 				error: '#B00020',
+				warning: '#fbbd23',
 				dark_error: '#e12345'
 			},
 			fontSize: {

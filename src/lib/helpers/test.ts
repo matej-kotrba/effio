@@ -18,7 +18,7 @@ type QuestionContentTransformation = {
 
     // Type which takes the question and checks if the answer of the specific question type is present
     "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
-    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean,
+    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean | "partial",
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
   }
 }
@@ -110,7 +110,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question.answers.every((item) => item.isTrue !== undefined)
     },
     "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
-      return answer.answers.every((item, index) => item.isTrue === original.answers[index].isTrue)
+      const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count++ : count, 0)
+      if (correctAnswersCount === answer.answers.length) return true
+      if (correctAnswersCount === 0) return false
+      return "partial"
     },
     "checkCreatorCorrectFormat": (content: TrueFalseQuestion) => {
       let isError = false
@@ -173,10 +176,15 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: ConnectQuestion, original: ConnectQuestion) => {
       if (answer.answers.length !== original.answers.length) return false
+      let correctAnswersCount = 0
       for (const i in answer.answers) {
-        if (answer.answers[i].matchedAnswerIndex !== original.answers[i].matchedAnswerIndex) return false
+        if (answer.answers[i].matchedAnswerIndex === original.answers[i].matchedAnswerIndex) {
+          correctAnswersCount++
+        }
       }
-      return true
+      if (correctAnswersCount === answer.answers.length) return true
+      else if (correctAnswersCount === 0) return false
+      return "partial"
     },
     "checkCreatorCorrectFormat": (content: ConnectQuestion) => {
       let isError = false
@@ -289,7 +297,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question.answers.every(item => item.answer.options[0] !== "")
     },
     "checkAnswerCorrectness": (answer: FillQuestion, original: FillQuestion) => {
-      return original.answers.every((item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")))
+      const correctAnswersCount = original.answers.reduce((count, item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")) ? count++ : count, 0)
+      if (correctAnswersCount === answer.answers.length) return true
+      if (correctAnswersCount === 0) return false
+      return "partial"
     },
     "checkCreatorCorrectFormat": (content: FillQuestion) => {
       let isError = false
