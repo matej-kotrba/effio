@@ -37,8 +37,8 @@ export default {
 
 				success: '#5cb85c',
 				error: '#B00020',
-				warning: '#fbbd23',
-				dark_error: '#e12345'
+				dark_error: '#e12345',
+				warning: '#fbbd23'
 			},
 			fontSize: {
 				h1: '65px',

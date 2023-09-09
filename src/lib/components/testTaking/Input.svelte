@@ -28,29 +28,34 @@
 	export { classes as class };
 	let classes = '';
 
-	let outlineStyles;
+	let outlineStyles: string;
 
-	// switch(resultFormat?.isCorrect) {
-	// 	case true: {
-	// 		break;
-	// 	}
-	// 	case false: {
-	// 		break;
-	// 	}
-	// 	resultFormat?.isCorrect satisfies never
-	// }
+	console.log(resultFormat?.isCorrect);
+
+	switch (resultFormat?.isCorrect) {
+		case true: {
+			outlineStyles = 'outline-success';
+			break;
+		}
+		case false: {
+			outlineStyles = 'outline-error dark:outline-dark_error';
+			break;
+		}
+		case 'partial': {
+			outlineStyles = 'outline-warning';
+			break;
+		}
+		default: {
+			outlineStyles = 'outline-transparent';
+			break;
+		}
+	}
 
 	$: typedResultFormat = resultFormat as any;
 </script>
 
 <div
-	class={`relative p-3 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey outline-2 outline ${
-		resultFormat
-			? resultFormat.isCorrect
-				? 'outline-success'
-				: 'outline-error dark:outline-dark_error'
-			: 'outline-transparent'
-	} ${classes}`}
+	class={`relative p-3 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey outline-2 outline ${outlineStyles} ${classes}`}
 >
 	<div
 		class="absolute grid w-8 translate-x-1/2 translate-y-1/2 rounded-full shadow-md right-full bottom-full aspect-square place-content-center duration-150

@@ -18,7 +18,7 @@ type QuestionContentTransformation = {
 
     // Type which takes the question and checks if the answer of the specific question type is present
     "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
-    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => boolean | "partial",
+    "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => QuestionServerCheckResponse<any>["isCorrect"],
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
   }
 }
@@ -110,9 +110,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question.answers.every((item) => item.isTrue !== undefined)
     },
     "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
-      const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count++ : count, 0)
+      const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count + 1 : count, 0)
       if (correctAnswersCount === answer.answers.length) return true
       if (correctAnswersCount === 0) return false
+      console.log("HEHE", correctAnswersCount, answer.answers.length)
       return "partial"
     },
     "checkCreatorCorrectFormat": (content: TrueFalseQuestion) => {
@@ -297,7 +298,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question.answers.every(item => item.answer.options[0] !== "")
     },
     "checkAnswerCorrectness": (answer: FillQuestion, original: FillQuestion) => {
-      const correctAnswersCount = original.answers.reduce((count, item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")) ? count++ : count, 0)
+      const correctAnswersCount = original.answers.reduce((count, item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(answer.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")) ? count + 1 : count, 0)
       if (correctAnswersCount === answer.answers.length) return true
       if (correctAnswersCount === 0) return false
       return "partial"

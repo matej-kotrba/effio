@@ -97,7 +97,7 @@ type ClientTest = {
 }
 
 type QuestionServerCheckResponse<T extends QuestionContent> = {
-  isCorrect: boolean;
+  isCorrect: boolean | "partial";
   correctAnswer: T;
   userAnswer: T;
 }

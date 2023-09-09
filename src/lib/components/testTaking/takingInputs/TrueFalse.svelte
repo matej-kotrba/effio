@@ -26,14 +26,16 @@
 				: ''} rounded-md shadow-md {!resultFormat &&
 				'hover:bg-slate-50 dark:hover:bg-dark_terciary dark:active:bg-dark_quaternary active:bg-slate-100'} 
 			{resultFormat &&
-				resultFormat.isCorrect === false &&
+				(resultFormat.isCorrect === false ||
+					resultFormat.isCorrect === 'partial') &&
 				resultFormat.correctAnswer.answers[index].isTrue ===
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-green-200'} {resultFormat &&
-				resultFormat.isCorrect === false &&
+				'bg-green-200 dark:bg-green-800'} {resultFormat &&
+				(resultFormat.isCorrect === false ||
+					resultFormat.isCorrect === 'partial') &&
 				resultFormat.correctAnswer.answers[index].isTrue !==
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-red-200'}"
+				'bg-red-200 dark:bg-error'}"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>
