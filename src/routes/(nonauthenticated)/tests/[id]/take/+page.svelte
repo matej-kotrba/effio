@@ -10,6 +10,7 @@
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
+	import type { Prisma, TestRecord, TestRecordPayload } from '@prisma/client';
 
 	export let data;
 
@@ -17,6 +18,14 @@
 	let submitError: string = '';
 
 	let result: QuestionServerCheckResponse<QuestionContent>[] | null = null;
+	let returnedTestRecord:
+		| (TestRecord &
+				Prisma.TestRecordGetPayload<{
+					include: {
+						questionRecords: true;
+					};
+				}>)
+		| undefined = undefined;
 
 	let openDialog: () => void;
 
@@ -74,6 +83,7 @@
 					console.log(res);
 					if (!res['questionData']) return;
 					result = res['questionData'];
+					returnedTestRecord = res['test'];
 					// ...
 				}
 
@@ -99,6 +109,12 @@
 							: 'border-transparent'
 					}`}
 					resultFormat={result === null ? null : result[index]}
+					points={returnedTestRecord
+						? {
+								got: returnedTestRecord?.questionRecords[index].userPoints,
+								max: data.testContent.testVersions[0].questions[index].points
+						  }
+						: undefined}
 				/>
 				<Space gap={10} />
 				{#if $testObject.questions[index].errors.content}

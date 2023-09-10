@@ -28,6 +28,20 @@ export const recordsRouter = router({
         testId: input.testId,
         title: input.title,
         description: input.description,
+        questionRecords: {
+          createMany: {
+            data: input.answerContent.map(item => {
+              return {
+                questionId: item.questionId,
+                content: item.userContent,
+                userPoints: item.points
+              }
+            })
+          }
+        }
+      },
+      include: {
+        questionRecords: true
       }
     })
 
@@ -37,25 +51,9 @@ export const recordsRouter = router({
       }
     }
 
-    const questionResponse = await ctx.prisma.questionRecord.createMany({
-      data: input.answerContent.map(item => {
-        return {
-          testRecordId: createdTest.id,
-          questionId: item.questionId,
-          content: item.userContent,
-          userPoints: item.points
-        } satisfies Prisma.QuestionRecordCreateManyInput
-      })
-    })
-
-    if (!questionResponse) {
-      return {
-        success: false,
-      }
-    }
-
     return {
-      success: true
+      success: true,
+      test: createdTest
     }
   }),
   getUserRecords: loggedInProcedure.input(z.object({

@@ -5,6 +5,7 @@ import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, MA
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
+import type { Prisma, Test, TestRecord } from "@prisma/client";
 
 
 type QuestionContentTransformation = {
@@ -19,7 +20,8 @@ type QuestionContentTransformation = {
     // Type which takes the question and checks if the answer of the specific question type is present
     "checkAnswerPresence": (question: QuestionTypeMap[Key]) => boolean,
     "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => QuestionServerCheckResponse<any>["isCorrect"],
-    "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] }
+    "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] },
+    "calculatePoints": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key], maxPoints: number) => number
   }
 }
 
@@ -76,6 +78,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message: message,
         store: content
       }
+    },
+    "calculatePoints": (q1: PickOneQuestion, q2: PickOneQuestion, maxPoints: number) => {
+      return q1.correctAnswerIndex === q2.correctAnswerIndex ? maxPoints : 0
     }
   },
   "true/false": {
@@ -113,7 +118,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count + 1 : count, 0)
       if (correctAnswersCount === answer.answers.length) return true
       if (correctAnswersCount === 0) return false
-      console.log("HEHE", correctAnswersCount, answer.answers.length)
       return "partial"
     },
     "checkCreatorCorrectFormat": (content: TrueFalseQuestion) => {
@@ -132,6 +136,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message: "",
         store: content
       }
+    },
+    "calculatePoints": (q1: TrueFalseQuestion, q2: TrueFalseQuestion, maxPoints: number) => {
+      const correctAnswersCount = q1.answers.reduce((count, item, index) => item.isTrue === q2.answers[index].isTrue ? count + 1 : count, 0)
+      return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
     }
   },
   "connect": {
@@ -216,6 +224,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message: "",
         store: content
       }
+    },
+    "calculatePoints": (q1: ConnectQuestion, q2: ConnectQuestion, maxPoints: number) => {
+      const correctAnswersCount = q1.answers.reduce((count, item, index) => item.matchedAnswerIndex === q2.answers[index].matchedAnswerIndex ? count + 1 : count, 0)
+      return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
     }
   },
   "write": {
@@ -257,6 +269,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message: "",
         store: content
       }
+    },
+    "calculatePoints": (q1: WriteQuestion, q2: WriteQuestion, maxPoints: number) => {
+      return q1.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(q2.answers[0].answer.toLowerCase().replace(/\s/g, "")) ? maxPoints : 0
     }
   },
   "fill": {
@@ -335,6 +350,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message: "",
         store: content
       }
+    },
+    "calculatePoints": (q1: FillQuestion, q2: FillQuestion, maxPoints: number) => {
+      const correctAnswersCount = q1.answers.reduce((count, item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(q2.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")) ? count + 1 : count, 0)
+      return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
     }
   }
 }
@@ -546,8 +565,11 @@ type CheckServer = {
   error?: string;
   success: boolean;
   questionData?: QuestionServerCheckResponse<QuestionContent>[]
-
-
+  test?: TestRecord & Prisma.TestRecordGetPayload<{
+    include: {
+      questionRecords: true
+    }
+  }>
 
   //({ isCorrect: boolean } & { [key: string]: unknown })[]
 }
@@ -610,21 +632,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     success: false
   }
 
-  console.log({
-    testId: test.id,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    answerContent: questionData.map((item, index) => {
-      return {
-        questionId: test.questions[index].id,
-        questionContent: {
-          original: item.correctAnswer,
-          user: item.userAnswer
-        },
-      }
-    })
-  })
-
-  await trpc().records.createTestRecord.mutate({
+  const recordedTest = await trpc().records.createTestRecord.mutate({
     testId: test.versionId,
     title: test.title,
     description: test.description,
@@ -633,7 +641,9 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
       return {
         questionId: test.questions[index].id,
         userContent: item.userAnswer,
-        points: item.isCorrect ? test.questions[index].points : 0
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        points: questionContentFunctions[test.questions[index].questionType].calculatePoints(item.correctAnswer, item.userAnswer, test.questions[index].points)
       }
     })
   })
@@ -641,7 +651,8 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
   return {
     error: responseData?.error ?? undefined,
     success: responseData?.success ?? false,
-    questionData
+    questionData,
+    test: recordedTest.test ?? undefined
   }
 }
 
