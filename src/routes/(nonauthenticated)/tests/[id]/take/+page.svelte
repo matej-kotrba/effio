@@ -4,6 +4,7 @@
 	import {
 		checkTestClient,
 		checkTestServerAndRecordIt,
+		getMarkBasedOnPoints,
 		initializeTestToTestStore
 	} from '~helpers/test';
 	import Space from '~components/separators/Space.svelte';
@@ -11,6 +12,7 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 	import type { Prisma, TestRecord, TestRecordPayload } from '@prisma/client';
+	import { getMarkSystemMarksByJSON } from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
 
 	export let data;
 
@@ -44,9 +46,35 @@
 	}
 
 	let questionContainerRef: HTMLDivElement | null = null;
+
+	let higlightedInputIndex: number | null = null;
 </script>
 
-<TestTakingNavigation session={data.session} {questionContainerRef} />
+{#if result && returnedTestRecord}
+	{@const maxPoints = data.testContent.testVersions[0].questions.reduce(
+		(acc, item) => acc + item.points,
+		0
+	)}
+	{@const userPoints =
+		returnedTestRecord?.questionRecords.reduce((count, item) => {
+			if (item['userPoints']) {
+				return count + item['userPoints'];
+			} else {
+				return count;
+			}
+		}, 0) || 0}
+	<TestTakingNavigation
+		session={data.session}
+		{questionContainerRef}
+		{result}
+		bind:markedIndex={higlightedInputIndex}
+		{maxPoints}
+		{userPoints}
+		mark={markSystem
+			? getMarkBasedOnPoints(markSystem, userPoints, maxPoints).name
+			: undefined}
+	/>
+{/if}
 <Dialog bind:open={openDialog}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		You are about to submit the test, after that you want be able to change your

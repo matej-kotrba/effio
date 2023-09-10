@@ -6,6 +6,7 @@ import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
 import type { Prisma, Test, TestRecord } from "@prisma/client";
+import { getMarkSystemMarksByJSON } from "~/routes/dashboard/test-history/records/[id]/+page.svelte";
 
 
 type QuestionContentTransformation = {
@@ -371,13 +372,16 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
 // TODO: FIX THE TYPES
 
 export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars" | "views">) {
+  const markSystem = getMarkSystemMarksByJSON(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
     versionId: testData.testVersions[0].versionId,
     title: testData.title,
     description: testData.description,
     published: testData.published,
-    markSystem: testData.testVersions[0].markSystemJSON as MarkSystemJSON,
+    markSystem: markSystem ? {
+      marks: markSystem
+    } : {},
     errors: {},
     questions: testData.testVersions[0].questions.map((question) => {
       const type = question.type.slug as keyof QuestionTypeMap
