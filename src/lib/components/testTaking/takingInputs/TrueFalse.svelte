@@ -25,29 +25,46 @@
 				? 'bg-white dark:bg-dark_light_grey'
 				: ''} rounded-md shadow-md {!resultFormat &&
 				'hover:bg-slate-50 dark:hover:bg-dark_terciary dark:active:bg-dark_quaternary active:bg-slate-100'} 
-			{resultFormat &&
+			"
+		>
+			<!-- {resultFormat &&
 				(resultFormat.isCorrect === false ||
 					resultFormat.isCorrect === 'partial') &&
 				resultFormat.correctAnswer.answers[index].isTrue ===
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-green-200 dark:bg-green-800'} {resultFormat &&
+				'bg-correct dark:bg-dark_correct'} {resultFormat &&
 				(resultFormat.isCorrect === false ||
 					resultFormat.isCorrect === 'partial') &&
 				resultFormat.correctAnswer.answers[index].isTrue !==
 					resultFormat.userAnswer.answers[index].isTrue &&
-				'bg-red-200 dark:bg-error'}"
-		>
+				'bg-incorrect dark:bg-dark_incorrect'} -->
 			<div class="grid__container">
 				<span>{index + 1}.</span>
 				<span> {answer}</span>
 			</div>
-			<input
-				type="checkbox"
-				class="checkbox checkbox-primary radio_button dark:checkbox-accent"
-				disabled={!!resultFormat}
-				name={$testObject.questions[questionIndex].title + '-radio'}
-				bind:checked={checkBoxValues[index]['isTrue']}
-			/>
+			<div class="flex items-center gap-2">
+				{#if resultFormat?.isCorrect === false || resultFormat?.isCorrect === 'partial'}
+					{#if resultFormat.correctAnswer.answers[index].isTrue === resultFormat.userAnswer.answers[index].isTrue}
+						<iconify-icon
+							icon="charm:tick"
+							class="text-2xl text-correct dark:text-dark_correct"
+						/>
+					{/if}
+					{#if resultFormat.correctAnswer.answers[index].isTrue !== resultFormat.userAnswer.answers[index].isTrue}
+						<iconify-icon
+							icon="ic:round-close"
+							class="text-2xl text-incorrect dark:text-dark_incorrect"
+						/>
+					{/if}
+				{/if}
+				<input
+					type="checkbox"
+					class="checkbox checkbox-primary radio_button dark:checkbox-accent"
+					disabled={!!resultFormat}
+					name={$testObject.questions[questionIndex].title + '-radio'}
+					bind:checked={checkBoxValues[index]['isTrue']}
+				/>
+			</div>
 		</button>
 	{/each}
 </div>
