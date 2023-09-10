@@ -44,17 +44,20 @@
 			</div>
 			<div class="flex items-center gap-2">
 				{#if resultFormat?.isCorrect === false || resultFormat?.isCorrect === 'partial'}
-					{#if resultFormat.correctAnswer.answers[index].isTrue === resultFormat.userAnswer.answers[index].isTrue}
-						<iconify-icon
-							icon="charm:tick"
-							class="text-2xl text-correct dark:text-dark_correct"
-						/>
-					{/if}
-					{#if resultFormat.correctAnswer.answers[index].isTrue !== resultFormat.userAnswer.answers[index].isTrue}
-						<iconify-icon
-							icon="ic:round-close"
-							class="text-2xl text-incorrect dark:text-dark_incorrect"
-						/>
+					{#if resultFormat.correctAnswer.answers[index].isTrue}
+						<div class="lg:tooltip" data-tip="Correct answer is true">
+							<iconify-icon
+								icon="charm:tick"
+								class="grid text-2xl place-content-center text-correct dark:text-dark_correct"
+							/>
+						</div>
+					{:else}
+						<div class="lg:tooltip" data-tip="Correct answer is false">
+							<iconify-icon
+								icon="ic:round-close"
+								class="grid text-2xl place-content-center text-incorrect dark:text-dark_incorrect"
+							/>
+						</div>
 					{/if}
 				{/if}
 				<input

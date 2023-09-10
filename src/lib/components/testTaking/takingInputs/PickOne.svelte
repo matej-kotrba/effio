@@ -33,26 +33,35 @@
 				? 'bg-white dark:bg-dark_light_grey'
 				: ''} {!resultFormat &&
 				'hover:bg-slate-50 dark:hover:bg-dark_terciary active:bg-slate-100 dark:active:bg-dark_quaternary'} 
-			{resultFormat &&
-				resultFormat.isCorrect === false &&
-				selectedInput === index &&
-				'bg-red-200'} {resultFormat &&
-				resultFormat.isCorrect === false &&
-				index === resultFormat.correctAnswer.correctAnswerIndex &&
-				'bg-green-200'}"
+			"
 		>
 			<div class="grid__container">
 				<span>{index + 1}.</span>
 				<span> {answer}</span>
 			</div>
-			<input
-				type="radio"
-				class="radio radio-primary dark:border-dark_primary dark:checked:bg-dark_primary radio_button"
-				disabled={!!resultFormat}
-				name={$testObject.questions[questionIndex].title + '-radio'}
-				value={index}
-				bind:group={selectedInput}
-			/>
+			<div class="flex items-center gap-2">
+				{#if resultFormat?.isCorrect === false || resultFormat?.isCorrect === 'partial'}
+					{#if resultFormat.correctAnswer.correctAnswerIndex === index}
+						<iconify-icon
+							icon="charm:tick"
+							class="text-2xl text-correct dark:text-dark_correct"
+						/>
+					{:else}
+						<iconify-icon
+							icon="ic:round-close"
+							class="text-2xl text-incorrect dark:text-dark_incorrect"
+						/>
+					{/if}
+				{/if}
+				<input
+					type="radio"
+					class="radio radio-primary dark:border-dark_primary dark:checked:bg-dark_primary radio_button"
+					disabled={!!resultFormat}
+					name={$testObject.questions[questionIndex].title + '-radio'}
+					value={index}
+					bind:group={selectedInput}
+				/>
+			</div>
 		</button>
 	{/each}
 </div>

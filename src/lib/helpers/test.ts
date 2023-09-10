@@ -360,19 +360,21 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
     published: testData.published,
     markSystem: testData.testVersions[0].markSystemJSON as MarkSystemJSON,
     errors: {},
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     questions: testData.testVersions[0].questions.map((question) => {
-      return {
+      const type = question.type.slug as keyof QuestionTypeMap
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const item: QuestionClient = {
         id: question.id,
         title: question.title,
-        content: question.content as QuestionTypeMap[keyof QuestionTypeMap],
+        content: question.content as QuestionTypeMap[typeof type],
         questionTypeId: question.typeId,
-        questionType: question.type.slug as keyof QuestionTypeMap,
+        questionType: type,
         displayType: question.type.name,
         points: question.points,
         errors: {}
-      } satisfies QuestionClient
+      }
+      return item
     })
   })
 }

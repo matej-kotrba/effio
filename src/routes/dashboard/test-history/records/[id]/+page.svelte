@@ -109,7 +109,7 @@
 							<td class="font-semibold text-center">{userPoints}</td>
 							<td class="font-semibold text-center">{maxPoints}</td>
 							<td class="font-semibold text-center"
-								>{(userPoints / maxPoints || 0) * 100}%</td
+								>{((userPoints / maxPoints || 0) * 100).toFixed(2)}%</td
 							>
 						</tr>
 					</tbody>

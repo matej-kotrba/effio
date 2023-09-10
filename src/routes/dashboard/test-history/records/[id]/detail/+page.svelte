@@ -37,6 +37,9 @@
 			testVersions: [
 				{
 					...data.record.test,
+					markSystemJSON: {
+						marks: getMarkSystemMarksByJSON(data.record.test.markSystemJSON)
+					},
 					questions: data.record.questionRecords.map((item) => {
 						return {
 							...item.question,
@@ -118,6 +121,12 @@
 							userAnswer: question['content']
 						}}
 						isHighlighted={index === higlightedInputIndex}
+						points={question.question.points
+							? {
+									got: question.userPoints,
+									max: question.question.points
+							  }
+							: undefined}
 					/>
 					<Space gap={20} />
 				{/each}
