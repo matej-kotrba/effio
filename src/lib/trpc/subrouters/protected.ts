@@ -72,6 +72,12 @@ export const protectedRouter = router({
     description: z.string(),
     questionContent: z.string(),
     isPublished: z.boolean(),
+    markSystem: z.object({
+      marks: z.array(z.object({
+        name: z.string(),
+        limit: z.number()
+      }))
+    }),
   })).mutation(async ({ ctx, input }) => {
     try {
 
@@ -100,7 +106,8 @@ export const protectedRouter = router({
       const testData = await ctx.prisma.testVersion.create({
         data: {
           testId: input.testGroupId,
-          version: version + 1
+          version: version + 1,
+          markSystemJSON: input.markSystem.marks ?? "{}",
         }
       })
 

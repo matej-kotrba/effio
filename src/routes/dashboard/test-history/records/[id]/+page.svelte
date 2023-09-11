@@ -28,11 +28,6 @@
 		}
 
 		return markSystem as MarkSystemJSON['marks'];
-
-		// if (typeof markSystem === 'object') return markSystem;
-		// const string = markSystem?.toString();
-		// if (string === undefined) return undefined;
-		// return JSON.parse(string) as MarkSystemJSON['marks'];
 	}
 
 	export function isMarkSystemCorrect(
@@ -91,7 +86,6 @@
 			{@const userPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.userPoints;
 			}, 0)}
-			{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
 			{@const mark = marks
 				? getMarkBasedOnPoints(marks, userPoints, maxPoints)
 				: undefined}
