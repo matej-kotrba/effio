@@ -17,6 +17,10 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 	import { goto } from '$app/navigation';
+	import {
+		checkJSONQuestionData,
+		checkMarkSystem
+	} from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
 
 	export let data;
 
@@ -29,14 +33,16 @@
 	initializeTestToTestStore(data.testContent);
 
 	// TODO: Create a check for the JSON so we make sure that the JSON is in correct format
-	let markSystem: MarkSystemJSON['marks'] | null;
-	if (data.testContent.testVersions[0].markSystemJSON) {
-		markSystem = JSON.parse(
-			data.testContent.testVersions[0].markSystemJSON?.toString()
-		) as MarkSystemJSON['marks'];
-	} else {
-		markSystem = null;
-	}
+	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
+		data.testContent.testVersions[0].markSystemJSON
+	);
+	// if (data.testContent.testVersions[0].markSystemJSON) {
+	// 	markSystem = JSON.parse(
+	// 		data.testContent.testVersions[0].markSystemJSON?.toString()
+	// 	) as MarkSystemJSON['marks'];
+	// } else {
+	// 	markSystem = null;
+	// }
 
 	function startTest() {
 		isTakingTest = true;

@@ -19,16 +19,26 @@
 		if (markSystem === null || typeof markSystem !== 'object') return null;
 		if (markSystem.map === undefined) return null;
 
-		markSystem = markSystem as Array<unknown>;
+		let markSystemTemp = markSystem as Array<unknown>;
 
-		for (let i = 0; i < markSystem.length; i++) {
-			let item = markSystem[i] as MarkSystemJSON['marks'][0];
+		for (let i = 0; i < markSystemTemp.length; i++) {
+			let item = markSystemTemp[i] as MarkSystemJSON['marks'][0];
+			if (item.name === undefined) return null;
+			if (item.limit === undefined) return null;
 		}
+
+		return markSystem as MarkSystemJSON['marks'];
 
 		// if (typeof markSystem === 'object') return markSystem;
 		// const string = markSystem?.toString();
 		// if (string === undefined) return undefined;
 		// return JSON.parse(string) as MarkSystemJSON['marks'];
+	}
+
+	export function isMarkSystemCorrect(
+		markSystem: Prisma.JsonValue
+	): markSystem is MarkSystemJSON['marks'] {
+		return checkMarkSystem(markSystem) !== null;
 	}
 </script>
 

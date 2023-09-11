@@ -10,7 +10,11 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import Back from '~components/navigation/Back.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
-	import { checkJSONQuestionData, checkMarkSystem } from '../+page.svelte';
+	import {
+		checkJSONQuestionData,
+		checkMarkSystem,
+		isMarkSystemCorrect
+	} from '../+page.svelte';
 
 	export let data;
 
@@ -35,9 +39,13 @@
 			testVersions: [
 				{
 					...data.record.test,
-					markSystemJSON: {
-						marks: data.record.test.markSystemJSON
-					},
+					markSystemJSON: (checkMarkSystem(data.record.test.markSystemJSON) !==
+					null
+						? {
+								marks: data.record.test
+									.markSystemJSON as MarkSystemJSON['marks']
+						  }
+						: {}) satisfies MarkSystemJSON,
 					questions: data.record.questionRecords.map((item) => {
 						return {
 							...item.question,
@@ -84,7 +92,9 @@
 				result={questionData}
 				{maxPoints}
 				{userPoints}
-				mark={getMarkBasedOnPoints(marks, userPoints, maxPoints).name}
+				mark={isMarkSystemCorrect(marks)
+					? getMarkBasedOnPoints(marks, userPoints, maxPoints).name
+					: undefined}
 				bind:markedIndex={higlightedInputIndex}
 			/>
 		{/if}

@@ -36,14 +36,9 @@
 	initializeTestToTestStore(data.testContent);
 
 	// TODO: Create a check for the JSON so we make sure that the JSON is in correct format
-	let markSystem: MarkSystemJSON['marks'] | null;
-	if (data.testContent.testVersions[0].markSystemJSON) {
-		markSystem = JSON.parse(
-			data.testContent.testVersions[0].markSystemJSON?.toString()
-		) as MarkSystemJSON['marks'];
-	} else {
-		markSystem = null;
-	}
+	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
+		data.testContent.testVersions[0].markSystemJSON
+	);
 
 	let questionContainerRef: HTMLDivElement | null = null;
 
