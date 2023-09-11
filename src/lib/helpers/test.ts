@@ -6,7 +6,7 @@ import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
 import type { Prisma, Test, TestRecord } from "@prisma/client";
-import { getMarkSystemMarksByJSON } from "~/routes/dashboard/test-history/records/[id]/+page.svelte";
+import { checkMarkSystem } from "~/routes/dashboard/test-history/records/[id]/+page.svelte";
 
 
 type QuestionContentTransformation = {
@@ -372,7 +372,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
 // TODO: FIX THE TYPES
 
 export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars" | "views">) {
-  const markSystem = getMarkSystemMarksByJSON(testData.testVersions[0].markSystemJSON)
+  const markSystem = checkMarkSystem(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
     versionId: testData.testVersions[0].versionId,
@@ -503,7 +503,6 @@ export function isTestValid(inputsToValidate: IsTestValid) {
     }
   }
 
-  console.log(markSystem)
   if (markSystem !== undefined && markSystem.marks) {
     result.errors.markSystem = {
       marks: []

@@ -15,10 +15,20 @@
 		};
 	}
 
-	export function getMarkSystemMarksByJSON(markSystem: Prisma.JsonValue) {
-		const string = markSystem?.toString();
-		if (string === undefined) return undefined;
-		return JSON.parse(string) as MarkSystemJSON['marks'];
+	export function checkMarkSystem(markSystem: Prisma.JsonValue) {
+		if (markSystem === null || typeof markSystem !== 'object') return null;
+		if (markSystem.map === undefined) return null;
+
+		markSystem = markSystem as Array<unknown>;
+
+		for (let i = 0; i < markSystem.length; i++) {
+			let item = markSystem[i] as MarkSystemJSON['marks'][0];
+		}
+
+		// if (typeof markSystem === 'object') return markSystem;
+		// const string = markSystem?.toString();
+		// if (string === undefined) return undefined;
+		// return JSON.parse(string) as MarkSystemJSON['marks'];
 	}
 </script>
 
@@ -63,9 +73,7 @@
 		);
 	})}
 	{#if res.record}
-		{@const marks = getMarkSystemMarksByJSON(
-			res.record['test']['markSystemJSON']
-		)}
+		{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
 		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
 			{@const maxPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.question.points;
@@ -73,9 +81,7 @@
 			{@const userPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.userPoints;
 			}, 0)}
-			{@const marks = getMarkSystemMarksByJSON(
-				res.record['test']['markSystemJSON']
-			)}
+			{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
 			{@const mark = marks
 				? getMarkBasedOnPoints(marks, userPoints, maxPoints)
 				: undefined}

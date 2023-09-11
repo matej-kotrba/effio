@@ -10,10 +10,7 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import Back from '~components/navigation/Back.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
-	import {
-		checkJSONQuestionData,
-		getMarkSystemMarksByJSON
-	} from '../+page.svelte';
+	import { checkJSONQuestionData, checkMarkSystem } from '../+page.svelte';
 
 	export let data;
 
@@ -26,6 +23,7 @@
 			return;
 		}
 
+		console.log(data.record.test.markSystemJSON);
 		initializeTestToTestStore({
 			id: data.record.id,
 			title: data.record.title,
@@ -38,7 +36,7 @@
 				{
 					...data.record.test,
 					markSystemJSON: {
-						marks: getMarkSystemMarksByJSON(data.record.test.markSystemJSON)
+						marks: data.record.test.markSystemJSON
 					},
 					questions: data.record.questionRecords.map((item) => {
 						return {
@@ -72,9 +70,7 @@
 		);
 	})}
 	{#if res.record}
-		{@const marks = getMarkSystemMarksByJSON(
-			res.record['test']['markSystemJSON']
-		)}
+		{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
 		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
 			{@const maxPoints = res.record['questionRecords'].reduce((acc, item) => {
 				return acc + item.question.points;

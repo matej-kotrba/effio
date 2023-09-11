@@ -36,8 +36,6 @@
 
 	let outlineStyles: string;
 
-	console.log(resultFormat?.isCorrect);
-
 	switch (resultFormat?.isCorrect) {
 		case true: {
 			outlineStyles = 'outline-success';

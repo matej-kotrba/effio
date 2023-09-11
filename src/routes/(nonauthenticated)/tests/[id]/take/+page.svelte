@@ -12,7 +12,7 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 	import type { Prisma, TestRecord, TestRecordPayload } from '@prisma/client';
-	import { getMarkSystemMarksByJSON } from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
+	import { checkMarkSystem } from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
 
 	export let data;
 
