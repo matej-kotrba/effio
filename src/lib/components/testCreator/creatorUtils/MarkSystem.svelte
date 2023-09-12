@@ -14,23 +14,29 @@
 	import RemoveButton from './RemoveButton.svelte';
 
 	export let isAdded = true;
+	export let defaultValue: MarkSystemJSON['marks'] = [
+		{
+			name: 'Passed',
+			limit: 50
+		},
+
+		{
+			name: 'Failed',
+			limit: 0
+		}
+	];
 
 	type Mark = {
 		name: string;
 		limitInPercent: number | undefined;
 	};
 
-	let marks: Mark[] = [
-		{
-			name: 'Passed',
-			limitInPercent: 50
-		},
-
-		{
-			name: 'Failed',
-			limitInPercent: 0
-		}
-	];
+	let marks: Mark[] = defaultValue.map((item) => {
+		return {
+			name: item.name,
+			limitInPercent: item.limit
+		};
+	});
 
 	$: {
 		if (isAdded === false) {

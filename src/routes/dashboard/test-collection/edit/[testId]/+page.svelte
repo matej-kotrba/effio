@@ -27,7 +27,8 @@
 	import { getContext } from 'svelte';
 	import type { toast as Toast } from 'svelte-french-toast';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
-	import { TRPCError } from '@trpc/server';
+	import { TRPCClientError } from '@trpc/client';
+	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 
 	export let data;
 
@@ -35,6 +36,7 @@
 
 	let isSubmitting = false;
 
+	$: console.log($testObject.markSystem);
 	initializeTestToTestStore(data.testData);
 
 	async function postEditedTest() {
@@ -47,45 +49,63 @@
 		const result = isTestValid({
 			title: $testObject.title,
 			questions: $testObject.questions,
-			description: $testObject.description
+			description: $testObject.description,
+			markSystem: $testObject.markSystem
 		});
 
-		// TODO: Check if the isValidServer is needed here
-
-		if (result['store']['questions']) {
-			$testObject['questions'] = result['store']['questions'];
+		if (result['isError']) {
+			$testObject.errors = result['store']['errors'];
+			if (result['store']['questions']) {
+				$testObject.questions = result['store']['questions'];
+			}
+			return;
 		}
 
-		$testObject.errors.title = result['store']['errors']['title'] || undefined;
-		$testObject.errors.description =
-			result['store']['errors']['description'] || undefined;
+		const serverResult = await isValidInputServer({
+			title: $testObject.title,
+			description: $testObject.description,
+			questions: $testObject.questions,
+			markSystem: $testObject.markSystem
+		});
 
-		if (result['message']) {
-			toast.error(result['message']);
+		if (serverResult.success === false) {
+			$testObject.errors = result['store']['errors'];
+			if (result['store']['questions']) {
+				$testObject.questions = result['store']['questions'];
+			}
+			return;
 		}
-
-		$testObject = $testObject;
-		if (result['isError']) return;
 
 		let data;
 		try {
+			isSubmitting = true;
 			data = await trpc($page).protected.updateTest.mutate({
 				testGroupId: $testObject.id as string,
 				title: $testObject.title,
 				description: $testObject.description,
 				isPublished: $testObject.published as boolean,
-				questionContent: JSON.stringify($testObject.questions)
+				questionContent: JSON.stringify($testObject.questions),
+				markSystem: {
+					marks: $testObject.markSystem.marks.map((item) => {
+						return {
+							name: item.name,
+							// Checked in the isTestValid
+							limit: item.limit as number
+						};
+					})
+				}
 			});
 		} catch (e) {
-			if (e instanceof TRPCError) {
-				toast['error'](e.message);
+			if (e instanceof TRPCClientError) {
+				toast['error'](
+					e.message || 'An error occurred while updating the test'
+				);
 			}
 			return;
+		} finally {
+			isSubmitting = false;
 		}
 		if (data['success']) {
-			isSubmitting = true;
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			isSubmitting = false;
 			toast['success']('Test updated successfully');
 			goto('/dashboard/test-collection');
 		}
@@ -132,6 +152,11 @@
 		on:error={(e) => ($testObject.errors.description = e.detail)}
 	/>
 </ErrorEnhance>
+
+<MarkSystem
+	isAdded={!!$testObject.markSystem['marks']}
+	defaultValue={$testObject.markSystem['marks']}
+/>
 
 <Creator inputTemplates={data.questionsTypes} />
 

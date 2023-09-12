@@ -1,4 +1,4 @@
-import { z, type ZodRawShape } from "zod"
+import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import type { Prisma } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
@@ -13,7 +13,7 @@ export const protectedRouter = router({
       marks: z.array(z.object({
         name: z.string(),
         limit: z.number()
-      }))
+      })).optional()
     }),
     isPublished: z.boolean(),
   })).mutation(async ({ ctx, input }) => {
@@ -29,7 +29,7 @@ export const protectedRouter = router({
           testVersions: {
             create: {
               version: 1,
-              markSystemJSON: input.markSystem.marks ?? "{}",
+              markSystemJSON: input.markSystem?.marks ?? "{}",
               questions: {
                 createMany: {
                   data: questions.map((question) => {
@@ -77,7 +77,7 @@ export const protectedRouter = router({
         name: z.string(),
         limit: z.number()
       }))
-    }),
+    }).optional(),
   })).mutation(async ({ ctx, input }) => {
     try {
 
@@ -107,7 +107,7 @@ export const protectedRouter = router({
         data: {
           testId: input.testGroupId,
           version: version + 1,
-          markSystemJSON: input.markSystem.marks ?? "{}",
+          markSystemJSON: input.markSystem?.marks ?? "{}",
         }
       })
 

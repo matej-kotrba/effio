@@ -426,6 +426,8 @@ export async function isValidInputServer(obj: IsTestValid): Promise<{ success: b
   //     'Content-Type': 'application/json'
   //   }
   // });
+  // TODO: PLEASE rewrite this so it makes a little sence
+
   const data = (await res.json()) as { store: QuestionClient[]; error: boolean };
   obj.questions = data.store as QuestionClient[];
   return {
