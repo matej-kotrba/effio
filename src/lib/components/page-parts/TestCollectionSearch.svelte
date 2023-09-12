@@ -26,11 +26,13 @@
 		orderBy: 'stars' | 'date' = 'date'
 	) {
 		if (tests === undefined) return;
+
+		isFetchingNewTests = true;
+
+		// Cleanup before so the last place is empty
 		if (shouldReset) {
 			tests = [];
 		}
-
-		isFetchingNewTests = true;
 
 		const data = await trpc($page).getUserTestsById.query({
 			// @ts-ignore
@@ -40,6 +42,12 @@
 			searchQuery: searchQuery,
 			order: orderBy
 		});
+
+		// Cleanup in case if some other request was made and finished before this one
+		if (shouldReset) {
+			tests = [];
+		}
+
 		tests = [...tests, ...data];
 	}
 
@@ -88,9 +96,6 @@
 	}
 
 	onMount(async () => {
-		// Get initial state of the tests
-		getTests(false);
-
 		// Observing last element to fetch more tests, then unobserving it
 		observer = new IntersectionObserver(
 			(entries) => {
@@ -113,8 +118,10 @@
 	};
 
 	$: if (orderRef?.value) {
+		// When odering changes refetch, also fetches initial data
 		onOrderByChange();
 	}
+
 	$: console.log(orderRef?.value);
 </script>
 

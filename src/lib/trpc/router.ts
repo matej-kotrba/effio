@@ -47,7 +47,6 @@ export const appRouter = router({
     searchQuery: z.string().optional(),
     order: z.enum(["stars", "date"]).optional()
   })).query(async ({ ctx, input }) => {
-
     const ordering = input.order === "stars" ? [
       {
         stars: "desc"
