@@ -17,10 +17,12 @@
 		][0]['answer']}
 	/>
 	{#if resultFormat && resultFormat['isCorrect'] === false}
-		<p class="p-2 rounded-md bg-error dark:bg-dark_error">
-			{resultFormat.correctAnswer.answers
-				.map((item) => item['answer'])
-				.join(', ')}
+		<p class="p-2 rounded-md">
+			Correct answer(s): <span class="font-semibold"
+				>{resultFormat.correctAnswer.answers
+					.map((item) => item['answer'])
+					.join(', ')}</span
+			>
 		</p>
 	{/if}
 </div>

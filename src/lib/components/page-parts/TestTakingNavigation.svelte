@@ -33,8 +33,8 @@
 	<div class="mb-2">
 		{#if maxPoints !== null && userPoints !== null && mark !== null}
 			<h3 class="text-h4">
-				Your result is: {mark}, {userPoints}/{maxPoints} - {(userPoints /
-					maxPoints || 0) * 100}%
+				Your result is: <span class="font-semibold">{mark}</span>, {userPoints}/{maxPoints}
+				- {(userPoints / maxPoints || 0) * 100}%
 			</h3>
 		{:else}
 			<h3 class="text-h4">Your results</h3>
