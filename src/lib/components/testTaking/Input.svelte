@@ -36,7 +36,7 @@
 
 	let outlineStyles: string;
 
-	switch (resultFormat?.isCorrect) {
+	$: switch (resultFormat?.isCorrect) {
 		case true: {
 			outlineStyles = 'outline-success';
 			break;

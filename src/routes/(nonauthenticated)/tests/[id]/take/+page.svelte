@@ -31,8 +31,6 @@
 
 	let openDialog: () => void;
 
-	// console.log(data.testContent);
-
 	initializeTestToTestStore(data.testContent);
 
 	// TODO: Create a check for the JSON so we make sure that the JSON is in correct format
@@ -103,7 +101,6 @@
 					submitError = res['error'] || 'Something went wrong';
 				} else {
 					submitError = '';
-					console.log(res);
 					if (!res['questionData']) return;
 					result = res['questionData'];
 					returnedTestRecord = res['test'];

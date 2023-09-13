@@ -36,7 +36,6 @@
 
 	let isSubmitting = false;
 
-	$: console.log($testObject.markSystem);
 	initializeTestToTestStore(data.testData);
 
 	async function postEditedTest() {
