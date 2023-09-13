@@ -21,6 +21,7 @@
 		checkJSONQuestionData,
 		checkMarkSystem
 	} from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
+	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 
 	export let data;
 
@@ -92,53 +93,12 @@
 	</div>
 	<p class="flex items-center gap-1">
 		{#if markSystem}
-			<Collapsible position="left" title="Show marking">
-				<div class="grid__layout">
-					<p
-						class="font-semibold text-center text-light_text_black_60 dark:text-dark_text_white_60"
-					>
-						Grade
-					</p>
-					<Separator
-						w="100%"
-						h="100%"
-						class="mb-6"
-						color={$applicationStates.darkMode
-							? 'var(--dark-text-white-20)'
-							: 'var(--light-text-black-20)'}
-					/>
-					<p
-						class="font-semibold text-center text-light_text_black_60 dark:text-dark_text_white_60"
-					>
-						Range
-					</p>
-					<div class="col-span-3 mb-3" />
-					{#each markSystem as mark, index}
-						{#if mark['name'] !== undefined && mark['limit'] !== undefined}
-							{#if index === 0}
-								<p class="text-center">
-									{mark['name']}
-								</p>
-								<div />
-								<p class="text-center">
-									{MARK_LIMIT_MAX}% - {mark['limit']}%
-								</p>
-							{/if}
-							{#if markSystem[index - 1]?.limit !== undefined}
-								<p class="text-center">
-									{mark['name']}
-								</p>
-								<div />
-								<p class="text-center">
-									{markSystem[index - 1]['limit'] || 1 - 1}% - {mark['limit']}%
-								</p>
-							{/if}
-						{/if}
-					{/each}
-				</div>
-			</Collapsible>
+			<MarkSystemDropdown {markSystem} />
 		{:else}
-			<iconify-icon icon="ic:round-close" class="text-3xl text-red-600" />
+			<p class="flex items-center gap-2">
+				This test is ungraded
+				<iconify-icon icon="fluent:info-24-regular" class="text-3xl" />
+			</p>
 		{/if}
 	</p>
 	<Space gap={30} />

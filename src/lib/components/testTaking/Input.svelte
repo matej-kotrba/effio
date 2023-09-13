@@ -73,11 +73,13 @@
 		<p class="text-light_text_black dark:text-dark_text_white_40 text-body2">
 			{$testObject.questions[questionIndex].displayType}
 		</p>
-		<div class="p-2 text-sm rounded-md bg-light_white dark:bg-dark_light_grey">
-			{#if points}
+		{#if points}
+			<div
+				class="p-2 text-sm rounded-md bg-light_white dark:bg-dark_light_grey"
+			>
 				<span>{points.got}</span>/<span>{points.max}</span>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 	<div class="p-2">
 		<h4 class="text-light_text_black dark:text-dark_text_white text-h4">

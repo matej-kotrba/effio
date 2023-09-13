@@ -129,7 +129,7 @@
 							: 'border-transparent'
 					}`}
 					resultFormat={result === null ? null : result[index]}
-					points={returnedTestRecord
+					points={returnedTestRecord && markSystem
 						? {
 								got: returnedTestRecord?.questionRecords[index].userPoints,
 								max: data.testContent.testVersions[0].questions[index].points

@@ -33,6 +33,7 @@
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data;
 
@@ -104,15 +105,17 @@
 				description: $testObject.description,
 				questionContent: JSON.stringify($testObject.questions),
 				isPublished: isPublished,
-				markSystem: {
-					marks: $testObject.markSystem.marks.map((item) => {
-						return {
-							name: item.name,
-							// Checked in the isTestValid
-							limit: item.limit as number
-						};
-					})
-				}
+				markSystem: $testObject.markSystem?.marks
+					? {
+							marks: $testObject.markSystem.marks.map((item) => {
+								return {
+									name: item.name,
+									// Checked in the isTestValid
+									limit: item.limit as number
+								};
+							})
+					  }
+					: undefined
 			});
 			isSuccess = response.success;
 			isSubmitting = false;
@@ -412,7 +415,9 @@
 						<Separator
 							w={'80%'}
 							h={'1px'}
-							color={'var(--light-text-black-20)'}
+							color={$applicationStates['darkMode']
+								? 'var(--dark-text-white-20)'
+								: 'var(--light-text-black-20)'}
 						/>
 						<p class="py-4 text-center text-body1">
 							Your test named <span class="block font-semibold"
@@ -424,7 +429,9 @@
 							<Separator
 								w={'50%'}
 								h={'1px'}
-								color={'var(--light-text-black-20)'}
+								color={$applicationStates['darkMode']
+									? 'var(--dark-text-white-20)'
+									: 'var(--light-text-black-20)'}
 							/>
 							should be
 						</p>

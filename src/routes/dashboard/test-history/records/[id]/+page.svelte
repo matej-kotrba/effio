@@ -45,6 +45,7 @@
 		questionContentFunctions
 	} from '~helpers/test';
 	import { page } from '$app/stores';
+	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 
 	export let data;
 </script>
@@ -103,7 +104,9 @@
 					<!-- head -->
 					<thead>
 						<tr class="text-light_text_black dark:text-dark_text_white">
-							<th class="font-medium text-center">Mark</th>
+							{#if isMarkSystemCorrect(res.record.test.markSystemJSON)}
+								<th class="font-medium text-center">Mark</th>
+							{/if}
 							<th class="font-medium text-center">Your Points</th>
 							<th class="font-medium text-center">Max Points</th>
 							<th class="font-medium text-center">Percentage</th>
@@ -113,8 +116,6 @@
 						<tr>
 							{#if mark !== undefined}
 								<td class="font-semibold text-center">{mark.name}</td>
-							{:else}
-								<td class="font-semibold text-center">Unknown</td>
 							{/if}
 							<td class="font-semibold text-center">{userPoints}</td>
 							<td class="font-semibold text-center">{maxPoints}</td>
@@ -125,6 +126,9 @@
 					</tbody>
 				</table>
 				<Space gap={10} />
+				{#if isMarkSystemCorrect(res.record.test.markSystemJSON)}
+					<MarkSystemDropdown markSystem={res.record.test.markSystemJSON} />
+				{/if}
 				<a
 					href={$page.url + '/detail'}
 					class="btn btn-outline dark:text-dark_text_white dark:outline-dark_text_white"
