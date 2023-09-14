@@ -43,9 +43,9 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?      @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -53,6 +53,7 @@ model User {
   tests         Test[]
   testRecords   TestRecord[]
   markSystems   MarkSystem[]
+  groups        GroupOnUsers[]
 }
 
 model VerificationToken {
@@ -80,18 +81,19 @@ model QuestionType {
 }
 
 model Test {
-  id           String        @id @default(uuid())
+  id           String         @id @default(uuid())
   testVersions TestVersion[]
   title        String
   description  String
-  published    Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  published    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   tags         TagOnTests[]
-  stars        Int           @default(0)
-  views        Int           @default(0)
-  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  stars        Int            @default(0)
+  views        Int            @default(0)
+  owner        User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String
+  groups       GroupOnTests[]
 
   @@index([ownerId])
   @@index([title, description])
@@ -193,4 +195,36 @@ model Tag {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   tests     TagOnTests[]
+}
+
+model GroupOnTests {
+  id      Int     @id @default(autoincrement())
+  test    Test?   @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  group   Group?  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  testId  String?
+  groupId String?
+
+  @@index([testId])
+  @@index([groupId])
+}
+
+model GroupOnUsers {
+  id      Int     @id @default(autoincrement())
+  user    User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  group   Group?  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId  String?
+  groupId String?
+
+  @@index([userId])
+  @@index([groupId])
+}
+
+model Group {
+  id        String         @id @default(uuid())
+  name      String
+  slug      String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  tests     GroupOnTests[]
+  users     GroupOnUsers[]
 }

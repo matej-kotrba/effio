@@ -84,15 +84,17 @@
 				description: $testObject.description,
 				isPublished: $testObject.published as boolean,
 				questionContent: JSON.stringify($testObject.questions),
-				markSystem: {
-					marks: $testObject.markSystem.marks.map((item) => {
-						return {
-							name: item.name,
-							// Checked in the isTestValid
-							limit: item.limit as number
-						};
-					})
-				}
+				markSystem: $testObject.markSystem?.marks
+					? {
+							marks: $testObject.markSystem.marks.map((item) => {
+								return {
+									name: item.name,
+									// Checked in the isTestValid
+									limit: item.limit as number
+								};
+							})
+					  }
+					: undefined
 			});
 		} catch (e) {
 			if (e instanceof TRPCClientError) {
