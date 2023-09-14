@@ -118,6 +118,9 @@
 						on:click={() => (isSidebarShown = false)}
 						href="/dashboard/my-groups"
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						class:dark={$applicationStates}
+						class:active={browser &&
+							$page.url.pathname === '/dashboard/my-groups'}
 					>
 						<iconify-icon icon="ion:share-social" class="text-2xl" />
 						My Groups

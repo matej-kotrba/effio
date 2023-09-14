@@ -209,11 +209,12 @@ model GroupOnTests {
 }
 
 model GroupOnUsers {
-  id      Int     @id @default(autoincrement())
-  user    User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  group   Group?  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId  String?
-  groupId String?
+  id       Int      @id @default(autoincrement())
+  user     User?    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  group    Group?   @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId   String?
+  groupId  String?
+  joinedAt DateTime @default(now())
 
   @@index([userId])
   @@index([groupId])

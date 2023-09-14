@@ -23,9 +23,13 @@ export const LIMIT_OPTIONS = [
   5
 ] as const;
 
+export const GROUP_NAME_MAX = 25
+export const GROUP_NAME_MIN = 5
+
 export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")
 export const titleSchema = z.string().min(TITLE_MIN, `Title has to be at least ${TITLE_MIN} character long.`).max(TITLE_MAX, `Title can be max ${TITLE_MAX} characters long.`)
 export const descriptionSchema = z.string().min(DESCRIPTION_MIN, "Tell the users what your test will be about with at least 15 characters.").max(DESCRIPTION_MAX, "Description can be max 255 characters long.")
 export const writeAnswerSchema = z.string().min(WRITE_ANSWER_MIN, "Write answer has to be at least 1 character long.").max(WRITE_AMSWER_MAX, "Answer can be max 30 characters long.")
 export const markSchema = z.string().min(MARK_MIN, "Mark has to be at least 1 character long.").max(MARK_MAX, "Mark can be max 15 characters long.")
 export const markLimitSchema = z.number({ required_error: "Please select a value" }).min(MARK_LIMIT_MIN, "Limit cannot be less than 0.").max(MARK_LIMIT_MAX, "Limit cannot be more than 100.")
+export const groupNameSchema = z.string().min(GROUP_NAME_MIN, `Mark has to be at least ${GROUP_NAME_MIN} character long.`).max(GROUP_NAME_MAX, `Mark can be max ${GROUP_NAME_MAX} characters long.`)

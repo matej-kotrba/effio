@@ -3,6 +3,7 @@
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
 
+	export let title: string = '';
 	export const open = () => modal.showModal();
 	export let isSuccessOpen = false;
 	export let isSubmitting = false;
@@ -10,7 +11,7 @@
 	let modal: HTMLDialogElement;
 </script>
 
-<dialog bind:this={modal} class="modal">
+<dialog bind:this={modal} class="modal modal-open">
 	<form
 		method="dialog"
 		class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
@@ -27,12 +28,10 @@
 		>
 			<Skewed />
 		</div>
-		<div class="modal-action">
+		<div class="flex items-center justify-between m-0 modal-action">
+			<h4 class="font-semibold text-h6">{title}</h4>
 			<button type="button" on:click={() => modal.close()}
-				><Icon
-					icon="ic:round-close"
-					class="absolute text-2xl top-4 right-4"
-				/></button
+				><Icon icon="ic:round-close" class="text-2xl" /></button
 			>
 		</div>
 		<slot />
