@@ -50,7 +50,7 @@
 		>{title}</label
 	>
 	<div class="relative">
-		{#if min && max}
+		{#if min !== undefined && max !== undefined}
 			<Limit
 				current={inputValue.length}
 				{min}

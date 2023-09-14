@@ -5,14 +5,37 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 	import {
+		GROUP_DESCRIPTION_MAX,
+		GROUP_DESCRIPTION_MIN,
 		GROUP_NAME_MAX,
 		GROUP_NAME_MIN,
+		groupDescriptionSchema,
 		groupNameSchema
 	} from '~schemas/textInput';
+	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 
 	export let groups: Group[];
 
 	let openDialog: () => void;
+
+	let imageRef: HTMLImageElement | null = null;
+
+	function onImageUpload(
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		if (imageRef === null || !e.currentTarget.files) return;
+		const file = e.currentTarget.files[0];
+		if (!file) return;
+
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+
+		reader.onload = () => {
+			imageRef!.src = reader.result as string;
+		};
+	}
 </script>
 
 <Dialog bind:open={openDialog} title={'Create a new group'}>
@@ -22,17 +45,51 @@
 		max={GROUP_NAME_MAX}
 		min={GROUP_NAME_MIN}
 		validationSchema={groupNameSchema}
+		doesLimit
 	/>
-	<div class="flex flex-col gap-1">
-		<span class="text-body2">Group photo</span>
-		<button
-			type="button"
-			class="grid border-2 border-dashed rounded-md w-28 border-light_text_black_80 dark:border-dark_text_white_80 aspect-square place-content-center"
-		>
-			<iconify-icon icon="uil:plus" class="text-5xl" />
-		</button>
+	<div class="flex gap-2 h-fit">
+		<div class="flex flex-col">
+			<span
+				class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
+				>Group photo</span
+			>
+			<div
+				class="relative grid duration-100 border-2 border-dashed rounded-md group w-28 border-light_text_black_80 dark:border-dark_text_white_80 aspect-square place-content-center hover:bg-light_white dark:hover:bg-dark_quaternary"
+			>
+				<input
+					type="file"
+					on:change={onImageUpload}
+					accept="image/jpeg, image/png, image/jpg, image/webp, image/avif"
+					class="absolute w-full h-full opacity-0 cursor-pointer"
+				/>
+				<div
+					class="absolute w-full overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-md pointer-events-none aspect-square left-1/2 top-1/2"
+				>
+					<img
+						bind:this={imageRef}
+						src=""
+						alt="Group icon"
+						class="object-cover w-full h-full text-transparent"
+					/>
+				</div>
+				<iconify-icon
+					icon="uil:plus"
+					class="text-5xl pointer-events-none group-hover:z-10"
+				/>
+			</div>
+		</div>
+		<div>
+			<TextAreaInput
+				title="Group description"
+				titleName="groupDescription"
+				validationSchema={groupDescriptionSchema}
+				doesLimit
+				min={GROUP_DESCRIPTION_MIN}
+				max={GROUP_DESCRIPTION_MAX}
+				customStyles={'min-h-[100px]'}
+			/>
+		</div>
 	</div>
-	<div class="flex flex-col gap-1" />
 </Dialog>
 <section>
 	<h2 class="text-h4 text-light_text_black_80 dark:text-dark_text_white_80">
