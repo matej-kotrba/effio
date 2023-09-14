@@ -68,6 +68,9 @@
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean
 	) {
+		if (isSubmitting) return;
+		isSubmitting = true;
+
 		const result = isTestValid({
 			title: $testObject.title,
 			description: $testObject.description,
@@ -98,7 +101,6 @@
 			return;
 		}
 
-		isSubmitting = true;
 		try {
 			const response = await trpc($page).protected.saveTest.mutate({
 				title: $testObject.title,
@@ -394,7 +396,7 @@
 						<SuccessKeyframe
 							successMessage="Success!"
 							visible={isSuccess}
-							class="absolute top-0 left-0 w-full h-full bg-white"
+							class="absolute top-0 left-0 w-full h-full bg-white dark:bg-dark_grey"
 						/>
 						<div
 							class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting

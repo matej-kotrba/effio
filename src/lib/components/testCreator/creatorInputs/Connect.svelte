@@ -25,10 +25,6 @@
 	}),
 		answersLength;
 
-	$: console.log(
-		content.matchedAnswers[Object.keys(content.matchedAnswers)[0]]
-	);
-
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
