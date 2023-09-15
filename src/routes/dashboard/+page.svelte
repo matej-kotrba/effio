@@ -6,6 +6,7 @@
 	import Chart from 'chart.js/auto';
 	import type { ChartData, ChartConfiguration } from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
+	import OverviewLinks from '~components/page-parts/OverviewLinks.svelte';
 
 	export let data;
 
@@ -173,6 +174,7 @@
 	});
 </script>
 
+<OverviewLinks />
 <div
 	class="mx-auto max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 place-items-center"
 >
