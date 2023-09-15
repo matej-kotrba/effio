@@ -66,5 +66,33 @@ export const groupsRouter = router({
     }
 
     return deletedGroup
+  }),
+  getGroupById: loggedInProcedure.input(z.object({
+    id: z.string(),
+  })).query(async ({ ctx, input }) => {
+    const group = await ctx.prisma.group.findUnique({
+      where: {
+        id: input.id
+      },
+      include: {
+        tests: true,
+        users: true
+      }
+    })
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
+    }
+
+    return group
+  }),
+  getAllUsersGroup: loggedInProcedure.input(z.object({
+    id: z.string(),
+  })).query(async ({ ctx, input }) => {
+    const groups = await ctx.prisma.group.findMany({
+      where: {
+
+      }
+    })
   })
 })
