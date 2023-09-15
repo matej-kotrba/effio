@@ -2,6 +2,7 @@ import { z } from "zod"
 import { protectedRouter } from "./subrouters/protected";
 import { recordsRouter } from "./subrouters/records";
 import { procedure, router } from "./setup";
+import { groupsRouter } from "./subrouters/groups";
 
 
 // Schema of template question type
@@ -257,6 +258,7 @@ export const appRouter = router({
   }),
   protected: protectedRouter,
   records: recordsRouter,
+  groups: groupsRouter
 })
 
 export type Router = typeof appRouter

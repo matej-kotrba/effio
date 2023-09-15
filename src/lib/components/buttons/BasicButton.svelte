@@ -19,7 +19,7 @@
 		 flex items-center duration-150 hover:bg-light_primary 
 		 dark:hover:bg-dark_primary dark:text-dark_primary hover:text-white hover:dark:text-dark_text_white text-light_primary 
 		  gap-2 btn bg-light_primary dark:bg-dark_primary before:content-[''] hover:before:scale-y-0
-			 before:origin-top before:duration-150 before:absolute before:inset-1 before:bg-white dark:before:bg-dark_black
+			 before:origin-top before:duration-150 before:absolute before:inset-1 before:bg-white dark:before:bg-dark_grey
 			  before:rounded-md before:z-[-99]`,
 		classes
 	)}
