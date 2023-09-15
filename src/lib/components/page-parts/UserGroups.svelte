@@ -13,12 +13,16 @@
 		groupNameSchema
 	} from '~schemas/textInput';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	export let groups: Group[];
 
 	let openDialog: () => void;
 
 	let imageRef: HTMLImageElement | null = null;
+
+	let isSubmitting = false;
 
 	function onImageUpload(
 		e: Event & {
@@ -36,6 +40,8 @@
 			imageRef!.src = reader.result as string;
 		};
 	}
+
+	function createGroup() {}
 </script>
 
 <Dialog bind:open={openDialog} title={'Create a new group'}>
@@ -47,7 +53,7 @@
 		validationSchema={groupNameSchema}
 		doesLimit
 	/>
-	<div class="flex gap-2 h-fit">
+	<div class="flex items-start gap-2 h-fit">
 		<div class="flex flex-col">
 			<span
 				class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
@@ -78,7 +84,7 @@
 				/>
 			</div>
 		</div>
-		<div>
+		<div class="w-full">
 			<TextAreaInput
 				title="Group description"
 				titleName="groupDescription"
@@ -86,10 +92,17 @@
 				doesLimit
 				min={GROUP_DESCRIPTION_MIN}
 				max={GROUP_DESCRIPTION_MAX}
-				customStyles={'min-h-[100px]'}
+				customStyles={'min-h-[100px] text-body2'}
+				inputProperties={{ placeholder: 'Optional' }}
 			/>
 		</div>
 	</div>
+	<Space gap={16} />
+	<BasicButton
+		title={'Create group'}
+		isLoading={isSubmitting}
+		class="ml-auto"
+	/>
 </Dialog>
 <section>
 	<h2 class="text-h4 text-light_text_black_80 dark:text-dark_text_white_80">

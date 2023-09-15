@@ -221,11 +221,12 @@ model GroupOnUsers {
 }
 
 model Group {
-  id        String         @id @default(uuid())
-  name      String
-  slug      String         @unique
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  tests     GroupOnTests[]
-  users     GroupOnUsers[]
+  id          String         @id @default(uuid())
+  name        String
+  description String         @default("")
+  slug        String         @unique
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  tests       GroupOnTests[]
+  users       GroupOnUsers[]
 }
