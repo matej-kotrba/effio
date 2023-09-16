@@ -2,107 +2,18 @@
 	import type { Group } from '@prisma/client';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import Separator from '~components/separators/Separator.svelte';
-	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import { applicationStates } from '~stores/applicationStates';
-	import {
-		GROUP_DESCRIPTION_MAX,
-		GROUP_DESCRIPTION_MIN,
-		GROUP_NAME_MAX,
-		GROUP_NAME_MIN,
-		groupDescriptionSchema,
-		groupNameSchema
-	} from '~schemas/textInput';
-	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
-	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import Space from '~components/separators/Space.svelte';
 
 	export let groups: Group[];
 
 	let openDialog: () => void;
 
-	let imageRef: HTMLImageElement | null = null;
-
-	let isSubmitting = false;
-
-	function onImageUpload(
-		e: Event & {
-			currentTarget: EventTarget & HTMLInputElement;
-		}
-	) {
-		if (imageRef === null || !e.currentTarget.files) return;
-		const file = e.currentTarget.files[0];
-		if (!file) return;
-
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-
-		reader.onload = () => {
-			imageRef!.src = reader.result as string;
-		};
-	}
-
 	function createGroup() {}
 </script>
 
 <Dialog bind:open={openDialog} title={'Create a new group'}>
-	<TextInputSimple
-		title="Group name"
-		titleName="groupName"
-		max={GROUP_NAME_MAX}
-		min={GROUP_NAME_MIN}
-		validationSchema={groupNameSchema}
-		doesLimit
-	/>
-	<div class="flex items-start gap-2 h-fit">
-		<div class="flex flex-col">
-			<span
-				class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
-				>Group photo</span
-			>
-			<div
-				class="relative grid duration-100 border-2 border-dashed rounded-md group w-28 border-light_text_black_80 dark:border-dark_text_white_80 aspect-square place-content-center hover:bg-light_white dark:hover:bg-dark_quaternary"
-			>
-				<input
-					type="file"
-					on:change={onImageUpload}
-					accept="image/jpeg, image/png, image/jpg, image/webp, image/avif"
-					class="absolute w-full h-full opacity-0 cursor-pointer"
-				/>
-				<div
-					class="absolute w-full overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-md pointer-events-none aspect-square left-1/2 top-1/2"
-				>
-					<img
-						bind:this={imageRef}
-						src=""
-						alt="Group icon"
-						class="object-cover w-full h-full text-transparent"
-					/>
-				</div>
-				<iconify-icon
-					icon="uil:plus"
-					class="text-5xl pointer-events-none group-hover:z-10"
-				/>
-			</div>
-		</div>
-		<div class="w-full">
-			<TextAreaInput
-				title="Group description"
-				titleName="groupDescription"
-				validationSchema={groupDescriptionSchema}
-				doesLimit
-				min={GROUP_DESCRIPTION_MIN}
-				max={GROUP_DESCRIPTION_MAX}
-				customStyles={'min-h-[100px] text-body2'}
-				inputProperties={{ placeholder: 'Optional' }}
-			/>
-		</div>
-	</div>
-	<Space gap={16} />
-	<BasicButton
-		title={'Create group'}
-		isLoading={isSubmitting}
-		class="ml-auto"
-	/>
+	<slot name="create" />
+	<slot name="join" />
 </Dialog>
 <section>
 	<h2 class="text-h4 text-light_text_black_80 dark:text-dark_text_white_80">
