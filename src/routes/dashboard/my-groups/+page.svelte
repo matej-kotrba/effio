@@ -14,10 +14,12 @@
 		groupNameSchema
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
+	import { enhance } from '$app/forms';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 
 	export let data;
 
-	const { form } = superForm(data.form);
+	const { form, errors } = superForm(data.form);
 
 	let imageRef: HTMLImageElement | null = null;
 
@@ -45,16 +47,18 @@
 />
 
 <UserGroups groups={[]}>
-	<form slot="create" method="POST">
-		<TextInputSimple
-			title="Group name"
-			titleName="groupName"
-			max={GROUP_NAME_MAX}
-			min={GROUP_NAME_MIN}
-			validationSchema={groupNameSchema}
-			doesLimit
-			bind:inputValue={$form.name}
-		/>
+	<form slot="create" method="POST" use:enhance action="?/createGroup">
+		<ErrorEnhance>
+			<TextInputSimple
+				title="Group name"
+				titleName="groupName"
+				max={GROUP_NAME_MAX}
+				min={GROUP_NAME_MIN}
+				validationSchema={groupNameSchema}
+				doesLimit
+				bind:inputValue={$form.name}
+			/>
+		</ErrorEnhance>
 		<div class="flex items-start gap-2 h-fit">
 			<div class="flex flex-col">
 				<span
@@ -87,17 +91,21 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<TextAreaInput
-					title="Group description"
-					titleName="groupDescription"
-					validationSchema={groupDescriptionSchema}
-					doesLimit
-					min={GROUP_DESCRIPTION_MIN}
-					max={GROUP_DESCRIPTION_MAX}
-					customStyles={'min-h-[100px] text-body2'}
-					inputProperties={{ placeholder: 'Optional' }}
-					bind:inputValue={$form.description}
-				/>
+				<ErrorEnhance
+					error={$errors.description ? $errors.description[0] : undefined}
+				>
+					<TextAreaInput
+						title="Group description"
+						titleName="groupDescription"
+						validationSchema={groupDescriptionSchema}
+						doesLimit
+						min={GROUP_DESCRIPTION_MIN}
+						max={GROUP_DESCRIPTION_MAX}
+						customStyles={'min-h-[100px] text-body2'}
+						inputProperties={{ placeholder: 'Optional' }}
+						bind:inputValue={$form.description}
+					/>
+				</ErrorEnhance>
 			</div>
 		</div>
 		<Space gap={16} />

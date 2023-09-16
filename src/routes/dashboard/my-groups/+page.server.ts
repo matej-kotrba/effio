@@ -24,7 +24,10 @@ export const actions = {
       return fail(400, { form })
     }
 
-    trpcServer(event)
+    (await trpcServer(event)).groups.createGroup({
+      name: form.data.name,
+      description: form.data.description
+    })
 
     return { form }
   }
