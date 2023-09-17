@@ -14,6 +14,7 @@
 		groupNameSchema
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
+
 	import { enhance } from '$app/forms';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 
@@ -48,10 +49,10 @@
 
 <UserGroups groups={[]}>
 	<form slot="create" method="POST" use:enhance action="?/createGroup">
-		<ErrorEnhance>
+		<ErrorEnhance error={$errors.name ? $errors.name[0] : undefined}>
 			<TextInputSimple
 				title="Group name"
-				titleName="groupName"
+				titleName="name"
 				max={GROUP_NAME_MAX}
 				min={GROUP_NAME_MIN}
 				validationSchema={groupNameSchema}
@@ -96,7 +97,7 @@
 				>
 					<TextAreaInput
 						title="Group description"
-						titleName="groupDescription"
+						titleName="description"
 						validationSchema={groupDescriptionSchema}
 						doesLimit
 						min={GROUP_DESCRIPTION_MIN}

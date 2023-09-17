@@ -2,7 +2,7 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 
-function transformStringIntoSlug(text: string) {
+function tranformString(text: string) {
   let transformedText = ""
   for (const char of text.toLowerCase().replace(/ /g, "-")) {
     if (char.match(/[a-zA-Z0-9-]/)) {
@@ -15,6 +15,12 @@ function transformStringIntoSlug(text: string) {
   return transformedText
 }
 
+function transformStringIntoSlug(text: string, username: string) {
+  const transformedText = tranformString(text)
+  const transformedUsername = tranformString(username)
+  return `${transformedUsername}:${transformedText}`
+}
+
 export const groupsRouter = router({
   createGroup: loggedInProcedure.input(z.object({
     name: z.string(),
@@ -24,7 +30,10 @@ export const groupsRouter = router({
       data: {
         name: input.name,
         description: input.description,
-        slug: transformStringIntoSlug(input.name),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ownerId: ctx.user!.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        slug: transformStringIntoSlug(input.name, ctx.user!.name!),
       }
     })
 
@@ -42,7 +51,8 @@ export const groupsRouter = router({
       data: {
         name: input.name,
         description: input.description,
-        slug: input?.name ? transformStringIntoSlug(input.name) : undefined,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        slug: input?.name ? transformStringIntoSlug(input.name, ctx.user!.name!) : undefined,
       }
     })
 

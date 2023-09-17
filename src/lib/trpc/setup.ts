@@ -11,12 +11,12 @@ export const router = t.router
 export const procedure = t.procedure
 
 const isLoggedIn = t.middleware(async (opts) => {
-  if (!opts.ctx.user || !opts.ctx.user.id) {
+  if (opts.ctx.user === undefined || opts.ctx.user === null || opts.ctx.user.id === undefined || opts.ctx.user.id === null || opts.ctx.user.name === undefined || opts.ctx.user.name === null) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: "You are not logged in" })
   }
   return opts.next({
     ctx: {
-      userId: opts.ctx.user.id as string
+      userId: opts.ctx.user.id
     }
   })
 })

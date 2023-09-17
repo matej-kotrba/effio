@@ -54,6 +54,7 @@ model User {
   testRecords   TestRecord[]
   markSystems   MarkSystem[]
   groups        GroupOnUsers[]
+  groupsOwned   Group[]
 }
 
 model VerificationToken {
@@ -229,4 +230,8 @@ model Group {
   updatedAt   DateTime       @updatedAt
   tests       GroupOnTests[]
   users       GroupOnUsers[]
+  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String
+
+  @@index([ownerId])
 }
