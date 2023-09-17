@@ -34,7 +34,6 @@ export const appRouter = router({
         result.push(validationResult.data)
       }
     }
-    console.log(questionsTypes)
     // This needs to be converted to unkown because of the JSON field
     // But its 100% safe because of the manual check above
     return result

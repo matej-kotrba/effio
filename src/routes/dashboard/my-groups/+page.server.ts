@@ -18,7 +18,7 @@ export const load: ServerLoad = async () => {
 export const actions = {
   createGroup: async (event) => {
     const form = await superValidate(event.request, schema)
-    console.log("POST", form)
+    console.log("POSTED FORM")
 
     if (!form.valid) {
       return fail(400, { form })

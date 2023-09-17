@@ -7,12 +7,23 @@
 	export let groups: Group[];
 
 	let openDialog: () => void;
-
-	function createGroup() {}
+	let openDialogJoin: () => void;
+	export let closeDialog: () => void = () => {};
+	export let closeDialogJoin: () => void = () => {};
 </script>
 
-<Dialog bind:open={openDialog} title={'Create a new group'}>
+<Dialog
+	bind:open={openDialog}
+	bind:close={closeDialog}
+	title={'Create a new group'}
+>
 	<slot name="create" />
+</Dialog>
+<Dialog
+	bind:open={openDialogJoin}
+	bind:close={closeDialogJoin}
+	title={'Join a group'}
+>
 	<slot name="join" />
 </Dialog>
 <section>
@@ -51,9 +62,13 @@
 	<div
 		class="flex items-center gap-2 text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
 	>
-		<button class="hover:text-light_text_black dark:hover:text-dark_text_white"
+		<button
+			type="button"
+			on:click={openDialogJoin}
+			class="hover:text-light_text_black dark:hover:text-dark_text_white"
 			>Join group</button
 		>|<button
+			type="button"
 			on:click={openDialog}
 			class="hover:text-light_text_black dark:hover:text-dark_text_white"
 			>Create group</button

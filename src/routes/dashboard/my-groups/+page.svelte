@@ -15,12 +15,13 @@
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
 
-	import { enhance } from '$app/forms';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 
 	export let data;
 
-	const { form, errors } = superForm(data.form);
+	const { form, errors, enhance } = superForm(data.form, {
+		resetForm: true
+	});
 
 	let imageRef: HTMLImageElement | null = null;
 
@@ -40,6 +41,9 @@
 			imageRef!.src = reader.result as string;
 		};
 	}
+
+	let closeCreateDialog: () => void = () => {};
+	let closeJoinDialog: () => void = () => {};
 </script>
 
 <DashboardTitle
@@ -47,8 +51,19 @@
 	subtitle="See all groups you are a member of."
 />
 
-<UserGroups groups={[]}>
-	<form slot="create" method="POST" use:enhance action="?/createGroup">
+<UserGroups groups={[]} bind:closeDialog={closeCreateDialog}>
+	<form
+		slot="create"
+		method="POST"
+		use:enhance={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					closeCreateDialog();
+				}
+			}
+		}}
+		action="?/createGroup"
+	>
 		<ErrorEnhance error={$errors.name ? $errors.name[0] : undefined}>
 			<TextInputSimple
 				title="Group name"
