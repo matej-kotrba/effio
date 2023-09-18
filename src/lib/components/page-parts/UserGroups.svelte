@@ -37,13 +37,17 @@
 			? 'var(--dark-text-white-20)'
 			: 'var(--light-text-black-20)'}
 	/>
-	<div class="min-h-[220px] py-4 px-2 grid place-content-center">
+	<div class="min-h-[220px] py-4 px-2 grid">
 		{#if groups.length > 0}
-			{#each groups as group}
-				<div>
-					<h3>{group.name}</h3>
-				</div>
-			{/each}
+			<div
+				class="grid w-full grid-cols-2 gap-2 xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:max-w-[1200px]"
+			>
+				{#each groups as group}
+					<div class="w-full bg-red-400 rounded-md aspect-square">
+						<h3>{group.name}</h3>
+					</div>
+				{/each}
+			</div>
 		{:else}
 			<p
 				class="font-semibold text-center text-h5 text-light_text_black_60 dark:text-dark_text_white_60"
