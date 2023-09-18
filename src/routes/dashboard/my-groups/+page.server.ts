@@ -1,33 +1,36 @@
 import { superValidate } from "sveltekit-superforms/server"
 import { fail, type ServerLoad } from "@sveltejs/kit";
-import { z } from "zod";
-import { groupDescriptionSchema, groupNameSchema } from "~schemas/textInput";
 import { trpcServer } from "~helpers/trpcServer.js";
-
-const schema = z.object({
-  name: groupNameSchema,
-  description: groupDescriptionSchema
-})
+import { createGroupSchema } from "./schemas"
+import { TRPCError } from "@trpc/server";
 
 export const load: ServerLoad = async () => {
-  const form = await superValidate(schema)
+  const form = await superValidate(createGroupSchema)
 
   return { form }
 }
 
 export const actions = {
   createGroup: async (event) => {
-    const form = await superValidate(event.request, schema)
+    const form = await superValidate(event.request, createGroupSchema)
     console.log("POSTED FORM")
 
     if (!form.valid) {
       return fail(400, { form })
     }
 
-    (await trpcServer(event)).groups.createGroup({
-      name: form.data.name,
-      description: form.data.description
-    })
+    try {
+      (await trpcServer(event)).groups.createGroup({
+        name: form.data.name,
+        description: form.data.description
+      })
+    }
+    catch (e) {
+      console.log("ERROR")
+      if (e instanceof TRPCError) {
+        return fail(400, { form, error: e.message })
+      }
+    }
 
     return { form }
   }

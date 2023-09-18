@@ -26,14 +26,28 @@ export const groupsRouter = router({
     name: z.string(),
     description: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const slug = transformStringIntoSlug(input.name, ctx.user!.name!)
+
+    const existingPost = await ctx.prisma.group.findUnique({
+      where: {
+        slug: slug
+      }
+    })
+
+    if (existingPost) {
+      return {
+        message: "Group with same name and owner already exists."
+      }
+    }
+
     const newGroup = await ctx.prisma.group.create({
       data: {
         name: input.name,
         description: input.description,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ownerId: ctx.user!.id!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        slug: transformStringIntoSlug(input.name, ctx.user!.name!),
+        slug: slug,
       }
     })
 

@@ -14,13 +14,14 @@
 		groupNameSchema
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
-
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import { createGroupSchema } from './schemas';
 
 	export let data;
 
 	const { form, errors, enhance } = superForm(data.form, {
-		resetForm: true
+		resetForm: true,
+		validators: createGroupSchema
 	});
 
 	let imageRef: HTMLImageElement | null = null;
