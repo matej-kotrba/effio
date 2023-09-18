@@ -16,6 +16,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import { createGroupSchema } from './schemas';
+	import toast from 'svelte-french-toast';
 
 	export let data;
 
@@ -52,7 +53,7 @@
 	subtitle="See all groups you are a member of."
 />
 
-<UserGroups groups={[]} bind:closeDialog={closeCreateDialog}>
+<UserGroups groups={data.groups ?? []} bind:closeDialog={closeCreateDialog}>
 	<form
 		slot="create"
 		method="POST"
@@ -60,6 +61,10 @@
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
 					closeCreateDialog();
+				} else if (result['type'] === 'failure') {
+					toast.error(
+						result['data'] ? result['data']['error'] : 'Error ocurred'
+					);
 				}
 			}
 		}}

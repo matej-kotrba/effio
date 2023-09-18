@@ -1,13 +1,24 @@
 import { superValidate } from "sveltekit-superforms/server"
-import { fail, type ServerLoad } from "@sveltejs/kit";
+import { fail, error, type ServerLoad } from "@sveltejs/kit";
 import { trpcServer } from "~helpers/trpcServer.js";
 import { createGroupSchema } from "./schemas"
 import { TRPCError } from "@trpc/server";
 
-export const load: ServerLoad = async () => {
+export const load: ServerLoad = async (event) => {
   const form = await superValidate(createGroupSchema)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const id = (await event.locals.getSession())?.user.id
 
-  return { form }
+  if (!id) throw error(401, "Unauthorized")
+
+  const groups = await (await trpcServer(event)).groups.getGroupById({
+    id: id,
+    includeTests: false,
+    includeUsers: false
+  })
+
+  return { form, groups }
 }
 
 export const actions = {
@@ -20,13 +31,12 @@ export const actions = {
     }
 
     try {
-      (await trpcServer(event)).groups.createGroup({
+      await (await trpcServer(event)).groups.createGroup({
         name: form.data.name,
         description: form.data.description
       })
     }
     catch (e) {
-      console.log("ERROR")
       if (e instanceof TRPCError) {
         return fail(400, { form, error: e.message })
       }

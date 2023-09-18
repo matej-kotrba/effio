@@ -36,9 +36,7 @@ export const groupsRouter = router({
     })
 
     if (existingPost) {
-      return {
-        message: "Group with same name and owner already exists."
-      }
+      throw new TRPCError({ code: "CONFLICT", message: "Group with same owner and name already exists." })
     }
 
     const newGroup = await ctx.prisma.group.create({
@@ -93,20 +91,18 @@ export const groupsRouter = router({
   }),
   getGroupById: loggedInProcedure.input(z.object({
     id: z.string(),
+    includeTests: z.boolean().optional(),
+    includeUsers: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
-    const group = await ctx.prisma.group.findUnique({
+    const group = await ctx.prisma.group.findMany({
       where: {
-        id: input.id
+        ownerId: input.id
       },
       include: {
-        tests: true,
-        users: true
+        tests: input.includeTests || false,
+        users: input.includeUsers || false
       }
     })
-
-    if (!group) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
-    }
 
     return group
   }),
