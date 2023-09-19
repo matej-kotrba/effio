@@ -107,12 +107,31 @@ export const groupsRouter = router({
     return group
   }),
   getGroupByName: loggedInProcedure.input(z.object({
-    name: z.string()
+    id: z.string(),
+    name: z.string(),
+    includeTests: z.boolean().optional(),
+    includeUsers: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     // TODO: Think this through and try to find a way to store name as unique
     const group = ctx.prisma.group.findFirst({
       where: {
-        name: input.name
+        name: input.name,
+        OR: [
+          {
+            ownerId: input.id
+          },
+          {
+            users: {
+              some: {
+                userId: input.id
+              }
+            }
+          }
+        ]
+      },
+      include: {
+        tests: input.includeTests || false,
+        users: input.includeUsers || false
       }
     })
 

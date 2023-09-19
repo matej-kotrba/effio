@@ -92,6 +92,10 @@
 </section>
 
 <style>
+	:root {
+		--group-translate: 15deg;
+	}
+
 	.group-container {
 		perspective: 1000px;
 	}
@@ -103,7 +107,7 @@
 
 	.group-item::before {
 		content: '';
-		inset: 80% 10px 10px 10px;
+		inset: 80% 15px 15px 15px;
 		background-color: var(--light-primary);
 		position: absolute;
 		filter: blur(1rem);
@@ -116,6 +120,17 @@
 	}
 
 	.group-item:hover {
-		transform: rotateX(15deg);
+		transform: rotateX(var(--group-translate));
+	}
+
+	.group-item > img {
+		translate: 0 0 15px;
+		transform: 0deg;
+		transition: 250ms;
+	}
+
+	.group-item:hover > img {
+		transform-style: initial;
+		transform: rotateX(calc(-1 * var(--group-translate)));
 	}
 </style>

@@ -1,8 +1,7 @@
 <script>
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
+
+	export let data;
 </script>
 
-<DashboardTitle
-	title="My Groups"
-	subtitle="See all groups you are a member of."
-/>
+<h3 class="font-semibold text-h3">{data.group.name}</h3>
