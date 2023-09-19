@@ -2,6 +2,7 @@
 	import type { Group } from '@prisma/client';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import Separator from '~components/separators/Separator.svelte';
+	import Space from '~components/separators/Space.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 
 	export let groups: Group[];
@@ -43,8 +44,18 @@
 				class="grid w-full grid-cols-2 gap-2 xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:max-w-[1200px]"
 			>
 				{#each groups as group}
-					<div class="w-full bg-red-400 rounded-md aspect-square">
-						<h3>{group.name}</h3>
+					<div class="group-container">
+						<div
+							class="relative grid w-full rounded-md shadow-md group-item bg-light_whiter dark:bg-dark_grey aspect-square place-content-center"
+						>
+							<img
+								src="/imgs/content_imgs/liska.avif"
+								alt=""
+								class="w-[50%] aspect-square object-cover mx-auto rounded-sm"
+							/>
+							<Space gap={10} />
+							<h3 class="text-center">{group.name}</h3>
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -79,3 +90,32 @@
 		>
 	</div>
 </section>
+
+<style>
+	.group-container {
+		perspective: 1000px;
+	}
+
+	.group-item {
+		transition: 250ms;
+		transform-style: preserve-3d;
+	}
+
+	.group-item::before {
+		content: '';
+		inset: 80% 10px 10px 10px;
+		background-color: var(--light-primary);
+		position: absolute;
+		filter: blur(1rem);
+		opacity: 0.4;
+		transform: translateZ(-70px);
+	}
+
+	:global(.dark) .group-item::before {
+		background-color: var(--dark-primary);
+	}
+
+	.group-item:hover {
+		transform: rotateX(15deg);
+	}
+</style>
