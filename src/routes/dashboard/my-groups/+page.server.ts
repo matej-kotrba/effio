@@ -12,7 +12,7 @@ export const load: ServerLoad = async (event) => {
 
   if (!id) throw error(401, "Unauthorized")
 
-  const groups = await (await trpcServer(event)).groups.getGroupById({
+  const groups = await (await trpcServer(event)).groups.getGroupsByUserId({
     id: id,
     includeTests: false,
     includeUsers: false

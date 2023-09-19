@@ -54,7 +54,7 @@
 								class="w-[50%] aspect-square object-cover mx-auto rounded-sm"
 							/>
 							<Space gap={10} />
-							<h3 class="text-center">{group.name}</h3>
+							<h3 class="text-center text-body2">{group.name}</h3>
 						</div>
 					</div>
 				{/each}
