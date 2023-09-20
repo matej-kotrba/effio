@@ -20,7 +20,7 @@
 
 	export let data;
 
-	const { form, errors, enhance } = superForm(data.form, {
+	const { form, errors, enhance, submitting } = superForm(data.form, {
 		resetForm: true,
 		validators: createGroupSchema
 	});
@@ -53,7 +53,11 @@
 	subtitle="See all groups you are a member of."
 />
 
-<UserGroups groups={data.groups ?? []} bind:closeDialog={closeCreateDialog}>
+<UserGroups
+	groups={data.groups ?? []}
+	bind:closeDialog={closeCreateDialog}
+	isSubmitting={$submitting}
+>
 	<form
 		slot="create"
 		method="POST"
@@ -62,6 +66,7 @@
 				if (result['status'] === 200) {
 					closeCreateDialog();
 				} else if (result['type'] === 'failure') {
+					console.log(result);
 					toast.error(
 						result['data'] ? result['data']['error'] : 'Error ocurred'
 					);

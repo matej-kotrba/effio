@@ -7,8 +7,11 @@
 
 	export let groups: Group[];
 
+	export let isSubmitting = false;
+
 	let openDialog: () => void;
 	let openDialogJoin: () => void;
+
 	export let closeDialog: () => void = () => {};
 	export let closeDialogJoin: () => void = () => {};
 </script>
@@ -17,6 +20,7 @@
 	bind:open={openDialog}
 	bind:close={closeDialog}
 	title={'Create a new group'}
+	{isSubmitting}
 >
 	<slot name="create" />
 </Dialog>

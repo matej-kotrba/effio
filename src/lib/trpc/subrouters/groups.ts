@@ -46,8 +46,16 @@ export const groupsRouter = router({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ownerId: ctx.user!.id!,
         slug: slug,
+        groupsSubcategories: {
+          create: {
+            name: "General",
+            slug: "general",
+          }
+        }
       }
     })
+
+    console.log(newGroup)
 
     return newGroup
   }),
@@ -111,6 +119,8 @@ export const groupsRouter = router({
     name: z.string(),
     includeTests: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
+    includeSubcategories: z.boolean().optional(),
+    includeOwner: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     // TODO: Think this through and try to find a way to store name as unique
     const group = ctx.prisma.group.findFirst({
@@ -131,7 +141,9 @@ export const groupsRouter = router({
       },
       include: {
         tests: input.includeTests || false,
-        users: input.includeUsers || false
+        users: input.includeUsers || false,
+        groupsSubcategories: input.includeSubcategories || false,
+        owner: input.includeOwner || false,
       }
     })
 

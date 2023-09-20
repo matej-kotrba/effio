@@ -222,16 +222,17 @@ model GroupOnUsers {
 }
 
 model Group {
-  id          String         @id @default(uuid())
-  name        String
-  description String         @default("")
-  slug        String         @unique
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  tests       GroupOnTests[]
-  users       GroupOnUsers[]
-  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId     String
+  id                  String             @id @default(uuid())
+  name                String
+  description         String             @default("")
+  slug                String             @unique
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  tests               GroupOnTests[]
+  users               GroupOnUsers[]
+  owner               User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId             String
+  groupsSubcategories GroupSubcategory[]
 
   @@index([ownerId])
 }
@@ -240,9 +241,11 @@ model GroupSubcategory {
   id        String   @id @default(uuid())
   name      String
   slug      String   @unique
-  color     String   @default("#000000")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  groups    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
 
   @@index([name])
+  @@index([groupId])
 }

@@ -14,7 +14,9 @@ export const load: PageServerLoad = async (event) => {
     id: id,
     name: event.params.name,
     includeTests: true,
-    includeUsers: true
+    includeUsers: true,
+    includeOwner: true,
+    includeSubcategories: true
   })
 
   if (!groupFullData) {
