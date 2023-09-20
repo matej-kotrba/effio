@@ -10,6 +10,8 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(301, "/login")
   }
 
+  console.log(id, event.params.name)
+
   const groupFullData = await (await trpcServer(event)).groups.getGroupByName({
     id: id,
     name: event.params.name,

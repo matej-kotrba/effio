@@ -240,7 +240,7 @@ model Group {
 model GroupSubcategory {
   id        String   @id @default(uuid())
   name      String
-  slug      String   @unique
+  slug      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   groups    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)

@@ -64,6 +64,7 @@
 		use:enhance={{
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
+					toast.success('Group created successfully!');
 					closeCreateDialog();
 				} else if (result['type'] === 'failure') {
 					console.log(result);

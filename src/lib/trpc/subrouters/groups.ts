@@ -123,9 +123,9 @@ export const groupsRouter = router({
     includeOwner: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     // TODO: Think this through and try to find a way to store name as unique
-    const group = ctx.prisma.group.findFirst({
+    const group = await ctx.prisma.group.findFirst({
       where: {
-        name: input.name,
+        slug: input.name,
         OR: [
           {
             ownerId: input.id

@@ -48,7 +48,7 @@
 				class="grid w-full grid-cols-2 gap-2 xs:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 xl:max-w-[1200px]"
 			>
 				{#each groups as group}
-					<div class="group-container">
+					<a href="/dashboard/my-groups/{group.slug}" class="group-container">
 						<div
 							class="relative grid w-full rounded-md shadow-md group-item bg-light_whiter dark:bg-dark_grey aspect-square place-content-center"
 						>
@@ -60,7 +60,7 @@
 							<Space gap={10} />
 							<h3 class="text-center text-body2">{group.name}</h3>
 						</div>
-					</div>
+					</a>
 				{/each}
 			</div>
 		{:else}
