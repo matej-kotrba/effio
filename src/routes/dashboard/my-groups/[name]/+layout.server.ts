@@ -1,16 +1,13 @@
 import { redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
 import { trpcServer } from "~helpers/trpcServer";
 
-export const load: PageServerLoad = async (event) => {
+export const load = async (event) => {
 
   const id = ((await event.locals.getSession()) as UpdatedSession)?.user?.id
 
   if (!id) {
     throw redirect(301, "/login")
   }
-
-  console.log(id, event.params.name)
 
   const groupFullData = await (await trpcServer(event)).groups.getGroupByName({
     id: id,
