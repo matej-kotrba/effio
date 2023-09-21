@@ -47,10 +47,8 @@
 </div>
 
 <style>
-	/* .grid__container {
+	.grid__container {
 		display: grid;
-		grid-template-columns: 150px 1fr;
-	} */
-	.sidebar {
+		grid-template-columns: 180px 1fr;
 	}
 </style>
