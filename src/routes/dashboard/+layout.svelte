@@ -40,7 +40,7 @@
 		class={isSidebarShown ? '' : isSidebarCollapsible ? 'overflow-hidden' : ''}
 	>
 		<aside
-			class="bg-light_white dark:bg-dark_grey sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
+			class="bg-light_white dark:bg-dark_black sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
 			 lg:max-w-[260px] md:block sticky top-0 z-[100] min-h-screen max-h-screen
 			  border-r-2 border-solid border-light_text_black_20 {isSidebarShown
 				? 'w-full'
@@ -58,15 +58,10 @@
 				</div>
 			{/if}
 			<div class="flex flex-col items-center px-2 xl:px-4">
-				<a
-					class="w-[90px] aspect-square"
-					on:click={() => (isSidebarShown = false)}
-					href="/"
-				>
+				<a class="w-[160px]" on:click={() => (isSidebarShown = false)} href="/">
 					<img
-						src="/imgs/logo.png"
+						src="/imgs/effio/text.png"
 						alt="Effio logo"
-						width="90"
 						class="drop-shadow-primary"
 					/>
 				</a>
@@ -140,7 +135,7 @@
 		</aside>
 	</div>
 
-	<div>
+	<div class="nav__grid__container">
 		<nav
 			class="flex items-center justify-end gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
 		>
@@ -227,7 +222,7 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="px-4 pt-6 md:px-8 xl:px-16 content">
+		<div class="relative h-full px-4 pt-6 md:px-8 xl:px-16 content">
 			<slot />
 		</div>
 	</div>
@@ -252,5 +247,10 @@
 	.active {
 		background-color: var(--light-primary) !important;
 		color: var(--light-white) !important;
+	}
+
+	.nav__grid__container {
+		display: grid;
+		grid-template-rows: auto 1fr;
 	}
 </style>
