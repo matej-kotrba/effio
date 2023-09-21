@@ -43,6 +43,10 @@
 		}
 		return resultedPath;
 	}
+
+	$: pathname = $page['url']['pathname']
+		.split('/')
+		.filter((item) => item !== '');
 </script>
 
 <main
@@ -164,12 +168,15 @@
 
 			<div class="mr-auto text-sm breadcrumbs">
 				<ul>
-					{#each $page['url']['pathname']
-						.split('/')
-						.filter((item) => item !== '') as segment, index}
+					{#each pathname as segment, index (index)}
 						{#if !['', 'edit', 'delete'].includes(segment)}
 							<li>
-								<a href={getBreadcrumbsPath(index)}>
+								<a
+									href={getBreadcrumbsPath(index)}
+									class={pathname[pathname.length - 1] === segment
+										? 'text-light_primary dark:bg-dark_primary'
+										: ''}
+								>
 									{segment.replace('-', ' ')[0].toUpperCase() +
 										segment.replace('-', ' ').slice(1, segment.length)}
 								</a>
