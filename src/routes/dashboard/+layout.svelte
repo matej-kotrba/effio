@@ -8,6 +8,7 @@
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { LG } from '~/utils/responsive';
+	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
 
 	export let data: PageData;
 
@@ -30,6 +31,18 @@
 			}
 		});
 	});
+
+	function getBreadcrumbsPath(index: number) {
+		const parts = $page['url']['pathname']
+			.split('/')
+			.filter((item) => item !== '');
+
+		let resultedPath = '';
+		for (let i = 0; i <= index; i++) {
+			resultedPath += '/' + parts[i];
+		}
+		return resultedPath;
+	}
 </script>
 
 <main
@@ -137,7 +150,7 @@
 
 	<div class="nav__grid__container">
 		<nav
-			class="flex items-center justify-end gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
+			class="flex items-center gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
 		>
 			{#if isSidebarCollapsible}
 				<button
@@ -148,6 +161,28 @@
 					<iconify-icon icon="charm:menu-hamburger" class="text-3xl" />
 				</button>
 			{/if}
+
+			<div class="mr-auto text-sm breadcrumbs">
+				<ul>
+					{#each $page['url']['pathname']
+						.split('/')
+						.filter((item) => item !== '') as segment, index}
+						{#if !['', 'edit', 'delete'].includes(segment)}
+							<li>
+								<a href={getBreadcrumbsPath(index)}>
+									{segment.replace('-', ' ')[0].toUpperCase() +
+										segment.replace('-', ' ').slice(1, segment.length)}
+								</a>
+							</li>
+						{:else}
+							<li>
+								{segment.replace('-', ' ')[0].toUpperCase() +
+									segment.replace('-', ' ').slice(1, segment.length)}
+							</li>
+						{/if}
+					{/each}
+				</ul>
+			</div>
 
 			<button
 				class="relative grid h-10 place-content-center"

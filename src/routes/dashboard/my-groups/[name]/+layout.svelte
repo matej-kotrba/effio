@@ -52,6 +52,5 @@
 		grid-template-columns: 150px 1fr;
 	} */
 	.sidebar {
-		box-shadow: 5px 0 8px var(--light-text-black-20);
 	}
 </style>
