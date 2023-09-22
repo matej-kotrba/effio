@@ -29,6 +29,7 @@
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import { TRPCClientError } from '@trpc/client';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
+	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 
 	export let data;
 
@@ -120,6 +121,8 @@
 	title="Test Editor"
 	subtitle="Here you can edit your previously created test"
 />
+
+<GroupSelection groups={[]} />
 
 <Toggle
 	title="Is Published"
