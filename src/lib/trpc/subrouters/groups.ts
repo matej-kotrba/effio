@@ -98,13 +98,14 @@ export const groupsRouter = router({
     return deletedGroup
   }),
   getGroupsByUserId: loggedInProcedure.input(z.object({
-    id: z.string(),
+    id: z.string().optional(),
     includeTests: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
+    const userId = input.id ?? ctx.userId
     const group = await ctx.prisma.group.findMany({
       where: {
-        ownerId: input.id
+        ownerId: userId
       },
       include: {
         tests: input.includeTests || false,
