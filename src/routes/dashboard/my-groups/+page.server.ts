@@ -14,6 +14,7 @@ export const load: ServerLoad = async (event) => {
 
   const groups = await (await trpcServer(event)).groups.getGroupsByUserId({
     id: id,
+    alsoUser: true,
     includeTests: false,
     includeUsers: false
   })

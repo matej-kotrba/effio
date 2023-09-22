@@ -99,13 +99,29 @@ export const groupsRouter = router({
   }),
   getGroupsByUserId: loggedInProcedure.input(z.object({
     id: z.string().optional(),
+    alsoUser: z.boolean().optional(),
     includeTests: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     const userId = input.id ?? ctx.userId
     const group = await ctx.prisma.group.findMany({
       where: {
-        ownerId: userId
+        OR: input.alsoUser ? [
+          {
+            ownerId: userId
+          },
+          {
+            users: {
+              some: {
+                userId: userId
+              }
+            }
+          }
+        ] : [
+          {
+            ownerId: userId
+          }
+        ]
       },
       include: {
         tests: input.includeTests || false,

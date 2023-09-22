@@ -122,7 +122,7 @@
 	subtitle="Here you can edit your previously created test"
 />
 
-<GroupSelection groups={[]} />
+<GroupSelection />
 
 <Toggle
 	title="Is Published"

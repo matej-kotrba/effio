@@ -2,21 +2,25 @@
 	import { page } from '$app/stores';
 	import type { Group } from '@prisma/client';
 	import { trpc } from '~/lib/trpc/client';
-
-	export let userId: string;
+	import Skewed from '~components/loaders/Skewed.svelte';
 
 	let groups: Group[] | 'fetching' = 'fetching';
 	let checkboxGroup: string[] = [];
 
-	function onInitialGroupDisplay() {
-		const userGroups = trpc($page).groups.getGroupsByUserId;
+	async function onInitialGroupDisplay() {
+		const userGroups = await trpc($page).groups.getGroupsByUserId.query({
+			alsoUser: false
+		});
+		groups = userGroups;
 	}
 </script>
 
 <details class="mb-32 dropdown">
-	<summary class="m-1 btn">Group Selection</summary>
+	<summary class="m-1 btn" on:click|once={onInitialGroupDisplay}
+		>Group Selection</summary
+	>
 	<ul
-		class="p-2 shadow menu dropdown-content z-[100] bg-base-100 w-52 min-h-[80px]"
+		class="p-2 shadow menu dropdown-content z-[100] bg-base-100 w-52 min-h-[80px] relative"
 	>
 		{#if typeof groups !== 'string'}
 			<input
@@ -34,7 +38,11 @@
 				/>
 			{/each}
 		{:else if groups === 'fetching'}
-			asdasdasd
+			<div class="absolute inset-0 grid place-content-center">
+				<span
+					class="loading loading-spinner loading-md text-light_primary dark:text-dark_primary"
+				/>
+			</div>
 		{/if}
 	</ul>
 </details>
