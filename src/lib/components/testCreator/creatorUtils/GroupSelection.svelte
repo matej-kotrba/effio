@@ -15,27 +15,41 @@
 	}
 </script>
 
-<details class="mb-32 dropdown">
-	<summary class="m-1 btn" on:click|once={onInitialGroupDisplay}
-		>Group Selection</summary
+<div class="dropdown">
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+	<!-- svelte-ignore a11y-label-has-associated-control -->
+	<label tabindex="0" class="m-1 btn" on:click|once={onInitialGroupDisplay}
+		>Group Selection</label
 	>
+	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<ul
-		class="p-2 shadow menu dropdown-content z-[100] bg-base-100 w-52 min-h-[80px] relative"
+		tabindex="0"
+		class="p-2 shadow-sm menu dropdown-content z-[100] bg-base-100 w-52 min-h-[80px] relative rounded-sm"
 	>
 		{#if typeof groups !== 'string'}
-			<input
-				type="checkbox"
-				bind:group={checkboxGroup}
-				class="checkbox"
-				value="public"
-			/>
-			{#each groups as group}
+			<div class="mb-1 grid-input__container">
+				<label for="public">Public</label>
 				<input
 					type="checkbox"
 					bind:group={checkboxGroup}
-					class="checkbox"
-					value={group.slug}
+					class="checkbox checkbox-primary dark:checkbox-accent"
+					value="public"
+					name="public"
 				/>
+			</div>
+			<!-- # before value is for case when a value would be named 'public' -->
+			{#each groups as group}
+				<div class="mb-1 grid-input__container">
+					<label for={group.slug}>{group.name}</label>
+					<input
+						type="checkbox"
+						bind:group={checkboxGroup}
+						class="checkbox checkbox-primary dark:checkbox-accent"
+						value="#{group.slug}"
+						name={group.slug}
+					/>
+				</div>
 			{/each}
 		{:else if groups === 'fetching'}
 			<div class="absolute inset-0 grid place-content-center">
@@ -45,4 +59,11 @@
 			</div>
 		{/if}
 	</ul>
-</details>
+</div>
+
+<style>
+	.grid-input__container {
+		display: grid;
+		grid-template-columns: 1fr auto;
+	}
+</style>
