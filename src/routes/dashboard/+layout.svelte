@@ -50,7 +50,7 @@
 </script>
 
 <main
-	class="h-full duration-100 grid__layout dark:bg-dark_black"
+	class="min-h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible}
 >
 	<div
@@ -166,6 +166,7 @@
 				</button>
 			{/if}
 
+			<!-- Upper part navigation -->
 			<div class="mr-auto text-sm breadcrumbs">
 				<ul>
 					{#each pathname as segment, index (index)}
@@ -174,7 +175,7 @@
 								<a
 									href={getBreadcrumbsPath(index)}
 									class={pathname[pathname.length - 1] === segment
-										? 'text-light_primary dark:bg-dark_primary'
+										? 'text-light_primary dark:text-dark_primary'
 										: ''}
 								>
 									{segment.replace('-', ' ')[0].toUpperCase() +

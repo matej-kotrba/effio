@@ -25,7 +25,7 @@
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<ul
 		tabindex="0"
-		class="p-2 shadow-sm menu dropdown-content z-[100] bg-base-100 w-52 min-h-[80px] relative rounded-sm"
+		class="p-2 shadow-md menu dropdown-content z-[100] bg-light_whiter w-52 min-h-[80px] relative rounded-sm"
 	>
 		{#if typeof groups !== 'string'}
 			<div class="mb-1 grid-input__container">
