@@ -157,7 +157,6 @@
 			<div>
 				<CreatorInputSidebar
 					inputs={inputTemplates}
-					{containerRef}
 					class="self-start"
 					on:drop={onInputDrop}
 				/>

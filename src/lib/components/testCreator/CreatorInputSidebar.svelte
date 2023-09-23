@@ -7,7 +7,6 @@
 	};
 
 	export let inputs: Inputs[];
-	export let containerRef: HTMLElement;
 
 	export { classes as class };
 	let classes = '';
@@ -24,10 +23,11 @@
 
 	function onMouseMove(
 		e: MouseEvent & {
-			currentTarget: EventTarget & HTMLElement;
+			currentTarget: EventTarget & Window;
 		}
 	) {
-		asideElement.style.setProperty('--blur-x', `${e.x}`);
+		asideElement.style.setProperty('--blur-x', `${e.x}px`);
+		asideElement.style.setProperty('--blur-y', `${e.y}px`);
 	}
 
 	onMount(() => {
@@ -39,11 +39,11 @@
 	});
 </script>
 
-<!-- {asideWidth > 260
-			? 'grid-cols-2'
-			: 'grid-cols-1'} -->
+<svelte:window on:mousemove={onMouseMove} />
 <aside
 	class="sticky top-0 w-full h-full parent"
+	style="--blur-x: 0px;
+		--blur-y: 0px;"
 	bind:clientWidth={asideWidth}
 	bind:this={asideElement}
 >
@@ -76,10 +76,29 @@
 	}
 
 	.parent {
-		--blur-x: 0px;
-		--blur-y: 0px;
-
 		position: relative;
-		background-color: pink;
+		isolation: isolate;
+	}
+
+	.item-box {
+		aspect-ratio: 1/1;
+		position: relative;
+		background-color: royalblue;
+		border-radius: 5px;
+	}
+
+	.item-box::before {
+		content: '';
+		position: absolute;
+		inset: -2px;
+		border-radius: inherit;
+		background-attachment: fixed;
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			hsl(0 0% 100% / 0.75),
+			transparent 8rem
+		);
+		z-index: -1;
+		pointer-events: none;
 	}
 </style>
