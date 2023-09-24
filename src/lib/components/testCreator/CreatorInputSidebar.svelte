@@ -53,7 +53,7 @@
 				<!-- class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500" -->
 				<!-- on:mousedown={() => onDragEvent(true, index)} -->
 				<div
-					class=""
+					class="grid w-full h-full duration-150 place-content-center bg-light_white dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey"
 					bind:this={inputReferences[index]}
 					draggable="true"
 					on:dragstart={(e) => {
@@ -83,8 +83,16 @@
 	.item-box {
 		aspect-ratio: 1/1;
 		position: relative;
-		background-color: royalblue;
 		border-radius: 5px;
+		display: grid;
+		place-items: center;
+		box-shadow: 1px 1px 5px var(--light-text-black-40);
+		user-select: none;
+		cursor: pointer;
+	}
+
+	.item-box > div {
+		border-radius: inherit;
 	}
 
 	.item-box::before {
@@ -95,10 +103,18 @@
 		background-attachment: fixed;
 		background-image: radial-gradient(
 			circle at var(--blur-x, 0) var(--blur-y, 0),
-			hsl(0 0% 100% / 0.75),
-			transparent 8rem
+			var(--light-primary),
+			transparent 6rem
 		);
 		z-index: -1;
 		pointer-events: none;
+	}
+
+	:global(.dark) .item-box::before {
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--dark-primary),
+			transparent 6rem
+		);
 	}
 </style>
