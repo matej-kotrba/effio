@@ -92,6 +92,33 @@ export const protectedRouter = router({
       const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
       const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
 
+      const linkedGroups = await ctx.prisma.groupOnTests.findMany({
+        where: {
+          testId: input.testGroupId
+        }
+      })
+
+      const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.groupId))
+      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.groupId).includes(item))
+
+      await ctx.prisma.$transaction([
+        ...linkedGroupsToDelete.map(({ id }) => {
+          return ctx.prisma.groupOnTests.delete({
+            where: {
+              id
+            }
+          })
+        }),
+        ...linkedGroupsToCreate.map((groupId) => {
+          return ctx.prisma.groupOnTests.create({
+            data: {
+              testId: input.testGroupId,
+              groupId
+            }
+          })
+        })
+      ])
+
       const test = await ctx.prisma.test.update({
         where: {
           id: input.testGroupId
@@ -100,15 +127,6 @@ export const protectedRouter = router({
           title: input.title,
           description: input.description,
           isPublic,
-          groups: {
-            createMany: {
-              data: includedInGroups.map((groupId) => {
-                return {
-                  groupId: groupId,
-                }
-              })
-            }
-          }
         }
       })
 

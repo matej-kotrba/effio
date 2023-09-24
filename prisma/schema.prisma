@@ -200,11 +200,11 @@ model Tag {
 }
 
 model GroupOnTests {
-  id      Int     @id @default(autoincrement())
-  test    Test?   @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  group   Group?  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  testId  String?
-  groupId String?
+  id      Int    @id @default(autoincrement())
+  test    Test   @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  group   Group  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  testId  String
+  groupId String
 
   @@index([testId])
   @@index([groupId])
