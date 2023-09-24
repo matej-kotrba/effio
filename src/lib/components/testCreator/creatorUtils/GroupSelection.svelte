@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { testObject } from '~stores/testObject';
 	import { page } from '$app/stores';
 	import type { Group } from '@prisma/client';
 	import { trpc } from '~/lib/trpc/client';
-	import Skewed from '~components/loaders/Skewed.svelte';
 
 	let groups: Group[] | 'fetching' = 'fetching';
-	let checkboxGroup: string[] = [];
+	let checkboxGroup: (string | 'public')[] = ['public'];
 
 	async function onInitialGroupDisplay() {
 		const userGroups = await trpc($page).groups.getGroupsByUserId.query({
@@ -13,6 +13,10 @@
 		});
 		groups = userGroups;
 	}
+
+	$: $testObject.includedInGroups = checkboxGroup.map((item) =>
+		item.replace('#', '')
+	);
 </script>
 
 <div class="dropdown">
@@ -46,7 +50,7 @@
 						type="checkbox"
 						bind:group={checkboxGroup}
 						class="checkbox checkbox-primary dark:checkbox-accent"
-						value="#{group.slug}"
+						value="#{group.id}"
 						name={group.slug}
 					/>
 				</div>

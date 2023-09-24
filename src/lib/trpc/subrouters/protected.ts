@@ -75,8 +75,9 @@ export const protectedRouter = router({
       marks: z.array(z.object({
         name: z.string(),
         limit: z.number()
-      }))
+      })),
     }).optional(),
+    includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
     try {
 
@@ -88,6 +89,9 @@ export const protectedRouter = router({
 
       console.log("VERSION", version)
 
+      const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
+      const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
+
       const test = await ctx.prisma.test.update({
         where: {
           id: input.testGroupId
@@ -95,6 +99,16 @@ export const protectedRouter = router({
         data: {
           title: input.title,
           description: input.description,
+          isPublic,
+          groups: {
+            createMany: {
+              data: includedInGroups.map((groupId) => {
+                return {
+                  groupId: groupId,
+                }
+              })
+            }
+          }
         }
       })
 

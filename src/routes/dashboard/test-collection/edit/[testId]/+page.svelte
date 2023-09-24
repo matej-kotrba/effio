@@ -95,7 +95,8 @@
 								};
 							})
 					  }
-					: undefined
+					: undefined,
+				includedInGroups: $testObject.includedInGroups
 			});
 		} catch (e) {
 			if (e instanceof TRPCClientError) {

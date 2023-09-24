@@ -112,6 +112,8 @@ type MarkSystemJSON = { [key: string]: never } | {
 
 type MarkSystemInputUse = undefined | MarkSystemJSON["marks"]
 
+type IncludedInGroups = (string | "public")[]
+
 // Type with name and its properties retrieved from DB
 // IMPORTANT: cant promise typesafety becuase it is created in MySQL DB inside of JSON field
 // type QuestionTemplate = {
