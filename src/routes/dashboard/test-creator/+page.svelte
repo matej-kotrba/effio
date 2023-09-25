@@ -34,6 +34,7 @@
 	import toast from 'svelte-french-toast';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 	import { applicationStates } from '~stores/applicationStates';
+	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 
 	export let data;
 
@@ -49,8 +50,8 @@
 	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -360,6 +361,9 @@
 				>
 					{$testObject.errors.description || 'Placeholder error'}
 				</p>
+				<div class="flex justify-end">
+					<GroupSelection groupData={[]} />
+				</div>
 				<MarkSystem />
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton

@@ -8,7 +8,6 @@
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { LG } from '~/utils/responsive';
-	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
 
 	export let data: PageData;
 
@@ -77,7 +76,9 @@
 			<div class="flex flex-col items-center px-2 xl:px-4">
 				<a class="w-[160px]" on:click={() => (isSidebarShown = false)} href="/">
 					<img
-						src="/imgs/effio/text.png"
+						src={$applicationStates['darkMode']
+							? '/imgs/effio/text-dark.png'
+							: '/imgs/effio/text.png'}
 						alt="Effio logo"
 						class="drop-shadow-primary"
 					/>

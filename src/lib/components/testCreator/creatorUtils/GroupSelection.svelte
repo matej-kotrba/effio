@@ -27,13 +27,15 @@
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<!-- svelte-ignore a11y-label-has-associated-control -->
-	<label tabindex="0" class="m-1 btn" on:click|once={onInitialGroupDisplay}
-		>Group Selection</label
+	<label
+		tabindex="0"
+		class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
+		on:click|once={onInitialGroupDisplay}>Group Selection</label
 	>
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<ul
 		tabindex="0"
-		class="p-2 shadow-md menu dropdown-content z-[100] bg-light_whiter w-52 min-h-[80px] relative rounded-sm"
+		class="p-2 shadow-md menu dropdown-content z-[100] bg-light_whiter dark:bg-dark_grey dark:bg-lig w-52 min-h-[80px] relative rounded-sm"
 	>
 		{#if typeof groups !== 'string'}
 			<div class="mb-1 grid-input__container">

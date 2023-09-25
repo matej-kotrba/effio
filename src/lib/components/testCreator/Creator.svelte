@@ -182,9 +182,10 @@
 							<button
 								type="button"
 								on:click={() => onNewInputClick(input)}
-								class="rounded-lg shadow-lg aspect-square new-input-button dark:bg-dark_blackless bg-light_whiter dark:bg-dark_light_grey"
+								class="relative border-2 border-solid rounded-lg shadow-lg bg-light_secondary border-light_secondary aspect-square new-input-button dark:border-dark_secondary dark:bg-dark_secondary"
 							>
-								<span class="text-light_text_black dark:text-dark_text_white"
+								<span
+									class="text-2xl font-bold text-light_secondary dark:text-dark_secondary"
 									>{input.name}</span
 								>
 							</button>
@@ -309,10 +310,30 @@
 						white 60%,
 						var(--light-primary) 300%
 						); */
+		isolation: isolate;
 		transition: 0.4s ease;
+		perspective: 1000px;
 	}
 
 	.new-input-button:hover {
 		transform: translateY(-5px);
+	}
+
+	.new-input-button::before {
+		content: '';
+		inset: 10px;
+		position: absolute;
+		z-index: -10;
+		background-color: var(--light-white);
+		border-radius: inherit;
+		transition: 0.3s ease;
+	}
+
+	:global(.dark) .new-input-button::before {
+		background-color: var(--dark_black);
+	}
+
+	.new-input-button:hover::before {
+		inset: 20px;
 	}
 </style>
