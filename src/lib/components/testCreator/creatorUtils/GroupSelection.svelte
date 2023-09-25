@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { testObject } from '~stores/testObject';
 	import { page } from '$app/stores';
-	import type { Group } from '@prisma/client';
+	import type { Group, GroupOnTests } from '@prisma/client';
 	import { trpc } from '~/lib/trpc/client';
+
+	export let groupData: GroupOnTests[];
 
 	let groups: Group[] | 'fetching' = 'fetching';
 	let checkboxGroup: (string | 'public')[] = ['public'];
@@ -12,6 +14,8 @@
 			alsoUser: false
 		});
 		groups = userGroups;
+		checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
+		console.log(checkboxGroup);
 	}
 
 	$: $testObject.includedInGroups = checkboxGroup.map((item) =>
@@ -19,7 +23,7 @@
 	);
 </script>
 
-<div class="dropdown">
+<div class="dropdown dropdown-end dropdown-bottom">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<!-- svelte-ignore a11y-label-has-associated-control -->

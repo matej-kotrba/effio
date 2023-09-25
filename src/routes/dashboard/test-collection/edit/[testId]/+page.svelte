@@ -123,14 +123,15 @@
 	subtitle="Here you can edit your previously created test"
 />
 
-<GroupSelection />
-
-<Toggle
-	title="Is Published"
-	isChecked={$testObject.published}
-	class="justify-end mb-4"
-	on:toggle={(e) => ($testObject.published = e.detail)}
-/>
+<div class="flex items-center justify-end gap-1">
+	<Toggle
+		title="Is Published"
+		isChecked={$testObject.published}
+		class="items-center justify-end"
+		on:toggle={(e) => ($testObject.published = e.detail)}
+	/>
+	<GroupSelection groupData={data.testData.groups} />
+</div>
 
 <ErrorEnhance error={$testObject.errors.title}>
 	<TextInputSimple

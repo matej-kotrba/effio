@@ -103,13 +103,15 @@ export const appRouter = router({
     return groupTests
   }),
   getTestById: procedure.input(z.object({
-    id: z.string()
+    id: z.string(),
+    includeGroups: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
     const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.id
       },
       include: {
+        groups: input.includeGroups || false,
         owner: true,
         tags: true,
         testVersions: {

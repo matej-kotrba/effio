@@ -125,7 +125,7 @@ export const groupsRouter = router({
       },
       include: {
         tests: input.includeTests || false,
-        users: input.includeUsers || false
+        users: input.includeUsers || false,
       }
     })
 
