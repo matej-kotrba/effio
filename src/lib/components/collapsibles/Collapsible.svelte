@@ -1,9 +1,12 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import Space from '~components/separators/Space.svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
 	export let position: 'left' | 'center' | 'right' = 'left';
+	let classes = '';
+	export { classes as class };
 
 	const positionsClasses = {
 		left: 'mr-auto',
@@ -21,9 +24,12 @@
 </script>
 
 <div
-	class="parent w-fit {positionsClasses[
+	class={twMerge(
+		`parent w-fit {positionsClasses[
 		position
-	]} rounded-md bg-gray-100 dark:bg-dark_terciary"
+	]} rounded-md bg-gray-100 dark:bg-dark_terciary`,
+		classes
+	)}
 >
 	<button
 		on:click={toggleCollapsible}
