@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { twMerge } from 'tailwind-merge';
 
@@ -7,6 +6,7 @@
 	export let position: 'left' | 'center' | 'right' = 'left';
 	let classes = '';
 	export { classes as class };
+	export let buttonClasses = '';
 
 	const positionsClasses = {
 		left: 'mr-auto',
@@ -25,19 +25,19 @@
 
 <div
 	class={twMerge(
-		`parent w-fit {positionsClasses[
-		position
-	]} rounded-md bg-gray-100 dark:bg-dark_terciary`,
+		`parent w-fit ${positionsClasses[position]} rounded-md bg-gray-100 dark:bg-dark_terciary`,
 		classes
 	)}
 >
 	<button
 		on:click={toggleCollapsible}
 		type={'button'}
-		class="{positionsClasses[
-			position
-		]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_grey"
-		><Icon
+		class={twMerge(
+			`${positionsClasses[position]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_grey duration-150`,
+			buttonClasses
+		)}
+	>
+		<iconify-icon
 			icon="bxs:left-arrow"
 			rotate={2}
 			class="{isOpen

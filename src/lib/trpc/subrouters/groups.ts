@@ -191,5 +191,16 @@ export const groupsRouter = router({
     })
 
     return subcategories
+  }),
+  getSubcategoriesByTestId: loggedInProcedure.input(z.object({
+    id: z.string()
+  })).query(async ({ ctx, input }) => {
+    const subcategories = await ctx.prisma.groupSubcategoryOnTests.findMany({
+      where: {
+        testId: input.id
+      },
+    })
+
+    return subcategories
   })
 })

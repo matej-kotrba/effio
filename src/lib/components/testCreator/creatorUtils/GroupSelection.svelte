@@ -10,7 +10,7 @@
 	// 	};
 	// }>[];
 
-	export let testId: string;
+	export let testId: string = '';
 
 	let groups:
 		| Awaited<
@@ -26,14 +26,35 @@
 			alsoUser: false,
 			includeSubcategories: true
 		});
+
+		const usedSubcategories = testId
+			? await trpc($page).groups.getSubcategoriesByTestId.query({
+					id: testId
+			  })
+			: null;
+
+		if (usedSubcategories) {
+			const ids = userGroups.map((item) =>
+				item.groupsSubcategories.map((item) => item.id)
+			);
+			const newCategories: string[] = [];
+			usedSubcategories.map((item) => {
+				const id = ids.indexOf([item.subcategoryId]);
+				if (id !== -1) {
+					newCategories[id] = item.subcategoryId;
+				}
+			});
+			checkboxGroup = ['public', ...newCategories];
+		}
+
 		groups = userGroups;
 		// checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
 		console.log(checkboxGroup);
 	}
 
-	$: $testObject.includedInGroups = checkboxGroup.map((item) =>
-		item.replace('#', '')
-	);
+	$: $testObject.includedInGroups = checkboxGroup
+		.map((item) => item.replace('#', ''))
+		.filter((item) => item);
 
 	$: console.log(checkboxGroup);
 </script>
@@ -54,7 +75,7 @@
 	>
 		{#if typeof groups !== 'string'}
 			<div class="mb-1 grid-input__container">
-				<label for="public">Public</label>
+				<label for="public">Should test be public?</label>
 				<input
 					type="checkbox"
 					bind:group={checkboxGroup}
@@ -65,21 +86,36 @@
 			</div>
 			<!-- # before value is for case when a value would be named 'public' -->
 			{#each groups as group, index}
-				<Collapsible title={group.name}>
-					{#each group['groupsSubcategories'] as subcategory}
-						<div class="mb-1 grid-input__container">
-							<label for={subcategory.slug}>{subcategory.name}</label>
-							<input
-								type="radio"
-								checked={checkboxGroup[index + 1] === '#' + subcategory.id}
-								bind:group={checkboxGroup[index + 1]}
-								class="radio radio-primary dark:radio-accent"
-								value="#{subcategory.id}"
-								name={group.slug}
-							/>
-						</div>
-					{/each}
-				</Collapsible>
+				{#if group['groupsSubcategories'].length > 0}
+					<Collapsible
+						title={group.name}
+						class="w-full mb-1 bg-gray-100"
+						buttonClasses={checkboxGroup[index + 1]
+							? 'bg-light_quaternary'
+							: ''}
+					>
+						{#each group['groupsSubcategories'] as subcategory}
+							{@const checked =
+								checkboxGroup[index + 1] === '#' + subcategory.id}
+							<div class="mb-1 grid-input__container">
+								<label for={subcategory.slug}>{subcategory.name}</label>
+								<input
+									type="radio"
+									{checked}
+									bind:group={checkboxGroup[index + 1]}
+									class="radio radio-primary dark:radio-accent"
+									value="#{subcategory.id}"
+									name={group.slug}
+									on:click={() => {
+										if (checked === true) {
+											checkboxGroup[index + 1] = '';
+										}
+									}}
+								/>
+							</div>
+						{/each}
+					</Collapsible>
+				{/if}
 			{/each}
 		{:else if groups === 'fetching'}
 			<div class="absolute inset-0 grid place-content-center">

@@ -58,10 +58,10 @@ export const protectedRouter = router({
         }
       })
 
-      await ctx.prisma.groupOnTests.createMany({
-        data: includedInGroups.map((groupId) => {
+      await ctx.prisma.groupSubcategoryOnTests.createMany({
+        data: includedInGroups.map((subcategoryId) => {
           return {
-            groupId,
+            subcategoryId,
             testId: testGroupData.id
           }
         })
@@ -106,28 +106,28 @@ export const protectedRouter = router({
       const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
       const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
 
-      const linkedGroups = await ctx.prisma.groupOnTests.findMany({
+      const linkedGroups = await ctx.prisma.groupSubcategoryOnTests.findMany({
         where: {
           testId: input.testGroupId
         }
       })
 
-      const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.groupId))
-      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.groupId).includes(item))
+      const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.subcategoryId))
+      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item))
 
       await ctx.prisma.$transaction([
         ...linkedGroupsToDelete.map(({ id }) => {
-          return ctx.prisma.groupOnTests.delete({
+          return ctx.prisma.groupSubcategoryOnTests.delete({
             where: {
               id
             }
           })
         }),
-        ...linkedGroupsToCreate.map((groupId) => {
-          return ctx.prisma.groupOnTests.create({
+        ...linkedGroupsToCreate.map((subcategoryId) => {
+          return ctx.prisma.groupSubcategoryOnTests.create({
             data: {
               testId: input.testGroupId,
-              groupId
+              subcategoryId
             }
           })
         })

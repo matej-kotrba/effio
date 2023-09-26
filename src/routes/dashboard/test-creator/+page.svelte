@@ -118,7 +118,8 @@
 								};
 							})
 					  }
-					: undefined
+					: undefined,
+				includedInGroups: $testObject.includedInGroups
 			});
 			isSuccess = response.success;
 			isSubmitting = false;
@@ -362,7 +363,7 @@
 					{$testObject.errors.description || 'Placeholder error'}
 				</p>
 				<div class="flex justify-end">
-					<GroupSelection groupData={[]} />
+					<GroupSelection />
 				</div>
 				<MarkSystem />
 				<div class="flex justify-center gap-6 my-4">
