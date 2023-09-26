@@ -82,20 +82,20 @@ model QuestionType {
 }
 
 model Test {
-  id           String         @id @default(uuid())
-  testVersions TestVersion[]
-  title        String
-  description  String
-  published    Boolean        @default(false)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  isPublic     Boolean        @default(false)
-  tags         TagOnTests[]
-  stars        Int            @default(0)
-  views        Int            @default(0)
-  owner        User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId      String
-  groups       GroupOnTests[]
+  id            String                    @id @default(uuid())
+  testVersions  TestVersion[]
+  title         String
+  description   String
+  published     Boolean                   @default(false)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  isPublic      Boolean                   @default(false)
+  tags          TagOnTests[]
+  stars         Int                       @default(0)
+  views         Int                       @default(0)
+  owner         User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  subcategories GroupSubcategoryOnTests[]
 
   @@index([ownerId])
   @@index([title, description])
@@ -199,15 +199,15 @@ model Tag {
   tests     TagOnTests[]
 }
 
-model GroupOnTests {
-  id      Int    @id @default(autoincrement())
-  test    Test   @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  group   Group  @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  testId  String
-  groupId String
+model GroupSubcategoryOnTests {
+  id            Int              @id @default(autoincrement())
+  test          Test             @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  testId        String
+  subcategoryId String
 
   @@index([testId])
-  @@index([groupId])
+  @@index([subcategoryId])
 }
 
 model GroupOnUsers {
@@ -229,7 +229,6 @@ model Group {
   slug                String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
-  tests               GroupOnTests[]
   users               GroupOnUsers[]
   owner               User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId             String
@@ -239,13 +238,14 @@ model Group {
 }
 
 model GroupSubcategory {
-  id        String   @id @default(uuid())
+  id        String                    @id @default(uuid())
   name      String
   slug      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  groups    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime                  @default(now())
+  updatedAt DateTime                  @updatedAt
+  groups    Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
+  tests     GroupSubcategoryOnTests[]
 
   @@index([name])
   @@index([groupId])

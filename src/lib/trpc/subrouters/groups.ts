@@ -100,8 +100,8 @@ export const groupsRouter = router({
   getGroupsByUserId: loggedInProcedure.input(z.object({
     id: z.string().optional(),
     alsoUser: z.boolean().optional(),
-    includeTests: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
+    includeSubcategories: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     const userId = input.id ?? ctx.userId
     const group = await ctx.prisma.group.findMany({
@@ -124,8 +124,16 @@ export const groupsRouter = router({
         ]
       },
       include: {
-        tests: input.includeTests || false,
         users: input.includeUsers || false,
+        groupsSubcategories: input.includeSubcategories ? {
+          include: {
+            tests: {
+              select: {
+                id: true
+              }
+            }
+          }
+        } : false
       }
     })
 
@@ -134,7 +142,6 @@ export const groupsRouter = router({
   getGroupByName: loggedInProcedure.input(z.object({
     id: z.string(),
     name: z.string(),
-    includeTests: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
     includeSubcategories: z.boolean().optional(),
     includeOwner: z.boolean().optional(),
@@ -157,7 +164,6 @@ export const groupsRouter = router({
         ]
       },
       include: {
-        tests: input.includeTests || false,
         users: input.includeUsers || false,
         groupsSubcategories: input.includeSubcategories || false,
         owner: input.includeOwner || false,
@@ -174,5 +180,16 @@ export const groupsRouter = router({
 
       }
     })
+  }),
+  getGroupSubcategoriesByGroupId: loggedInProcedure.input(z.object({
+    id: z.string()
+  })).query(async ({ ctx, input }) => {
+    const subcategories = await ctx.prisma.groupSubcategory.findMany({
+      where: {
+        groupId: input.id
+      }
+    })
+
+    return subcategories
   })
 })

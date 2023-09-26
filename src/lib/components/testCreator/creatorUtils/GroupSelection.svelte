@@ -1,26 +1,41 @@
 <script lang="ts">
 	import { testObject } from '~stores/testObject';
 	import { page } from '$app/stores';
-	import type { Group, GroupOnTests } from '@prisma/client';
 	import { trpc } from '~/lib/trpc/client';
+	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 
-	export let groupData: GroupOnTests[];
+	// export let groupData: Prisma.GroupGetPayload<{
+	// 	include: {
+	// 		groupsSubcategories: true;
+	// 	};
+	// }>[];
 
-	let groups: Group[] | 'fetching' = 'fetching';
+	export let testId: string;
+
+	let groups:
+		| Awaited<
+				ReturnType<
+					ReturnType<typeof trpc>['groups']['getGroupsByUserId']['query']
+				>
+		  >
+		| 'fetching' = 'fetching';
 	let checkboxGroup: (string | 'public')[] = ['public'];
 
 	async function onInitialGroupDisplay() {
 		const userGroups = await trpc($page).groups.getGroupsByUserId.query({
-			alsoUser: false
+			alsoUser: false,
+			includeSubcategories: true
 		});
 		groups = userGroups;
-		checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
+		// checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
 		console.log(checkboxGroup);
 	}
 
 	$: $testObject.includedInGroups = checkboxGroup.map((item) =>
 		item.replace('#', '')
 	);
+
+	$: console.log(checkboxGroup);
 </script>
 
 <div class="dropdown dropdown-end dropdown-bottom">
@@ -49,17 +64,22 @@
 				/>
 			</div>
 			<!-- # before value is for case when a value would be named 'public' -->
-			{#each groups as group}
-				<div class="mb-1 grid-input__container">
-					<label for={group.slug}>{group.name}</label>
-					<input
-						type="checkbox"
-						bind:group={checkboxGroup}
-						class="checkbox checkbox-primary dark:checkbox-accent"
-						value="#{group.id}"
-						name={group.slug}
-					/>
-				</div>
+			{#each groups as group, index}
+				<Collapsible title={group.name}>
+					{#each group['groupsSubcategories'] as subcategory}
+						<div class="mb-1 grid-input__container">
+							<label for={subcategory.slug}>{subcategory.name}</label>
+							<input
+								type="radio"
+								checked={checkboxGroup[index + 1] === '#' + subcategory.id}
+								bind:group={checkboxGroup[index + 1]}
+								class="radio radio-primary dark:radio-accent"
+								value="#{subcategory.id}"
+								name={group.slug}
+							/>
+						</div>
+					{/each}
+				</Collapsible>
 			{/each}
 		{:else if groups === 'fetching'}
 			<div class="absolute inset-0 grid place-content-center">

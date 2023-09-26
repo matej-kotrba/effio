@@ -130,7 +130,7 @@
 		class="items-center justify-end"
 		on:toggle={(e) => ($testObject.published = e.detail)}
 	/>
-	<GroupSelection groupData={data.testData.groups} />
+	<GroupSelection />
 </div>
 
 <ErrorEnhance error={$testObject.errors.title}>
