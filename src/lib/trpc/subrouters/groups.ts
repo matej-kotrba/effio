@@ -102,13 +102,22 @@ export const groupsRouter = router({
     alsoUser: z.boolean().optional(),
     includeUsers: z.boolean().optional(),
     includeSubcategories: z.boolean().optional(),
+    excludeEmptyGroups: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     const userId = input.id ?? ctx.userId
     const group = await ctx.prisma.group.findMany({
       where: {
+        groupsSubcategories: input.excludeEmptyGroups ? {
+          some: {
+            id: {
+              startsWith: ""
+            }
+          }
+        } : undefined,
         OR: input.alsoUser ? [
           {
-            ownerId: userId
+            ownerId: userId,
+
           },
           {
             users: {
@@ -116,11 +125,20 @@ export const groupsRouter = router({
                 userId: userId
               }
             }
-          }
+          },
         ] : [
           {
             ownerId: userId
-          }
+          },
+          {
+            groupsSubcategories: input.excludeEmptyGroups ? {
+              some: {
+                id: {
+                  startsWith: ""
+                }
+              }
+            } : undefined
+          },
         ]
       },
       include: {

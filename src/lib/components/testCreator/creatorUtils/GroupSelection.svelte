@@ -24,8 +24,11 @@
 	async function onInitialGroupDisplay() {
 		const userGroups = await trpc($page).groups.getGroupsByUserId.query({
 			alsoUser: false,
-			includeSubcategories: true
+			includeSubcategories: true,
+			excludeEmptyGroups: true
 		});
+
+		console.log(userGroups);
 
 		const usedSubcategories = testId
 			? await trpc($page).groups.getSubcategoriesByTestId.query({
@@ -34,29 +37,31 @@
 			: null;
 
 		if (usedSubcategories) {
-			const ids = userGroups.map((item) =>
-				item.groupsSubcategories.map((item) => item.id)
-			);
+			const ids = userGroups
+				.map((item) => {
+					return item.groupsSubcategories.map((item) => item.id);
+				})
+				.flat();
 			const newCategories: string[] = [];
 			usedSubcategories.map((item) => {
-				const id = ids.indexOf([item.subcategoryId]);
+				const id = ids.indexOf(item.subcategoryId);
 				if (id !== -1) {
 					newCategories[id] = item.subcategoryId;
 				}
 			});
+			console.log(newCategories);
 			checkboxGroup = ['public', ...newCategories];
 		}
 
 		groups = userGroups;
 		// checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
-		console.log(checkboxGroup);
 	}
 
 	$: $testObject.includedInGroups = checkboxGroup
-		.map((item) => item.replace('#', ''))
-		.filter((item) => item);
-
-	$: console.log(checkboxGroup);
+		.map((item) => {
+			return item;
+		})
+		.filter((item) => !!item);
 </script>
 
 <div class="dropdown dropdown-end dropdown-bottom">
@@ -95,8 +100,7 @@
 							: ''}
 					>
 						{#each group['groupsSubcategories'] as subcategory}
-							{@const checked =
-								checkboxGroup[index + 1] === '#' + subcategory.id}
+							{@const checked = checkboxGroup[index + 1] === subcategory.id}
 							<div class="mb-1 grid-input__container">
 								<label for={subcategory.slug}>{subcategory.name}</label>
 								<input
@@ -104,7 +108,7 @@
 									{checked}
 									bind:group={checkboxGroup[index + 1]}
 									class="radio radio-primary dark:radio-accent"
-									value="#{subcategory.id}"
+									value={subcategory.id}
 									name={group.slug}
 									on:click={() => {
 										if (checked === true) {
