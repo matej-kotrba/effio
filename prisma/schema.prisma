@@ -205,6 +205,7 @@ model GroupSubcategoryOnTests {
   subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   testId        String
   subcategoryId String
+  addedDate     DateTime         @default(now())
 
   @@index([testId])
   @@index([subcategoryId])

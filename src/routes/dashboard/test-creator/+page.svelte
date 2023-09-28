@@ -50,8 +50,8 @@
 	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: true,
-		constructingDone: true,
+		templateDone: false,
+		constructingDone: false,
 		detailsDone: false
 	};
 

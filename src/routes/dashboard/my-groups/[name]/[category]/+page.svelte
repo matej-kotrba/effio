@@ -39,10 +39,24 @@
 </script>
 
 {#if subcategory}
-	<h4 class="w-full h-24 bg-blue-300">
-		{subcategory.name}
-	</h4>
+	<section class="flex flex-col items-center justify-center">
+		<img
+			aria-hidden="true"
+			src="/imgs/svgs/welcome.svg"
+			class=""
+			width="200"
+			alt="decorative"
+		/>
+		<p class="text-light_text_black_80 dark:text-dark_text_white_80">
+			This is the start of the <span
+				class="font-semibold text-light_text_black dark:text-dark_text_white"
+				>{data.group.name}</span
+			> channel.
+		</p>
+	</section>
 	{#each tests as test}
-		<p>{test.test.title}</p>
+		<div class="">
+			{test.test.title}
+		</div>
 	{/each}
 {/if}
