@@ -58,14 +58,27 @@ export const protectedRouter = router({
         }
       })
 
-      await ctx.prisma.groupSubcategoryOnTests.createMany({
-        data: includedInGroups.map((subcategoryId) => {
-          return {
-            subcategoryId,
-            testId: testGroupData.id
-          }
+      await ctx.prisma.$transaction([
+        ctx.prisma.groupSubcategoryOnTests.createMany({
+          data: includedInGroups.map((subcategoryId) => {
+            return {
+              subcategoryId,
+              testId: testGroupData.id
+            }
+          })
+        }),
+        ctx.prisma.groupSubcategoryMessage.createMany({
+          data: includedInGroups.map((subcategoryId) => {
+            return {
+              senderId: ctx.userId,
+              messageType: "MESSAGE",
+              title: "Added new test " + testGroupData.title,
+              groupSubcategoryId: subcategoryId
+            }
+          })
         })
-      })
+      ])
+
 
       return {
         test: testGroupData.testVersions[0],
@@ -128,6 +141,26 @@ export const protectedRouter = router({
             data: {
               testId: input.testGroupId,
               subcategoryId
+            }
+          })
+        }),
+        ctx.prisma.groupSubcategoryMessage.createMany({
+          data: linkedGroupsToCreate.map((subcategoryId) => {
+            return {
+              senderId: ctx.userId,
+              messageType: "MESSAGE",
+              title: "Added new test " + input.title,
+              groupSubcategoryId: subcategoryId
+            }
+          })
+        }),
+        ctx.prisma.groupSubcategoryMessage.createMany({
+          data: linkedGroupsToDelete.map((item) => {
+            return {
+              senderId: ctx.userId,
+              messageType: "MESSAGE",
+              title: "Added new test " + input.title,
+              groupSubcategoryId: item.subcategoryId
             }
           })
         })

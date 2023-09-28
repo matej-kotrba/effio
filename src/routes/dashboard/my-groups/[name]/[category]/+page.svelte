@@ -13,6 +13,16 @@
 		>
 	> = [];
 
+	let messages:
+		| Awaited<
+				ReturnType<
+					ReturnType<
+						typeof trpc
+					>['groups']['getSubcategoryMessagesByGroupSubcategoryId']['query']
+				>
+		  >
+		| 'fetching' = 'fetching';
+
 	const subcategory = data.group.groupsSubcategories.find((item) => item.slug);
 
 	if (!subcategory) {
@@ -33,6 +43,12 @@
 			});
 
 			tests = fetchedTests;
+
+			const messages = await trpc(
+				$page
+			).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
+				id: categoryId
+			});
 		}
 	});
 </script>
