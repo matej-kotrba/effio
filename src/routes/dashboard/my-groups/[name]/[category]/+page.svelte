@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client.js';
+	import { transformDate } from '~/lib/utils/date';
 
 	export let data;
 
@@ -54,9 +55,28 @@
 			> channel.
 		</p>
 	</section>
-	{#each tests as test}
-		<div class="">
-			{test.test.title}
-		</div>
-	{/each}
+	<div class="flex flex-col gap-2 max-w-[800px] mx-auto">
+		{#each tests as test}
+			<div>
+				<span class="text-xs text-light_text_black_60"
+					>{transformDate(new Date(test.addedDate))}</span
+				>
+				<div
+					class="flex items-center gap-1 p-2 rounded-sm shadow bg-light_whiter"
+				>
+					<!-- <div class="h-full">
+				<iconify-icon
+				icon="raphael:arrowright"
+				class="text-2xl text-light_primary"
+				/>
+			</div> -->
+					<div>
+						<div class="border-2 border-solid border-light_text_black_40">
+							{test.test.title}
+						</div>
+					</div>
+				</div>
+			</div>
+		{/each}
+	</div>
 {/if}
