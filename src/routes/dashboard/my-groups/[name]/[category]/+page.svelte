@@ -31,8 +31,6 @@
 			).groups.getSubcategoryTestsById.query({
 				id: categoryId
 			});
-			console.log(categoryId);
-			console.log(fetchedTests);
 
 			tests = fetchedTests;
 		}

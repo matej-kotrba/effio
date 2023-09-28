@@ -43,18 +43,19 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  tests         Test[]
-  testRecords   TestRecord[]
-  markSystems   MarkSystem[]
-  groups        GroupOnUsers[]
-  groupsOwned   Group[]
+  id                       String                    @id @default(cuid())
+  name                     String?
+  email                    String?                   @unique
+  emailVerified            DateTime?
+  image                    String?
+  accounts                 Account[]
+  sessions                 Session[]
+  tests                    Test[]
+  testRecords              TestRecord[]
+  markSystems              MarkSystem[]
+  groups                   GroupOnUsers[]
+  groupsOwned              Group[]
+  GroupSubcategoreyMessage GroupSubcategoryMessage[]
 }
 
 model VerificationToken {
@@ -247,7 +248,32 @@ model GroupSubcategory {
   groups    Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
   tests     GroupSubcategoryOnTests[]
+  messages  GroupSubcategoryMessage[]
 
   @@index([name])
   @@index([groupId])
+}
+
+model GroupSubcategoryMessage {
+  id                 String           @id @default(uuid())
+  groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
+  groupSubcategoryId String
+  sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId           String
+  messageType        MessageTypes
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  title              String?
+  content            String?
+  testId             String?
+
+  @@index([senderId])
+  @@index([groupSubcategoryId])
+  @@index([testId])
+  @@map("GroupSubcategoreyMessage")
+}
+
+enum MessageTypes {
+  MESSAGE
+  TEST
 }
