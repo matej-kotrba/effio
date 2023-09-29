@@ -244,6 +244,9 @@ export const groupsRouter = router({
     const messages = await ctx.prisma.groupSubcategoryMessage.findMany({
       where: {
         groupSubcategoryId: input.id
+      },
+      include: {
+
       }
     })
 

@@ -44,7 +44,7 @@
 
 			tests = fetchedTests;
 
-			const messages = await trpc(
+			messages = await trpc(
 				$page
 			).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
 				id: categoryId
@@ -54,7 +54,7 @@
 </script>
 
 {#if subcategory}
-	<section class="flex flex-col items-center justify-center">
+	<section class="flex flex-col items-center justify-center mb-4">
 		<img
 			aria-hidden="true"
 			src="/imgs/svgs/welcome.svg"
@@ -70,7 +70,19 @@
 		</p>
 	</section>
 	<div class="flex flex-col gap-2 max-w-[800px] mx-auto">
-		{#each tests as test}
+		{#if messages === 'fetching'}
+			<p>Gettig messages</p>
+		{:else}
+			{#each messages as message}
+				<div class="p-2 rounded-sm shadow bg-light_whiter">
+					<h5 class="text-body1">
+						{message.title}
+					</h5>
+					{#if message.testId}{/if}
+				</div>
+			{/each}
+		{/if}
+		<!-- {#each tests as test}
 			<div>
 				<span class="text-xs text-light_text_black_60"
 					>{transformDate(new Date(test.addedDate))}</span
@@ -78,12 +90,12 @@
 				<div
 					class="flex items-center gap-1 p-2 rounded-sm shadow bg-light_whiter"
 				>
-					<!-- <div class="h-full">
+					<div class="h-full">
 				<iconify-icon
 				icon="raphael:arrowright"
 				class="text-2xl text-light_primary"
 				/>
-			</div> -->
+			</div>
 					<div>
 						<div class="border-2 border-solid border-light_text_black_40">
 							{test.test.title}
@@ -91,6 +103,6 @@
 					</div>
 				</div>
 			</div>
-		{/each}
+		{/each} -->
 	</div>
 {/if}

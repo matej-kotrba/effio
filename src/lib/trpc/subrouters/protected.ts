@@ -149,9 +149,12 @@ export const protectedRouter = router({
             return {
               senderId: ctx.userId,
               messageType: "MESSAGE",
-              title: "Added new test " + input.title,
-              groupSubcategoryId: subcategoryId
+              title: "Added new test: " + input.title,
+              groupSubcategoryId: subcategoryId,
+              testId: input.testGroupId
             }
+
+
           })
         }),
         ctx.prisma.groupSubcategoryMessage.createMany({
@@ -159,8 +162,8 @@ export const protectedRouter = router({
             return {
               senderId: ctx.userId,
               messageType: "MESSAGE",
-              title: "Added new test " + input.title,
-              groupSubcategoryId: item.subcategoryId
+              title: "Removed test: " + input.title,
+              groupSubcategoryId: item.subcategoryId,
             }
           })
         })

@@ -25,7 +25,7 @@
 
 <div
 	class={twMerge(
-		`parent w-fit ${positionsClasses[position]} rounded-md bg-gray-100 dark:bg-dark_terciary`,
+		`parent w-fit ${positionsClasses[position]} rounded-md bg-gray-100 dark:bg-zinc-900`,
 		classes
 	)}
 >
@@ -33,7 +33,7 @@
 		on:click={toggleCollapsible}
 		type={'button'}
 		class={twMerge(
-			`${positionsClasses[position]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_grey duration-150`,
+			`${positionsClasses[position]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_light_grey duration-150`,
 			buttonClasses
 		)}
 	>

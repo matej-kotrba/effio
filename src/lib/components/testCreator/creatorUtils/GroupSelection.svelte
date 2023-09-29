@@ -28,8 +28,6 @@
 			excludeEmptyGroups: true
 		});
 
-		console.log(userGroups);
-
 		const usedSubcategories = testId
 			? await trpc($page).groups.getSubcategoriesByTestId.query({
 					id: testId
@@ -96,7 +94,7 @@
 						title={group.name}
 						class="w-full mb-1 bg-gray-100"
 						buttonClasses={checkboxGroup[index + 1]
-							? 'bg-light_quaternary'
+							? 'bg-light_quaternary dark:bg-dark_secondary'
 							: ''}
 					>
 						{#each group['groupsSubcategories'] as subcategory}
