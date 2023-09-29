@@ -246,7 +246,13 @@ export const groupsRouter = router({
         groupSubcategoryId: input.id
       },
       include: {
-
+        test: {
+          select: {
+            title: true,
+            description: true,
+          }
+        },
+        sender: true
       }
     })
 

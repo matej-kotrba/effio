@@ -74,11 +74,26 @@
 			<p>Gettig messages</p>
 		{:else}
 			{#each messages as message}
-				<div class="p-2 rounded-sm shadow bg-light_whiter">
+				<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+					<img
+						class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
+						src={message.sender.image}
+						alt="User image"
+					/>
 					<h5 class="text-body1">
 						{message.title}
 					</h5>
-					{#if message.testId}{/if}
+					{#if message.testId && message.test}
+						<div
+							class="flex flex-col gap-2 p-2 bg-white rounded-md w-fit max-w-[350px] shadow-md shadow-primary test__box"
+						>
+							{message.test.title}
+
+							<button class="btn w-fit">View</button>
+						</div>
+					{:else if message.testId}
+						<div>Oops, this test can't be accessed anymore.</div>
+					{/if}
 				</div>
 			{/each}
 		{/if}
@@ -106,3 +121,6 @@
 		{/each} -->
 	</div>
 {/if}
+
+<style>
+</style>

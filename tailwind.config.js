@@ -79,7 +79,8 @@ export default {
 				surrounding: '3px 1px 10px 2px var(--light-text-black-20)'
 			},
 			boxShadowColor: {
-				primary: '#6533f053'
+				primary: '#6533f043',
+				dark_primary: '#0092ca43'
 			},
 			dropShadow: {
 				primary: '0 0 6px var(--light-primary-transparent)',
