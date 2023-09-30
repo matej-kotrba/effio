@@ -74,34 +74,49 @@
 			<p>Gettig messages</p>
 		{:else}
 			{#each messages as message}
-				<div class="relative p-4 rounded-sm shadow bg-light_whiter">
-					<img
+				<div>
+					<div class="flex items-center gap-1 mb-1">
+						<img
+							src={message.sender.image}
+							alt="User"
+							class="w-8 rounded-lg aspect-square"
+						/>
+						<div class="flex flex-col">
+							<span class="text-body2">{message.sender.name}</span>
+							<span class="text-body3 text-light_text_black_40">
+								{transformDate(message.createdAt, { time: true })}
+							</span>
+						</div>
+					</div>
+					<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+						<!-- <img
 						class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
 						src={message.sender.image}
 						alt="User image"
-					/>
-					<h5 class="text-body1">
-						{message.title}
-					</h5>
-					{#if message.testId && message.test}
-						<div
-							class="flex flex-col gap-2 p-2 bg-white rounded-md w-fit max-w-[350px] shadow-md shadow-primary test__box"
-						>
-							{message.test.title}
+						/> -->
+						<h5 class="text-body1">
+							{message.title}
+						</h5>
+						{#if message.testId && message.test}
+							<div
+								class="flex flex-col gap-2 p-2 bg-white rounded-md w-fit max-w-[350px] shadow-md shadow-primary test__box"
+							>
+								{message.test.title}
 
-							<button class="btn w-fit">View</button>
-						</div>
-					{:else if message.testId}
-						<div>Oops, this test can't be accessed anymore.</div>
-					{/if}
+								<button class="btn w-fit">View</button>
+							</div>
+						{:else if message.testId}
+							<div>Oops, this test can't be accessed anymore.</div>
+						{/if}
+					</div>
 				</div>
 			{/each}
 		{/if}
 		<!-- {#each tests as test}
-			<div>
-				<span class="text-xs text-light_text_black_60"
-					>{transformDate(new Date(test.addedDate))}</span
-				>
+						<div>
+							<span class="text-xs text-light_text_black_60"
+							>{transformDate(new Date(test.addedDate))}</span
+							>
 				<div
 					class="flex items-center gap-1 p-2 rounded-sm shadow bg-light_whiter"
 				>
