@@ -4,6 +4,8 @@
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client.js';
 	import { transformDate } from '~/lib/utils/date';
+	import Space from '~components/separators/Space.svelte';
+	import ChatInput from '~components/inputs/ChatInput.svelte';
 
 	export let data;
 
@@ -69,73 +71,66 @@
 			> channel.
 		</p>
 	</section>
-	<div class="flex flex-col gap-2 max-w-[800px] mx-auto">
-		{#if messages === 'fetching'}
-			<p>Gettig messages</p>
-		{:else}
-			{#each messages as message}
-				<div>
-					<div class="flex items-center gap-1 mb-1">
-						<img
-							src={message.sender.image}
-							alt="User"
-							class="w-8 rounded-lg aspect-square"
-						/>
-						<div class="flex flex-col">
-							<span class="text-body2">{message.sender.name}</span>
-							<span class="text-body3 text-light_text_black_40">
-								{transformDate(message.createdAt, { time: true })}
-							</span>
-						</div>
-					</div>
-					<div class="relative p-4 rounded-sm shadow bg-light_whiter">
-						<!-- <img
-						class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
-						src={message.sender.image}
-						alt="User image"
-						/> -->
-						<h5 class="text-body1">
-							{message.title}
-						</h5>
-						{#if message.testId && message.test}
-							<div
-								class="flex flex-col gap-2 p-2 bg-white rounded-md w-fit max-w-[350px] shadow-md shadow-primary test__box"
-							>
-								{message.test.title}
-
-								<button class="btn w-fit">View</button>
-							</div>
-						{:else if message.testId}
-							<div>Oops, this test can't be accessed anymore.</div>
-						{/if}
-					</div>
-				</div>
-			{/each}
-		{/if}
-		<!-- {#each tests as test}
-						<div>
-							<span class="text-xs text-light_text_black_60"
-							>{transformDate(new Date(test.addedDate))}</span
-							>
-				<div
-					class="flex items-center gap-1 p-2 rounded-sm shadow bg-light_whiter"
-				>
-					<div class="h-full">
-				<iconify-icon
-				icon="raphael:arrowright"
-				class="text-2xl text-light_primary"
-				/>
-			</div>
+	<div class="max-w-[800px] mx-auto">
+		<ChatInput />
+		<div class="flex flex-col gap-2">
+			{#if messages === 'fetching'}
+				<p>Gettig messages</p>
+			{:else}
+				{#each messages as message}
 					<div>
-						<div class="border-2 border-solid border-light_text_black_40">
-							{test.test.title}
+						<div class="flex items-center gap-1 mb-1">
+							<img
+								src={message.sender.image}
+								alt="User"
+								class="w-8 rounded-lg aspect-square"
+							/>
+							<div class="flex flex-col">
+								<span class="text-body2">{message.sender.name}</span>
+								<span class="text-body3 text-light_text_black_40">
+									{transformDate(message.createdAt, { time: true })}
+								</span>
+							</div>
+						</div>
+						<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+							{#if message.messageType === 'MESSAGE'}
+								<!-- <img
+							class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
+							src={message.sender.image}
+							alt="User image"
+							/> -->
+								<h5 class="text-body1">
+									{message.title}
+								</h5>
+								{#if message.testId && message.test}
+									<Space gap={10} />
+									<div
+										class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
+									>
+										<div>
+											<div class="overflow-hidden">
+												<img
+													src="/imgs/content_imgs/liska.avif"
+													alt="{message.test.title} cover"
+													class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
+													loading="lazy"
+												/>
+											</div>
+											<span>{message.test.title}</span>
+										</div>
+
+										<button class="ml-auto btn w-fit">View</button>
+									</div>
+								{:else if message.testId}
+									<div>Oops, this test can't be accessed anymore.</div>
+								{/if}
+							{:else if message.messageType === 'TEST'}
+								TEST
+							{/if}
 						</div>
 					</div>
-				</div>
-			</div>
-		{/each} -->
+				{/each}
+			{/if}
+		</div>
 	</div>
 {/if}
-
-<style>
-</style>
