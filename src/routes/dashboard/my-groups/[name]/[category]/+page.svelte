@@ -72,7 +72,7 @@
 		</p>
 	</section>
 	<div class="max-w-[800px] mx-auto">
-		<ChatInput />
+		<ChatInput class="bottom-8 max-w-[800px]" />
 		<div class="flex flex-col gap-2">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>
