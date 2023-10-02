@@ -6,6 +6,7 @@
 	import { transformDate } from '~/lib/utils/date';
 	import Space from '~components/separators/Space.svelte';
 	import ChatInput from '~components/inputs/ChatInput.svelte';
+	import { CHAT_INPUT_MAX, CHAT_INPUT_MIN } from '~schemas/textInput.js';
 
 	export let data;
 
@@ -72,7 +73,13 @@
 		</p>
 	</section>
 	<div class="max-w-[800px] mx-auto">
-		<ChatInput class="bottom-8 max-w-[800px]" />
+		<ChatInput
+			class="bottom-8 max-w-[800px]"
+			limit={{
+				min: CHAT_INPUT_MIN,
+				max: CHAT_INPUT_MAX
+			}}
+		/>
 		<div class="flex flex-col gap-2">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>

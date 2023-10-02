@@ -2,9 +2,16 @@
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
+	import Limit from '~components/informatic/Limit.svelte';
 
 	let classes = '';
 	export { classes as class };
+	export let limit:
+		| {
+				min: number;
+				max: number;
+		  }
+		| undefined = undefined;
 
 	const dispatch = createEventDispatcher();
 
@@ -37,12 +44,22 @@
 		classes
 	)}
 >
-	<div
-		class="absolute w-[60px] h-[30px] bg-white right-0 bottom-[calc(100%+2px)] outline-2 group-focus-within:outline-light_secondary duration-100 outline-transparent rounded-t-md input__out_box"
-	/>
+	{#if limit && textAreaRef}
+		<div
+			class="absolute px-2 py-1 w-16 grid place-content-center bg-white right-0 bottom-[calc(100%+2px)] outline-2 outline group-focus-within:outline-light_secondary outline-transparent duration-100 rounded-t-md input__out_box"
+		>
+			<Limit
+				min={limit.min}
+				max={limit.max}
+				current={textAreaRef.value.length}
+			/>
+		</div>
+	{/if}
 	<textarea
 		bind:this={textAreaRef}
 		rows="1"
+		minlength={limit?.min}
+		maxlength={limit?.max}
 		class="w-full px-2 py-2 duration-150 rounded-l-md resize-none max-h-[380px] outline-none"
 		on:input={onInput}
 		on:keydown={onKeyDown}
@@ -50,11 +67,11 @@
 	<button
 		type="button"
 		on:click={submitContent}
-		class="grid h-[43px] bg-white place-content-center rounded-r-md px-2 group"
+		class="grid h-[43px] bg-white place-content-center rounded-r-md px-2 group/container"
 	>
 		<iconify-icon
 			icon="mingcute:send-plane-fill"
-			class="text-3xl duration-100 text-light_text_black group-hover:text-light_primary"
+			class="text-3xl duration-100 text-light_text_black group-hover/container:text-light_primary"
 		/>
 	</button>
 </div>
