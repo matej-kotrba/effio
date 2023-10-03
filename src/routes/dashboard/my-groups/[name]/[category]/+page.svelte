@@ -30,6 +30,8 @@
 		  >
 		| 'fetching' = 'fetching';
 
+	let chatRef: HTMLTextAreaElement;
+
 	const subcategory = data.group.groupsSubcategories.find((item) => item.slug);
 
 	if (!subcategory) {
@@ -37,16 +39,23 @@
 	}
 
 	function submitNewMessage(messageContent: string) {
+		if (chatRef === undefined) return;
 		const parsedMessage = chatInputSchema.safeParse(messageContent);
 
 		if (parsedMessage.success === false || subcategory === undefined) return;
 
-		trpc($page).groupMessages.postMessage.mutate({
-			type: 'MESSAGE',
-			groupId: data.group.id,
-			message: messageContent,
-			subcategoryId: subcategory.id
-		});
+		try {
+			trpc($page).groupMessages.postMessage.mutate({
+				type: 'MESSAGE',
+				groupId: data.group.id,
+				message: messageContent,
+				subcategoryId: subcategory.id
+			});
+
+			chatRef.value = '';
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	onMount(async () => {
@@ -96,11 +105,12 @@
 				min: CHAT_INPUT_MIN,
 				max: CHAT_INPUT_MAX
 			}}
+			bind:textAreaRef={chatRef}
 			on:chatSubmit={(e) => {
 				submitNewMessage(e.detail);
 			}}
 		/>
-		<div class="flex flex-col gap-2 mb-32">
+		<div class="flex flex-col gap-8 mb-32">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>
 			{:else}
@@ -126,9 +136,16 @@
 							src={message.sender.image}
 							alt="User image"
 							/> -->
-								<h5 class="text-body1">
-									{message.title}
-								</h5>
+								{#if message.title}
+									<h5 class="text-body1">
+										{message.title}
+									</h5>
+								{/if}
+								{#if message.content}
+									<p class="text-body2">
+										{message.content}
+									</p>
+								{/if}
 								{#if message.testId && message.test}
 									<Space gap={10} />
 									<div

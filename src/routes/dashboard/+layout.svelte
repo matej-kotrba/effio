@@ -76,7 +76,7 @@
 			<div class="flex flex-col items-center px-2 xl:px-4">
 				<a class="w-[160px]" on:click={() => (isSidebarShown = false)} href="/">
 					<img
-						src={$applicationStates['darkMode']
+						src={$applicationStates['darkMode']['isDarkMode']
 							? '/imgs/effio/text-dark.png'
 							: '/imgs/effio/text.png'}
 						alt="Effio logo"

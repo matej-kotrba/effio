@@ -15,7 +15,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	let textAreaRef: HTMLTextAreaElement;
+	export let textAreaRef: HTMLTextAreaElement;
 
 	function onInput() {
 		textAreaRef.style.height = 'auto';
@@ -60,7 +60,7 @@
 		rows="1"
 		minlength={limit?.min}
 		maxlength={limit?.max}
-		class="w-full px-2 py-2 duration-150 rounded-l-md resize-none max-h-[380px] outline-none"
+		class="w-full px-2 py-2 duration-150 rounded-l-md resize-none max-h-[380px] outline-none text-body1"
 		on:input={onInput}
 		on:keydown={onKeyDown}
 	/>

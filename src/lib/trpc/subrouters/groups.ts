@@ -252,7 +252,10 @@ export const groupsRouter = router({
             description: true,
           }
         },
-        sender: true
+        sender: true,
+      },
+      orderBy: {
+        createdAt: "asc"
       }
     })
 
