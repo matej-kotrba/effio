@@ -110,6 +110,8 @@
 				submitNewMessage(e.detail);
 			}}
 		/>
+		<!-- Backgroud layer to hide chat -->
+		<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
 		<div class="flex flex-col gap-8 mb-32">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>
@@ -178,3 +180,13 @@
 		</div>
 	</div>
 {/if}
+
+<style>
+	.bg-layer {
+		background-image: linear-gradient(
+			to bottom,
+			transparent,
+			var(--light-white) 30%
+		);
+	}
+</style>
