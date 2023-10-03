@@ -2,20 +2,18 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 import type { MessageTypes } from "@prisma/client"
-import { CHAT_INPUT_MAX, CHAT_INPUT_MIN } from "~schemas/textInput"
+import { chatInputSchema } from "~schemas/textInput"
 
-const messageTypeEnum = ["MESSAGE", "TEST"] satisfies MessageTypes[]
-
-const messageSchema = z.string().min(CHAT_INPUT_MIN).max(CHAT_INPUT_MAX)
+const messageTypeEnum = ["MESSAGE", "TEST"] as const satisfies readonly MessageTypes[]
 
 export const groupMessagesRouter = router({
   postMessage: loggedInProcedure.input(z.object({
     groupId: z.string(),
     subcategoryId: z.string(),
-    type: z.enum(messageTypeEnum as [string, ...string[]]),
+    type: z.enum(messageTypeEnum),
     message: z.string()
   })).mutation(async ({ ctx, input }) => {
-    const parsedMessage = messageSchema.safeParse(input.message)
+    const parsedMessage = chatInputSchema.safeParse(input.message)
     if (!parsedMessage.success) {
       throw new TRPCError({
         code: "BAD_REQUEST",

@@ -6,7 +6,11 @@
 	import { transformDate } from '~/lib/utils/date';
 	import Space from '~components/separators/Space.svelte';
 	import ChatInput from '~components/inputs/ChatInput.svelte';
-	import { CHAT_INPUT_MAX, CHAT_INPUT_MIN } from '~schemas/textInput.js';
+	import {
+		CHAT_INPUT_MAX,
+		CHAT_INPUT_MIN,
+		chatInputSchema
+	} from '~schemas/textInput.js';
 
 	export let data;
 
@@ -30,6 +34,19 @@
 
 	if (!subcategory) {
 		goto('/dashboard/my-groups/' + data.group.slug);
+	}
+
+	function submitNewMessage(messageContent: string) {
+		const parsedMessage = chatInputSchema.safeParse(messageContent);
+
+		if (parsedMessage.success === false || subcategory === undefined) return;
+
+		trpc($page).groupMessages.postMessage.mutate({
+			type: 'MESSAGE',
+			groupId: data.group.id,
+			message: messageContent,
+			subcategoryId: subcategory.id
+		});
 	}
 
 	onMount(async () => {
@@ -79,8 +96,11 @@
 				min: CHAT_INPUT_MIN,
 				max: CHAT_INPUT_MAX
 			}}
+			on:chatSubmit={(e) => {
+				submitNewMessage(e.detail);
+			}}
 		/>
-		<div class="flex flex-col gap-2">
+		<div class="flex flex-col gap-2 mb-32">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>
 			{:else}
