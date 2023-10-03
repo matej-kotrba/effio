@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { protectedRouter } from "./subrouters/protected";
 import { recordsRouter } from "./subrouters/records";
+import { groupMessagesRouter } from "./subrouters/groupMessages"
 import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 
@@ -259,7 +260,8 @@ export const appRouter = router({
   }),
   protected: protectedRouter,
   records: recordsRouter,
-  groups: groupsRouter
+  groups: groupsRouter,
+  groupMessages: groupMessagesRouter
 })
 
 export type Router = typeof appRouter
