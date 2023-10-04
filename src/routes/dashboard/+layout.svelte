@@ -3,13 +3,12 @@
 	import Icon from '@iconify/svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
-	import type { PageData } from './$types';
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { LG } from '~/utils/responsive';
 
-	export let data: PageData;
+	export let data;
 
 	$: isSidebarShown = false;
 	$: isSidebarCollapsible = false;
@@ -266,7 +265,8 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="relative h-full px-4 pt-6 md:px-8 xl:px-16 content">
+		<!-- px-4 pt-6 md:px-8 xl:px-16 -->
+		<div class="relative h-full content">
 			<slot />
 		</div>
 	</div>
