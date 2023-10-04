@@ -8,7 +8,7 @@
 <div class="grid__container">
 	<div class="">
 		<ul
-			class="w-[200px] min-h-full border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 absolute left-0 top-0 py-8 sidebar"
+			class="w-[200px] min-h-full border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 left-0 top-0 py-8 sidebar"
 		>
 			<li class="font-semibold text-body1">
 				{data.group.name}
