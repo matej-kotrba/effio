@@ -32,6 +32,8 @@
 
 	let chatRef: HTMLTextAreaElement;
 
+	let chatContainerRef: HTMLDivElement;
+
 	const subcategory = data.group.groupsSubcategories.find((item) => item.slug);
 
 	if (!subcategory) {
@@ -56,6 +58,14 @@
 		} catch (e) {
 			console.log(e);
 		}
+	}
+
+	function scrollToBottom() {
+		if (chatContainerRef === undefined) return;
+		chatContainerRef.scrollTop = 200;
+		// chatContainerRef.scrollTo({
+		// 	top: chatContainerRef.scrollHeight
+		// });
 	}
 
 	onMount(async () => {
@@ -99,6 +109,20 @@
 		</p>
 	</section>
 	<div class="max-w-[800px] mx-auto">
+		<div
+			class="fixed w-full max-w-[800px] z-10 bottom-32 flex justify-end pointer-events-none"
+		>
+			<button
+				type="button"
+				class="right-0 grid w-10 rounded-full pointer-events-auto bottom-32 bg-slate-400 aspect-square place-content-center"
+				on:click={scrollToBottom}
+			>
+				<iconify-icon
+					icon="uil:arrow-down"
+					class="text-3xl duration-100 hover:translate-y-1"
+				/>
+			</button>
+		</div>
 		<ChatInput
 			class="bottom-8 max-w-[800px]"
 			limit={{
@@ -111,8 +135,8 @@
 			}}
 		/>
 		<!-- Backgroud layer to hide chat -->
-		<!-- <div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" /> -->
-		<div class="flex flex-col gap-8 mb-32">
+		<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
+		<div class="flex flex-col gap-8 mb-32" bind:this={chatContainerRef}>
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>
 			{:else}

@@ -20,7 +20,7 @@
 	import {
 		checkJSONQuestionData,
 		checkMarkSystem
-	} from '~/routes/dashboard/test-history/records/[id]/+page.svelte';
+	} from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
 	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 
 	export let data;

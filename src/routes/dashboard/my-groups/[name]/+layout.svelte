@@ -11,14 +11,18 @@
 			class="max-h-full min-h-full py-8 border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 sidebar"
 		>
 			<li class="font-semibold text-body1">
-				<div class="flex gap-1">
-					<button type="button"
-						><iconify-icon icon="ion:home" class="text-2xl" /></button
-					>
-					<span>
-						{data.group.name}
-					</span>
-				</div>
+				<a
+					href="/dashboard/my-groups/{data.group.slug}"
+					class:active={$page.url.pathname.split('/').at(-1) ===
+						data.group.slug}
+				>
+					<div class="flex items-center gap-1">
+						<iconify-icon icon="ion:home" class="text-2xl" />
+						<span>
+							{data.group.name}
+						</span>
+					</div></a
+				>
 			</li>
 			{#each data.group['groupsSubcategories'] as category}
 				<li>
