@@ -37,7 +37,7 @@
 			{/each}
 		</ul>
 	</div>
-	<div class="relative max-h-[calc(100vh-70px)] overflow-scroll">
+	<div>
 		<slot />
 	</div>
 </div>

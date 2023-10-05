@@ -62,10 +62,7 @@
 
 	function scrollToBottom() {
 		if (chatContainerRef === undefined) return;
-		chatContainerRef.scrollTop = 200;
-		// chatContainerRef.scrollTo({
-		// 	top: chatContainerRef.scrollHeight
-		// });
+		chatContainerRef.scrollTop = chatContainerRef.scrollHeight;
 	}
 
 	onMount(async () => {
@@ -89,118 +86,125 @@
 				id: categoryId
 			});
 		}
+
+		setTimeout(scrollToBottom, 0);
 	});
 </script>
 
 {#if subcategory}
-	<section class="flex flex-col items-center justify-center mb-4">
-		<img
-			aria-hidden="true"
-			src="/imgs/svgs/welcome.svg"
-			class=""
-			width="200"
-			alt="decorative"
-		/>
-		<p class="text-light_text_black_80 dark:text-dark_text_white_80">
-			This is the start of the <span
-				class="font-semibold text-light_text_black dark:text-dark_text_white"
-				>{data.group.name}</span
-			> channel.
-		</p>
-	</section>
-	<div class="max-w-[800px] mx-auto">
-		<div
-			class="fixed w-full max-w-[800px] z-10 bottom-32 flex justify-end pointer-events-none"
-		>
-			<button
-				type="button"
-				class="right-0 grid w-10 rounded-full pointer-events-auto bottom-32 bg-slate-400 aspect-square place-content-center"
-				on:click={scrollToBottom}
+	<div
+		class="relative max-h-[calc(100vh-70px)] overflow-scroll"
+		bind:this={chatContainerRef}
+	>
+		<section class="flex flex-col items-center justify-center mb-4">
+			<img
+				aria-hidden="true"
+				src="/imgs/svgs/welcome.svg"
+				class=""
+				width="200"
+				alt="decorative"
+			/>
+			<p class="text-light_text_black_80 dark:text-dark_text_white_80">
+				This is the start of the <span
+					class="font-semibold text-light_text_black dark:text-dark_text_white"
+					>{data.group.name}</span
+				> channel.
+			</p>
+		</section>
+		<div class="max-w-[800px] mx-auto">
+			<div
+				class="fixed w-full max-w-[800px] z-10 bottom-32 flex justify-end pointer-events-none"
 			>
-				<iconify-icon
-					icon="uil:arrow-down"
-					class="text-3xl duration-100 hover:translate-y-1"
-				/>
-			</button>
-		</div>
-		<ChatInput
-			class="bottom-8 max-w-[800px]"
-			limit={{
-				min: CHAT_INPUT_MIN,
-				max: CHAT_INPUT_MAX
-			}}
-			bind:textAreaRef={chatRef}
-			on:chatSubmit={(e) => {
-				submitNewMessage(e.detail);
-			}}
-		/>
-		<!-- Backgroud layer to hide chat -->
-		<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
-		<div class="flex flex-col gap-8 mb-32" bind:this={chatContainerRef}>
-			{#if messages === 'fetching'}
-				<p>Gettig messages</p>
-			{:else}
-				{#each messages as message}
-					<div>
-						<div class="flex items-center gap-1 mb-1">
-							<img
-								src={message.sender.image}
-								alt="User"
-								class="w-8 rounded-lg aspect-square"
-							/>
-							<div class="flex flex-col">
-								<span class="text-body2">{message.sender.name}</span>
-								<span class="text-body3 text-light_text_black_40">
-									{transformDate(message.createdAt, { time: true })}
-								</span>
+				<button
+					type="button"
+					class="right-0 grid w-10 rounded-full pointer-events-auto bottom-32 bg-slate-400 aspect-square place-content-center"
+					on:click={scrollToBottom}
+				>
+					<iconify-icon
+						icon="uil:arrow-down"
+						class="text-3xl duration-100 hover:translate-y-1"
+					/>
+				</button>
+			</div>
+			<ChatInput
+				class="bottom-8 max-w-[800px]"
+				limit={{
+					min: CHAT_INPUT_MIN,
+					max: CHAT_INPUT_MAX
+				}}
+				bind:textAreaRef={chatRef}
+				on:chatSubmit={(e) => {
+					submitNewMessage(e.detail);
+				}}
+			/>
+			<!-- Backgroud layer to hide chat -->
+			<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
+			<div class="flex flex-col gap-8 mb-32">
+				{#if messages === 'fetching'}
+					<p>Gettig messages</p>
+				{:else}
+					{#each messages as message}
+						<div>
+							<div class="flex items-center gap-1 mb-1">
+								<img
+									src={message.sender.image}
+									alt="User"
+									class="w-8 rounded-lg aspect-square"
+								/>
+								<div class="flex flex-col">
+									<span class="text-body2">{message.sender.name}</span>
+									<span class="text-body3 text-light_text_black_40">
+										{transformDate(message.createdAt, { time: true })}
+									</span>
+								</div>
 							</div>
-						</div>
-						<div class="relative p-4 rounded-sm shadow bg-light_whiter">
-							{#if message.messageType === 'MESSAGE'}
-								<!-- <img
+							<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+								{#if message.messageType === 'MESSAGE'}
+									<!-- <img
 							class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
 							src={message.sender.image}
 							alt="User image"
 							/> -->
-								{#if message.title}
-									<h5 class="text-body1">
-										{message.title}
-									</h5>
-								{/if}
-								{#if message.content}
-									<p class="text-body2">
-										{message.content}
-									</p>
-								{/if}
-								{#if message.testId && message.test}
-									<Space gap={10} />
-									<div
-										class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
-									>
-										<div>
-											<div class="overflow-hidden">
-												<img
-													src="/imgs/content_imgs/liska.avif"
-													alt="{message.test.title} cover"
-													class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
-													loading="lazy"
-												/>
+									{#if message.title}
+										<h5 class="text-body1">
+											{message.title}
+										</h5>
+									{/if}
+									{#if message.content}
+										<p class="text-body2">
+											{message.content}
+										</p>
+									{/if}
+									{#if message.testId && message.test}
+										<Space gap={10} />
+										<div
+											class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
+										>
+											<div>
+												<div class="overflow-hidden">
+													<img
+														src="/imgs/content_imgs/liska.avif"
+														alt="{message.test.title} cover"
+														class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
+														loading="lazy"
+													/>
+												</div>
+												<span>{message.test.title}</span>
 											</div>
-											<span>{message.test.title}</span>
-										</div>
 
-										<button class="ml-auto btn w-fit">View</button>
-									</div>
-								{:else if message.testId}
-									<div>Oops, this test can't be accessed anymore.</div>
+											<button class="ml-auto btn w-fit">View</button>
+										</div>
+									{:else if message.testId}
+										<div>Oops, this test can't be accessed anymore.</div>
+									{/if}
+								{:else if message.messageType === 'TEST'}
+									TEST
 								{/if}
-							{:else if message.messageType === 'TEST'}
-								TEST
-							{/if}
+							</div>
 						</div>
-					</div>
-				{/each}
-			{/if}
+					{/each}
+				{/if}
+			</div>
 		</div>
 	</div>
 {/if}
