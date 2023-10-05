@@ -41,7 +41,7 @@
 <style>
 	.grid__container {
 		display: grid;
-		grid-template-columns: 180px 1fr;
+		grid-template-columns: 200px 1fr;
 	}
 	.active {
 		@apply bg-light_secondary text-white;
