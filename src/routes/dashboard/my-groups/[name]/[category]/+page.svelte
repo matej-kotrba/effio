@@ -111,7 +111,7 @@
 			}}
 		/>
 		<!-- Backgroud layer to hide chat -->
-		<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
+		<!-- <div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" /> -->
 		<div class="flex flex-col gap-8 mb-32">
 			{#if messages === 'fetching'}
 				<p>Gettig messages</p>

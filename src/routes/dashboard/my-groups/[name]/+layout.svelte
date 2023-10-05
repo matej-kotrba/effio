@@ -5,24 +5,35 @@
 </script>
 
 <!-- <h3 class="font-semibold text-h3">{data.group.name}</h3> -->
-<div class="grid__container">
-	<div class="">
+<div class="relative h-full grid__container">
+	<div class="relative w-full">
 		<ul
-			class="w-[200px] min-h-full border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 py-8 sidebar"
+			class="max-h-full min-h-full py-8 border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 sidebar"
 		>
 			<li class="font-semibold text-body1">
-				{data.group.name}
+				<div class="flex gap-1">
+					<button type="button"
+						><iconify-icon icon="ion:home" class="text-2xl" /></button
+					>
+					<span>
+						{data.group.name}
+					</span>
+				</div>
 			</li>
 			{#each data.group['groupsSubcategories'] as category}
 				<li>
-					<a href="/dashboard/my-groups/{data.group.slug}/{category.slug}">
+					<a
+						href="/dashboard/my-groups/{data.group.slug}/{category.slug}"
+						class:active={$page.url.pathname.split('/').at(-1) ===
+							category.slug}
+					>
 						{category.name}
 					</a>
 				</li>
 			{/each}
 		</ul>
 	</div>
-	<div class="relative max-h-[calc(100vh-70px)] overflow-x-scroll">
+	<div class="relative max-h-[calc(100vh-70px)] overflow-scroll">
 		<slot />
 	</div>
 </div>
@@ -31,5 +42,8 @@
 	.grid__container {
 		display: grid;
 		grid-template-columns: 180px 1fr;
+	}
+	.active {
+		@apply bg-light_secondary text-white;
 	}
 </style>

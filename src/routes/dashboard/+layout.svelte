@@ -152,7 +152,7 @@
 		</aside>
 	</div>
 
-	<div class="nav__grid__container">
+	<div class="nav__flex__container">
 		<nav
 			class="flex items-center gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
 		>
@@ -266,7 +266,7 @@
 			</div>
 		</nav>
 		<!-- px-4 pt-6 md:px-8 xl:px-16 -->
-		<div class="relative h-full content">
+		<div class="relative flex-1 content">
 			<slot />
 		</div>
 	</div>
@@ -293,8 +293,8 @@
 		color: var(--light-white) !important;
 	}
 
-	.nav__grid__container {
-		display: grid;
-		grid-template-rows: auto 1fr;
+	.nav__flex__container {
+		display: flex;
+		flex-direction: column;
 	}
 </style>
