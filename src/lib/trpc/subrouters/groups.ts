@@ -240,6 +240,8 @@ export const groupsRouter = router({
   }),
   getSubcategoryMessagesByGroupSubcategoryId: loggedInProcedure.input(z.object({
     id: z.string(),
+    take: z.number().optional(),
+    cursor: z.string().optional(),
   })).query(async ({ ctx, input }) => {
     const messages = await ctx.prisma.groupSubcategoryMessage.findMany({
       where: {
@@ -256,7 +258,12 @@ export const groupsRouter = router({
       },
       orderBy: {
         createdAt: "asc"
-      }
+      },
+      take: input.take,
+      skip: input.cursor ? 1 : 0,
+      cursor: input.cursor ? {
+        id: input.cursor
+      } : undefined
     })
 
     return messages

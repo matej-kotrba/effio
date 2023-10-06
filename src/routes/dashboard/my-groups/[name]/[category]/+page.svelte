@@ -40,6 +40,22 @@
 		goto('/dashboard/my-groups/' + data.group.slug);
 	}
 
+	let isScrollDownButtonVisible = false;
+	const DISTANCE_TO_APPEAR = 400;
+
+	function setScrollButtonVisible(
+		e: UIEvent & {
+			currentTarget: EventTarget & HTMLDivElement;
+		}
+	) {
+		const distance =
+			e.currentTarget.scrollHeight -
+			e.currentTarget.scrollTop -
+			e.currentTarget.clientHeight;
+
+		isScrollDownButtonVisible = distance >= DISTANCE_TO_APPEAR;
+	}
+
 	function submitNewMessage(messageContent: string) {
 		if (chatRef === undefined) return;
 		const parsedMessage = chatInputSchema.safeParse(messageContent);
@@ -60,9 +76,12 @@
 		}
 	}
 
-	function scrollToBottom() {
+	function scrollToBottom(smooth?: boolean) {
 		if (chatContainerRef === undefined) return;
-		chatContainerRef.scrollTop = chatContainerRef.scrollHeight;
+		chatContainerRef.scrollTo({
+			top: chatContainerRef.scrollHeight,
+			behavior: smooth ? 'smooth' : 'auto'
+		});
 	}
 
 	onMount(async () => {
@@ -95,6 +114,7 @@
 	<div
 		class="relative max-h-[calc(100vh-70px)] overflow-scroll"
 		bind:this={chatContainerRef}
+		on:scroll={(e) => setScrollButtonVisible(e)}
 	>
 		<section class="flex flex-col items-center justify-center mb-4">
 			<img
@@ -113,17 +133,16 @@
 		</section>
 		<div class="max-w-[800px] mx-auto">
 			<div
-				class="fixed w-full max-w-[800px] z-10 bottom-32 flex justify-end pointer-events-none"
+				class="fixed w-full max-w-[800px] z-10 bottom-36 flex justify-end pointer-events-none"
 			>
 				<button
 					type="button"
-					class="right-0 grid w-10 rounded-full pointer-events-auto bottom-32 bg-slate-400 aspect-square place-content-center"
-					on:click={scrollToBottom}
+					class="right-0 grid w-10 text-white duration-100 rounded-full shadow-md pointer-events-auto bottom-32 bg-light_terciary aspect-square place-content-center hover:scale-105 {isScrollDownButtonVisible
+						? 'opacity-100'
+						: ' opacity-0 pointer-events-none'}"
+					on:click={() => scrollToBottom(true)}
 				>
-					<iconify-icon
-						icon="uil:arrow-down"
-						class="text-3xl duration-100 hover:translate-y-1"
-					/>
+					<iconify-icon icon="uil:arrow-down" class="text-3xl duration-100" />
 				</button>
 			</div>
 			<ChatInput
