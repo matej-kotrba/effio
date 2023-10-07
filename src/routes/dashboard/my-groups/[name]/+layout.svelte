@@ -4,7 +4,6 @@
 	export let data;
 </script>
 
-<!-- <h3 class="font-semibold text-h3">{data.group.name}</h3> -->
 <div class="relative h-full grid__container">
 	<div class="relative w-full">
 		<ul
