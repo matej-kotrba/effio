@@ -169,8 +169,6 @@
 			let chart = new Chart(ctx, config);
 			let chartRecords = new Chart(ctxRecords, configRecords);
 		}
-
-		// getTemplates();
 	});
 </script>
 
@@ -185,8 +183,3 @@
 		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
 	</div>
 </div>
-<!-- <div class="text-primary">
-	{#each templates as template}
-		<p>{template.name}</p>
-	{/each}
-</div> -->
