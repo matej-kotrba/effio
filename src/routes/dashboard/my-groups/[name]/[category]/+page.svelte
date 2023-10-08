@@ -14,6 +14,22 @@
 
 	export let data;
 
+	let observer: IntersectionObserver;
+
+	function addIntersection(element: HTMLElement) {
+		observer.observe(element);
+
+		return {
+			destroy() {
+				observer.unobserve(element);
+			}
+		};
+	}
+
+	const categoryId = data.group.groupsSubcategories.find(
+		(item) => item.slug === $page.url.pathname.split('/').at(-1)
+	)?.id;
+
 	let tests: Awaited<
 		ReturnType<
 			ReturnType<typeof trpc>['groups']['getSubcategoryTestsById']['query']
@@ -84,10 +100,44 @@
 		});
 	}
 
+	async function getMessages() {
+		if (categoryId === undefined) return;
+		console.log('a');
+
+		const lastMessage =
+			messages === 'fetching'
+				? undefined
+				: messages[messages.length - 1]?.id || undefined;
+
+		const newMessages = await trpc(
+			$page
+		).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
+			id: categoryId,
+			cursor: lastMessage,
+			take: 1
+		});
+
+		messages =
+			messages === 'fetching' ? newMessages : [...newMessages, ...messages];
+		console.log(messages);
+	}
+
 	onMount(async () => {
-		const categoryId = data.group.groupsSubcategories.find(
-			(item) => item.slug === $page.url.pathname.split('/').at(-1)
-		)?.id;
+		observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach(async (entry) => {
+					if (entry.isIntersecting) {
+						getMessages();
+
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{
+				threshold: 0.5
+			}
+		);
+
 		if (categoryId === undefined) {
 			goto('/dashboard/my-groups/' + data.group.slug);
 		} else {
@@ -99,11 +149,13 @@
 
 			tests = fetchedTests;
 
-			messages = await trpc(
-				$page
-			).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
-				id: categoryId
-			});
+			await getMessages();
+
+			// messages = await trpc(
+			// 	$page
+			// ).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
+			// 	id: categoryId
+			// });
 		}
 
 		setTimeout(scrollToBottom, 0);
@@ -162,7 +214,10 @@
 				{#if messages === 'fetching'}
 					<p>Gettig messages</p>
 				{:else}
-					{#each messages as message}
+					{#each messages as message, index}
+						{#if index === 0}
+							<div use:addIntersection />
+						{/if}
 						<div>
 							<div class="flex items-center gap-1 mb-1">
 								<img

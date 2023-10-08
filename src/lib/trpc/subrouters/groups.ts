@@ -265,7 +265,6 @@ export const groupsRouter = router({
         id: input.cursor
       } : undefined
     })
-
     return messages
   })
 })
