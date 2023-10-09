@@ -113,8 +113,6 @@
 		if (categoryId === undefined) return;
 		isFetchingNew = true;
 
-		console.log(messages);
-
 		const lastMessage =
 			messages === 'fetching' ? undefined : messages[0]?.id || undefined;
 
@@ -127,8 +125,11 @@
 		});
 
 		messages =
-			messages === 'fetching' ? newMessages : [...newMessages, ...messages];
+			messages === 'fetching'
+				? newMessages.reverse()
+				: [...newMessages.reverse(), ...messages];
 		isFetchingNew = false;
+		console.log(messages, newMessages);
 	}
 
 	onMount(async () => {
