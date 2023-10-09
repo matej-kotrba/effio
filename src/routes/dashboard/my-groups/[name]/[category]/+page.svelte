@@ -26,6 +26,14 @@
 		};
 	}
 
+	let fetchNewMessagesDiv: HTMLDivElement;
+
+	let isFetchingNew = false;
+
+	$: if (fetchNewMessagesDiv) {
+		addIntersection(fetchNewMessagesDiv);
+	}
+
 	const categoryId = data.group.groupsSubcategories.find(
 		(item) => item.slug === $page.url.pathname.split('/').at(-1)
 	)?.id;
@@ -101,25 +109,26 @@
 	}
 
 	async function getMessages() {
+		if (isFetchingNew) return;
 		if (categoryId === undefined) return;
-		console.log('a');
+		isFetchingNew = true;
+
+		console.log(messages);
 
 		const lastMessage =
-			messages === 'fetching'
-				? undefined
-				: messages[messages.length - 1]?.id || undefined;
+			messages === 'fetching' ? undefined : messages[0]?.id || undefined;
 
 		const newMessages = await trpc(
 			$page
 		).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
 			id: categoryId,
 			cursor: lastMessage,
-			take: 1
+			take: 4
 		});
 
 		messages =
 			messages === 'fetching' ? newMessages : [...newMessages, ...messages];
-		console.log(messages);
+		isFetchingNew = false;
 	}
 
 	onMount(async () => {
@@ -129,12 +138,12 @@
 					if (entry.isIntersecting) {
 						getMessages();
 
-						observer.unobserve(entry.target);
+						// observer.unobserve(entry.target);
 					}
 				});
 			},
 			{
-				threshold: 0.5
+				threshold: 1
 			}
 		);
 
@@ -150,15 +159,12 @@
 			tests = fetchedTests;
 
 			await getMessages();
-
-			// messages = await trpc(
-			// 	$page
-			// ).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
-			// 	id: categoryId
-			// });
 		}
 
-		setTimeout(scrollToBottom, 0);
+		setTimeout(() => {
+			scrollToBottom();
+			isFetchingNew = false;
+		}, 0);
 	});
 </script>
 
@@ -210,73 +216,73 @@
 			/>
 			<!-- Backgroud layer to hide chat -->
 			<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
-			<div class="flex flex-col gap-8 mb-32">
+			<div class="mb-32">
 				{#if messages === 'fetching'}
 					<p>Gettig messages</p>
 				{:else}
-					{#each messages as message, index}
-						{#if index === 0}
-							<div use:addIntersection />
-						{/if}
-						<div>
-							<div class="flex items-center gap-1 mb-1">
-								<img
-									src={message.sender.image}
-									alt="User"
-									class="w-8 rounded-lg aspect-square"
-								/>
-								<div class="flex flex-col">
-									<span class="text-body2">{message.sender.name}</span>
-									<span class="text-body3 text-light_text_black_40">
-										{transformDate(message.createdAt, { time: true })}
-									</span>
+					<div class="flex flex-col gap-8">
+						<div bind:this={fetchNewMessagesDiv} class="h-1" />
+						{#each messages as message}
+							<div>
+								<div class="flex items-center gap-1 mb-1">
+									<img
+										src={message.sender.image}
+										alt="User"
+										class="w-8 rounded-lg aspect-square"
+									/>
+									<div class="flex flex-col">
+										<span class="text-body2">{message.sender.name}</span>
+										<span class="text-body3 text-light_text_black_40">
+											{transformDate(message.createdAt, { time: true })}
+										</span>
+									</div>
 								</div>
-							</div>
-							<div class="relative p-4 rounded-sm shadow bg-light_whiter">
-								{#if message.messageType === 'MESSAGE'}
-									<!-- <img
+								<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+									{#if message.messageType === 'MESSAGE'}
+										<!-- <img
 							class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
 							src={message.sender.image}
 							alt="User image"
 							/> -->
-									{#if message.title}
-										<h5 class="text-body1">
-											{message.title}
-										</h5>
-									{/if}
-									{#if message.content}
-										<p class="text-body2">
-											{message.content}
-										</p>
-									{/if}
-									{#if message.testId && message.test}
-										<Space gap={10} />
-										<div
-											class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
-										>
-											<div>
-												<div class="overflow-hidden">
-													<img
-														src="/imgs/content_imgs/liska.avif"
-														alt="{message.test.title} cover"
-														class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
-														loading="lazy"
-													/>
+										{#if message.title}
+											<h5 class="text-body1">
+												{message.title}
+											</h5>
+										{/if}
+										{#if message.content}
+											<p class="text-body2">
+												{message.content}
+											</p>
+										{/if}
+										{#if message.testId && message.test}
+											<Space gap={10} />
+											<div
+												class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
+											>
+												<div>
+													<div class="overflow-hidden">
+														<img
+															src="/imgs/content_imgs/liska.avif"
+															alt="{message.test.title} cover"
+															class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
+															loading="lazy"
+														/>
+													</div>
+													<span>{message.test.title}</span>
 												</div>
-												<span>{message.test.title}</span>
-											</div>
 
-											<button class="ml-auto btn w-fit">View</button>
-										</div>
-									{:else if message.testId}
-										<div>Oops, this test can't be accessed anymore.</div>
+												<button class="ml-auto btn w-fit">View</button>
+											</div>
+										{:else if message.testId}
+											<div>Oops, this test can't be accessed anymore.</div>
+										{/if}
+									{:else if message.messageType === 'TEST'}
+										TEST
 									{/if}
-								{:else if message.messageType === 'TEST'}
-									TEST
-								{/if}
+								</div>
 							</div>
-						</div>
-					{/each}
+						{/each}
+					</div>
 				{/if}
 			</div>
 		</div>
