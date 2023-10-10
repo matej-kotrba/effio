@@ -100,6 +100,10 @@
 		}
 	}
 
+	function onScroll(e: UIEvent & { currentTarget: HTMLDivElement }) {
+		setScrollButtonVisible(e);
+	}
+
 	function scrollToBottom(smooth?: boolean) {
 		if (chatContainerRef === undefined) return;
 		chatContainerRef.scrollTo({
@@ -116,6 +120,8 @@
 		const lastMessage =
 			messages === 'fetching' ? undefined : messages[0]?.id || undefined;
 
+		console.log('A', chatContainerRef.scrollHeight);
+
 		const newMessages = await trpc(
 			$page
 		).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
@@ -124,12 +130,20 @@
 			take: 4
 		});
 
+		const previousTop = chatContainerRef.scrollTop;
+		// console.log(distanceFromButton);
+		const previousHeight = chatContainerRef.scrollHeight;
+
 		messages =
 			messages === 'fetching'
 				? newMessages.reverse()
 				: [...newMessages.reverse(), ...messages];
 		isFetchingNew = false;
-		console.log(messages, newMessages);
+		// console.log(messages, newMessages);
+		setTimeout(() => {
+			chatContainerRef.scrollTop =
+				chatContainerRef.scrollHeight - previousHeight + previousTop;
+		}, 0);
 	}
 
 	onMount(async () => {
@@ -171,9 +185,9 @@
 
 {#if subcategory}
 	<div
-		class="relative max-h-[calc(100vh-70px)] overflow-scroll"
+		class="relative max-h-[calc(100vh-70px)] overflow-scroll px-1"
 		bind:this={chatContainerRef}
-		on:scroll={(e) => setScrollButtonVisible(e)}
+		on:scroll={(e) => onScroll(e)}
 	>
 		<section class="flex flex-col items-center justify-center mb-4">
 			<img
