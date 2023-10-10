@@ -21,12 +21,21 @@
 		>
 			<button
 				type="button"
-				class="absolute grid content-center -translate-y-1/2 rounded-full pointer-events-auto bg-light_terciary top-1/2 duration-150 {isOpen
-					? 'right-[calc(100%-0.5rem)] translate-x-full rotate-180'
-					: 'right-[calc(100%+0.5rem)]'}"
+				class="absolute grid content-center -translate-y-1/2 pointer-events-auto bg-light_terciary top-1/2 duration-150 {isOpen
+					? 'right-[calc(100%)] translate-x-full'
+					: 'right-[calc(100%)]'}
+          before:content-[''] before:absolute before:bottom-full before:left-0 before:w-full before:h-full before:bg-light_terciary {isOpen
+					? 'before:rounded-tr-4xl'
+					: 'before:rounded-tl-4xl'}
+          after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:bg-light_terciary {isOpen
+					? 'after:rounded-br-4xl'
+					: 'after:rounded-bl-4xl'}"
 				on:click={open}
 			>
-				<iconify-icon icon="iconamoon:arrow-left-2-bold" class="text-5xl" />
+				<iconify-icon
+					icon="iconamoon:arrow-left-2-bold"
+					class="text-4xl {isOpen ? 'rotate-180' : ''} duration-150"
+				/>
 			</button>
 			<button
 				type="button"
