@@ -11,6 +11,7 @@
 		CHAT_INPUT_MIN,
 		chatInputSchema
 	} from '~schemas/textInput.js';
+	import Drawer from '~components/collapsibles/Drawer.svelte';
 
 	export let data;
 
@@ -120,8 +121,6 @@
 		const lastMessage =
 			messages === 'fetching' ? undefined : messages[0]?.id || undefined;
 
-		console.log('A', chatContainerRef.scrollHeight);
-
 		const newMessages = await trpc(
 			$page
 		).groups.getSubcategoryMessagesByGroupSubcategoryId.query({
@@ -131,7 +130,6 @@
 		});
 
 		const previousTop = chatContainerRef.scrollTop;
-		// console.log(distanceFromButton);
 		const previousHeight = chatContainerRef.scrollHeight;
 
 		messages =
@@ -139,12 +137,13 @@
 				? newMessages.reverse()
 				: [...newMessages.reverse(), ...messages];
 		isFetchingNew = false;
-		// console.log(messages, newMessages);
 		setTimeout(() => {
 			chatContainerRef.scrollTop =
 				chatContainerRef.scrollHeight - previousHeight + previousTop;
 		}, 0);
 	}
+
+	let openDrawer = () => {};
 
 	onMount(async () => {
 		observer = new IntersectionObserver(
@@ -184,6 +183,7 @@
 </script>
 
 {#if subcategory}
+	<Drawer side="right" bind:open={openDrawer} />
 	<div
 		class="relative max-h-[calc(100vh-70px)] overflow-scroll px-1"
 		bind:this={chatContainerRef}
