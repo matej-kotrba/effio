@@ -185,7 +185,7 @@
 {#if subcategory}
 	<Drawer side="right" bind:open={openDrawer}>
 		<div class="flex flex-col gap-2">
-			{#each tests as test}
+			{#each [...tests, ...tests, ...tests, ...tests] as test}
 				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
 					<button
 						type="button"

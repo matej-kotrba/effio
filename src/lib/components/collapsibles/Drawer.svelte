@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Space from '~components/separators/Space.svelte';
+
 	export let side: 'left' | 'right' = 'left';
 
 	const styles = {
@@ -19,9 +21,10 @@
 <aside class="fixed {styles.side} top-0 h-full w-80 z-[20] pointer-events-none">
 	<div class="relative w-full h-full">
 		<div
-			class="bg-light_whiter shadow-md w-full h-full absolute top-0 p-4 duration-150 {isOpen
+			class="bg-light_whiter shadow-md w-full h-full absolute top-0 p-3 duration-150 {isOpen
 				? 'right-0'
-				: '-right-full'} pointer-events-auto"
+				: '-right-full'} pointer-events-auto
+				flex flex-col"
 		>
 			<button
 				type="button"
@@ -39,16 +42,45 @@
 			</button>
 			<button
 				type="button"
-				class="grid text-light_text_black place-content-center"
+				class="grid mr-auto text-light_text_black place-content-center group"
 				on:click={() => {
 					isOpen = false;
 				}}
 			>
-				<iconify-icon icon="ic:round-close" class="text-3xl" />
+				<iconify-icon
+					icon="ic:round-close"
+					class="text-3xl group-hover:text-error"
+				/>
 			</button>
-			<div>
+			<Space gap={5} />
+			<div class="relative max-h-full pr-4 overflow-y-scroll">
 				<slot />
 			</div>
 		</div>
 	</div>
 </aside>
+
+<!-- <style>
+	.shader {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: linear-gradient(
+			to right,
+			rgba(255, 255, 255, 0),
+			rgba(255, 255, 255, 1) 100%
+		);
+	}
+
+	.shader_flipped {
+		background-image: linear-gradient(
+			to left,
+			rgba(255, 255, 255, 0),
+			rgba(255, 255, 255, 1) 100%
+		);
+		bottom: 0;
+		top: none;
+	}
+</style> -->
