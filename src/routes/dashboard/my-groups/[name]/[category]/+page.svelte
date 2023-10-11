@@ -187,7 +187,8 @@
 		<div class="flex flex-col gap-2">
 			{#each tests as test}
 				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
-					<div
+					<button
+						type="button"
 						class="relative w-full overflow-hidden aspect-video text-body2 group
 						before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
 						hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
@@ -198,15 +199,24 @@
 							class="object-cover w-full h-full duration-200 group-hover:blur-md"
 						/>
 						<div
-							class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100"
+							class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full
+							group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100
+							grid place-content-center text-center"
 						>
-							{test.test.description}
+							<p class="line-clamp-3">
+								{test.test.description}
+							</p>
 						</div>
-					</div>
+					</button>
 					<div
-						class="h-[1.5em] bg-blue-400 left-0 bottom-0 text-center text-body2"
+						class="bottom-0 left-0 px-2 py-1 text-center bg-light_secondary text-body2"
 					>
-						<span>{test.test.title}</span>
+						<span
+							class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
+							><abbr title={test.test.title} class="no-underline"
+								>{test.test.title}</abbr
+							></span
+						>
 					</div>
 				</div>
 			{/each}

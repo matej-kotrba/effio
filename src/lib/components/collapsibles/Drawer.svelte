@@ -17,7 +17,7 @@
 </script>
 
 <aside class="fixed {styles.side} top-0 h-full w-80 z-[20] pointer-events-none">
-	<div class="relative w-full h-full overflow-hidden">
+	<div class="relative w-full h-full">
 		<div
 			class="bg-light_whiter shadow-md w-full h-full absolute top-0 p-4 duration-150 {isOpen
 				? 'right-0'
@@ -26,14 +26,10 @@
 			<button
 				type="button"
 				class="absolute grid content-center -translate-y-1/2 pointer-events-auto bg-light_terciary top-1/2 duration-150 {isOpen
-					? 'right-[calc(100%)] translate-x-full'
+					? 'right-[calc(100%)] '
 					: 'right-[calc(100%)]'}
-          before:content-[''] before:absolute before:bottom-full before:left-0 before:w-full before:h-full before:bg-light_terciary {isOpen
-					? 'before:rounded-tr-4xl'
-					: 'before:rounded-tl-4xl'}
-          after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:bg-light_terciary {isOpen
-					? 'after:rounded-br-4xl'
-					: 'after:rounded-bl-4xl'}"
+          before:content-[''] before:absolute before:bottom-full before:left-0 before:w-full before:h-full before:bg-light_terciary before:rounded-tl-4xl
+          after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:bg-light_terciary after:rounded-bl-4xl"
 				on:click={isOpen ? close : open}
 			>
 				<iconify-icon
