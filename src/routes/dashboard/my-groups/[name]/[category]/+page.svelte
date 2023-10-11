@@ -183,7 +183,35 @@
 </script>
 
 {#if subcategory}
-	<Drawer side="right" bind:open={openDrawer} />
+	<Drawer side="right" bind:open={openDrawer}>
+		<div class="flex flex-col gap-2">
+			{#each tests as test}
+				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
+					<div
+						class="relative w-full overflow-hidden aspect-video text-body2 group
+						before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
+						hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
+					>
+						<img
+							src="/imgs/content_imgs/liska.avif"
+							alt="Test"
+							class="object-cover w-full h-full duration-200 group-hover:blur-md"
+						/>
+						<div
+							class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100"
+						>
+							{test.test.description}
+						</div>
+					</div>
+					<div
+						class="h-[1.5em] bg-blue-400 left-0 bottom-0 text-center text-body2"
+					>
+						<span>{test.test.title}</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+	</Drawer>
 	<div
 		class="relative max-h-[calc(100vh-70px)] overflow-scroll px-1"
 		bind:this={chatContainerRef}

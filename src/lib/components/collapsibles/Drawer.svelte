@@ -5,10 +5,14 @@
 		side: `${side}-0`
 	};
 
-	let isOpen = false;
+	let isOpen = true;
 
 	export const open = () => {
 		isOpen = true;
+	};
+
+	export const close = () => {
+		isOpen = false;
 	};
 </script>
 
@@ -30,7 +34,7 @@
           after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:bg-light_terciary {isOpen
 					? 'after:rounded-br-4xl'
 					: 'after:rounded-bl-4xl'}"
-				on:click={open}
+				on:click={isOpen ? close : open}
 			>
 				<iconify-icon
 					icon="iconamoon:arrow-left-2-bold"
@@ -46,6 +50,9 @@
 			>
 				<iconify-icon icon="ic:round-close" class="text-3xl" />
 			</button>
+			<div>
+				<slot />
+			</div>
 		</div>
 	</div>
 </aside>
