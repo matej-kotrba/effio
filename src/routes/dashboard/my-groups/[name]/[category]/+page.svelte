@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client.js';
 	import { transformDate } from '~/lib/utils/date';
@@ -137,10 +137,10 @@
 				? newMessages.reverse()
 				: [...newMessages.reverse(), ...messages];
 		isFetchingNew = false;
-		setTimeout(() => {
-			chatContainerRef.scrollTop =
-				chatContainerRef.scrollHeight - previousHeight + previousTop;
-		}, 0);
+
+		await tick();
+		chatContainerRef.scrollTop =
+			chatContainerRef.scrollHeight - previousHeight + previousTop;
 	}
 
 	let openDrawer = () => {};
@@ -213,7 +213,7 @@
 						</div>
 					</button>
 					<div
-						class="bottom-0 left-0 px-2 py-1 text-center bg-light_secondary text-body2"
+						class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2"
 					>
 						<span
 							class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
@@ -289,12 +289,16 @@
 									/>
 									<div class="flex flex-col">
 										<span class="text-body2">{message.sender.name}</span>
-										<span class="text-body3 text-light_text_black_40">
+										<span
+											class="text-body3 text-light_text_black_40 dark:text-dark_text_white_40"
+										>
 											{transformDate(message.createdAt, { time: true })}
 										</span>
 									</div>
 								</div>
-								<div class="relative p-4 rounded-sm shadow bg-light_whiter">
+								<div
+									class="relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
+								>
 									{#if message.messageType === 'MESSAGE'}
 										<!-- <img
 							class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
@@ -314,7 +318,7 @@
 										{#if message.testId && message.test}
 											<Space gap={10} />
 											<div
-												class="flex flex-col gap-2 p-2 bg-light_white rounded-md w-fit max-w-[300px] shadow-md group"
+												class="flex flex-col gap-2 p-2 bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
 											>
 												<div>
 													<div class="overflow-hidden">
@@ -328,7 +332,10 @@
 													<span>{message.test.title}</span>
 												</div>
 
-												<button class="ml-auto btn w-fit">View</button>
+												<button
+													class="ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
+													>View</button
+												>
 											</div>
 										{:else if message.testId}
 											<div>Oops, this test can't be accessed anymore.</div>
@@ -352,6 +359,13 @@
 			to bottom,
 			transparent,
 			var(--light-white) 30%
+		);
+	}
+	:global(.dark) .bg-layer {
+		background-image: linear-gradient(
+			to bottom,
+			transparent,
+			var(--dark_black) 30%
 		);
 	}
 </style>
