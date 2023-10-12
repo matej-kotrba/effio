@@ -2,6 +2,7 @@
 	import Space from '~components/separators/Space.svelte';
 
 	export let side: 'left' | 'right' = 'left';
+	export let title: string;
 
 	const styles = {
 		side: `${side}-0`
@@ -40,47 +41,45 @@
 					class="text-4xl {isOpen ? 'rotate-180' : ''} duration-150"
 				/>
 			</button>
-			<button
-				type="button"
-				class="grid mr-auto text-light_text_black place-content-center group"
-				on:click={() => {
-					isOpen = false;
-				}}
-			>
-				<iconify-icon
-					icon="ic:round-close"
-					class="text-3xl group-hover:text-error"
-				/>
-			</button>
+			<div class="flex items-center justify-between">
+				<span class="font-bold">{title}</span>
+				<button
+					type="button"
+					class="grid text-light_text_black place-content-center group"
+					on:click={() => {
+						isOpen = false;
+					}}
+				>
+					<iconify-icon
+						icon="ic:round-close"
+						class="text-3xl group-hover:text-error"
+					/>
+				</button>
+			</div>
 			<Space gap={5} />
-			<div class="relative max-h-full pr-4 overflow-y-scroll">
-				<slot />
+			<div class="relative max-h-full pr-2 overflow-y-scroll">
+				<div
+					class="sticky top-0 left-0 z-10 w-full h-6 pointer-events-none fading"
+				/>
+				<div>
+					<slot />
+				</div>
+				<div
+					class="sticky bottom-0 left-0 z-10 w-full h-6 rotate-180 pointer-events-none fading"
+				/>
 			</div>
 		</div>
 	</div>
 </aside>
 
-<!-- <style>
-	.shader {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-image: linear-gradient(
-			to right,
-			rgba(255, 255, 255, 0),
-			rgba(255, 255, 255, 1) 100%
+<style>
+	.fading {
+		background-color: var(--light-whiter);
+		mask-image: linear-gradient(
+			to bottom,
+			rgb(255, 255, 255) 10%,
+			rgba(255, 255, 255, 0.377),
+			transparent
 		);
 	}
-
-	.shader_flipped {
-		background-image: linear-gradient(
-			to left,
-			rgba(255, 255, 255, 0),
-			rgba(255, 255, 255, 1) 100%
-		);
-		bottom: 0;
-		top: none;
-	}
-</style> -->
+</style>

@@ -183,9 +183,13 @@
 </script>
 
 {#if subcategory}
-	<Drawer side="right" bind:open={openDrawer}>
+	<Drawer
+		title={`${subcategory.name}'s tests`}
+		side="right"
+		bind:open={openDrawer}
+	>
 		<div class="flex flex-col gap-2">
-			{#each [...tests, ...tests, ...tests, ...tests] as test}
+			{#each tests as test}
 				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
 					<button
 						type="button"
@@ -196,7 +200,7 @@
 						<img
 							src="/imgs/content_imgs/liska.avif"
 							alt="Test"
-							class="object-cover w-full h-full duration-200 group-hover:blur-md"
+							class="object-cover w-full h-full duration-200 group-hover:blur-md group-hover:scale-110"
 						/>
 						<div
 							class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full
