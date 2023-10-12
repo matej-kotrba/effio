@@ -243,7 +243,6 @@ export const groupsRouter = router({
     take: z.number().optional(),
     cursor: z.string().optional(),
   })).query(async ({ ctx, input }) => {
-    console.log(input.cursor)
     const messages = await ctx.prisma.groupSubcategoryMessage.findMany({
       where: {
         groupSubcategoryId: input.id

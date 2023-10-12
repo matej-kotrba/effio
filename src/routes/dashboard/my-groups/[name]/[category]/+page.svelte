@@ -252,7 +252,7 @@
 			>
 				<button
 					type="button"
-					class="right-0 grid w-10 text-white duration-100 rounded-full shadow-md pointer-events-auto bottom-32 bg-light_terciary aspect-square place-content-center hover:scale-105 {isScrollDownButtonVisible
+					class="right-0 grid w-10 text-white duration-100 rounded-full shadow-md pointer-events-auto bottom-32 bg-light_terciary dark:bg-dark_secondary aspect-square place-content-center hover:scale-105 {isScrollDownButtonVisible
 						? 'opacity-100'
 						: ' opacity-0 pointer-events-none'}"
 					on:click={() => scrollToBottom(true)}
@@ -278,6 +278,9 @@
 					<p>Gettig messages</p>
 				{:else}
 					<div class="flex flex-col gap-8">
+						<div class="flex justify-center">
+							<span class="loading loading-bars loading-lg" />
+						</div>
 						<div bind:this={fetchNewMessagesDiv} class="h-1" />
 						{#each messages as message}
 							<div>

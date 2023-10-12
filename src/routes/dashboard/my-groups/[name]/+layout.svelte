@@ -9,9 +9,10 @@
 		<ul
 			class="max-h-full min-h-full py-8 border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 sidebar"
 		>
-			<li class="font-semibold text-body1">
+			<li class="mb-1 font-semibold text-body1">
 				<a
 					href="/dashboard/my-groups/{data.group.slug}"
+					class="dark:hover:bg-dark_text_white_20 dark:hover:text-dark_text_white"
 					class:active={$page.url.pathname.split('/').at(-1) ===
 						data.group.slug}
 				>
@@ -27,6 +28,7 @@
 				<li>
 					<a
 						href="/dashboard/my-groups/{data.group.slug}/{category.slug}"
+						class="dark:hover:bg-dark_text_white_20 dark:hover:text-dark_text_white"
 						class:active={$page.url.pathname.split('/').at(-1) ===
 							category.slug}
 					>
@@ -48,5 +50,8 @@
 	}
 	.active {
 		@apply bg-light_secondary text-white;
+	}
+	:global(.dark) .active {
+		@apply bg-dark_secondary;
 	}
 </style>
