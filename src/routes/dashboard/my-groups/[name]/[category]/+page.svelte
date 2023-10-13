@@ -30,6 +30,7 @@
 	let fetchNewMessagesDiv: HTMLDivElement;
 
 	let isFetchingNew = false;
+	let isEndOfChat = false;
 
 	$: if (fetchNewMessagesDiv) {
 		addIntersection(fetchNewMessagesDiv);
@@ -128,6 +129,11 @@
 			cursor: lastMessage,
 			take: 4
 		});
+
+		if (newMessages.length === 0) {
+			isEndOfChat = true;
+			isFetchingNew = false;
+		}
 
 		const previousTop = chatContainerRef.scrollTop;
 		const previousHeight = chatContainerRef.scrollHeight;
@@ -231,21 +237,23 @@
 		bind:this={chatContainerRef}
 		on:scroll={(e) => onScroll(e)}
 	>
-		<section class="flex flex-col items-center justify-center mb-4">
-			<img
-				aria-hidden="true"
-				src="/imgs/svgs/welcome.svg"
-				class=""
-				width="200"
-				alt="decorative"
-			/>
-			<p class="text-light_text_black_80 dark:text-dark_text_white_80">
-				This is the start of the <span
-					class="font-semibold text-light_text_black dark:text-dark_text_white"
-					>{data.group.name}</span
-				> channel.
-			</p>
-		</section>
+		{#if isEndOfChat}
+			<section class="flex flex-col items-center justify-center mb-4">
+				<img
+					aria-hidden="true"
+					src="/imgs/svgs/welcome.svg"
+					class=""
+					width="200"
+					alt="decorative"
+				/>
+				<p class="text-light_text_black_80 dark:text-dark_text_white_80">
+					This is the start of the <span
+						class="font-semibold text-light_text_black dark:text-dark_text_white"
+						>{data.group.name}</span
+					> channel.
+				</p>
+			</section>
+		{/if}
 		<div class="max-w-[800px] mx-auto">
 			<div
 				class="fixed w-full max-w-[800px] z-10 bottom-36 flex justify-end pointer-events-none"
@@ -278,9 +286,11 @@
 					<p>Gettig messages</p>
 				{:else}
 					<div class="flex flex-col gap-8">
-						<div class="flex justify-center">
-							<span class="loading loading-bars loading-lg" />
-						</div>
+						{#if isEndOfChat === false}
+							<div class="flex justify-center">
+								<span class="loading loading-bars loading-lg" />
+							</div>
+						{/if}
 						<div bind:this={fetchNewMessagesDiv} class="h-1" />
 						{#each messages as message}
 							<div>
