@@ -9,7 +9,7 @@ export const load: ServerLoad = async (event) => {
   const data = await appRouter.createCaller(context).getTestById({ id: event.params.testId as string, includeGroupSubcategories: true });
 
   if (!data) {
-    throw redirect(302, "/dashboard/test-collection")
+    throw redirect(307, "/dashboard/test-collection")
   }
   return {
     testData: data

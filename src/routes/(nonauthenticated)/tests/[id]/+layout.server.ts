@@ -7,13 +7,13 @@ export const load: ServerLoad = async (request) => {
 
   const id = request.params.id;
 
-  if (!id) throw redirect(302, "/")
+  if (!id) throw redirect(307, "/")
 
   const context = await createContext(request)
 
   const test = await appRouter.createCaller(context).getTestById({ id: id });
 
-  if (!test) throw redirect(302, "/")
+  if (!test) throw redirect(307, "/")
 
   let resultTest;
 
@@ -21,7 +21,7 @@ export const load: ServerLoad = async (request) => {
     resultTest = transformTestToTakeFormat(test)
   }
   catch (e) {
-    throw redirect(302, "/")
+    throw redirect(307, "/")
   }
 
   return {

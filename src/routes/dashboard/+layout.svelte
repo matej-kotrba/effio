@@ -179,13 +179,13 @@
 										: ''}
 								>
 									{segment.replace('-', ' ')[0].toUpperCase() +
-										segment.replace('-', ' ').slice(1, segment.length)}
+										segment.replaceAll('-', ' ').slice(1, segment.length)}
 								</a>
 							</li>
 						{:else}
 							<li>
 								{segment.replace('-', ' ')[0].toUpperCase() +
-									segment.replace('-', ' ').slice(1, segment.length)}
+									segment.replaceAll('-', ' ').slice(1, segment.length)}
 							</li>
 						{/if}
 					{/each}

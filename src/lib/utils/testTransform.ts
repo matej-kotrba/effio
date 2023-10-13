@@ -1,4 +1,4 @@
-import type { TestFullType, TestWithQuestions, TestWithQuestionsAndVersions } from "~/Prisma"
+import type { TestWithQuestionsAndVersions } from "~/Prisma"
 import { questionContentFunctions } from "~helpers/test"
 
 export function transformTestToTakeFormat(test: TestWithQuestionsAndVersions) {

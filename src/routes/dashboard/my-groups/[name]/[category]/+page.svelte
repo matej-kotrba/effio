@@ -197,8 +197,9 @@
 		<div class="flex flex-col gap-2">
 			{#each tests as test}
 				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
-					<button
-						type="button"
+					<a
+						href="/dashboard/my-groups/{data.group
+							.slug}/{subcategory.slug}/tests/{test.testId}"
 						class="relative w-full overflow-hidden aspect-video text-body2 group
 						before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
 						hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
@@ -217,7 +218,7 @@
 								{test.test.description}
 							</p>
 						</div>
-					</button>
+					</a>
 					<div
 						class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2"
 					>

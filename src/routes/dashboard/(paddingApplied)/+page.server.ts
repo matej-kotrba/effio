@@ -88,6 +88,6 @@ export const load = async ({ locals }) => {
 export const actions = {
   async logOut() {
     const query = "logout=true"
-    throw redirect(302, `/?${query}`)
+    throw redirect(307, `/?${query}`)
   }
 }

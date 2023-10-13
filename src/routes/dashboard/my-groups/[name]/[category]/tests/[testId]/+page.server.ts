@@ -1,14 +1,13 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
 import prisma from "$lib/prisma"
 import type { trpc } from "~/lib/trpc/client";
+import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
 export const load: ServerLoad = async ({ params }) => {
   const id = params.testId
 
-  console.log(id)
-
   if (!id) {
-    throw redirect(302, "/dashboard/my-groups")
+    throw redirect(307, "/dashboard/my-groups")
   }
 
   try {
@@ -25,10 +24,31 @@ export const load: ServerLoad = async ({ params }) => {
     const test = await prisma.test.findUnique({
       where: {
         id: id
+      },
+      include: {
+        testVersions: {
+          include: {
+            questions: {
+              include: {
+                type: true
+              }
+            }
+          }
+        }
       }
     })
+
+    if (!test) {
+      throw new Error("No test found")
+    }
+
+    console.log(test)
+
+    return {
+      testContent: transformTestToTakeFormat(test)
+    }
   }
   catch (e) {
-    throw redirect(302, "/dashboard/my-groups")
+    throw redirect(307, "/dashboard/my-groups")
   }
 }
