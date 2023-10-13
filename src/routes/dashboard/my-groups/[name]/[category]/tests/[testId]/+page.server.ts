@@ -32,9 +32,10 @@ export const load: ServerLoad = async ({ params }) => {
               include: {
                 type: true
               }
-            }
+            },
           }
-        }
+        },
+        owner: true
       }
     })
 
@@ -45,7 +46,10 @@ export const load: ServerLoad = async ({ params }) => {
     console.log(test)
 
     return {
-      testContent: transformTestToTakeFormat(test)
+      testContent: {
+        ...test,
+        ...transformTestToTakeFormat(test)
+      }
     }
   }
   catch (e) {

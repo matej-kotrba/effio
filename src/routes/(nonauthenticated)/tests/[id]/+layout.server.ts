@@ -15,18 +15,16 @@ export const load: ServerLoad = async (request) => {
 
   if (!test) throw redirect(307, "/")
 
-  let resultTest;
-
   try {
-    resultTest = transformTestToTakeFormat(test)
+    return {
+      testContent: {
+        ...test,
+        ...transformTestToTakeFormat(test)
+      }
+    }
   }
   catch (e) {
     throw redirect(307, "/")
   }
 
-  return {
-    testContent: {
-      ...resultTest,
-    }
-  }
 }
