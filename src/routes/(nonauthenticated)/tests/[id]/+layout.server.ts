@@ -1,7 +1,7 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
 import { appRouter } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
-import { questionContentFunctions } from "~helpers/test";
+import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
 export const load: ServerLoad = async (request) => {
 
@@ -15,24 +15,18 @@ export const load: ServerLoad = async (request) => {
 
   if (!test) throw redirect(302, "/")
 
-  const questionTypeOptions = Object.keys(questionContentFunctions)
+  let resultTest;
 
-  const editedQuestions = test.testVersions[0].questions.map((question) => {
-    // check if the question type exists in the object above, if so then redirect to homepage
-    if (!questionTypeOptions.some((key) => key === question.type.slug)) throw redirect(302, "/")
-    return {
-      ...question,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      content: questionContentFunctions[question.type.slug as keyof QuestionTransformation]["separateAnswer"](question.content)
-    }
-  })
-
-  test.testVersions[0].questions = editedQuestions
+  try {
+    resultTest = transformTestToTakeFormat(test)
+  }
+  catch (e) {
+    throw redirect(302, "/")
+  }
 
   return {
     testContent: {
-      ...test,
+      ...resultTest,
     }
   }
 }

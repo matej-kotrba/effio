@@ -21,6 +21,20 @@ type TestFullType = Prisma.TestGetPayload<{
   }
 }>
 
+type TestWithQuestionsAndVersions = Prisma.TestGetPayload<{
+  include: {
+    testVersions: {
+      include: {
+        questions: {
+          include: {
+            type: true
+          }
+        },
+      }
+    },
+  }
+}>
+
 // type TestFullType = Prisma.TestVersionGetPayload<{
 //   include: {
 //     testGroup: true,

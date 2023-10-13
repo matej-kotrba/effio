@@ -1,7 +1,7 @@
-import type { TestFullType } from "~/Prisma"
+import type { TestFullType, TestWithQuestions, TestWithQuestionsAndVersions } from "~/Prisma"
 import { questionContentFunctions } from "~helpers/test"
 
-export function transformTestToTakeFormat(test: TestFullType) {
+export function transformTestToTakeFormat(test: TestWithQuestionsAndVersions) {
   const questionTypeOptions = Object.keys(questionContentFunctions)
 
   const editedQuestions = test.testVersions[0].questions.map((question) => {
