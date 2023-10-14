@@ -22,29 +22,16 @@
 		};
 	}>;
 
-	let isTakingTest = false;
-
-	let openDialog: () => void;
-
-	// console.log(testContent);
+	export let testLink: string;
 
 	initializeTestToTestStore(testContent);
 
-	// TODO: Create a check for the JSON so we make sure that the JSON is in correct format
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		testContent.testVersions[0].markSystemJSON
 	);
-	// if (testContent.testVersions[0].markSystemJSON) {
-	// 	markSystem = JSON.parse(
-	// 		testContent.testVersions[0].markSystemJSON?.toString()
-	// 	) as MarkSystemJSON['marks'];
-	// } else {
-	// 	markSystem = null;
-	// }
 
 	function startTest() {
-		isTakingTest = true;
-		goto(`/tests/${testContent.id}/take`);
+		goto(`${testLink}`);
 	}
 </script>
 
@@ -101,10 +88,3 @@
 	<Space gap={30} />
 	<BasicButton title="Take test" onClick={startTest} />
 </div>
-
-<style>
-	.grid__layout {
-		display: grid;
-		grid-template-columns: 1fr 2px 1fr;
-	}
-</style>

@@ -9,11 +9,11 @@
 
 <Collapsible position="left" title="Show marking">
 	<div class="grid__layout">
-		<p
+		<span
 			class="font-semibold text-center text-light_text_black_60 dark:text-dark_text_white_60"
 		>
 			Grade
-		</p>
+		</span>
 		<Separator
 			w="100%"
 			h="100%"
@@ -22,11 +22,11 @@
 				? 'var(--dark-text-white-20)'
 				: 'var(--light-text-black-20)'}
 		/>
-		<p
+		<span
 			class="font-semibold text-center text-light_text_black_60 dark:text-dark_text_white_60"
 		>
 			Range
-		</p>
+		</span>
 		<div class="col-span-3 mb-3" />
 		{#each markSystem as mark, index}
 			{#if mark['name'] !== undefined && mark['limit'] !== undefined}
@@ -52,3 +52,10 @@
 		{/each}
 	</div>
 </Collapsible>
+
+<style>
+	.grid__layout {
+		display: grid;
+		grid-template-columns: 1fr 2px 1fr;
+	}
+</style>
