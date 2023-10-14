@@ -581,7 +581,7 @@ type CheckServer = {
 
 // Check test on the server for correctness of the answers
 
-export const checkTestServerAndRecordIt = async (test: TestObject): Promise<CheckServer> => {
+export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId?: string): Promise<CheckServer> => {
   if (test.id === undefined || test.versionId === undefined) return {
     error: "Test has no ID and hence cannot be submitted.",
     success: false
@@ -641,6 +641,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject): Promise<Chec
     testId: test.versionId,
     title: test.title,
     description: test.description,
+    subcategoryId: subcategoryId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     answerContent: questionData.map((item, index) => {
       return {

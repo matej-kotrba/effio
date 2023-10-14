@@ -152,19 +152,22 @@ model MarkSystem {
 }
 
 model TestRecord {
-  id              String           @id @default(uuid())
+  id              String            @id @default(uuid())
   title           String
   description     String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  test            TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  test            TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   testId          String
   questionRecords QuestionRecord[]
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          String
+  subcategory     GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
+  subacategoryId  String?
 
   @@index([testId])
   @@index([userId])
+  @@index([subacategoryId])
 }
 
 model QuestionRecord {
@@ -241,15 +244,16 @@ model Group {
 }
 
 model GroupSubcategory {
-  id        String                    @id @default(uuid())
-  name      String
-  slug      String
-  createdAt DateTime                  @default(now())
-  updatedAt DateTime                  @updatedAt
-  groups    Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId   String
-  tests     GroupSubcategoryOnTests[]
-  messages  GroupSubcategoryMessage[]
+  id          String                    @id @default(uuid())
+  name        String
+  slug        String
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+  groups      Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String
+  tests       GroupSubcategoryOnTests[]
+  testRecords TestRecord[]
+  messages    GroupSubcategoryMessage[]
 
   @@index([name])
   @@index([groupId])

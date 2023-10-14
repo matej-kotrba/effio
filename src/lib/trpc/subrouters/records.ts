@@ -7,6 +7,7 @@ export const recordsRouter = router({
     testId: z.string(),
     title: z.string(),
     description: z.string(),
+    subcategoryId: z.string().optional(),
     answerContent: z.array(
       z.object({
         questionId: z.string(),
@@ -28,6 +29,7 @@ export const recordsRouter = router({
         testId: input.testId,
         title: input.title,
         description: input.description,
+        subacategoryId: input.subcategoryId,
         questionRecords: {
           createMany: {
             data: input.answerContent.map(item => {
