@@ -1,6 +1,5 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
 import prisma from "$lib/prisma"
-import type { trpc } from "~/lib/trpc/client";
 import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
 export const load: ServerLoad = async ({ params }) => {
@@ -42,8 +41,6 @@ export const load: ServerLoad = async ({ params }) => {
     if (!test) {
       throw new Error("No test found")
     }
-
-    console.log(test)
 
     return {
       testContent: {

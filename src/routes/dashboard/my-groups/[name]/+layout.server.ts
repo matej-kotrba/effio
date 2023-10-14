@@ -22,6 +22,6 @@ export const load = async (event) => {
   }
 
   return {
-    group: groupFullData
+    group: groupFullData,
   }
 }
