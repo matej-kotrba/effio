@@ -158,14 +158,44 @@
 		</div>
 	{:else}
 		<div
-			class="grid grid-cols-1 gap-2 xl:grid-cols-4 md:grid-cols-3 xs:grid-cols-2"
+			class="grid grid-cols-1 gap-2 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 xs:grid-cols-2"
 		>
 			{#each tests as test}
 				<div
-					class="relative grid rounded-md shadow-md aspect-video bg-light_whiter dark:bg-dark_light_grey place-content-center"
+					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter dark:bg-dark_light_grey"
 				>
-					{#if test === tests[tests.length - 1]}{:else}
-						<div class="" />
+					{#if test === tests[tests.length - 1]}
+						asd
+					{:else}
+						<div class="absolute inset-3">
+							<img
+								src="/imgs/content_imgs/liska.avif"
+								alt="Question"
+								class="object-cover w-full h-full rounded-md"
+							/>
+						</div>
+						<div class="relative z-[2]">
+							<div class="flex items-center justify-between w-full p-4">
+								<div class="flex items-center">
+									<iconify-icon
+										icon="ic:round-star-outline"
+										class="text-3xl duration-100"
+									/>
+									<span class="text-sm">{test.stars}</span>
+								</div>
+								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
+									<iconify-icon
+										icon="fluent:settings-24-filled"
+										class="text-2xl text-light_text_black dark:text-dark_text_white"
+									/>
+								</DropdownSelect>
+							</div>
+						</div>
+						<div
+							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center overflow-ellipsis dark:bg-dark_terciary rounded-b-md text-semiBody1"
+						>
+							<h5>{test.title}</h5>
+						</div>
 					{/if}
 					<!-- {#if test === tests[tests.length - 1]}
 						<div

@@ -45,6 +45,7 @@
 		"@auth/prisma-adapter": "^1.0.0",
 		"@auth/sveltekit": "^0.3.1",
 		"@prisma/client": "^5.0.0",
+		"@tailwindcss/container-queries": "^0.1.1",
 		"@trpc/client": "^10.19.1",
 		"@trpc/react-query": "^10.19.1",
 		"@trpc/server": "^10.19.1",

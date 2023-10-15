@@ -55,7 +55,8 @@ export default {
 				body1: '18px',
 				body2: '14px',
 				body3: '11px',
-				body4: '9px'
+				body4: '9px',
+				semiBody1: '16px'
 			},
 			fontWeight: {
 				thicker: 700,
@@ -92,7 +93,7 @@ export default {
 		}
 	},
 	darkMode: 'class',
-	plugins: [require('daisyui')],
+	plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
 	daisyui: {
 		styled: true,
 		themes: [
