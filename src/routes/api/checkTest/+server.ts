@@ -23,6 +23,7 @@ export async function POST(event) {
     return !(questionContentFunctions[question.questionType]["checkAnswerPresence"](question.content as any))
   })) return json({ error: "Not all questions has been filled!", success: false })
 
+
   // Get test from DB so we can access correct answers
   const test = await prisma.test.findUnique({
     where: {
@@ -43,6 +44,8 @@ export async function POST(event) {
   })
 
   if (!test) return json({ error: "Test not found!", success: false })
+
+  console.log(body.questions, test.testVersions[0].questions)
 
   const result = body.questions.map((question) => {
     const compareQuestion = test.testVersions[0].questions.find(item => item.id === question.id)

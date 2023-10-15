@@ -32,6 +32,9 @@ export const load: ServerLoad = async ({ params }) => {
                 type: true
               }
             },
+          },
+          orderBy: {
+            createdAt: "desc"
           }
         },
         owner: true

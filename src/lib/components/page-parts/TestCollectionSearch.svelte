@@ -164,7 +164,10 @@
 				<div
 					class="relative grid rounded-md shadow-md aspect-video bg-light_whiter dark:bg-dark_light_grey place-content-center"
 				>
-					{#if test === tests[tests.length - 1]}
+					{#if test === tests[tests.length - 1]}{:else}
+						<div class="" />
+					{/if}
+					<!-- {#if test === tests[tests.length - 1]}
 						<div
 							class="absolute top-0 left-0 flex items-center justify-between w-full p-1"
 							use:addIntersection
@@ -215,7 +218,7 @@
 						>
 							{test.description}
 						</p>
-					{/if}
+					{/if} -->
 				</div>
 			{/each}
 		</div>
