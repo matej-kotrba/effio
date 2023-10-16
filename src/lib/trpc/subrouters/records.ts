@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
-import type { Prisma } from "@prisma/client"
+import { TRPCError } from "@trpc/server"
 
 export const recordsRouter = router({
   createTestRecord: loggedInProcedure.input(z.object({
@@ -20,6 +20,25 @@ export const recordsRouter = router({
     if (input.answerContent.length === 0) {
       return {
         success: false,
+      }
+    }
+
+    if (input.subcategoryId) {
+      const subcategory = await ctx.prisma.groupSubcategory.findUnique({
+        where: {
+          id: input.subcategoryId,
+          groups: {
+            users: {
+              some: {
+                userId: ctx.userId
+              }
+            }
+          }
+        }
+      })
+
+      if (!subcategory) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test record in group you are not part of" })
       }
     }
 
@@ -63,6 +82,8 @@ export const recordsRouter = router({
     limit: z.number().optional(),
     skip: z.number().optional(),
   })).query(async ({ ctx, input }) => {
+    if (input.id !== ctx.userId) throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to access other users records" })
+
     const records = await ctx.prisma.testRecord.findMany({
       take: input.limit || 10,
       skip: input.skip || 0,
@@ -94,7 +115,8 @@ export const recordsRouter = router({
   })).query(async ({ ctx, input }) => {
     const record = await ctx.prisma.testRecord.findUnique({
       where: {
-        id: input.id
+        id: input.id,
+        userId: ctx.userId
       },
       include: {
         test: {

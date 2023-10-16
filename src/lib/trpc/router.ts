@@ -108,8 +108,9 @@ export const appRouter = router({
     includeGroupSubcategories: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
     const test = await ctx.prisma.test.findUnique({
+      // TODO: Might be limited to only accessable test by specific user
       where: {
-        id: input.id
+        id: input.id,
       },
       include: {
         subcategories: input.includeGroupSubcategories || false,
@@ -128,7 +129,7 @@ export const appRouter = router({
           },
           take: 1
         }
-      }
+      },
     })
 
     if (!test) return null

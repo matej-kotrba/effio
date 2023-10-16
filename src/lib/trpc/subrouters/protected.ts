@@ -58,6 +58,25 @@ export const protectedRouter = router({
         }
       })
 
+      const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
+        where: {
+          id: {
+            in: includedInGroups
+          },
+          groups: {
+            users: {
+              some: {
+                userId: ctx.userId
+              }
+            }
+          }
+        }
+      })
+
+      if (legitGroupsCount !== includedInGroups.length) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test in group you are not part of" })
+      }
+
       await ctx.prisma.$transaction([
         ctx.prisma.groupSubcategoryOnTests.createMany({
           data: includedInGroups.map((subcategoryId) => {
@@ -106,6 +125,18 @@ export const protectedRouter = router({
     }).optional(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
+
+    const test = await ctx.prisma.test.findUnique({
+      where: {
+        id: input.testGroupId,
+        ownerId: ctx.userId
+      }
+    })
+
+    if (!test) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+    }
+
     try {
 
       const version = await ctx.prisma.testVersion.count({
@@ -114,7 +145,7 @@ export const protectedRouter = router({
         }
       })
 
-      console.log("VERSION", version)
+      // console.log("VERSION", version)
 
       const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
       const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
@@ -127,6 +158,25 @@ export const protectedRouter = router({
 
       const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.subcategoryId))
       const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item))
+
+      const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
+        where: {
+          id: {
+            in: linkedGroupsToCreate
+          },
+          groups: {
+            users: {
+              some: {
+                userId: ctx.userId
+              }
+            }
+          }
+        }
+      })
+
+      if (legitGroupsCount !== linkedGroupsToCreate.length) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test in group you are not part of" })
+      }
 
       await ctx.prisma.$transaction([
         ...linkedGroupsToDelete.map(({ id }) => {
@@ -234,17 +284,11 @@ export const protectedRouter = router({
       })
 
       if (!test) {
-        return {
-          success: false,
-          message: "Test not found"
-        }
+        throw new TRPCError({ code: "NOT_FOUND", message: "Test was not found" })
       }
 
       if (test.ownerId !== ctx.userId) {
-        return {
-          success: false,
-          message: "Unauthorized"
-        }
+        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to delete this test" })
       }
 
       const deleteTest = await ctx.prisma.test.delete({
