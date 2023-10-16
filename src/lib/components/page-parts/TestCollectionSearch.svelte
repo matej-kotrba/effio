@@ -140,7 +140,7 @@
 	/>
 </div>
 <Space />
-<div>
+<div class="@container">
 	{#if tests.length === 0}
 		<div class="flex flex-col items-center gap-1">
 			<iconify-icon
@@ -158,22 +158,54 @@
 		</div>
 	{:else}
 		<div
-			class="grid grid-cols-1 gap-2 2xl:grid-cols-5 xl:grid-cols-4 md:grid-cols-3 xs:grid-cols-2"
+			class="grid gap-2 @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
 		>
 			{#each tests as test}
 				<div
-					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter dark:bg-dark_light_grey"
+					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
 				>
 					{#if test === tests[tests.length - 1]}
-						asd
-					{:else}
-						<div class="absolute inset-3">
+						<a class="absolute inset-3">
 							<img
 								src="/imgs/content_imgs/liska.avif"
 								alt="Question"
 								class="object-cover w-full h-full rounded-md"
 							/>
+						</a>
+						<div class="relative z-[2]" use:addIntersection>
+							<div class="flex items-center justify-between w-full p-4">
+								<div class="flex items-center">
+									<iconify-icon
+										icon="ic:round-star-outline"
+										class="text-3xl duration-100"
+									/>
+									<span class="text-sm">{test.stars}</span>
+								</div>
+								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
+									<iconify-icon
+										icon="fluent:settings-24-filled"
+										class="text-2xl text-light_text_black dark:text-dark_text_white"
+									/>
+								</DropdownSelect>
+							</div>
 						</div>
+						<div
+							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary rounded-b-md text-semiBody1"
+						>
+							<abbr title={test.title} class="no-underline"
+								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">
+									{test.title}
+								</h5></abbr
+							>
+						</div>
+					{:else}
+						<a class="absolute inset-3">
+							<img
+								src="/imgs/content_imgs/liska.avif"
+								alt="Question"
+								class="object-cover w-full h-full rounded-md"
+							/>
+						</a>
 						<div class="relative z-[2]">
 							<div class="flex items-center justify-between w-full p-4">
 								<div class="flex items-center">
@@ -192,9 +224,13 @@
 							</div>
 						</div>
 						<div
-							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center overflow-ellipsis dark:bg-dark_terciary rounded-b-md text-semiBody1"
+							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary rounded-b-md text-semiBody1"
 						>
-							<h5>{test.title}</h5>
+							<abbr title={test.title} class="no-underline"
+								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">
+									{test.title}
+								</h5></abbr
+							>
 						</div>
 					{/if}
 					<!-- {#if test === tests[tests.length - 1]}
