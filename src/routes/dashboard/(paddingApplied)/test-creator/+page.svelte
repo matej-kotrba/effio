@@ -35,6 +35,8 @@
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
+	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
+	import { TRPCError } from '@trpc/server';
 
 	export let data;
 
@@ -121,6 +123,7 @@
 					: undefined,
 				includedInGroups: $testObject.includedInGroups
 			});
+			console.log('RESPONSE', response);
 			isSuccess = response.success;
 			isSubmitting = false;
 
@@ -129,7 +132,10 @@
 			} else {
 			}
 		} catch (e) {
-			console.log(e);
+			console.log('ERROR', e);
+			if (e instanceof TRPCError) {
+				createTRPCErrorNotification(e);
+			}
 			isSubmitting = false;
 		}
 	}
@@ -292,7 +298,7 @@
 							questions: $testObject.questions
 						});
 
-						console.log(result);
+						// console.log(result);
 						if (result['store']['questions']) {
 							$testObject['questions'] = result['store']['questions'];
 						}

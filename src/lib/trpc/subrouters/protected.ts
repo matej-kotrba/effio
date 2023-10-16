@@ -17,99 +17,100 @@ export const protectedRouter = router({
     isPublished: z.boolean(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
+    let questions;
     try {
-      const questions = JSON.parse(input.questionContent) as QuestionClient[]
-
-      const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
-      const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
-
-      const testGroupData = await ctx.prisma.test.create({
-        data: {
-          ownerId: ctx.userId,
-          published: input.isPublished,
-          title: input.title,
-          description: input.description,
-          isPublic: isPublic,
-          testVersions: {
-            create: {
-              version: 1,
-              markSystemJSON: input.markSystem?.marks ?? {},
-              questions: {
-                createMany: {
-                  data: questions.map((question) => {
-                    return {
-                      title: question.title,
-                      content: question.content,
-                      typeId: question.questionTypeId,
-                      points: question.points
-                    }
-                  }) as PartialPick<Prisma.QuestionCreateManyInput, "testId" | "createdAt" | "updatedAt" | "id">[],
-                }
-              }
-            },
-          }
-        },
-        include: {
-          testVersions: {
-            include: {
-              questions: true
-            }
-          }
-        }
-      })
-
-      const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
-        where: {
-          id: {
-            in: includedInGroups
-          },
-          groups: {
-            users: {
-              some: {
-                userId: ctx.userId
-              }
-            }
-          }
-        }
-      })
-
-      if (legitGroupsCount !== includedInGroups.length) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test in group you are not part of" })
-      }
-
-      await ctx.prisma.$transaction([
-        ctx.prisma.groupSubcategoryOnTests.createMany({
-          data: includedInGroups.map((subcategoryId) => {
-            return {
-              subcategoryId,
-              testId: testGroupData.id
-            }
-          })
-        }),
-        ctx.prisma.groupSubcategoryMessage.createMany({
-          data: includedInGroups.map((subcategoryId) => {
-            return {
-              senderId: ctx.userId,
-              messageType: "MESSAGE",
-              title: "Added new test " + testGroupData.title,
-              groupSubcategoryId: subcategoryId
-            }
-          })
-        })
-      ])
-
-
-      return {
-        test: testGroupData.testVersions[0],
-        questions: testGroupData.testVersions[0].questions,
-        success: true
-      }
+      questions = JSON.parse(input.questionContent) as QuestionClient[]
     }
     catch (e) {
       return {
-        success: false,
+        success: false
       }
     }
+    const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
+    const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
+
+    const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
+      where: {
+        id: {
+          in: includedInGroups
+        },
+        groups: {
+          users: {
+            some: {
+              userId: ctx.userId
+            }
+          }
+        }
+      }
+    })
+
+    if (legitGroupsCount !== includedInGroups.length) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test in group you are not part of" })
+    }
+
+    const testGroupData = await ctx.prisma.test.create({
+      data: {
+        ownerId: ctx.userId,
+        published: input.isPublished,
+        title: input.title,
+        description: input.description,
+        isPublic: isPublic,
+        testVersions: {
+          create: {
+            version: 1,
+            markSystemJSON: input.markSystem?.marks ?? {},
+            questions: {
+              createMany: {
+                data: questions.map((question) => {
+                  return {
+                    title: question.title,
+                    content: question.content,
+                    typeId: question.questionTypeId,
+                    points: question.points
+                  }
+                }) as PartialPick<Prisma.QuestionCreateManyInput, "testId" | "createdAt" | "updatedAt" | "id">[],
+              }
+            }
+          },
+        }
+      },
+      include: {
+        testVersions: {
+          include: {
+            questions: true
+          }
+        }
+      }
+    })
+
+    await ctx.prisma.$transaction([
+      ctx.prisma.groupSubcategoryOnTests.createMany({
+        data: includedInGroups.map((subcategoryId) => {
+          return {
+            subcategoryId,
+            testId: testGroupData.id
+          }
+        })
+      }),
+      ctx.prisma.groupSubcategoryMessage.createMany({
+        data: includedInGroups.map((subcategoryId) => {
+          return {
+            senderId: ctx.userId,
+            messageType: "MESSAGE",
+            title: "Added new test " + testGroupData.title,
+            groupSubcategoryId: subcategoryId
+          }
+        })
+      })
+    ])
+
+
+    return {
+      test: testGroupData.testVersions[0],
+      questions: testGroupData.testVersions[0].questions,
+      success: true
+    }
+
   }),
   updateTest: loggedInProcedure.input(z.object({
     testGroupId: z.string(),
