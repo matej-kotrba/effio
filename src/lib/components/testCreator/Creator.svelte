@@ -164,7 +164,7 @@
 		{/if}
 		<div class="p-4 {$testObject.questions.length === 0 ? 'col-span-2' : ''}">
 			<!-- The dropdown for new input -->
-			<dialog class="modal" bind:this={newInputModal}>
+			<dialog class="modal modal-open" bind:this={newInputModal}>
 				<form
 					method="dialog"
 					class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_grey"
@@ -175,19 +175,38 @@
 						Pick new input for your test!
 					</h3>
 					<Space gap={20} />
-					<div
-						class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-					>
+					<div class="flex flex-col gap-1">
 						{#each inputTemplates as input}
 							<button
 								type="button"
 								on:click={() => onNewInputClick(input)}
-								class="relative border-2 border-solid rounded-lg shadow-lg bg-light_secondary border-light_secondary aspect-square new-input-button dark:border-dark_secondary dark:bg-dark_secondary"
+								class="relative w-full px-4 py-3 text-left border-solid rounded-md dark:bg-dark_black dark:border-dark_text_white_40 border-[1px]"
 							>
-								<span
-									class="text-2xl font-bold text-light_secondary dark:text-dark_secondary"
-									>{input.name}</span
-								>
+								<div class="flex items-center gap-1">
+									<iconify-icon
+										icon="carbon:connect"
+										class="text-xl dark:text-dark_text_white"
+									/>
+									<iconify-icon
+										icon="majesticons:text"
+										class="text-xl dark:text-dark_text_white"
+									/>
+									<iconify-icon
+										icon="fluent:text-16-filled"
+										class="text-xl dark:text-dark_text_white"
+									/>
+									<iconify-icon
+										icon="tabler:checkbox"
+										class="text-xl dark:text-dark_text_white"
+									/>
+									<iconify-icon
+										icon="fa-solid:hand-point-right"
+										class="text-xl dark:text-dark_text_white"
+									/>
+									<span class="text-xl font-thin dark:text-dark_text_white"
+										>{input.name}</span
+									>
+								</div>
 							</button>
 						{/each}
 					</div>

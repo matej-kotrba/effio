@@ -55,7 +55,12 @@ export const groupsRouter = router({
       }
     })
 
-    console.log(newGroup)
+    const user = await ctx.prisma.groupOnUsers.create({
+      data: {
+        userId: ctx.userId,
+        groupId: newGroup.id
+      }
+    })
 
     return newGroup
   }),
