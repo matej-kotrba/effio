@@ -25,6 +25,6 @@
 </script>
 
 <div>
-	<Toaster />
+	<Toaster containerStyle={'z-index: 100;'} />
 	<slot />
 </div>

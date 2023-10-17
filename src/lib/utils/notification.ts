@@ -1,6 +1,7 @@
-import type { TRPCError } from "@trpc/server";
+import type { TRPCClientError } from "@trpc/client";
 import { toast } from "svelte-french-toast"
 
-export function createTRPCErrorNotification(e: TRPCError) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function createTRPCErrorNotification(e: TRPCClientError<any>) {
   toast.error(e.message)
 }

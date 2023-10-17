@@ -36,7 +36,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
-	import { TRPCError } from '@trpc/server';
+	import { TRPCClientError } from '@trpc/client';
 
 	export let data;
 
@@ -132,8 +132,7 @@
 			} else {
 			}
 		} catch (e) {
-			console.log('ERROR', e);
-			if (e instanceof TRPCError) {
+			if (e instanceof TRPCClientError) {
 				createTRPCErrorNotification(e);
 			}
 			isSubmitting = false;
