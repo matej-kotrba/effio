@@ -98,7 +98,8 @@ export const protectedRouter = router({
             senderId: ctx.userId,
             messageType: "MESSAGE",
             title: "Added new test " + testGroupData.title,
-            groupSubcategoryId: subcategoryId
+            groupSubcategoryId: subcategoryId,
+            testId: testGroupData.id
           }
         })
       })

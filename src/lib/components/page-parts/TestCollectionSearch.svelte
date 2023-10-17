@@ -162,7 +162,7 @@
 		>
 			{#each tests as test}
 				<div
-					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
+					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter hover:bg-light_quaternary dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
 				>
 					{#if test === tests[tests.length - 1]}
 						<a class="absolute inset-3">
@@ -177,20 +177,20 @@
 								<div class="flex items-center">
 									<iconify-icon
 										icon="ic:round-star-outline"
-										class="text-3xl duration-100"
+										class="text-3xl text-white duration-100"
 									/>
-									<span class="text-sm">{test.stars}</span>
+									<span class="text-sm text-white">{test.stars}</span>
 								</div>
 								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
 									<iconify-icon
 										icon="fluent:settings-24-filled"
-										class="text-2xl text-light_text_black dark:text-dark_text_white"
+										class="text-2xl text-white"
 									/>
 								</DropdownSelect>
 							</div>
 						</div>
 						<div
-							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary rounded-b-md text-semiBody1"
+							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary bg-light_quaternary rounded-b-md text-semiBody1"
 						>
 							<abbr title={test.title} class="no-underline"
 								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">
@@ -211,20 +211,20 @@
 								<div class="flex items-center">
 									<iconify-icon
 										icon="ic:round-star-outline"
-										class="text-3xl duration-100"
+										class="text-3xl text-white duration-100"
 									/>
-									<span class="text-sm">{test.stars}</span>
+									<span class="text-sm text-white">{test.stars}</span>
 								</div>
 								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
 									<iconify-icon
 										icon="fluent:settings-24-filled"
-										class="text-2xl text-light_text_black dark:text-dark_text_white"
+										class="text-2xl text-white"
 									/>
 								</DropdownSelect>
 							</div>
 						</div>
 						<div
-							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary rounded-b-md text-semiBody1"
+							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary bg-light_quaternary rounded-b-md text-semiBody1"
 						>
 							<abbr title={test.title} class="no-underline"
 								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">

@@ -173,7 +173,8 @@
 			const fetchedTests = await trpc(
 				$page
 			).groups.getSubcategoryTestsById.query({
-				id: categoryId
+				id: categoryId,
+				orderByDate: 'desc'
 			});
 
 			tests = fetchedTests;
@@ -196,38 +197,43 @@
 	>
 		<div class="flex flex-col gap-2">
 			{#each tests as test}
-				<div class="flex flex-col overflow-hidden rounded-md shadow-md">
-					<a
-						href="/dashboard/my-groups/{data.group
-							.slug}/{subcategory.slug}/tests/{test.testId}"
-						class="relative w-full overflow-hidden aspect-video text-body2 group
-						before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
-						hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
-					>
-						<img
-							src="/imgs/content_imgs/liska.avif"
-							alt="Test"
-							class="object-cover w-full h-full duration-200 group-hover:blur-md group-hover:scale-110"
-						/>
-						<div
-							class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full
-							group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100
-							grid place-content-center text-center"
-						>
-							<p class="line-clamp-3">
-								{test.test.description}
-							</p>
-						</div>
+				<div class="relative">
+					<a href="#" class="absolute top-0 left-0 z-10 p-1 icon-gradient">
+						<iconify-icon icon="carbon:result" class="text-3xl text-white" />
 					</a>
-					<div
-						class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2"
-					>
-						<span
-							class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
-							><abbr title={test.test.title} class="no-underline"
-								>{test.test.title}</abbr
-							></span
+					<div class="flex flex-col rounded-md shadow-md">
+						<a
+							href="/dashboard/my-groups/{data.group
+								.slug}/{subcategory.slug}/tests/{test.testId}"
+							class="relative w-full overflow-hidden aspect-video text-body2 group
+							before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
+							hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
 						>
+							<img
+								src="/imgs/content_imgs/liska.avif"
+								alt="Test"
+								class="object-cover w-full h-full duration-200 group-hover:blur-md group-hover:scale-110"
+							/>
+							<div
+								class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full
+								group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100
+								grid place-content-center text-center"
+							>
+								<p class="line-clamp-3">
+									{test.test.description}
+								</p>
+							</div>
+						</a>
+						<div
+							class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2"
+						>
+							<span
+								class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
+								><abbr title={test.test.title} class="no-underline"
+									>{test.test.title}</abbr
+								></span
+							>
+						</div>
 					</div>
 				</div>
 			{/each}
@@ -332,7 +338,7 @@
 										{#if message.testId && message.test}
 											<Space gap={10} />
 											<div
-												class="flex flex-col gap-2 p-2 bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
+												class="flex flex-col gap-2 p-2 bg-light_white dark:bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
 											>
 												<div>
 													<div class="overflow-hidden">
@@ -380,6 +386,20 @@
 			to bottom,
 			transparent,
 			var(--dark_black) 30%
+		);
+	}
+	.icon-gradient {
+		isolation: isolate;
+	}
+	.icon-gradient::before {
+		content: '';
+		inset: 0;
+		position: absolute;
+		z-index: -10;
+		background-image: radial-gradient(
+			circle at left top,
+			var(--light-text-black) -50%,
+			transparent
 		);
 	}
 </style>
