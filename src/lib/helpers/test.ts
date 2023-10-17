@@ -5,9 +5,32 @@ import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, MA
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
-import type { Prisma, Test, TestRecord } from "@prisma/client";
+import type { Prisma, TestRecord } from "@prisma/client";
 import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte";
 
+type QuestionMethods = {
+  [Key in keyof QuestionTypeMap]: {
+    icon: string
+  }
+}
+
+export const questionMethods: QuestionMethods = {
+  "pickOne": {
+    icon: "fa-solid:hand-point-right"
+  },
+  "true/false": {
+    icon: "tabler:checkbox"
+  },
+  "connect": {
+    icon: "carbon:connect"
+  },
+  "write": {
+    icon: "majesticons:text"
+  },
+  "fill": {
+    icon: "fluent:text-16-filled"
+  }
+}
 
 type QuestionContentTransformation = {
   [Key in keyof QuestionTypeMap]: {

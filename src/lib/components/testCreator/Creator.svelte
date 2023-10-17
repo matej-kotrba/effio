@@ -34,7 +34,7 @@
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
 	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
 	import toast from 'svelte-french-toast';
-	import { QUESTION_LIMIT } from '~helpers/test';
+	import { QUESTION_LIMIT, questionMethods } from '~helpers/test';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -136,17 +136,11 @@
 			displayedActivatorId = -1;
 		}
 	}
-
-	// $: {
-	// 	dispatch('questionsDataChange', questionsData);
-	// }
-
-	// onMount(() => {
-	// 	questionsData = initialData;
-	// });
-
-	// $: questionsData = initialData;
-	// $: console.log(questionsData);
+	function getIcon(index: string) {
+		if (Object.keys(questionMethods).includes(index)) {
+			return questionMethods[index as keyof typeof questionMethods].icon;
+		}
+	}
 </script>
 
 <div
@@ -164,7 +158,7 @@
 		{/if}
 		<div class="p-4 {$testObject.questions.length === 0 ? 'col-span-2' : ''}">
 			<!-- The dropdown for new input -->
-			<dialog class="modal modal-open" bind:this={newInputModal}>
+			<dialog class="modal" bind:this={newInputModal}>
 				<form
 					method="dialog"
 					class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_grey"
@@ -177,32 +171,19 @@
 					<Space gap={20} />
 					<div class="flex flex-col gap-1">
 						{#each inputTemplates as input}
+							{@const icon = getIcon(input.slug)}
 							<button
 								type="button"
 								on:click={() => onNewInputClick(input)}
-								class="relative w-full px-4 py-3 text-left border-solid rounded-md dark:bg-dark_black dark:border-dark_text_white_40 border-[1px]"
+								class="relative w-full px-4 py-3 text-left border-solid rounded-md bg-light_white border-light_text_black_40 hover:bg-light_whiter dark:bg-dark_black dark:border-dark_text_white_40 border-[1px] dark:hover:bg-dark_quaternary duration-150"
 							>
-								<div class="flex items-center gap-1">
-									<iconify-icon
-										icon="carbon:connect"
-										class="text-xl dark:text-dark_text_white"
-									/>
-									<iconify-icon
-										icon="majesticons:text"
-										class="text-xl dark:text-dark_text_white"
-									/>
-									<iconify-icon
-										icon="fluent:text-16-filled"
-										class="text-xl dark:text-dark_text_white"
-									/>
-									<iconify-icon
-										icon="tabler:checkbox"
-										class="text-xl dark:text-dark_text_white"
-									/>
-									<iconify-icon
-										icon="fa-solid:hand-point-right"
-										class="text-xl dark:text-dark_text_white"
-									/>
+								<div class="flex items-center gap-2">
+									{#if icon}
+										<iconify-icon
+											{icon}
+											class="text-xl dark:text-dark_text_white"
+										/>
+									{/if}
 									<span class="text-xl font-thin dark:text-dark_text_white"
 										>{input.name}</span
 									>
