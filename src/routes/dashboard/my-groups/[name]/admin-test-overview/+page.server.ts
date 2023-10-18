@@ -3,7 +3,7 @@ import prisma from "~/lib/prisma";
 import type { trpc } from "~/lib/trpc/client";
 
 export const load: ServerLoad = async ({ locals, parent, params }) => {
-
+  console.log("A")
   const { group } = await parent() as {
     group: Awaited<
       ReturnType<
@@ -27,8 +27,28 @@ export const load: ServerLoad = async ({ locals, parent, params }) => {
     where: {
       subcategory: {
         slug: categorySlug,
-        groups
+        group: {
+          id: group.id
+        }
       },
+    },
+    include: {
+      test: {
+        include: {
+          testVersions: {
+            orderBy: {
+              createdAt: "desc"
+            },
+            include: {
+              records: true
+            }
+          }
+        }
+      }
     }
   })
+
+  return {
+    tests: tests
+  }
 }  

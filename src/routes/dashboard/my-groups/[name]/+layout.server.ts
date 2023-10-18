@@ -2,7 +2,6 @@ import { redirect } from "@sveltejs/kit";
 import { trpcServer } from "~helpers/trpcServer";
 
 export const load = async (event) => {
-
   const id = ((await event.locals.getSession()) as UpdatedSession)?.user?.id
 
   if (!id) {

@@ -18,7 +18,7 @@ export default {
 				light_transparent_blue: '#242f9b26',
 				light_white: '#EFEFEF',
 				light_whiter: '#F5F5F5',
-				light_grey: '#999999',
+				light_grey: '#e7e5e4',
 
 				dark_primary: '#0092CA',
 				dark_primary_light: '#393E46',
