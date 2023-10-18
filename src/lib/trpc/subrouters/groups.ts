@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
+import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
 
 function tranformString(text: string) {
   let transformedText = ""
@@ -49,7 +50,7 @@ export const groupsRouter = router({
         groupsSubcategories: {
           create: {
             name: "General",
-            slug: "general",
+            slug: transformCategoryNameToSlug("General"),
           }
         }
       }

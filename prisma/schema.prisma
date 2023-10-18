@@ -249,7 +249,7 @@ model GroupSubcategory {
   slug        String
   createdAt   DateTime                  @default(now())
   updatedAt   DateTime                  @updatedAt
-  groups      Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId     String
   tests       GroupSubcategoryOnTests[]
   testRecords TestRecord[]

@@ -198,10 +198,15 @@
 		<div class="flex flex-col gap-2">
 			{#each tests as test}
 				<div class="relative">
-					<a href="#" class="absolute top-0 left-0 z-10 p-1 icon-gradient">
-						<iconify-icon icon="carbon:result" class="text-3xl text-white" />
-					</a>
-					<div class="flex flex-col rounded-md shadow-md">
+					{#if data.group.ownerId === data.session.user?.id}
+						<a href="#" class="absolute top-0 left-0 z-10 p-1 icon-gradient">
+							<iconify-icon
+								icon="carbon:result"
+								class="text-3xl text-white shadow-sm"
+							/>
+						</a>
+					{/if}
+					<div class="flex flex-col overflow-hidden rounded-md shadow-md">
 						<a
 							href="/dashboard/my-groups/{data.group
 								.slug}/{subcategory.slug}/tests/{test.testId}"
@@ -225,7 +230,7 @@
 							</div>
 						</a>
 						<div
-							class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2"
+							class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2 rounded-b-md"
 						>
 							<span
 								class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
@@ -386,20 +391,6 @@
 			to bottom,
 			transparent,
 			var(--dark_black) 30%
-		);
-	}
-	.icon-gradient {
-		isolation: isolate;
-	}
-	.icon-gradient::before {
-		content: '';
-		inset: 0;
-		position: absolute;
-		z-index: -10;
-		background-image: radial-gradient(
-			circle at left top,
-			var(--light-text-black) -50%,
-			transparent
 		);
 	}
 </style>
