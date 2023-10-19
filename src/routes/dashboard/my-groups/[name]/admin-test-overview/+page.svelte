@@ -2,7 +2,6 @@
 	import { trpc } from '~/lib/trpc/client.js';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { page } from '$app/stores';
-	import { test } from 'vitest';
 
 	export let data;
 
@@ -13,10 +12,10 @@
 				img?: string;
 		  }[];
 
-	type TestOrFetching = Test | 'fetching';
+	type TestOrFetching = Test | undefined;
 
 	let tests: TestOrFetching[] = data['group']['groupsSubcategories'].map(
-		() => 'fetching'
+		() => undefined
 	);
 
 	async function setTestForSubcategory(id: string, index: number) {
@@ -33,14 +32,6 @@
 			};
 		});
 	}
-
-	function checkTestStatus(test: TestOrFetching): test is Test {
-		return test !== 'fetching';
-	}
-
-	function getRetypedTest(test: TestOrFetching): Test {
-		return test as Test;
-	}
 </script>
 
 <section class="p-2 max-w-[600px]">
@@ -51,14 +42,13 @@
 			buttonClasses="bg-light_grey_dark"
 			onOpen={() => setTestForSubcategory(subcategory.id, index)}
 		>
-			{#if checkTestStatus(tests[index]) === false}
+			{@const testArray = tests[index]}
+			{#if testArray === undefined}
 				<div class="flex justify-center">
 					<span class="loading loading-bars loading-lg" />
 				</div>
 			{:else}
-				{#each tests[index] as testInitial}
-					{@const test = getRetypedTest(testInitial)}
-				{/each}
+				{#each testArray as testInitial}{/each}
 			{/if}
 		</Collapsible>
 	{/each}
