@@ -2,6 +2,7 @@
 	import { trpc } from '~/lib/trpc/client.js';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { page } from '$app/stores';
+	import { test } from 'vitest';
 
 	export let data;
 
@@ -10,19 +11,35 @@
 				title: string;
 				takenByPeopleCount: number;
 				img?: string;
-		  }[]
-		| 'fetching';
+		  }[];
 
-	let tests: Test[] = data['group']['groupsSubcategories'].map(
+	type TestOrFetching = Test | 'fetching';
+
+	let tests: TestOrFetching[] = data['group']['groupsSubcategories'].map(
 		() => 'fetching'
 	);
 
-	async function getTestForSubcategory(id: string) {
-		const tests = await trpc($page).groups.getSubcategoryTestsById.query({
-			id: id,
-			getRecordData: true
+	async function setTestForSubcategory(id: string, index: number) {
+		const testsData = await trpc(
+			$page
+		).groups.getSubcategoryTestsByIdWithRecords.query({
+			id: id
 		});
-		console.log(tests);
+
+		tests[index] = testsData.map((test) => {
+			return {
+				title: test.test.title,
+				takenByPeopleCount: test.test.testVersions[0]._count.records
+			};
+		});
+	}
+
+	function checkTestStatus(test: TestOrFetching): test is Test {
+		return test !== 'fetching';
+	}
+
+	function getRetypedTest(test: TestOrFetching): Test {
+		return test as Test;
 	}
 </script>
 
@@ -32,12 +49,16 @@
 			title={subcategory.name}
 			class="w-full bg-light_grey"
 			buttonClasses="bg-light_grey_dark"
-			onOpen={() => getTestForSubcategory(subcategory.id)}
+			onOpen={() => setTestForSubcategory(subcategory.id, index)}
 		>
-			{#if tests[index] === 'fetching'}
+			{#if checkTestStatus(tests[index]) === false}
 				<div class="flex justify-center">
 					<span class="loading loading-bars loading-lg" />
 				</div>
+			{:else}
+				{#each tests[index] as testInitial}
+					{@const test = getRetypedTest(testInitial)}
+				{/each}
 			{/if}
 		</Collapsible>
 	{/each}
