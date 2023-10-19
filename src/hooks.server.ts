@@ -76,11 +76,13 @@ const handleAuth: Handle = SvelteKitAuth({
 
 const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
 
-  if (event.url.pathname.startsWith("/dashboard") && !(await event.locals.getSession())?.user) {
+  const session = await event.locals.getSession()
+
+  if (event.url.pathname.startsWith("/dashboard") && !(session?.user)) {
     throw redirect(303, "/")
   }
 
-  if (event.url.pathname.startsWith("/login") && (await event.locals.getSession())?.user) {
+  if (event.url.pathname.startsWith("/login") && (session?.user)) {
     throw redirect(303, "/dashboard")
   }
 

@@ -34,7 +34,7 @@ export const protectedRouter = router({
         id: {
           in: includedInGroups
         },
-        groups: {
+        group: {
           users: {
             some: {
               userId: ctx.userId
@@ -166,7 +166,7 @@ export const protectedRouter = router({
           id: {
             in: linkedGroupsToCreate
           },
-          groups: {
+          group: {
             users: {
               some: {
                 userId: ctx.userId
