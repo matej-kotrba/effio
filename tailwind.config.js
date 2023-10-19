@@ -19,6 +19,7 @@ export default {
 				light_white: '#EFEFEF',
 				light_whiter: '#F5F5F5',
 				light_grey: '#e7e5e4',
+				light_grey_dark: '#cccccc',
 
 				dark_primary: '#0092CA',
 				dark_primary_light: '#393E46',

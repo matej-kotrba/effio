@@ -7,6 +7,7 @@
 	let classes = '';
 	export { classes as class };
 	export let buttonClasses = '';
+	export let onOpen: Function = () => {};
 
 	const positionsClasses = {
 		left: 'mr-auto',
@@ -20,6 +21,9 @@
 
 	function toggleCollapsible() {
 		isOpen = !isOpen;
+		if (isOpen === true) {
+			onOpen();
+		}
 	}
 </script>
 

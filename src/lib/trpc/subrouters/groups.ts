@@ -229,6 +229,7 @@ export const groupsRouter = router({
   }),
   getSubcategoryTestsById: loggedInProcedure.input(z.object({
     id: z.string(),
+    getRecordData: z.boolean().optional(),
     orderByDate: z.union([z.literal("asc"), z.literal("desc")]).optional(),
   })).query(async ({ ctx, input }) => {
     const tests = await ctx.prisma.groupSubcategoryOnTests.findMany({
@@ -236,7 +237,24 @@ export const groupsRouter = router({
         subcategoryId: input.id
       },
       include: {
-        test: true
+        test: input.getRecordData ? {
+          include: {
+            testVersions: {
+              take: 1,
+              orderBy: {
+                version: "desc"
+              },
+              include: {
+                _count: {
+                  select: {
+                    records: true
+                  }
+                }
+
+              }
+            }
+          }
+        } : false
       },
       orderBy: {
         addedDate: input.orderByDate === "desc" ? "desc" : "asc"
