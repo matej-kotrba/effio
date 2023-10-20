@@ -12,6 +12,7 @@
 		chatInputSchema
 	} from '~schemas/textInput.js';
 	import Drawer from '~components/collapsibles/Drawer.svelte';
+	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
 
 	export let data;
 
@@ -206,7 +207,12 @@
 							/>
 						</a>
 					{/if}
-					<div class="flex flex-col overflow-hidden rounded-md shadow-md">
+					<TestImageCard
+						test={test.test}
+						url="/dashboard/my-groups/{data.group
+							.slug}/{subcategory.slug}/tests/{test.testId}"
+					/>
+					<!-- <div class="flex flex-col overflow-hidden rounded-md shadow-md">
 						<a
 							href="/dashboard/my-groups/{data.group
 								.slug}/{subcategory.slug}/tests/{test.testId}"
@@ -239,7 +245,7 @@
 								></span
 							>
 						</div>
-					</div>
+					</div> -->
 				</div>
 			{/each}
 		</div>
