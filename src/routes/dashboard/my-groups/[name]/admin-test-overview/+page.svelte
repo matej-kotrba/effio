@@ -3,6 +3,7 @@
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { page } from '$app/stores';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
+	import Dropdown from '~components/effects/Dropdown.svelte';
 
 	export let data;
 
@@ -24,7 +25,8 @@
 		const testsData = await trpc(
 			$page
 		).groups.getSubcategoryTestsByIdWithRecords.query({
-			id: id
+			id: id,
+			excludeOwnersRecords: true
 		});
 
 		tests[index] = testsData.map((test) => {
@@ -55,12 +57,16 @@
 					{#each testArray as testInitial}
 						<div class="relative">
 							<div
-								class="absolute shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white right-2 top-2 z-[5] aspect-square w-8 grid place-content-center rounded-full"
+								class="absolute right-2 top-2 shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white z-[5] w-fit whitespace-nowrap grid place-content-center rounded-lg"
 							>
+								<span>Taken by:</span>
 								{testInitial.takenByPeopleCount}
 							</div>
 							<TestImageCard
-								test={testInitial}
+								test={{
+									title: testInitial.title,
+									description: 'See the statistics'
+								}}
 								url={`/dashboard/my-groups/${data['group']['slug']}/admin-test-overview/${testInitial.title}`}
 							/>
 						</div>

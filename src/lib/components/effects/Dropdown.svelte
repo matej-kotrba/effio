@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	export let directionY: 'top' | 'bottom' = 'top';
 	export let directionX: 'left' | 'right' | 'center' = 'right';
 
 	export let dropdownStyles: string = '';
+	export let dropdownButtonStyles: string = '';
 
 	let directionXStyle = '';
 	let directionYStyle = '';
+
+	let classes = '';
+	export { classes as class };
 
 	function initializeSettings() {
 		switch (directionX) {
@@ -39,12 +44,19 @@
 	});
 </script>
 
-<div class="relative inline-block">
-	<button type="button" on:click={onClick} class="p-2">
+<div class={twMerge('relative inline-block', classes)}>
+	<button
+		type="button"
+		on:click={onClick}
+		class={twMerge('p-2', dropdownButtonStyles)}
+	>
 		<slot name="title" />
 	</button>
 	<div
-		class="absolute p-2 bg-light_text_black text-whiter {directionXStyle} {directionYStyle} {dropdownStyles}"
+		class={twMerge(
+			`absolute p-2 bg-light_text_black text-whiter z-[6] ${directionXStyle} ${directionYStyle}`,
+			dropdownStyles
+		)}
 	>
 		<slot name="content" />
 	</div>

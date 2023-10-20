@@ -247,6 +247,7 @@ export const groupsRouter = router({
   getSubcategoryTestsByIdWithRecords: loggedInProcedure.input(z.object({
     id: z.string(),
     orderByDate: z.union([z.literal("asc"), z.literal("desc")]).optional(),
+    excludeOwnersRecords: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     const tests = await ctx.prisma.groupSubcategoryOnTests.findMany({
       where: {
@@ -263,7 +264,13 @@ export const groupsRouter = router({
               include: {
                 _count: {
                   select: {
-                    records: true
+                    records: input.excludeOwnersRecords ? {
+                      where: {
+                        userId: {
+                          not: ctx.userId
+                        }
+                      }
+                    } : true
                   }
                 }
 
