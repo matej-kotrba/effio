@@ -3,12 +3,12 @@
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { page } from '$app/stores';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
-	import Dropdown from '~components/effects/Dropdown.svelte';
 
 	export let data;
 
 	type Test =
 		| {
+				id: string;
 				title: string;
 				description: string;
 				takenByPeopleCount: number;
@@ -31,6 +31,7 @@
 
 		tests[index] = testsData.map((test) => {
 			return {
+				id: test.test.id,
 				title: test.test.title,
 				description: test.test.description,
 				takenByPeopleCount: test.test.testVersions[0]._count.records
@@ -57,17 +58,17 @@
 					{#each testArray as testInitial}
 						<div class="relative">
 							<div
-								class="absolute right-2 top-2 shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white z-[5] w-fit whitespace-nowrap grid place-content-center rounded-lg"
+								class="flex gap-1 p-1 items-center absolute right-2 top-2 shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white z-[5] w-fit whitespace-nowrap rounded-lg"
 							>
-								<span>Taken by:</span>
-								{testInitial.takenByPeopleCount}
+								<span class="text-body3">Taken by:</span>
+								<span class="text-body2">{testInitial.takenByPeopleCount}</span>
 							</div>
 							<TestImageCard
 								test={{
 									title: testInitial.title,
 									description: 'See the statistics'
 								}}
-								url={`/dashboard/my-groups/${data['group']['slug']}/admin-test-overview/${testInitial.title}`}
+								url={`/dashboard/my-groups/${data['group']['slug']}/admin-test-overview/${subcategory.slug}/${testInitial.id}`}
 							/>
 						</div>
 					{/each}

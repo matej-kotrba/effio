@@ -4,6 +4,6 @@
 
 <pre>
   <code>
-    {JSON.stringify(data.tests, null, 2)}
+    {JSON.stringify(data['avarage'], null, 2)}
   </code>
 </pre>

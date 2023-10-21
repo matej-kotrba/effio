@@ -164,6 +164,7 @@ model TestRecord {
   userId          String
   subcategory     GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
   subacategoryId  String?
+  userPoints      Int               @default(0)
 
   @@index([testId])
   @@index([userId])

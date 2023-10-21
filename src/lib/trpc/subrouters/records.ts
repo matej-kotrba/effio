@@ -27,7 +27,7 @@ export const recordsRouter = router({
       const subcategory = await ctx.prisma.groupSubcategory.findUnique({
         where: {
           id: input.subcategoryId,
-          groups: {
+          group: {
             users: {
               some: {
                 userId: ctx.userId
@@ -49,6 +49,7 @@ export const recordsRouter = router({
         title: input.title,
         description: input.description,
         subacategoryId: input.subcategoryId,
+        userPoints: input.answerContent.reduce((acc, curr) => acc + curr.points, 0),
         questionRecords: {
           createMany: {
             data: input.answerContent.map(item => {
