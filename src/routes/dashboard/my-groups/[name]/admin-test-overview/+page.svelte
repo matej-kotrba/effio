@@ -29,6 +29,8 @@
 			excludeOwnersRecords: true
 		});
 
+		console.log(testsData);
+
 		tests[index] = testsData.map((test) => {
 			return {
 				id: test.test.id,

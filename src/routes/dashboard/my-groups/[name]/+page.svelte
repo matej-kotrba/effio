@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Separator from '~components/separators/Separator.svelte';
 	import { page } from '$app/stores';
+	import IconButton from '~components/buttons/IconButton.svelte';
 
 	export let data;
 </script>
@@ -8,7 +9,10 @@
 <div class="p-4">
 	{#if data.session?.user?.id === data.group.ownerId}
 		<section class="p-2 rounded-md shadow-md bg-light_grey">
-			<h4 class="font-semibold text-h4">Admin part</h4>
+			<div class="flex items-center justify-between">
+				<h4 class="font-semibold text-h4">Admin part</h4>
+				<IconButton icon="material-symbols:person-add" />
+			</div>
 			<!-- <Separator w="100%" h="1px" /> -->
 			<div>
 				<a

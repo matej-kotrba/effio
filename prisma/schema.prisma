@@ -240,8 +240,18 @@ model Group {
   owner               User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId             String
   groupsSubcategories GroupSubcategory[]
+  groupInvites        GroupInvite[]
 
   @@index([ownerId])
+}
+
+model GroupInvite {
+  id        String   @id @default(uuid())
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   String
+  createdAt DateTime @default(now())
+
+  @@index([groupId])
 }
 
 model GroupSubcategory {
