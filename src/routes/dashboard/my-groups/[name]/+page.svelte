@@ -4,12 +4,15 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import { trpc } from '~/lib/trpc/client';
+	import { randomId } from '~helpers/randomId.js';
+	import toast from 'svelte-french-toast';
+	import Space from '~components/separators/Space.svelte';
 
 	export let data;
 
 	let openDialog: () => void;
 
-	let code: string = 'sj25-aiol4-4sd5';
+	let code: string = randomId();
 
 	async function getOrCreateInviteCode() {
 		if (data.session?.user?.id !== data.group.ownerId) return;
@@ -21,15 +24,39 @@
 </script>
 
 <Dialog bind:open={openDialog} title={'Group invitation code'}>
-	<h6 class="font-bold text-center uppercase text-h5">Here's your code</h6>
-	<div class="flex justify-center">
+	<h6 class="mt-4 font-bold text-center uppercase text-h5">Here's your code</h6>
+	<div class="flex items-center justify-center gap-1">
 		<input
 			type="text"
 			bind:value={code}
-			class="p-2 mx-auto font-semibold text-center uppercase rounded-md outline-none dark:bg-dark_light_grey"
+			class="p-2 font-semibold text-center uppercase rounded-md outline-none dark:bg-dark_light_grey"
 			readonly
 		/>
+		<IconButton
+			icon="solar:clipboard-bold"
+			class="rounded-md"
+			onClick={() => {
+				navigator.clipboard.writeText(code);
+				toast.success('Code copied to clipboard');
+			}}
+		/>
 	</div>
+	<Space gap={10} />
+	<ul
+		class="flex flex-col gap-2 dark:text-dark_text_white_60 text-light_text_black_60"
+	>
+		<li
+			class="text-body2 list-item before:content-[''] before:w-2 before:aspect-square before:rounded-full before:bg-light_text_black_60 before:dark:bg-dark_text_white_60 before:inline-block before:mr-2"
+		>
+			You can share this code with people you want to invite to your group.
+		</li>
+		<li
+			class="text-body2 list-item before:content-[''] before:w-2 before:aspect-square before:rounded-full before:bg-light_text_black_60 before:dark:bg-dark_text_white_60 before:inline-block before:mr-2"
+		>
+			Code can be used in "My groups" page, by clicking on the "Join group"
+			button and entering code
+		</li>
+	</ul>
 </Dialog>
 
 <div class="p-4">
