@@ -4,6 +4,7 @@ import { recordsRouter } from "./subrouters/records";
 import { groupMessagesRouter } from "./subrouters/groupMessages"
 import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
+import { groupInvitesRouter } from "./subrouters/groupInvite";
 
 
 // Schema of template question type
@@ -262,7 +263,8 @@ export const appRouter = router({
   protected: protectedRouter,
   records: recordsRouter,
   groups: groupsRouter,
-  groupMessages: groupMessagesRouter
+  groupMessages: groupMessagesRouter,
+  groupInvites: groupInvitesRouter
 })
 
 export type Router = typeof appRouter

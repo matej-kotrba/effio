@@ -12,11 +12,10 @@
 	let modal: HTMLDialogElement;
 </script>
 
-<dialog bind:this={modal} class="modal">
+<dialog bind:this={modal} class="modal modal-open">
 	<form
 		method="dialog"
 		class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
-		on:submit={() => console.log('asdas')}
 	>
 		<SuccessKeyframe
 			successMessage="Success!"
