@@ -40,5 +40,40 @@ export const groupInvitesRouter = router({
       })
     }
 
+  }),
+
+  joinGroupWithInvite: loggedInProcedure.input(z.object({
+    inviteCode: z.string(),
+  })).query(async ({ ctx, input }) => {
+    const invite = await ctx.prisma.groupInvite.findUnique({
+      where: {
+        id: input.inviteCode
+      }
+    })
+
+    if (!invite) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "This invite doesn't seem to exist." })
+    }
+
+    const group = await ctx.prisma.group.findUnique({
+      where: {
+        id: invite.groupId
+      }
+    })
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group you are trying to join doesn't seem to exist." })
+    }
+
+    await ctx.prisma.groupOnUsers.create({
+      data: {
+        groupId: invite.groupId,
+        userId: ctx.userId
+      }
+    })
+
+    return {
+      success: true
+    }
   })
 })

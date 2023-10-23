@@ -8,7 +8,6 @@
 
 	export let title: string;
 	export let titleName: string;
-	export let customStyles: string = '';
 	export let customContainerStyles: string = '';
 	export let inputProperties: HTMLInputAttributes = {};
 	export let validationSchema: ZodSchema<any> | null = null;
@@ -16,6 +15,10 @@
 	export let max: number | undefined = undefined;
 	export let doesLimit: boolean = false;
 	export let trailing: string = '';
+	export let displayOutside: boolean = false;
+
+	let classes = '';
+	export { classes as class };
 
 	export let inputValue: HTMLInputAttributes['value'] = '';
 
@@ -64,16 +67,30 @@
 	// }
 </script>
 
+{#if displayOutside === true}
+	<div class="flex items-center justify-between px-1">
+		<label
+			for={titleName}
+			class="text-xs duration-150 text-light_text_black dark:text-dark_text_white text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
+			>{title}</label
+		>
+		{#if min !== undefined && max !== undefined && displayOutside === true}
+			<Limit current={inputValue.length} {min} {max} class="text-xs" />
+		{/if}
+	</div>
+{/if}
 <div
 	class="p-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
 >
-	<label
-		for={titleName}
-		class="absolute z-10 text-xs duration-150 top-2 left-2 text-light_text_black dark:text-dark_text_white text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
-		>{title}</label
-	>
+	{#if displayOutside === false}
+		<label
+			for={titleName}
+			class="absolute z-10 text-xs duration-150 top-2 left-2 text-light_text_black dark:text-dark_text_white text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
+			>{title}</label
+		>
+	{/if}
 	<div class="relative">
-		{#if min !== undefined && max !== undefined}
+		{#if min !== undefined && max !== undefined && displayOutside === false}
 			<Limit
 				current={inputValue.length}
 				{min}
@@ -94,13 +111,15 @@
 				autocomplete="off"
 				maxlength={doesLimit ? max : undefined}
 				class={twMerge(
-					`input_edit resize-none my-1 outline-none bg-white dark:bg-dark_light_grey
+					`input_edit resize-none ${
+						displayOutside === false ? 'my-1' : 'mb-1'
+					} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full
 			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150 
 				
 			`,
-					customStyles
+					classes
 				)}
 				{...inputProperties}
 			/>

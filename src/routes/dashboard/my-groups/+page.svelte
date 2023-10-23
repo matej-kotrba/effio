@@ -10,8 +10,10 @@
 		GROUP_DESCRIPTION_MIN,
 		GROUP_NAME_MAX,
 		GROUP_NAME_MIN,
+		JOIN_CODE_LENGTH,
 		groupDescriptionSchema,
-		groupNameSchema
+		groupNameSchema,
+		joinCodeSchema
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -144,6 +146,25 @@
 				class="ml-auto"
 				buttonAttributes={{ type: 'submit' }}
 			/>
+		</form>
+
+		<form method="POST" slot="join">
+			<!-- <ErrorEnhance error={$errors.name ? $errors.name[0] : undefined}> -->
+			<Space gap={16} />
+			<TextInputSimple
+				title="Enter invite code"
+				titleName="code"
+				inputProperties={{
+					placeholder: 'XXXX-XXXX-XXXX'
+				}}
+				class="text-center uppercase"
+				max={JOIN_CODE_LENGTH}
+				min={JOIN_CODE_LENGTH}
+				validationSchema={joinCodeSchema}
+				doesLimit
+				displayOutside
+			/>
+			<!-- </ErrorEnhance> -->
 		</form>
 	</UserGroups>
 </div>
