@@ -25,7 +25,7 @@ export const groupInvitesRouter = router({
       where: {
         groupId: input.groupId,
         createdAt: {
-          lt: new Date(Date.now() - 1000 * 60 * 60 * 24)
+          gt: new Date(Date.now() - 1000 * 60 * 60 * 24)
         }
       }
     })

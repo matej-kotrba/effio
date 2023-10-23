@@ -12,9 +12,15 @@
 
 	let openDialog: () => void;
 
-	let code: string = randomId();
+	function onOpenInvite() {
+		openDialog();
+		getOrCreateInviteCode();
+	}
+
+	let code: string = '';
 
 	async function getOrCreateInviteCode() {
+		if (code) return;
 		if (data.session?.user?.id !== data.group.ownerId) return;
 		const response = await trpc($page).groupInvites.createInvite.mutate({
 			groupId: data.group.id
@@ -64,7 +70,7 @@
 		<section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
 			<div class="flex items-center justify-between">
 				<h4 class="font-semibold text-h4">Admin part</h4>
-				<IconButton icon="material-symbols:person-add" onClick={openDialog} />
+				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
 			</div>
 			<!-- <Separator w="100%" h="1px" /> -->
 			<div>
