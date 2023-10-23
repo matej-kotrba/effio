@@ -17,7 +17,7 @@
 	} from '~schemas/textInput.js';
 	import { superForm } from 'sveltekit-superforms/client';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
-	import { createGroupSchema } from './schemas';
+	import { createGroupSchema, joinGroupSchema } from './schemas';
 	import toast from 'svelte-french-toast';
 
 	export let data;
@@ -25,6 +25,16 @@
 	const { form, errors, enhance, submitting } = superForm(data.form, {
 		resetForm: true,
 		validators: createGroupSchema
+	});
+
+	const {
+		form: joinForm,
+		errors: joinErrors,
+		enhance: joinEnhance,
+		submitting: joinSubmitting
+	} = superForm(data.joinForm, {
+		resetForm: true,
+		validators: joinGroupSchema
 	});
 
 	let imageRef: HTMLImageElement | null = null;
@@ -148,23 +158,50 @@
 			/>
 		</form>
 
-		<form method="POST" slot="join">
-			<!-- <ErrorEnhance error={$errors.name ? $errors.name[0] : undefined}> -->
-			<Space gap={16} />
-			<TextInputSimple
-				title="Enter invite code"
-				titleName="code"
-				inputProperties={{
-					placeholder: 'XXXX-XXXX-XXXX'
+		<form
+			method="POST"
+			slot="join"
+			use:joinEnhance={{
+				onResult: ({ result }) => {
+					if (result['status'] === 200) {
+						toast.success('Joined a new group successfully!');
+						closeJoinDialog();
+					} else if (result['type'] === 'failure') {
+						console.log(result);
+						toast.error(
+							result['data'] ? result['data']['error'] : 'Error ocurred'
+						);
+					}
+				}
+			}}
+			action="?/joinGroup"
+		>
+			<ErrorEnhance error={$joinErrors.code ? $joinErrors.code[0] : undefined}>
+				<Space gap={16} />
+				<TextInputSimple
+					title="Enter invite code"
+					titleName="code"
+					inputProperties={{
+						placeholder: 'XXXX-XXXX-XXXX'
+					}}
+					class="text-center uppercase"
+					max={JOIN_CODE_LENGTH}
+					min={JOIN_CODE_LENGTH}
+					validationSchema={joinCodeSchema}
+					doesLimit
+					displayOutside
+					bind:inputValue={$joinForm.code}
+				/>
+			</ErrorEnhance>
+			<BasicButton
+				class="ml-auto"
+				buttonAttributes={{
+					type: 'submit',
+					disabled: !!$joinErrors.code || $joinSubmitting
 				}}
-				class="text-center uppercase"
-				max={JOIN_CODE_LENGTH}
-				min={JOIN_CODE_LENGTH}
-				validationSchema={joinCodeSchema}
-				doesLimit
-				displayOutside
+				isLoading={$joinSubmitting}
+				title="Join"
 			/>
-			<!-- </ErrorEnhance> -->
 		</form>
 	</UserGroups>
 </div>
