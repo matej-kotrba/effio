@@ -32,8 +32,8 @@
 				class="absolute grid content-center -translate-y-1/2 pointer-events-auto bg-light_terciary dark:bg-dark_secondary top-1/2 duration-150 {isOpen
 					? 'right-[calc(100%)] '
 					: 'right-[calc(100%)]'}
-          before:content-[''] before:absolute before:bottom-full before:left-0 before:w-full before:h-full before:dark:bg-dark_secondary before:bg-light_terciary before:rounded-tl-4xl
-          after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:dark:bg-dark_secondary after:bg-light_terciary after:rounded-bl-4xl"
+          before:content-[''] before:absolute before:bottom-full before:left-0 before:w-full before:h-full before:translate-y-[1px] before:dark:bg-dark_secondary before:bg-light_terciary before:rounded-tl-4xl
+          after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-full after:translate-y-[-1px] after:dark:bg-dark_secondary after:bg-light_terciary after:rounded-bl-4xl"
 				on:click={isOpen ? close : open}
 			>
 				<iconify-icon

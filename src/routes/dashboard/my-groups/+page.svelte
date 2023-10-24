@@ -10,11 +10,10 @@
 		GROUP_DESCRIPTION_MIN,
 		GROUP_NAME_MAX,
 		GROUP_NAME_MIN,
-		JOIN_CODE_LENGTH,
 		groupDescriptionSchema,
-		groupNameSchema,
-		joinCodeSchema
+		groupNameSchema
 	} from '~schemas/textInput.js';
+	import { joinCodeSchema, JOIN_CODE_LENGTH } from '~schemas/inviteCode';
 	import { superForm } from 'sveltekit-superforms/client';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import { createGroupSchema, joinGroupSchema } from './schemas';
@@ -69,6 +68,7 @@
 	<UserGroups
 		groups={data.groups ?? []}
 		bind:closeDialog={closeCreateDialog}
+		bind:closeDialogJoin={closeJoinDialog}
 		isSubmitting={$submitting}
 	>
 		<form
@@ -197,7 +197,7 @@
 				class="ml-auto"
 				buttonAttributes={{
 					type: 'submit',
-					disabled: !!$joinErrors.code || $joinSubmitting
+					disabled: !!$joinErrors.code || $joinSubmitting || !$joinForm.code
 				}}
 				isLoading={$joinSubmitting}
 				title="Join"

@@ -2,6 +2,7 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 import { randomId } from "~helpers/randomId"
+import { JOIN_CODE_EXPIRATION_VALUE } from "~schemas/inviteCode"
 
 export const groupInvitesRouter = router({
   createInvite: loggedInProcedure.input(z.object({
@@ -25,7 +26,7 @@ export const groupInvitesRouter = router({
       where: {
         groupId: input.groupId,
         createdAt: {
-          gt: new Date(Date.now() - 1000 * 60 * 60 * 24)
+          gt: new Date(Date.now() - JOIN_CODE_EXPIRATION_VALUE)
         }
       }
     })
@@ -55,6 +56,13 @@ export const groupInvitesRouter = router({
       throw new TRPCError({ code: "NOT_FOUND", message: "This invite doesn't seem to exist." })
     }
 
+    if (invite.createdAt <= new Date(Date.now() - JOIN_CODE_EXPIRATION_VALUE)) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Sorry, this invite code has expired."
+      })
+    }
+
     const group = await ctx.prisma.group.findUnique({
       where: {
         id: invite.groupId
@@ -63,6 +71,17 @@ export const groupInvitesRouter = router({
 
     if (!group) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Group you are trying to join doesn't seem to exist." })
+    }
+
+    const alreadyJoined = await ctx.prisma.groupOnUsers.findFirst({
+      where: {
+        groupId: invite.groupId,
+        userId: ctx.userId
+      }
+    })
+
+    if (alreadyJoined) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are already a member of this group." })
     }
 
     await ctx.prisma.groupOnUsers.create({
