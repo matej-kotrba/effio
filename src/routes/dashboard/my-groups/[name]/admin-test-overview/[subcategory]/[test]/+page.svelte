@@ -15,7 +15,7 @@
 				datasets: [
 					{
 						label: 'Maximum',
-						data: [100], // The total range (maximum value)
+						data: [data.totalPoints], // The total range (maximum value)
 						backgroundColor:
 							getComputedStyle(document.documentElement).getPropertyValue(
 								$applicationStates.darkMode.isDarkMode
@@ -25,7 +25,7 @@
 					},
 					{
 						label: 'Average',
-						data: [75], // The actual value
+						data: [data.avarage], // The actual value
 						backgroundColor:
 							getComputedStyle(document.documentElement).getPropertyValue(
 								$applicationStates.darkMode.isDarkMode
@@ -44,6 +44,11 @@
 					y: {
 						stacked: true
 					}
+				},
+				plugins: {
+					legend: {
+						display: false
+					}
 				}
 			}
 		};
@@ -54,11 +59,14 @@
 	});
 </script>
 
-<div class="w-[300px] p-4 bg-light_whiter shadow-md rounded-md">
-	<canvas bind:this={portfolio} width="400" class="w-full" />
+<div class="p-2">
+	<div class="w-[300px] p-4 bg-light_whiter shadow-md rounded-md">
+		Avarage achieved score
+		<canvas bind:this={portfolio} width="400" class="w-full" />
+	</div>
+	<pre>
+    <code>
+      {JSON.stringify(data['avarage'], null, 2)}
+    </code>
+  </pre>
 </div>
-<pre>
-  <code>
-    {JSON.stringify(data['avarage'], null, 2)}
-  </code>
-</pre>

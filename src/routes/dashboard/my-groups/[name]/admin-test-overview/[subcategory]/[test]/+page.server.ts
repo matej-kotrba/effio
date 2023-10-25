@@ -8,6 +8,27 @@ export const load: ServerLoad = async ({ parent, params }) => {
   console.log(testId, subacategorySlug, params)
   if (!testId || !subacategorySlug) throw redirect(307, "/dashboard/my-groups")
 
+  const test = await prisma.test.findUnique({
+    where: {
+      id: testId
+    },
+    include: {
+      testVersions: {
+        orderBy: {
+          version: "desc"
+        },
+        take: 1,
+        select: {
+          totalPoints: true
+        }
+      }
+    }
+  })
+
+  if (!test) {
+    throw redirect(307, "/dashboard/my-groups")
+  }
+
   const recordsAvg = await prisma.testRecord.aggregate({
     where: {
       test: {
@@ -25,11 +46,10 @@ export const load: ServerLoad = async ({ parent, params }) => {
     _count: true,
   })
 
-  console.log(recordsAvg)
-
   return {
     avarage: recordsAvg._avg.userPoints,
-    count: recordsAvg._count
+    count: recordsAvg._count,
+    totalPoints: test?.testVersions[0].totalPoints
   }
 
   // const tests = await prisma.groupSubcategoryOnTests.findMany({

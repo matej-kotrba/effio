@@ -59,6 +59,7 @@ export const protectedRouter = router({
           create: {
             version: 1,
             markSystemJSON: input.markSystem?.marks ?? {},
+            totalPoints: questions.reduce((acc, item) => acc + item.points, 0),
             questions: {
               createMany: {
                 data: questions.map((question) => {
@@ -236,19 +237,20 @@ export const protectedRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
       }
 
+      const questions = JSON.parse(input.questionContent) as QuestionClient[]
+
       const testData = await ctx.prisma.testVersion.create({
         data: {
           testId: input.testGroupId,
           version: version + 1,
           markSystemJSON: input.markSystem?.marks ?? {},
+          totalPoints: questions.reduce((acc, item) => acc + item.points, 0)
         }
       })
 
       if (!testData) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Test version not created" })
       }
-
-      const questions = JSON.parse(input.questionContent) as QuestionClient[]
 
       const questionsData =
         await ctx.prisma.question.createMany({

@@ -113,6 +113,7 @@ model TestVersion {
   questions      Question[]
   records        TestRecord[]
   markSystemJSON Json         @default("{}")
+  totalPoints    Int          @default(0)
   // markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
   // markSystemId String?
   // @@index([markSystemId])
