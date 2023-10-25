@@ -10,7 +10,11 @@ export const load: ServerLoad = async ({ parent, params }) => {
 
   const recordsAvg = await prisma.testRecord.aggregate({
     where: {
-      testId: testId,
+      test: {
+        testGroup: {
+          id: testId
+        }
+      },
       subcategory: {
         slug: subacategorySlug
       }
@@ -20,6 +24,8 @@ export const load: ServerLoad = async ({ parent, params }) => {
     },
     _count: true,
   })
+
+  console.log(recordsAvg)
 
   return {
     avarage: recordsAvg._avg.userPoints,
