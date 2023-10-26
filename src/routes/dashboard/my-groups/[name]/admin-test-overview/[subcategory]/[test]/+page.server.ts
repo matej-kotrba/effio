@@ -32,9 +32,7 @@ export const load: ServerLoad = async ({ parent, params }) => {
   const recordsAvg = await prisma.testRecord.aggregate({
     where: {
       test: {
-        testGroup: {
-          id: testId
-        }
+        testId: testId
       },
       subcategory: {
         slug: subacategorySlug
@@ -46,38 +44,52 @@ export const load: ServerLoad = async ({ parent, params }) => {
     _count: true,
   })
 
+  const avarageForEachQuestion = await prisma.questionRecord.groupBy({
+    by: ["questionId"],
+    where: {
+      testRecord: {
+        test: {
+          testId: testId
+        },
+        subcategory: {
+          slug: subacategorySlug
+        }
+      }
+    },
+    _avg: {
+      userPoints: true
+    },
+  })
+
+  const totalForEachQuestion = await prisma.question.findMany({
+    where: {
+      test: {
+        testId: testId,
+      }
+    },
+    select: {
+      id: true,
+      points: true
+    }
+  })
+
+  const pointsQuestionData = (avarageForEachQuestion.map((question) => {
+    const total = totalForEachQuestion.find((total) => total.id === question.questionId)
+    console.log(total)
+    if (!question._avg.userPoints || !total?.points) return null
+    return {
+      averagePoints: question._avg.userPoints,
+      totalPoints: total.points
+    }
+  })).filter(data => data !== null) as {
+    averagePoints: number;
+    totalPoints: number;
+  }[]
+
   return {
     avarage: recordsAvg._avg.userPoints,
     count: recordsAvg._count,
-    totalPoints: test?.testVersions[0].totalPoints
+    totalPoints: test.testVersions[0].totalPoints,
+    pointsQuestionData
   }
-
-  // const tests = await prisma.groupSubcategoryOnTests.findMany({
-  //   where: {
-  //     subcategory: {
-  //       slug: categorySlug,
-  //       group: {
-  //         id: group?.id
-  //       }
-  //     },
-  //   },
-  //   include: {
-  //     test: {
-  //       include: {
-  //         testVersions: {
-  //           orderBy: {
-  //             createdAt: "desc"
-  //           },
-  //           include: {
-  //             records: true
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // })
-
-  // return {
-  //   tests: tests
-  // }
 }  

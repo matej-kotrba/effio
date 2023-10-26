@@ -1,67 +1,41 @@
 <script lang="ts">
-	import type { ChartConfiguration } from 'chart.js';
 	import Chart from 'chart.js/auto';
 	import { onMount } from 'svelte';
 	import Counter from '~components/informatic/Counter.svelte';
 	import { applicationStates } from '~stores/applicationStates.js';
 	import GraphContainer from './GraphContainer.svelte';
+	import { createVerticalBarChartConfig } from './graphsMethods';
 
 	export let data;
 
-	let portfolio: HTMLCanvasElement;
-	onMount(() => {
-		const config: ChartConfiguration = {
-			type: 'bar',
-			data: {
-				labels: [''],
-				datasets: [
-					{
-						label: 'Maximum',
-						data: [data.totalPoints], // The total range (maximum value)
-						backgroundColor:
-							getComputedStyle(document.documentElement).getPropertyValue(
-								$applicationStates.darkMode.isDarkMode
-									? '--dark-text-white-20'
-									: '--light-text-black-20'
-							) || '#6722e6' // Maximum segment color with transparency
-					},
-					{
-						label: 'Average',
-						data: [data.avarage], // The actual value
-						backgroundColor:
-							getComputedStyle(document.documentElement).getPropertyValue(
-								$applicationStates.darkMode.isDarkMode
-									? '--dark-primary'
-									: '--light-primary'
-							) || '#6722e6' // Maximum segment color with transparency // Actual Value segment color with transparency
-					}
-				]
-			},
-			options: {
-				indexAxis: 'y',
-				scales: {
-					x: {
-						beginAtZero: true
-					},
-					y: {
-						stacked: true
-					}
-				},
-				plugins: {
-					legend: {
-						display: true,
-						align: 'center',
-						position: 'bottom',
-						onClick: () => {}
-					}
-				}
-			}
-		};
+	let questionAverages: HTMLCanvasElement[] = [];
 
-		const ctx = portfolio.getContext('2d');
+	let overallAverageGraph: HTMLCanvasElement;
+	onMount(() => {
+		if (!data.avarage) return;
+
+		const overallConfig = createVerticalBarChartConfig(
+			data.totalPoints,
+			data.avarage,
+			$applicationStates.darkMode.isDarkMode
+		);
+
+		const ctx = overallAverageGraph.getContext('2d');
 		//@ts-ignore
-		let chart = new Chart(ctx, config);
+		let chart = new Chart(ctx, overallConfig);
+
+		const questionAveragesConfigs: ReturnType<
+			typeof createVerticalBarChartConfig
+		>[] = data.pointsQuestionData.map((avarageData) => {
+			return createVerticalBarChartConfig(
+				avarageData.totalPoints,
+				avarageData.averagePoints,
+				$applicationStates.darkMode.isDarkMode
+			);
+		});
 	});
+
+	console.log(data.pointsQuestionData);
 </script>
 
 <div class="grid grid-cols-12 gap-2 p-2">
@@ -74,6 +48,11 @@
 	</GraphContainer>
 	<GraphContainer class="col-span-3">
 		<span class="font-semibold">Avarage achieved score</span>
-		<canvas bind:this={portfolio} width="400" class="w-full" />
+		<canvas bind:this={overallAverageGraph} width="400" class="w-full" />
 	</GraphContainer>
+	{#each data['pointsQuestionData'] as questionData, index}
+		<GraphContainer class="col-span-2">
+			<canvas bind:this={questionAverages[index]} width="400" class="w-full" />
+		</GraphContainer>
+	{/each}
 </div>
