@@ -2,7 +2,9 @@
 	import type { ChartConfiguration } from 'chart.js';
 	import Chart from 'chart.js/auto';
 	import { onMount } from 'svelte';
+	import Counter from '~components/informatic/Counter.svelte';
 	import { applicationStates } from '~stores/applicationStates.js';
+	import GraphContainer from './GraphContainer.svelte';
 
 	export let data;
 
@@ -47,7 +49,10 @@
 				},
 				plugins: {
 					legend: {
-						display: false
+						display: true,
+						align: 'center',
+						position: 'bottom',
+						onClick: () => {}
 					}
 				}
 			}
@@ -59,14 +64,16 @@
 	});
 </script>
 
-<div class="p-2">
-	<div class="w-[300px] p-4 bg-light_whiter shadow-md rounded-md">
-		Avarage achieved score
+<div class="grid grid-cols-12 gap-2 p-2">
+	<GraphContainer class="flex flex-col items-center col-span-2 gap-1">
+		<span class="font-semibold text-h4">Taken by</span>
+		<Counter count={42} />
+		<span class="mt-auto text-body4 text-light_text_black_60"
+			>*Also includes duplicate completion</span
+		>
+	</GraphContainer>
+	<GraphContainer class="col-span-3">
+		<span class="font-semibold">Avarage achieved score</span>
 		<canvas bind:this={portfolio} width="400" class="w-full" />
-	</div>
-	<pre>
-    <code>
-      {JSON.stringify(data['avarage'], null, 2)}
-    </code>
-  </pre>
+	</GraphContainer>
 </div>
