@@ -8,6 +8,7 @@ export const createVerticalBarChartConfig = (chartData1: number, chartData2: num
       datasets: [
         {
           label: 'Maximum',
+          barThickness: 40,
           data: [chartData1], // The total range (maximum value)
           backgroundColor:
             getComputedStyle(document.documentElement).getPropertyValue(
@@ -30,12 +31,13 @@ export const createVerticalBarChartConfig = (chartData1: number, chartData2: num
     },
     options: {
       indexAxis: 'y',
+      maintainAspectRatio: false,
       scales: {
         x: {
           beginAtZero: true
         },
         y: {
-          stacked: true
+          stacked: true,
         }
       },
       plugins: {

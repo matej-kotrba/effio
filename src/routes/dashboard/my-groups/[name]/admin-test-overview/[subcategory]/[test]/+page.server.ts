@@ -69,22 +69,27 @@ export const load: ServerLoad = async ({ parent, params }) => {
     },
     select: {
       id: true,
-      points: true
+      points: true,
+      title: true,
     }
   })
+
+  type QuestionData = {
+    title: string;
+    averagePoints: number;
+    totalPoints: number;
+  }
 
   const pointsQuestionData = (avarageForEachQuestion.map((question) => {
     const total = totalForEachQuestion.find((total) => total.id === question.questionId)
     console.log(total)
     if (!question._avg.userPoints || !total?.points) return null
     return {
+      title: total.title,
       averagePoints: question._avg.userPoints,
       totalPoints: total.points
     }
-  })).filter(data => data !== null) as {
-    averagePoints: number;
-    totalPoints: number;
-  }[]
+  })).filter(data => data !== null) as QuestionData[]
 
   return {
     avarage: recordsAvg._avg.userPoints,
