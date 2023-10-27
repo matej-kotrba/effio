@@ -6,12 +6,14 @@
 	import GraphContainer from './GraphContainer.svelte';
 	import { createVerticalBarChartConfig } from './graphsMethods';
 	import Space from '~components/separators/Space.svelte';
+	import UserTable from './UserTable.svelte';
 
 	export let data;
 
 	let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
 	let overallAverageGraph: HTMLCanvasElement;
+
 	onMount(() => {
 		if (!data.avarage) return;
 
@@ -41,8 +43,6 @@
 			let chart = new Chart(ctx, questionAveragesConfigs[index]);
 		});
 	});
-
-	console.log(data.pointsQuestionData);
 </script>
 
 <!-- Title grid -->
@@ -107,7 +107,7 @@
 </div>
 <!-- Content grid -->
 <div class="grid grid-cols-12 gap-2 px-2 main-grid">
-	<div class="flex flex-col gap-1" />
+	<UserTable />
 </div>
 
 <style>

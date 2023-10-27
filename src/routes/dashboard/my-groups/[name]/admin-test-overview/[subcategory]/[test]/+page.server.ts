@@ -82,7 +82,6 @@ export const load: ServerLoad = async ({ parent, params }) => {
 
   const pointsQuestionData = (avarageForEachQuestion.map((question) => {
     const total = totalForEachQuestion.find((total) => total.id === question.questionId)
-    console.log(total)
     if (!question._avg.userPoints || !total?.points) return null
     return {
       title: total.title,

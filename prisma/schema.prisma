@@ -56,6 +56,8 @@ model User {
   groups                   GroupOnUsers[]
   groupsOwned              Group[]
   GroupSubcategoreyMessage GroupSubcategoryMessage[]
+
+  @@index([name, id])
 }
 
 model VerificationToken {
