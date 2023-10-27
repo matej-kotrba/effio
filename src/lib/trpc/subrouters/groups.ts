@@ -2,7 +2,6 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
-import type { User } from "@prisma/client"
 
 function tranformString(text: string) {
   let transformedText = ""
@@ -319,9 +318,7 @@ export const groupsRouter = router({
     groupId: z.string(),
     cursor: z.string().optional(),
     limit: z.number().optional(),
-    select: z.object<{
-      [key in keyof User]: Partial<boolean>;
-    }>({
+    select: z.object({
       email: z.boolean().optional(),
       emailVerified: z.boolean().optional(),
       id: z.boolean().optional(),
