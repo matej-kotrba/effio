@@ -7,14 +7,20 @@
 	import type { CreateObserverReturn } from '~/lib/utils/observers';
 	import { twMerge } from 'tailwind-merge';
 
+	type UserDataObject = Pick<User, 'name' | 'id' | 'image'> & {
+		takenCount: number;
+	};
+
 	export let data: {
 		groupId: string;
+		subcategorySlug: string;
+		testId: string;
 	};
 
 	let classes = '';
 	export { classes as class };
 
-	let users: Pick<User, 'name' | 'id' | 'image'>[] = [];
+	let users: UserDataObject[] = [];
 	let isFetchingNewUsers = true;
 
 	async function getUsers() {
@@ -29,7 +35,36 @@
 			}
 		});
 
-		users = [...users, ...result];
+		const userTestCount = await trpc(
+			$page
+		).groups.getUsersTestRecordCount.query({
+			subcategorySlug: data.subcategorySlug,
+			testId: data.testId,
+			userId: result.map((item) => item.id)
+		});
+
+		const joinedArray: UserDataObject[] = result
+			.map((item) => {
+				const count = userTestCount.find(
+					(countItem) => countItem.userId === item.id
+				);
+				if (!count)
+					return {
+						id: item.id,
+						name: item.name,
+						image: item.image,
+						takenCount: 0
+					};
+				return {
+					id: item.id,
+					name: item.name,
+					image: item.image,
+					takenCount: count._count.id
+				} as UserDataObject;
+			})
+			.filter((item) => item !== undefined) as UserDataObject[];
+
+		users = [...users, ...joinedArray];
 	}
 
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
@@ -54,13 +89,28 @@
 	});
 </script>
 
-<div class={twMerge('flex flex-col gap-1', classes)}>
+<div class={twMerge('grid grid-cols-12', classes)}>
+	<div class="grid grid-cols-12 col-span-12">
+		<span class="col-span-3 font-bold text-center text-body1">Name</span>
+		<span class="col-span-1 font-bold text-center text-body1">Icon</span>
+		<span class="col-span-1 font-bold text-center text-body1">Taken</span>
+		<span class="col-span-2 font-bold text-center text-body1">Taken Count</span>
+	</div>
 	{#each users as user, index}
 		<div
 			use:addIntersectionUse={{ shouldActive: index === users.length - 1 }}
-			class="w-full rounded-md h-[200px] bg-light_whiter text-light_text_black"
+			class="grid w-full grid-cols-12 col-span-12 px-2 py-2 bg-light_whiter text-light_text_black"
 		>
-			{user.name}
+			<span class="col-span-3 font-semibold text-center">{user.name}</span>
+			<img
+				class="col-span-1 font-semibold text-center"
+				src={user.image}
+				alt="User"
+			/>
+			<span class="col-span-1 font-semibold text-center">{user.takenCount}</span
+			>
+			<span class="col-span-2 font-semibold text-center">{user.takenCount}</span
+			>
 		</div>
 	{/each}
 </div>

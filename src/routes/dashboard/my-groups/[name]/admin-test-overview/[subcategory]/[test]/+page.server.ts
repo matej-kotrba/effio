@@ -94,6 +94,8 @@ export const load: ServerLoad = async ({ parent, params }) => {
     avarage: recordsAvg._avg.userPoints,
     count: recordsAvg._count,
     totalPoints: test.testVersions[0].totalPoints,
-    pointsQuestionData
+    pointsQuestionData,
+    subcategorySlug: subacategorySlug,
+    testId: testId
   }
 }  

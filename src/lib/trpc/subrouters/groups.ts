@@ -345,15 +345,44 @@ export const groupsRouter = router({
           some: {
             groupId: input.groupId
           }
-        }
+        },
       },
       cursor: input.cursor ? {
         id: input.cursor
       } : undefined,
       take: input.limit,
       skip: input.cursor ? 1 : 0,
+      include: {
+
+      }
     })
 
     return users
+  }),
+
+  getUsersTestRecordCount: loggedInProcedure.input(z.object({
+    subcategorySlug: z.string(),
+    testId: z.string(),
+    userId: z.array(z.string())
+  })).query(async ({ ctx, input }) => {
+    const count = await ctx.prisma.testRecord.groupBy({
+      by: ["userId"],
+      where: {
+        userId: {
+          in: input.userId
+        },
+        subcategory: {
+          slug: input.subcategorySlug
+        },
+        test: {
+          testId: input.testId
+        }
+      },
+      _count: {
+        id: true
+      },
+    })
+
+    return count
   })
 })
