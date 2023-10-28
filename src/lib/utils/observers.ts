@@ -1,18 +1,19 @@
-type CreateObserverParams = {
-  callback: (entry: IntersectionObserverEntry) => void
+export type CreateObserverParams = {
+  callback: (entry: IntersectionObserverEntry, observer: IntersectionObserver) => void
 }
 
-type CreateObserverReturn = {
-  disconnect: () => void;
-  addIntersection: (element: HTMLElement) => void;
+export type CreateObserverReturn = {
+  observer: IntersectionObserver;
+  addIntersection: (element: HTMLElement, { shouldActive }: { shouldActive: boolean }) => void;
 }
 
 export const createObserver = ({ callback }: CreateObserverParams): CreateObserverReturn => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(callback)
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(item => callback(item, observer))
   })
 
-  function addIntersection(element: HTMLElement) {
+  const addIntersection: CreateObserverReturn["addIntersection"] = (element: HTMLElement, { shouldActive }) => {
+    if (!shouldActive) return;
     observer.observe(element);
 
     return {
@@ -23,7 +24,7 @@ export const createObserver = ({ callback }: CreateObserverParams): CreateObserv
   }
 
   return {
-    disconnect: observer.disconnect,
+    observer: observer,
     addIntersection: addIntersection
   }
 }

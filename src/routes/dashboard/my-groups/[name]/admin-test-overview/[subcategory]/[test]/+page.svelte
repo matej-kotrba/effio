@@ -107,7 +107,7 @@
 </div>
 <!-- Content grid -->
 <div class="grid grid-cols-12 gap-2 px-2 main-grid">
-	<UserTable />
+	<UserTable data={{ groupId: data.group.id }} class="col-span-5" />
 </div>
 
 <style>
