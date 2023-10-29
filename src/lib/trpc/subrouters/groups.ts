@@ -316,6 +316,8 @@ export const groupsRouter = router({
   }),
   getGroupUsers: loggedInProcedure.input(z.object({
     groupId: z.string(),
+    subcategorySlug: z.string(),
+    testId: z.string(),
     cursor: z.string().optional(),
     limit: z.number().optional(),
     select: z.object({
@@ -324,6 +326,10 @@ export const groupsRouter = router({
       id: z.boolean().optional(),
       image: z.boolean().optional(),
       name: z.boolean().optional(),
+    }),
+    ordering: z.object({
+      order: z.union([z.literal("asc"), z.literal("desc")]),
+      by: z.union([z.literal("count"), z.literal("name")])
     })
   })).query(async ({ ctx, input }) => {
     const group = await ctx.prisma.group.findUnique({
@@ -336,10 +342,22 @@ export const groupsRouter = router({
       throw new TRPCError({ code: "NOT_FOUND", message: "This group doesn't seem to exist" })
     }
 
+    const orderBy: Record<string, unknown> = {}
+
+    switch (input.ordering.by) {
+      case "name": {
+        orderBy["name"] = input.ordering.order
+        break
+      }
+      case "count": {
+        orderBy["testRecords"] = {
+          _count: input.ordering.order
+        }
+      }
+    }
+
     const users = await ctx.prisma.user.findMany({
-      orderBy: {
-        name: "asc"
-      },
+      orderBy: orderBy,
       where: {
         groups: {
           some: {
@@ -353,7 +371,20 @@ export const groupsRouter = router({
       take: input.limit,
       skip: input.cursor ? 1 : 0,
       include: {
-
+        _count: {
+          select: {
+            testRecords: {
+              where: {
+                subcategory: {
+                  slug: input.subcategorySlug
+                },
+                test: {
+                  testId: input.testId
+                }
+              }
+            }
+          }
+        }
       }
     })
 
@@ -363,7 +394,7 @@ export const groupsRouter = router({
   getUsersTestRecordCount: loggedInProcedure.input(z.object({
     subcategorySlug: z.string(),
     testId: z.string(),
-    userId: z.array(z.string())
+    userId: z.array(z.string()),
   })).query(async ({ ctx, input }) => {
     const count = await ctx.prisma.testRecord.groupBy({
       by: ["userId"],
