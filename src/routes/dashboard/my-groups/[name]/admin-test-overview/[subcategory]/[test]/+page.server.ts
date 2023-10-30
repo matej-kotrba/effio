@@ -5,7 +5,6 @@ export const load: ServerLoad = async ({ parent, params }) => {
   const testId = params.test as string
   const subacategorySlug = params.subcategory as string
 
-  console.log(testId, subacategorySlug, params)
   if (!testId || !subacategorySlug) throw redirect(307, "/dashboard/my-groups")
 
   const test = await prisma.test.findUnique({

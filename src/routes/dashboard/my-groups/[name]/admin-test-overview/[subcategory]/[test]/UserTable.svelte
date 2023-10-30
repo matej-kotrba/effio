@@ -204,9 +204,18 @@
 							alt="User"
 						/>
 					</div>
-					<span class="col-span-1 font-normal text-center"
-						>{user.takenCount}</span
+					<div
+						class="grid col-span-1 font-normal text-center place-content-center"
 					>
+						{#if user.takenCount > 0}
+							<iconify-icon
+								icon="ic:round-check"
+								class="text-2xl text-green-500"
+							/>
+						{:else}
+							<iconify-icon icon="ic:round-close" class="text-2xl text-error" />
+						{/if}
+					</div>
 					<span class="col-span-2 font-normal text-center"
 						>{user.takenCount}</span
 					>

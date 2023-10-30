@@ -52,6 +52,7 @@
 		"chart.js": "^4.3.3",
 		"gift-format-generator": "^0.2.8",
 		"gift-pegjs": "^0.2.1",
+		"leaflet": "^1.9.4",
 		"superjson": "^1.13.1",
 		"svelte-french-toast": "1.0.4-beta.0",
 		"sveltekit-superforms": "^1.0.0",
