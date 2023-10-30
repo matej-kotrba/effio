@@ -8,6 +8,7 @@
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { applicationStates } from '~stores/applicationStates';
+	import ScrollIndicator from '~components/informatic/ScrollIndicator.svelte';
 
 	export let data;
 

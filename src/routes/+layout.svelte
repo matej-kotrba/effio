@@ -10,6 +10,14 @@
 	let htmlTag: HTMLElement | undefined | null = undefined;
 
 	if (browser) {
+		if (localStorage.getItem('dark') === null) {
+			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				localStorage.setItem('dark', 'true');
+			} else {
+				localStorage.setItem('dark', 'false');
+			}
+		}
+
 		const isDarkMode = localStorage.getItem('dark') === 'true';
 		$applicationStates.darkMode.isDarkMode = isDarkMode;
 		htmlTag = document?.getElementsByTagName('html')[0];

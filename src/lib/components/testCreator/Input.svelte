@@ -15,6 +15,7 @@ will be used in the test creator -->
 	import Connect from './creatorInputs/Connect.svelte';
 	import Write from './creatorInputs/Write.svelte';
 	import Fill from './creatorInputs/Fill.svelte';
+	import { clickOutside } from '~use/clickOutside';
 
 	let dispatch = createEventDispatcher();
 
@@ -23,6 +24,10 @@ will be used in the test creator -->
 	function dispatchDragEvent() {
 		dispatch('dnddrag');
 	}
+
+	let isCollapsed = false;
+
+	let dropdownRef: HTMLDetailsElement;
 
 	const MIN_RANGE_VALUE: number = 0;
 	const MAX_RANGE_VALUE: number = 10;
@@ -60,18 +65,32 @@ will be used in the test creator -->
 				class="text-3xl text-light_text_black dark:text-dark_text_white_80"
 			/>
 		</div>
-		<button
-			on:click={() => {
-				dispatch('deleteInput');
-			}}
-			class="justify-self-end group"
-		>
-			<Icon
-				icon="material-symbols:close-rounded"
-				class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error dark:text-dark_error"
-				style="transition: 200ms transform;"
-			/>
-		</button>
+		<div class="flex items-center gap-3 justify-self-end">
+			<button
+				type="button"
+				class={`grid place-content-center duration-150 ${
+					isCollapsed ? 'rotate-180' : ''
+				}`}
+				on:click={() => {
+					isCollapsed = !isCollapsed;
+				}}
+			>
+				<iconify-icon icon="iconamoon:arrow-down-2-duotone" class="text-3xl" />
+			</button>
+			<button
+				type="button"
+				on:click={() => {
+					dispatch('deleteInput');
+				}}
+				class=" group"
+			>
+				<Icon
+					icon="material-symbols:close-rounded"
+					class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error dark:text-dark_error"
+					style="transition: 200ms transform;"
+				/>
+			</button>
+		</div>
 	</div>
 	<Space gap={20} />
 	<h6 class="text-light_text_black dark:text-dark_text_white">
@@ -94,50 +113,77 @@ will be used in the test creator -->
 		{$testObject.questions[index].errors.title || 'Placeholder error'}
 	</p>
 	<Space gap={10} />
-	<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
-	<Space gap={10} />
-	<div class="p-2 content">
-		{#if $testObject['questions'][index]['questionType'] === 'pickOne'}
-			<PickOneInput on:questionDetails indexParent={index} />
-		{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
-			<TrueFalseInput on:questionDetails indexParent={index} />
-		{:else if $testObject['questions'][index]['questionType'] === 'connect'}
-			<Connect on:questionDetails indexParent={index} />
-		{:else if $testObject['questions'][index]['questionType'] === 'write'}
-			<Write on:questionDetails indexParent={index} />
-		{:else if $testObject['questions'][index]['questionType'] === 'fill'}
-			<Fill on:questionDetails indexParent={index} />
-		{/if}
-	</div>
-	<details class="dropdown dropdown-top">
-		<summary
-			class="m-1 shadow-md btn dark:bg-dark_terciary dark:border-dark_terciary dark:text-dark_text_white dark:hover:bg-dark_quaternary dark:hover:border-dark_quaternary"
-			>Edit points</summary
-		>
-		<div
-			class="p-3 shadow menu dropdown-content z-[1] bg-base-100 dark:bg-dark_terciary rounded-box w-52"
-		>
-			<h6 class="font-semibold text-center">Points for this question?</h6>
-			<p class="text-2xl font-semibold text-center">
-				{$testObject.questions[index].points}
-			</p>
-			<div class="flex items-center gap-1">
-				<button
-					class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
-					on:click={() => onButtonClick(-1)}>-1</button
-				>
-				<input
-					bind:value={$testObject.questions[index].points}
-					type="range"
-					min={MIN_RANGE_VALUE}
-					max={MAX_RANGE_VALUE}
-					class="range range-xs dark:bg-dark_text_white_20"
-				/>
-				<button
-					class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
-					on:click={() => onButtonClick(1)}>+1</button
-				>
+	<div class:collapsed={isCollapsed} class="collapsible">
+		<div>
+			<Separator color={'var(--light-text-black-20)'} w="100%" h="0.5px" />
+			<Space gap={10} />
+			<div class="p-2 content">
+				{#if $testObject['questions'][index]['questionType'] === 'pickOne'}
+					<PickOneInput on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
+					<TrueFalseInput on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'connect'}
+					<Connect on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'write'}
+					<Write on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'fill'}
+					<Fill on:questionDetails indexParent={index} />
+				{/if}
 			</div>
+			<details
+				class="dropdown dropdown-top"
+				use:clickOutside
+				bind:this={dropdownRef}
+				on:clickoutside={() => {
+					dropdownRef.removeAttribute('open');
+				}}
+			>
+				<summary
+					class="m-1 shadow-md btn dark:bg-dark_terciary dark:border-dark_terciary dark:text-dark_text_white dark:hover:bg-dark_quaternary dark:hover:border-dark_quaternary"
+					>Edit points</summary
+				>
+				<div
+					class="p-3 shadow menu dropdown-content z-[1] bg-base-100 dark:bg-dark_terciary rounded-box w-52"
+				>
+					<h6 class="font-semibold text-center">Points for this question?</h6>
+					<p class="text-2xl font-semibold text-center">
+						{$testObject.questions[index].points}
+					</p>
+					<div class="flex items-center gap-1">
+						<button
+							class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+							on:click={() => onButtonClick(-1)}>-1</button
+						>
+						<input
+							bind:value={$testObject.questions[index].points}
+							type="range"
+							min={MIN_RANGE_VALUE}
+							max={MAX_RANGE_VALUE}
+							class="range range-xs dark:bg-dark_text_white_20"
+						/>
+						<button
+							class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+							on:click={() => onButtonClick(1)}>+1</button
+						>
+					</div>
+				</div>
+			</details>
 		</div>
-	</details>
+	</div>
 </div>
+
+<style>
+	.collapsible {
+		display: grid;
+		grid-template-rows: 1fr;
+		transition: 200ms ease;
+	}
+
+	.collapsible > div {
+		overflow: hidden;
+	}
+
+	.collapsed {
+		grid-template-rows: 0fr;
+	}
+</style>

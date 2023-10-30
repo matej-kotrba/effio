@@ -95,7 +95,9 @@
 								  });`
 								: `background-color: var(${
 										isDarkMode ? '--dark_black' : '--light-white'
-								  }); color: var(--success);`
+								  }); color: var(${
+										isDarkMode ? '--dark-text-white' : '--success'
+								  });`
 						}}`}
 						on:click={() => (content['correctAnswerIndex'] = index)}
 					>
