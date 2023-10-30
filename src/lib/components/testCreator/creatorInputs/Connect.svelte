@@ -34,7 +34,9 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		if ($testObject.questions[indexParent].content.answers) {
+		if (
+			($testObject.questions[indexParent].content as ConnectQuestion).answers
+		) {
 			(
 				$testObject.questions[indexParent].content as ConnectQuestion
 			).matchedAnswers[crypto.randomUUID()] = {
@@ -46,9 +48,8 @@
 	}
 
 	function deleteQuestion(index: number) {
-		$testObject.questions[indexParent].content.answers = content.answers.filter(
-			(_, i) => i !== index
-		);
+		($testObject.questions[indexParent].content as ConnectQuestion).answers =
+			content.answers.filter((_, i) => i !== index);
 		delete ($testObject.questions[indexParent].content as ConnectQuestion)
 			.matchedAnswers[answerKeys[index]];
 		toast.success(`Question ${index + 1} deleted`);

@@ -29,18 +29,17 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		if ($testObject.questions[indexParent].content.answers) {
-			$testObject.questions[indexParent].content.answers = [
-				...content.answers,
-				{ answer: '' }
-			];
+		if (
+			($testObject.questions[indexParent].content as PickOneQuestion).answers
+		) {
+			($testObject.questions[indexParent].content as PickOneQuestion).answers =
+				[...content.answers, { answer: '' }];
 		}
 	}
 
 	function deleteQuestion(index: number) {
-		$testObject.questions[indexParent].content.answers = content.answers.filter(
-			(_, i) => i !== index
-		);
+		($testObject.questions[indexParent].content as PickOneQuestion).answers =
+			content.answers.filter((_, i) => i !== index);
 		if (content['correctAnswerIndex'] === index)
 			(
 				$testObject.questions[indexParent].content as PickOneQuestion

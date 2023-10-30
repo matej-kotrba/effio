@@ -28,16 +28,13 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		$testObject.questions[indexParent].content.answers = [
-			...content.answers,
-			{ answer: '', isTrue: false }
-		];
+		($testObject.questions[indexParent].content as TrueFalseQuestion).answers =
+			[...content.answers, { answer: '', isTrue: false }];
 	}
 
 	function deleteQuestion(index: number) {
-		$testObject.questions[indexParent].content.answers = content.answers.filter(
-			(_, i) => i !== index
-		);
+		($testObject.questions[indexParent].content as TrueFalseQuestion).answers =
+			content.answers.filter((_, i) => i !== index);
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>

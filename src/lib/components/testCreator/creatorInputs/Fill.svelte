@@ -49,8 +49,12 @@
 			return;
 		}
 
-		if ($testObject.questions[indexParent].content.answers[index]) {
-			$testObject.questions[indexParent].content.answers;
+		if (
+			($testObject.questions[indexParent].content as FillQuestion).answers[
+				index
+			]
+		) {
+			($testObject.questions[indexParent].content as FillQuestion).answers;
 		}
 
 		($testObject.questions[indexParent].content as FillQuestion).answers[

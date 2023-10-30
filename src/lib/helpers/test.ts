@@ -397,7 +397,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         }
       }
     },
-    separateAnswer: (question: GeohraphyQuestion): GeohraphyQuestion => {
+    separateAnswer: (question: GeographyQuestion): GeographyQuestion => {
       return {
         ...question,
         answerPoint: {
@@ -405,10 +405,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         }
       }
     },
-    checkAnswerPresence: (question: GeohraphyQuestion): boolean => {
+    checkAnswerPresence: (question: GeographyQuestion): boolean => {
       return question.answerPoint.location !== undefined
     },
-    checkAnswerCorrectness: (answer: GeohraphyQuestion, original: GeohraphyQuestion) => {
+    checkAnswerCorrectness: (answer: GeographyQuestion, original: GeographyQuestion) => {
       if (!answer.answerPoint.location || !original.answerPoint.location) return false
       const lat1 = answer.answerPoint.location[0]
       const lon1 = answer.answerPoint.location[1]
@@ -426,7 +426,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       return distance <= original.tolerence
     },
-    checkCreatorCorrectFormat: (content: GeohraphyQuestion) => {
+    checkCreatorCorrectFormat: (content: GeographyQuestion) => {
       let isError = false
       let message = ""
 
@@ -450,7 +450,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         store: content
       }
     },
-    calculatePoints: (q1: GeohraphyQuestion, q2: GeohraphyQuestion, maxPoints: number) => {
+    calculatePoints: (q1: GeographyQuestion, q2: GeographyQuestion, maxPoints: number) => {
       return questionContentFunctions["geography"].checkAnswerCorrectness(q1, q2) ? maxPoints : 0
     }
   }

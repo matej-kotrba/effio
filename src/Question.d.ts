@@ -48,17 +48,17 @@ type FillQuestion = {
   }>[];
 }
 
-type GeohraphyLocation = [number, number]
+type GeographyLocation = [number, number]
 
-type GeohraphyQuestion = {
+type GeographyQuestion = {
   type: "geography";
   initial: {
-    location: GeohraphyLocation;
+    location: GeographyLocation;
     zoom: number;
   },
   tolerence: number,
   answerPoint: {
-    location?: GeohraphyLocation;
+    location?: GeographyLocation;
   }
 }
 
@@ -73,7 +73,7 @@ type QuestionTypeMap = {
   'connect': ConnectQuestion;
   'write': WriteQuestion;
   'fill': FillQuestion;
-  'geography': GeohraphyQuestion;
+  'geography': GeographyQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

@@ -1,23 +1,21 @@
 <script lang="ts">
+	import Icon from '@iconify/svelte';
+	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
-	import {
-		WRITE_AMSWER_MAX,
-		WRITE_ANSWER_MIN,
-		writeAnswerSchema
-	} from '~schemas/textInput';
-
-	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import { answerSchema } from '~schemas/textInput';
+	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 
 	export let indexParent: number;
 
 	// Reference to the test object content
-	$: content = $testObject.questions[indexParent].content as WriteQuestion;
-	$: answersLength = content.answers.length;
+	$: content = $testObject.questions[indexParent].content as GeographyQuestion;
+
+	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
 
 	const QUESTION_LIMIT = 10;
 
@@ -30,17 +28,22 @@
 			toast.error('You have reached the limit of questions: ' + QUESTION_LIMIT);
 			return;
 		}
-		if (($testObject.questions[indexParent].content as WriteQuestion).answers) {
-			($testObject.questions[indexParent].content as WriteQuestion).answers = [
-				...content.answers,
-				{ answer: '' }
-			];
+		if (
+			($testObject.questions[indexParent].content as GeographyQuestion).answers
+		) {
+			(
+				$testObject.questions[indexParent].content as GeographyQuestion
+			).answers = [...content.answers, { answer: '' }];
 		}
 	}
 
 	function deleteQuestion(index: number) {
-		($testObject.questions[indexParent].content as WriteQuestion).answers =
+		($testObject.questions[indexParent].content as GeographyQuestion).answers =
 			content.answers.filter((_, i) => i !== index);
+		if (content['correctAnswerIndex'] === index)
+			(
+				$testObject.questions[indexParent].content as GeographyQuestion
+			).correctAnswerIndex = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
@@ -66,28 +69,38 @@
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
-				<div class="flex items-start gap-1">
+				<div class="flex">
 					<RemoveButton
-						questionLimit={1}
 						deleteQuestion={() => deleteQuestion(index)}
-						questionLength={answersLength}
-						class="w-10 h-10 rounded-full"
+						questionLength={content.answers.length}
 					/>
-					<TextInputSimple
-						title="Answer option {index + 1}"
-						titleName="titleAnswer{indexParent}"
-						max={WRITE_AMSWER_MAX}
-						min={WRITE_ANSWER_MIN}
-						validationSchema={writeAnswerSchema}
-						doesLimit={true}
-						inputProperties={{
-							placeholder: 'Your answer option ...'
-						}}
-						on:error={(e) => {
-							content.answers[index].error = e.detail;
-						}}
-						bind:inputValue={content.answers[index].answer}
-					/>
+					<div class="relative grow-[1]">
+						<TextInput
+							title="Option {index + 1}"
+							titleName="Option {index + 1}"
+							validationSchema={answerSchema}
+							on:error={(event) =>
+								(content.answers[index].error = event.detail)}
+							bind:inputValue={content.answers[index].answer}
+						/>
+					</div>
+					<button
+						type="button"
+						data-tip="Mark this as a correct answer"
+						class={`px-2 grid tooltip place-content-center rounded-r-md`}
+						style={`${
+							index === content.correctAnswerIndex
+								? `background-color: var(--success); color: var(${
+										isDarkMode ? '--dark_black' : '--light-white'
+								  });`
+								: `background-color: var(${
+										isDarkMode ? '--dark_black' : '--light-white'
+								  }); color: var(--success);`
+						}}`}
+						on:click={() => (content['correctAnswerIndex'] = index)}
+					>
+						<Icon icon="charm:tick" class="text-3xl" />
+					</button>
 				</div>
 				<p
 					class={`text-body2 text-error dark:text-dark_error ${
