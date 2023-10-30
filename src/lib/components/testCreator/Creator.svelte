@@ -304,12 +304,12 @@
 		grid-template-columns: 340px 1fr;
 	}
 
-	.new-input-button {
-		/* background-image: radial-gradient(
+	/* .new-input-button {
+		background-image: radial-gradient(
 						ellipse at 50% 0,
 						white 60%,
 						var(--light-primary) 300%
-						); */
+						);
 		isolation: isolate;
 		transition: 0.4s ease;
 		perspective: 1000px;
@@ -335,5 +335,5 @@
 
 	.new-input-button:hover::before {
 		inset: 20px;
-	}
+	} */
 </style>

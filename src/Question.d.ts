@@ -48,6 +48,20 @@ type FillQuestion = {
   }>[];
 }
 
+type GeohraphyLocation = [number, number]
+
+type GeohraphyQuestion = {
+  type: "geography";
+  initial: {
+    location: GeohraphyLocation;
+    zoom: number;
+  },
+  tolerence: number,
+  answerPoint: {
+    location?: GeohraphyLocation;
+  }
+}
+
 type Answer<T = string> = {
   answer: T;
   error?: string;
@@ -59,6 +73,7 @@ type QuestionTypeMap = {
   'connect': ConnectQuestion;
   'write': WriteQuestion;
   'fill': FillQuestion;
+  'geography': GeohraphyQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

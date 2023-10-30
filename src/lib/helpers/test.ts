@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -29,6 +29,9 @@ export const questionMethods: QuestionMethods = {
   },
   "fill": {
     icon: "fluent:text-16-filled"
+  },
+  "geography": {
+    icon: "tabler:globe-filled"
   }
 }
 
@@ -378,6 +381,77 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "calculatePoints": (q1: FillQuestion, q2: FillQuestion, maxPoints: number) => {
       const correctAnswersCount = q1.answers.reduce((count, item, index) => item.answer.options.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(q2.answers[index].answer.options[0].toLowerCase().replace(/\s/g, "")) ? count + 1 : count, 0)
       return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
+    }
+  },
+  "geography": {
+    createNew: () => {
+      return {
+        type: "geography",
+        initial: {
+          location: [50.0755, 14.4378],
+          zoom: 13
+        },
+        tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
+        answerPoint: {
+          location: undefined
+        }
+      }
+    },
+    separateAnswer: (question: GeohraphyQuestion): GeohraphyQuestion => {
+      return {
+        ...question,
+        answerPoint: {
+          location: undefined
+        }
+      }
+    },
+    checkAnswerPresence: (question: GeohraphyQuestion): boolean => {
+      return question.answerPoint.location !== undefined
+    },
+    checkAnswerCorrectness: (answer: GeohraphyQuestion, original: GeohraphyQuestion) => {
+      if (!answer.answerPoint.location || !original.answerPoint.location) return false
+      const lat1 = answer.answerPoint.location[0]
+      const lon1 = answer.answerPoint.location[1]
+      const lat2 = original.answerPoint.location[0]
+      const lon2 = original.answerPoint.location[1]
+
+      const R = 6371; // Radius of the Earth in kilometers
+      const dLat = (lat2 - lat1) * (Math.PI / 180);
+      const dLon = (lon2 - lon1) * (Math.PI / 180);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = R * c;
+
+      return distance <= original.tolerence
+    },
+    checkCreatorCorrectFormat: (content: GeohraphyQuestion) => {
+      let isError = false
+      let message = ""
+
+      const parsedTolerance = geographyToleranceSchema.safeParse(content.tolerence)
+
+      if (parsedTolerance.success === false) {
+        isError = true
+        message = parsedTolerance.error.errors[0].message
+      }
+
+      const parsedLocation = geographyToleranceSchema.safeParse(content.initial.location)
+
+      if (parsedLocation.success === false) {
+        isError = true
+        message = parsedLocation.error.errors[0].message
+      }
+
+      return {
+        isError: isError,
+        message: message,
+        store: content
+      }
+    },
+    calculatePoints: (q1: GeohraphyQuestion, q2: GeohraphyQuestion, maxPoints: number) => {
+      return questionContentFunctions["geography"].checkAnswerCorrectness(q1, q2) ? maxPoints : 0
     }
   }
 }
