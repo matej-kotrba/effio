@@ -68,7 +68,7 @@ will be used in the test creator -->
 		<div class="flex items-center gap-3 justify-self-end">
 			<button
 				type="button"
-				class={`grid place-content-center duration-150 ${
+				class={`grid place-content-center transform-transition ${
 					isCollapsed ? 'rotate-180' : ''
 				}`}
 				on:click={() => {
@@ -173,10 +173,14 @@ will be used in the test creator -->
 </div>
 
 <style>
+	.transform-transition {
+		transition: transform 150ms;
+	}
+
 	.collapsible {
 		display: grid;
 		grid-template-rows: 1fr;
-		transition: 200ms ease;
+		transition: 200ms grid-template-rows ease;
 	}
 
 	.collapsible > div {
