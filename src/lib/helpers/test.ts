@@ -389,7 +389,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         type: "geography",
         initial: {
           location: [50.0755, 14.4378],
-          zoom: 13
+          zoom: 6
         },
         tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
         answerPoint: {

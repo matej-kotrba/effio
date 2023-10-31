@@ -16,6 +16,7 @@ will be used in the test creator -->
 	import Write from './creatorInputs/Write.svelte';
 	import Fill from './creatorInputs/Fill.svelte';
 	import { clickOutside } from '~use/clickOutside';
+	import Geography from './creatorInputs/Geography.svelte';
 
 	let dispatch = createEventDispatcher();
 
@@ -128,6 +129,8 @@ will be used in the test creator -->
 					<Write on:questionDetails indexParent={index} />
 				{:else if $testObject['questions'][index]['questionType'] === 'fill'}
 					<Fill on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'geography'}
+					<Geography on:questionDetails indexParent={index} />
 				{/if}
 			</div>
 			<details
