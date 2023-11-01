@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
+	import { dropdown } from '~use/dropdown';
 
 	export let deleteQuestion: Function;
 	export let questionLength: number;
@@ -11,7 +12,7 @@
 
 <button
 	type="button"
-	data-tip="Delete answer"
+	use:dropdown={'Delete answer'}
 	class={twMerge(
 		`tooltip grid px-2 group place-content-center bg-light_white dark:bg-dark_black text-error dark:text-dark_error hover:bg-error hover:text-white rounded-l-md ${
 			!(questionLength > questionLimit)

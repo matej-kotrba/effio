@@ -22,7 +22,17 @@ export const load: ServerLoad = async ({ params }) => {
 
     const test = await prisma.test.findUnique({
       where: {
-        id: id
+        id: id,
+        subcategories: {
+          some: {
+            subcategory: {
+              group: {
+                slug: params.name
+              },
+              slug: params.category
+            }
+          }
+        }
       },
       include: {
         testVersions: {

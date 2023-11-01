@@ -363,9 +363,11 @@
 													<span>{message.test.title}</span>
 												</div>
 
-												<button
+												<a
+													href="/dashboard/my-groups/{data.group
+														.slug}/{subcategory.slug}/tests/{message.testId}"
 													class="ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
-													>View</button
+													>View</a
 												>
 											</div>
 										{:else if message.testId}
