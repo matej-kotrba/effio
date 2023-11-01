@@ -9,6 +9,7 @@
 	import { answerSchema } from '~schemas/textInput';
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
+	import { dropdown } from '~use/dropdown';
 
 	export let indexParent: number;
 
@@ -84,9 +85,10 @@
 							bind:inputValue={content.answers[index].answer}
 						/>
 					</div>
+					<!-- data-tip="Mark this as a correct answer" -->
 					<button
 						type="button"
-						data-tip="Mark this as a correct answer"
+						use:dropdown={'Mark this as a correct answer'}
 						class={`px-2 grid tooltip place-content-center rounded-r-md`}
 						style={`${
 							index === content.correctAnswerIndex
