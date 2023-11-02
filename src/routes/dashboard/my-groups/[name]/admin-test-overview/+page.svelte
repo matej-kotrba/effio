@@ -44,61 +44,73 @@
 	}
 </script>
 
-<section class="p-2 max-w-[600px] relative">
-	<div class="mb-4">
-		<h5 class="font-semibold text-h5">Group tests</h5>
-		<Separator w="100%" h="1px" />
-	</div>
-	{#each data['group']['groupsSubcategories'] as subcategory, index}
-		<Collapsible
-			title={subcategory.name}
-			class="w-full bg-light_grey"
-			buttonClasses="bg-light_grey_dark"
-			onOpen={() => setTestForSubcategory(subcategory.id, index)}
-		>
-			{@const testArray = tests[index]}
-			{#if testArray === undefined}
-				<div class="flex justify-center">
-					<span class="loading loading-bars loading-lg" />
-				</div>
-			{:else if testArray.length === 0}
-				<div class="flex justify-center">
-					<span class="text-h6">Sorry, No tests found</span>
-				</div>
-			{:else}
-				<div class="grid w-full grid-cols-2 gap-1">
-					{#each testArray as testInitial}
-						<div class="relative">
-							<div
-								class="flex gap-1 p-1 items-center absolute right-2 top-2 shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white z-[5] w-fit whitespace-nowrap rounded-lg"
-							>
-								<span class="text-body3">Taken by:</span>
-								<span class="text-body2">{testInitial.takenByPeopleCount}</span>
+<div class="@container">
+	<div class="grid @6xl:grid-cols-2 grid-cols-1">
+		<section class="relative p-2">
+			<div class="mb-4">
+				<h5 class="font-semibold text-h5">Group tests</h5>
+				<Separator w="100%" h="1px" />
+			</div>
+			<div class="max-w-[600px]">
+				{#each data['group']['groupsSubcategories'] as subcategory, index}
+					<Collapsible
+						title={subcategory.name}
+						class="w-full bg-light_grey"
+						buttonClasses="bg-light_grey_dark"
+						onOpen={() => setTestForSubcategory(subcategory.id, index)}
+					>
+						{@const testArray = tests[index]}
+						{#if testArray === undefined}
+							<div class="flex justify-center">
+								<span class="loading loading-bars loading-lg" />
 							</div>
-							<TestImageCard
-								test={{
-									title: testInitial.title,
-									description: 'See the statistics'
-								}}
-								url={`/dashboard/my-groups/${data['group']['slug']}/admin-test-overview/${subcategory.slug}/${testInitial.id}`}
-							/>
-						</div>
-					{/each}
-				</div>
-			{/if}
-		</Collapsible>
-	{/each}
-</section>
-<section>
-	<UserTable
-		data={{
-			groupId: data.group.id
-		}}
-		displayData={{
-			name: true,
-			image: true,
-			joinedAt: true
-		}}
-		defaultOrderBy="name"
-	/>
-</section>
+						{:else if testArray.length === 0}
+							<div class="flex justify-center">
+								<span class="text-h6">Sorry, No tests found</span>
+							</div>
+						{:else}
+							<div class="grid w-full grid-cols-2 gap-1">
+								{#each testArray as testInitial}
+									<div class="relative">
+										<div
+											class="flex gap-1 p-1 items-center absolute right-2 top-2 shadow-sm dark:shadow-white bg-light_quaternary text-light_text_black dark:bg-dark_quaternary dark:text-dark_text_white z-[5] w-fit whitespace-nowrap rounded-lg"
+										>
+											<span class="text-body3">Taken by:</span>
+											<span class="text-body2"
+												>{testInitial.takenByPeopleCount}</span
+											>
+										</div>
+										<TestImageCard
+											test={{
+												title: testInitial.title,
+												description: 'See the statistics'
+											}}
+											url={`/dashboard/my-groups/${data['group']['slug']}/admin-test-overview/${subcategory.slug}/${testInitial.id}`}
+										/>
+									</div>
+								{/each}
+							</div>
+						{/if}
+					</Collapsible>
+				{/each}
+			</div>
+		</section>
+		<section class="p-2">
+			<div class="mb-4">
+				<h5 class="font-semibold text-h5">Group Users</h5>
+				<Separator w="100%" h="1px" />
+			</div>
+			<UserTable
+				data={{
+					groupId: data.group.id
+				}}
+				displayData={{
+					name: true,
+					image: true,
+					joinedAt: true
+				}}
+				defaultOrderBy="name"
+			/>
+		</section>
+	</div>
+</div>

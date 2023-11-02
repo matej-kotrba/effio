@@ -320,7 +320,7 @@ export const groupsRouter = router({
     }),
     ordering: z.object({
       order: z.union([z.literal("asc"), z.literal("desc")]),
-      by: z.union([z.literal("count"), z.literal("name"), z.literal("joinedAt")])
+      by: z.union([z.literal("count"), z.literal("name")])
     })
   })).query(async ({ ctx, input }) => {
     const group = await ctx.prisma.group.findUnique({
@@ -348,14 +348,8 @@ export const groupsRouter = router({
         }
         break
       }
-      case "joinedAt": {
-        orderBy["groups"] = {
-          joinedAt: input.ordering.order
-        }
-        break
-      }
     }
-
+    console.log(input.ordering.order)
     const users = await ctx.prisma.user.findMany({
       orderBy: orderBy,
       where: {

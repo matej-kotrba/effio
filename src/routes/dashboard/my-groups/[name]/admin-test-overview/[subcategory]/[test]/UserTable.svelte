@@ -18,7 +18,7 @@
 	};
 
 	type Ordering = {
-		by: 'name' | 'count' | 'joinedAt';
+		by: 'name' | 'count';
 		order: 'asc' | 'desc';
 	};
 
@@ -57,7 +57,7 @@
 	let isFetchingBlank = true;
 
 	let ordering: Ordering = {
-		by: 'count',
+		by: defaultOrderBy,
 		order: 'desc'
 	};
 
@@ -202,13 +202,13 @@
 
 <div
 	class={twMerge(
-		'overflow-x-auto max-w-[800px] h-[400px] max-h-[800px] shadow-md bg-light_whiter dark:bg-dark_light_grey',
+		'overflow-x-auto max-w-[800px] h-[400px] max-h-[800px] rounded-md shadow-md bg-light_whiter dark:bg-dark_light_grey',
 		classes
 	)}
 >
 	<div
 		style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
-		class="grid col-span-12 py-1 bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit"
+		class="grid col-span-12 py-1 border-b-2 border-solid bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit border-light_text_black_40 dark:border-dark_text_white_40"
 	>
 		{#if displayData.name}
 			<div
@@ -263,24 +263,10 @@
 			</div>
 		{/if}
 		{#if displayData.joinedAt}
-			<div
-				style={`grid-column: span ${DATA_GRID_COLUMNS['takenCount']};`}
-				class="relative flex justify-center h-fit"
+			<span
+				style={`grid-column: span ${DATA_GRID_COLUMNS['joinedAt']};`}
+				class="font-semibold text-center text-body1 h-fit">Joined At</span
 			>
-				<button
-					type="button"
-					class="col-span-2 font-semibold text-center text-body1"
-					on:click={() => createOrderSwap('joinedAt')()}>Joined At</button
-				>
-				{#if ordering.by === 'joinedAt'}
-					<iconify-icon
-						icon="iconamoon:arrow-down-2"
-						class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
-							ordering.order === 'asc' ? 'rotate-180' : ''
-						}`}
-					/>
-				{/if}
-			</div>
 		{/if}
 	</div>
 	<div
