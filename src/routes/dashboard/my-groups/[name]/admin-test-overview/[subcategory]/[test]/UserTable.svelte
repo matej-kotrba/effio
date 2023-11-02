@@ -9,21 +9,45 @@
 	import { userOrAnonymousSrc } from '~/lib/utils/icons';
 	import Separator from '~components/separators/Separator.svelte';
 	import { applicationStates } from '~stores/applicationStates';
+	import { transformDate } from '~/lib/utils/date';
+	import { TRPCClientError } from '@trpc/client';
 
-	type UserDataObject = Pick<User, 'name' | 'id' | 'image'> & {
-		takenCount: number;
+	type UserDataObject = Pick<Partial<User>, 'name' | 'id' | 'image'> & {
+		takenCount?: number;
+		joinedAt?: Date;
 	};
 
 	type Ordering = {
-		by: 'name' | 'count';
+		by: 'name' | 'count' | 'joinedAt';
 		order: 'asc' | 'desc';
+	};
+
+	type DisplayData = {
+		name: boolean;
+		image: boolean;
+		taken: boolean;
+		takenCount: boolean;
+		joinedAt: boolean;
+	};
+
+	const DATA_GRID_COLUMNS: {
+		[Key in keyof DisplayData as Key]: number;
+	} = {
+		name: 4,
+		image: 1,
+		taken: 1,
+		takenCount: 2,
+		joinedAt: 3
 	};
 
 	export let data: {
 		groupId: string;
-		subcategorySlug: string;
-		testId: string;
+		subcategorySlug?: string;
+		testId?: string;
 	};
+
+	export let displayData: Partial<DisplayData>;
+	export let defaultOrderBy: Ordering['by'] = 'count';
 
 	let classes = '';
 	export { classes as class };
@@ -35,6 +59,11 @@
 	let ordering: Ordering = {
 		by: 'count',
 		order: 'desc'
+	};
+
+	let error = {
+		is: false,
+		message: ''
 	};
 
 	function createOrderSwap(by: Ordering['by']) {
@@ -72,29 +101,59 @@
 		getUsers(true);
 	}
 
+	function calculateGridColumnCount() {
+		let count = 0;
+
+		for (const key in displayData) {
+			if (displayData[key as keyof DisplayData]) {
+				count += DATA_GRID_COLUMNS[key as keyof DisplayData];
+			}
+		}
+
+		return count;
+	}
+
 	async function getUsers(shouldReset: boolean = false) {
 		if (shouldReset === true) {
 			isFetchingBlank = true;
 		} else {
 			isFetchingNewUsers = true;
 		}
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-		const result = await trpc($page).groups.getGroupUsers.query({
-			groupId: data.groupId,
-			testId: data.testId,
-			subcategorySlug: data.subcategorySlug,
-			ordering: ordering,
-			cursor:
-				shouldReset === false && users[users.length - 1]
-					? users[users.length - 1].id
-					: undefined,
-			limit: 12,
-			select: {
-				id: true,
-				name: true,
-				image: true
+
+		let result;
+		try {
+			result = await trpc($page).groups.getGroupUsers.query({
+				groupId: data.groupId,
+				testId: data.testId,
+				subcategorySlug: data.subcategorySlug,
+				ordering: ordering,
+				cursor:
+					shouldReset === false && users[users.length - 1]
+						? users[users.length - 1].id
+						: undefined,
+				limit: 12,
+				select: {
+					name: !!displayData.name,
+					image: !!displayData.image,
+					count: !!displayData.takenCount,
+					joinedAt: !!displayData.joinedAt
+				}
+			});
+		} catch (e) {
+			if (e instanceof TRPCClientError) {
+				error.is = true;
+				error.message = e.message;
+			} else {
+				error.is = true;
+				error.message = 'An error has occured';
 			}
-		});
+		}
+		if (!result) {
+			isFetchingNewUsers = false;
+			isFetchingBlank = false;
+			return;
+		}
+
 		if (shouldReset === true) {
 			isFetchingBlank = false;
 		} else {
@@ -106,10 +165,14 @@
 		const transformedArray: UserDataObject[] = result.map((item) => {
 			return {
 				id: item.id,
-				image: item.image,
-				name: item.name,
-				takenCount: item._count.testRecords
-			};
+				image: displayData.image ? item.image : undefined,
+				name: displayData.name ? item.name : undefined,
+				takenCount:
+					displayData.takenCount || displayData.taken
+						? item._count.testRecords
+						: undefined,
+				joinedAt: displayData.joinedAt ? item.groups[0].joinedAt : undefined
+			} satisfies Record<keyof typeof displayData & { id: string }, unknown>;
 		});
 
 		users = [...users, ...transformedArray];
@@ -139,88 +202,171 @@
 
 <div
 	class={twMerge(
-		'grid grid-cols-12 max-w-[800px] h-[400px] max-h-[800px] shadow-md bg-light_whiter dark:bg-dark_light_grey',
+		'overflow-x-auto max-w-[800px] h-[400px] max-h-[800px] shadow-md bg-light_whiter dark:bg-dark_light_grey',
 		classes
 	)}
 >
 	<div
-		class="grid grid-cols-7 col-span-12 py-1 bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit"
+		style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
+		class="grid col-span-12 py-1 bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit"
 	>
-		<div class="relative flex justify-center col-span-3 h-fit">
-			<button
-				type="button"
-				on:click={() => createOrderSwap('name')()}
-				class="font-semibold text-center text-body1">Name</button
+		{#if displayData.name}
+			<div
+				style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
+				class="relative flex justify-center h-fit"
 			>
-			{#if ordering.by === 'name'}
-				<iconify-icon
-					icon="iconamoon:arrow-down-2"
-					class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
-						ordering.order === 'asc' ? 'rotate-180' : ''
-					}`}
-				/>
-			{/if}
-		</div>
-		<span class="col-span-1 font-semibold text-center text-body1 h-fit"
-			>Icon</span
-		>
-		<span class="col-span-1 font-semibold text-center text-body1 h-fit"
-			>Taken</span
-		>
-		<div class="relative flex justify-center col-span-2 h-fit">
-			<button
-				type="button"
-				class="col-span-2 font-semibold text-center text-body1"
-				on:click={() => createOrderSwap('count')()}>Taken Count</button
+				<button
+					type="button"
+					on:click={() => createOrderSwap('name')()}
+					class="font-semibold text-center text-body1">Name</button
+				>
+				{#if ordering.by === 'name'}
+					<iconify-icon
+						icon="iconamoon:arrow-down-2"
+						class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
+							ordering.order === 'asc' ? 'rotate-180' : ''
+						}`}
+					/>
+				{/if}
+			</div>
+		{/if}
+		{#if displayData.image}
+			<span
+				style={`grid-column: span ${DATA_GRID_COLUMNS['image']};`}
+				class="font-semibold text-center text-body1 h-fit">Icon</span
 			>
-			{#if ordering.by === 'count'}
-				<iconify-icon
-					icon="iconamoon:arrow-down-2"
-					class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
-						ordering.order === 'asc' ? 'rotate-180' : ''
-					}`}
-				/>
-			{/if}
-		</div>
+		{/if}
+		{#if displayData.taken}
+			<span
+				style={`grid-column: span ${DATA_GRID_COLUMNS['taken']};`}
+				class="font-semibold text-center text-body1 h-fit">Taken</span
+			>
+		{/if}
+		{#if displayData.takenCount}
+			<div
+				style={`grid-column: span ${DATA_GRID_COLUMNS['takenCount']};`}
+				class="relative flex justify-center h-fit"
+			>
+				<button
+					type="button"
+					class="col-span-2 font-semibold text-center text-body1"
+					on:click={() => createOrderSwap('count')()}>Taken Count</button
+				>
+				{#if ordering.by === 'count'}
+					<iconify-icon
+						icon="iconamoon:arrow-down-2"
+						class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
+							ordering.order === 'asc' ? 'rotate-180' : ''
+						}`}
+					/>
+				{/if}
+			</div>
+		{/if}
+		{#if displayData.joinedAt}
+			<div
+				style={`grid-column: span ${DATA_GRID_COLUMNS['takenCount']};`}
+				class="relative flex justify-center h-fit"
+			>
+				<button
+					type="button"
+					class="col-span-2 font-semibold text-center text-body1"
+					on:click={() => createOrderSwap('joinedAt')()}>Joined At</button
+				>
+				{#if ordering.by === 'joinedAt'}
+					<iconify-icon
+						icon="iconamoon:arrow-down-2"
+						class={`absolute right-0 text-2xl -translate-y-1/2 top-1/2 text-light_text_black dark:text-dark_text_white ${
+							ordering.order === 'asc' ? 'rotate-180' : ''
+						}`}
+					/>
+				{/if}
+			</div>
+		{/if}
 	</div>
 	<div
-		class="grid grid-cols-7 col-span-12 overflow-y-scroll bg-light_whiter dark:bg-dark_light_grey"
+		style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
+		class="relative grid col-span-12 overflow-y-scroll bg-light_whiter dark:bg-dark_light_grey"
 	>
 		{#if isFetchingBlank && users.length === 0}
-			<div class="flex justify-center col-span-7">
+			<div
+				class="flex justify-center"
+				style={`grid-column: span ${calculateGridColumnCount()};`}
+			>
 				<span class="loading loading-bars loading-lg" />
+			</div>
+		{:else if error.is}
+			<div
+				class="flex flex-col items-center justify-center w-full text-center"
+				style={`grid-column: span ${calculateGridColumnCount()};`}
+			>
+				<iconify-icon
+					icon="solar:mask-sad-linear"
+					class="text-6xl text-light_text_black_20 dark:text-dark_text_white_20"
+				/>
+				{error.message}
 			</div>
 		{:else}
 			{#each users as user, index}
 				<div
 					use:addIntersectionUse={{ shouldActive: index === users.length - 1 }}
-					class={`grid items-center w-full grid-cols-7 col-span-12 px-2 py-2 bg-light_whiter dark:bg-dark_light_grey hover:bg-light_grey text-light_text_black dark:text-dark_text_white ${
+					style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
+					class={`grid items-center w-full col-span-12 px-2 py-2 bg-light_whiter dark:bg-dark_light_grey hover:bg-light_grey text-light_text_black dark:text-dark_text_white ${
 						isFetchingBlank ? 'opacity-40' : ''
 					}`}
 				>
-					<span class="col-span-3 font-normal text-center">{user.name}</span>
-					<div class="flex justify-center col-span-1 text-center">
-						<img
-							class="w-8 font-normal rounded-full aspect-square text-light_text_black dark:text-dark_text_white"
-							src={userOrAnonymousSrc(user.image)}
-							alt="User"
-						/>
-					</div>
-					<div
-						class="grid col-span-1 font-normal text-center place-content-center"
-					>
-						{#if user.takenCount > 0}
-							<iconify-icon
-								icon="ic:round-check"
-								class="text-2xl text-green-500"
+					{#if displayData.name}
+						<span
+							style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
+							class="font-normal text-center">{user.name}</span
+						>
+					{/if}
+					{#if displayData.image}
+						<div
+							style={`grid-column: span ${DATA_GRID_COLUMNS['image']};`}
+							class="flex justify-center text-center"
+						>
+							<img
+								class="w-8 font-normal rounded-full aspect-square text-light_text_black dark:text-dark_text_white"
+								src={userOrAnonymousSrc(user.image)}
+								alt="User"
 							/>
+						</div>
+					{/if}
+					{#if displayData.taken}
+						<div
+							style={`grid-column: span ${DATA_GRID_COLUMNS['taken']};`}
+							class="grid font-normal text-center place-content-center"
+						>
+							{#if user.takenCount && user.takenCount > 0}
+								<iconify-icon
+									icon="ic:round-check"
+									class="text-2xl text-green-500"
+								/>
+							{:else}
+								<iconify-icon
+									icon="ic:round-close"
+									class="text-2xl text-error"
+								/>
+							{/if}
+						</div>
+					{/if}
+					{#if displayData.takenCount}
+						<span
+							style={`grid-column: span ${DATA_GRID_COLUMNS['takenCount']};`}
+							class="font-normal text-center">{user.takenCount}</span
+						>
+					{/if}
+					{#if displayData.joinedAt}
+						{#if user.joinedAt}
+							<span
+								style={`grid-column: span ${DATA_GRID_COLUMNS['joinedAt']};`}
+								class="font-normal text-center"
+								>{transformDate(user.joinedAt)}</span
+							>
 						{:else}
-							<iconify-icon icon="ic:round-close" class="text-2xl text-error" />
+							Unknown
 						{/if}
-					</div>
-					<span class="col-span-2 font-normal text-center"
-						>{user.takenCount}</span
-					>
+					{/if}
 				</div>
 				{#if index !== users.length - 1}
 					<Separator

@@ -306,20 +306,21 @@ export const groupsRouter = router({
   }),
   getGroupUsers: loggedInProcedure.input(z.object({
     groupId: z.string(),
-    subcategorySlug: z.string(),
-    testId: z.string(),
+    subcategorySlug: z.string().optional(),
+    testId: z.string().optional(),
     cursor: z.string().optional(),
     limit: z.number().optional(),
     select: z.object({
       email: z.boolean().optional(),
       emailVerified: z.boolean().optional(),
-      id: z.boolean().optional(),
       image: z.boolean().optional(),
       name: z.boolean().optional(),
+      count: z.boolean().optional(),
+      joinedAt: z.boolean().optional(),
     }),
     ordering: z.object({
       order: z.union([z.literal("asc"), z.literal("desc")]),
-      by: z.union([z.literal("count"), z.literal("name")])
+      by: z.union([z.literal("count"), z.literal("name"), z.literal("joinedAt")])
     })
   })).query(async ({ ctx, input }) => {
     const group = await ctx.prisma.group.findUnique({
@@ -327,6 +328,8 @@ export const groupsRouter = router({
         id: input.groupId,
       }
     })
+
+    if (input.select[input.ordering.by] === false) throw new TRPCError({ code: "BAD_REQUEST", message: "You have to include the field you are ordering by" })
 
     if (!group) {
       throw new TRPCError({ code: "NOT_FOUND", message: "This group doesn't seem to exist" })
@@ -343,6 +346,13 @@ export const groupsRouter = router({
         orderBy["testRecords"] = {
           _count: input.ordering.order
         }
+        break
+      }
+      case "joinedAt": {
+        orderBy["groups"] = {
+          joinedAt: input.ordering.order
+        }
+        break
       }
     }
 
@@ -360,8 +370,21 @@ export const groupsRouter = router({
       } : undefined,
       take: input.limit,
       skip: input.cursor ? 1 : 0,
-      include: {
-        _count: {
+      select: {
+        id: true,
+        name: input.select.name ? true : undefined,
+        image: input.select.image ? true : undefined,
+        email: input.select.email ? true : undefined,
+        emailVerified: input.select.emailVerified ? true : undefined,
+        groups: input.select.joinedAt ? {
+          select: {
+            joinedAt: true
+          },
+          where: {
+            groupId: input.groupId
+          }
+        } : undefined,
+        _count: input.select.count ? {
           select: {
             testRecords: {
               where: {
@@ -374,7 +397,7 @@ export const groupsRouter = router({
               }
             }
           }
-        }
+        } : undefined
       }
     })
 

@@ -3,6 +3,8 @@
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { page } from '$app/stores';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
+	import Separator from '~components/separators/Separator.svelte';
+	import UserTable from './[subcategory]/[test]/UserTable.svelte';
 
 	export let data;
 
@@ -43,6 +45,10 @@
 </script>
 
 <section class="p-2 max-w-[600px] relative">
+	<div class="mb-4">
+		<h5 class="font-semibold text-h5">Group tests</h5>
+		<Separator w="100%" h="1px" />
+	</div>
 	{#each data['group']['groupsSubcategories'] as subcategory, index}
 		<Collapsible
 			title={subcategory.name}
@@ -82,4 +88,17 @@
 			{/if}
 		</Collapsible>
 	{/each}
+</section>
+<section>
+	<UserTable
+		data={{
+			groupId: data.group.id
+		}}
+		displayData={{
+			name: true,
+			image: true,
+			joinedAt: true
+		}}
+		defaultOrderBy="name"
+	/>
 </section>
