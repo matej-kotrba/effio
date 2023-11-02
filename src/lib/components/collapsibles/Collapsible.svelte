@@ -4,6 +4,7 @@
 
 	export let title: string;
 	export let position: 'left' | 'center' | 'right' = 'left';
+	export let shouldWrap = true;
 	let classes = '';
 	export { classes as class };
 	export let buttonClasses = '';
@@ -48,9 +49,12 @@
 				? 'rotate-90'
 				: 'rotate-0'} duration-300 text-light_text_black dark:text-dark_text_white"
 		/>
-		<span
-			class="text-body3 md:text-body1 text-light_text_black dark:text-dark_text_white"
-			>{title}</span
+		<abbr {title} class="overflow-hidden no-underline text-ellipsis">
+			<span
+				class={`text-body3 md:text-body1 min-h-[1.2em] text-light_text_black dark:text-dark_text_white text-left ${
+					shouldWrap === false ? 'whitespace-nowrap  ' : ''
+				}`}>{title}</span
+			></abbr
 		></button
 	>
 	<div class="content" class:active={isOpen} bind:this={contentRef}>

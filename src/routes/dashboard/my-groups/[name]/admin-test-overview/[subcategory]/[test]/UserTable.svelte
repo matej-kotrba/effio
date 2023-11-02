@@ -139,12 +139,12 @@
 
 <div
 	class={twMerge(
-		'grid grid-cols-12 max-w-[800px] h-[400px] max-h-[800px] shadow-md bg-light_whiter',
+		'grid grid-cols-12 max-w-[800px] h-[400px] max-h-[800px] shadow-md bg-light_whiter dark:bg-dark_light_grey',
 		classes
 	)}
 >
 	<div
-		class="grid grid-cols-7 col-span-12 py-1 bg-light_whiter rounded-t-md h-fit"
+		class="grid grid-cols-7 col-span-12 py-1 bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit"
 	>
 		<div class="relative flex justify-center col-span-3 h-fit">
 			<button
@@ -183,7 +183,9 @@
 			{/if}
 		</div>
 	</div>
-	<div class="grid grid-cols-7 col-span-12 overflow-y-scroll bg-light_whiter">
+	<div
+		class="grid grid-cols-7 col-span-12 overflow-y-scroll bg-light_whiter dark:bg-dark_light_grey"
+	>
 		{#if isFetchingBlank && users.length === 0}
 			<div class="flex justify-center col-span-7">
 				<span class="loading loading-bars loading-lg" />
@@ -192,7 +194,7 @@
 			{#each users as user, index}
 				<div
 					use:addIntersectionUse={{ shouldActive: index === users.length - 1 }}
-					class={`grid items-center w-full grid-cols-7 col-span-12 px-2 py-2 bg-light_whiter hover:bg-light_grey text-light_text_black ${
+					class={`grid items-center w-full grid-cols-7 col-span-12 px-2 py-2 bg-light_whiter dark:bg-dark_light_grey hover:bg-light_grey text-light_text_black dark:text-dark_text_white ${
 						isFetchingBlank ? 'opacity-40' : ''
 					}`}
 				>

@@ -123,7 +123,6 @@ export const groupsRouter = router({
         OR: input.alsoUser ? [
           {
             ownerId: userId,
-
           },
           {
             users: {
@@ -135,15 +134,6 @@ export const groupsRouter = router({
         ] : [
           {
             ownerId: userId
-          },
-          {
-            groupsSubcategories: input.excludeEmptyGroups ? {
-              some: {
-                id: {
-                  startsWith: ""
-                }
-              }
-            } : undefined
           },
         ]
       },

@@ -64,7 +64,8 @@
 	<GraphContainer class="flex flex-col items-center col-span-2 gap-1">
 		<span class="font-semibold text-h4">Taken by</span>
 		<Counter count={data.count} />
-		<span class="mt-auto text-body4 text-light_text_black_60"
+		<span
+			class="mt-auto text-body4 text-light_text_black_60 dark:text-dark_text_white_60"
 			>*Also includes duplicate completion</span
 		>
 	</GraphContainer>

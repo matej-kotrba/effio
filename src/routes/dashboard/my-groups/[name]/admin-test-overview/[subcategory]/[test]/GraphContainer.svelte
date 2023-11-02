@@ -5,6 +5,11 @@
 	export { classes as class };
 </script>
 
-<div class={twMerge('p-4 bg-light_whiter shadow-md rounded-md', classes)}>
+<div
+	class={twMerge(
+		'p-4 bg-light_whiter dark:bg-dark_grey shadow-md rounded-md',
+		classes
+	)}
+>
 	<slot />
 </div>

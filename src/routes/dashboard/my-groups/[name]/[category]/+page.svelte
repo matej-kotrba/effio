@@ -200,7 +200,10 @@
 			{#each tests as test}
 				<div class="relative">
 					{#if data.group.ownerId === data.session.user?.id}
-						<a href="#" class="absolute top-0 left-0 z-10 p-1 icon-gradient">
+						<a
+							href={`dashboard/my-groups/${data.group.slug}/admin-test-overview/${data.subcategory.slug}/${test.testId}`}
+							class="absolute top-0 left-0 z-10 p-1 icon-gradient"
+						>
 							<iconify-icon
 								icon="carbon:result"
 								class="text-3xl text-white shadow-sm"

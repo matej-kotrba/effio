@@ -55,6 +55,10 @@
 				<div class="flex justify-center">
 					<span class="loading loading-bars loading-lg" />
 				</div>
+			{:else if testArray.length === 0}
+				<div class="flex justify-center">
+					<span class="text-h6">Sorry, No tests found</span>
+				</div>
 			{:else}
 				<div class="grid w-full grid-cols-2 gap-1">
 					{#each testArray as testInitial}
