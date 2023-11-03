@@ -11,6 +11,8 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import { transformDate } from '~/lib/utils/date';
 	import { TRPCClientError } from '@trpc/client';
+	import { dropdown } from '~use/dropdown';
+	import IconButton from '~components/buttons/IconButton.svelte';
 
 	type UserDataObject = Pick<Partial<User>, 'name' | 'id' | 'image'> & {
 		takenCount?: number;
@@ -30,14 +32,21 @@
 		joinedAt: boolean;
 	};
 
+	type AlwaysDisplayedData = {
+		checkbox: boolean;
+	};
+
 	const DATA_GRID_COLUMNS: {
 		[Key in keyof DisplayData as Key]: number;
+	} & {
+		[Key in keyof AlwaysDisplayedData as Key]: number;
 	} = {
 		name: 4,
 		image: 1,
 		taken: 1,
 		takenCount: 2,
-		joinedAt: 3
+		joinedAt: 3,
+		checkbox: 1
 	};
 
 	export let data: {
@@ -48,6 +57,15 @@
 
 	export let displayData: Partial<DisplayData>;
 	export let defaultOrderBy: Ordering['by'] = 'count';
+
+	export let actions: {
+		tooltip: string;
+		icon: string;
+	}[] = [];
+
+	let alwaysDisplayData: AlwaysDisplayedData = {
+		checkbox: true
+	};
 
 	let classes = '';
 	export { classes as class };
@@ -107,6 +125,12 @@
 		for (const key in displayData) {
 			if (displayData[key as keyof DisplayData]) {
 				count += DATA_GRID_COLUMNS[key as keyof DisplayData];
+			}
+		}
+
+		for (const key in alwaysDisplayData) {
+			if (alwaysDisplayData[key as keyof AlwaysDisplayedData]) {
+				count += DATA_GRID_COLUMNS[key as keyof AlwaysDisplayedData];
 			}
 		}
 
@@ -206,10 +230,22 @@
 		classes
 	)}
 >
+	<div class="flex items-center w-full p-1">
+		{#each actions as action}
+			<IconButton
+				icon={action.icon}
+				buttonClasses="text-2xl"
+				tootlip="Kick user(s) from the group"
+			/>
+		{/each}
+	</div>
 	<div
 		style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
 		class="grid col-span-12 py-1 border-b-2 border-solid bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit border-light_text_black_40 dark:border-dark_text_white_40"
 	>
+		{#if alwaysDisplayData.checkbox}
+			<span style={`grid-column: span ${DATA_GRID_COLUMNS['checkbox']};`} />
+		{/if}
 		{#if displayData.name}
 			<div
 				style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
@@ -300,6 +336,17 @@
 						isFetchingBlank ? 'opacity-40' : ''
 					}`}
 				>
+					{#if alwaysDisplayData.checkbox}
+						<div
+							style={`grid-column: span ${DATA_GRID_COLUMNS['checkbox']};`}
+							class="grid font-normal text-center place-content-center"
+						>
+							<input
+								type="checkbox"
+								class="checkbox checkbox-primary dark:checkbox-accent"
+							/>
+						</div>
+					{/if}
 					{#if displayData.name}
 						<span
 							style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
