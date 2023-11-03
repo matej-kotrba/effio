@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+	import { twMerge } from 'tailwind-merge';
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
 
 	export let title: string = '';
+	export let titleClasses: string = '';
 	export const open = () => modal.showModal();
 	export const close = () => modal.close();
 	export let isSuccessOpen = false;
@@ -29,8 +31,8 @@
 		>
 			<Skewed />
 		</div>
-		<div class="flex items-center justify-between m-0 modal-action">
-			<h4 class="font-semibold text-h6">{title}</h4>
+		<div class="flex items-start justify-between m-0 modal-action">
+			<h4 class={twMerge('font-semibold text-h6', titleClasses)}>{title}</h4>
 			<button type="button" on:click={() => modal.close()}
 				><Icon icon="ic:round-close" class="text-2xl" /></button
 			>

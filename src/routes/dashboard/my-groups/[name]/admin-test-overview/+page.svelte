@@ -7,6 +7,7 @@
 	import UserTable from './[subcategory]/[test]/UserTable.svelte';
 	import type { UserDataObject } from './[subcategory]/[test]/UserTable.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	export let data;
 
@@ -46,14 +47,18 @@
 	// DIALOG
 	let selectedUsers: UserDataObject[] = [];
 	let kickDialogOpen: () => void;
+	let kickDialogClose: () => void;
 </script>
 
 <Dialog
 	bind:open={kickDialogOpen}
+	bind:close={kickDialogClose}
 	title={'Are you sure you want to kick these users from the group?'}
+	titleClasses="text-center"
 >
 	<form action="" method="POST">
-		<p>
+		<Space gap={10} />
+		<p class="text-center text-h6">
 			{#each selectedUsers as user, index}
 				<span class="font-semibold text-error dark:text-dark_error"
 					>{user.name}</span
@@ -63,6 +68,13 @@
 				{/if}
 			{/each}
 		</p>
+		<Space gap={10} />
+		<div class="flex items-center justify-center gap-4">
+			<button type="button" class="btn btn-outline">Cancel</button>
+			<button type="button" class="text-white btn bg-error hover:bg-dark_error"
+				>Delete</button
+			>
+		</div>
 	</form>
 </Dialog>
 <div class="@container">
@@ -127,13 +139,21 @@
 				actions={[
 					{
 						icon: 'fluent:delete-28-filled',
-						tooltip: 'Kick user(s) from the group',
+						tooltip: selectedUsers
+							.map((user) => user.id)
+							.includes(data.group.ownerId)
+							? 'You cannot kick owner from the group.'
+							: 'Kick user(s) from the group',
 						onClick: () => {
 							if (selectedUsers.length === 0) return;
 							kickDialogOpen();
 						},
 						buttonAttr: {
-							disabled: selectedUsers.length === 0
+							disabled:
+								selectedUsers.length === 0 ||
+								selectedUsers
+									.map((user) => user.id)
+									.includes(data.group.ownerId)
 						}
 					}
 				]}

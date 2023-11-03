@@ -18,7 +18,7 @@
 		{...attr}
 		on:click={onClick}
 		class={twMerge(
-			'grid p-2 duration-150 bg-transparent rounded-full hover:bg-light_text_black_20 dark:hover:bg-dark_text_white_20 place-content-center',
+			'grid p-2 duration-150 bg-transparent rounded-full hover:bg-light_text_black_20 dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
 			classes
 		)}
 	>

@@ -245,7 +245,7 @@
 			<IconButton
 				icon={action.icon}
 				buttonClasses="text-2xl"
-				tootlip="Kick user(s) from the group"
+				tootlip={action.tooltip}
 				attr={action.buttonAttr}
 				onClick={action.onClick}
 			/>
