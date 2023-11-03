@@ -5,6 +5,7 @@
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import UserTable from './[subcategory]/[test]/UserTable.svelte';
+	import type { UserDataObject } from './[subcategory]/[test]/UserTable.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 
 	export let data;
@@ -32,8 +33,6 @@
 			excludeOwnersRecords: true
 		});
 
-		console.log(testsData);
-
 		tests[index] = testsData.map((test) => {
 			return {
 				id: test.test.id,
@@ -45,6 +44,7 @@
 	}
 
 	// DIALOG
+	let selectedUsers: UserDataObject[] = [];
 	let kickDialogOpen: () => void;
 </script>
 
@@ -52,7 +52,18 @@
 	bind:open={kickDialogOpen}
 	title={'Are you sure you want to kick these users from the group?'}
 >
-	<form action="" method="POST" />
+	<form action="" method="POST">
+		<p>
+			{#each selectedUsers as user, index}
+				<span class="font-semibold text-error dark:text-dark_error"
+					>{user.name}</span
+				>
+				{#if index !== selectedUsers.length - 1}
+					{' '},{' '}
+				{/if}
+			{/each}
+		</p>
+	</form>
 </Dialog>
 <div class="@container">
 	<div class="grid @6xl:grid-cols-2 grid-cols-1">
@@ -111,19 +122,28 @@
 				<Separator w="100%" h="1px" />
 			</div>
 			<UserTable
+				bind:selectedUsers
+				ownerId={data.group.ownerId}
 				actions={[
 					{
 						icon: 'fluent:delete-28-filled',
-						tooltip: 'Kick user(s) from the group'
+						tooltip: 'Kick user(s) from the group',
+						onClick: () => {
+							if (selectedUsers.length === 0) return;
+							kickDialogOpen();
+						},
+						buttonAttr: {
+							disabled: selectedUsers.length === 0
+						}
 					}
 				]}
 				data={{
 					groupId: data.group.id
 				}}
 				displayData={{
-					name: true,
 					image: true,
-					joinedAt: true
+					joinedAt: true,
+					role: true
 				}}
 				defaultOrderBy="name"
 			/>

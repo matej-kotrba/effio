@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+	export type UserDataObject = Pick<Partial<User>, 'name' | 'id' | 'image'> & {
+		takenCount?: number;
+		joinedAt?: Date;
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { createObserver } from '~/lib/utils/observers';
@@ -11,13 +18,8 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import { transformDate } from '~/lib/utils/date';
 	import { TRPCClientError } from '@trpc/client';
-	import { dropdown } from '~use/dropdown';
 	import IconButton from '~components/buttons/IconButton.svelte';
-
-	type UserDataObject = Pick<Partial<User>, 'name' | 'id' | 'image'> & {
-		takenCount?: number;
-		joinedAt?: Date;
-	};
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	type Ordering = {
 		by: 'name' | 'count';
@@ -25,14 +27,15 @@
 	};
 
 	type DisplayData = {
-		name: boolean;
 		image: boolean;
 		taken: boolean;
 		takenCount: boolean;
 		joinedAt: boolean;
+		role: boolean;
 	};
 
 	type AlwaysDisplayedData = {
+		name: boolean;
 		checkbox: boolean;
 	};
 
@@ -46,7 +49,8 @@
 		taken: 1,
 		takenCount: 2,
 		joinedAt: 3,
-		checkbox: 1
+		checkbox: 1,
+		role: 1
 	};
 
 	export let data: {
@@ -57,13 +61,17 @@
 
 	export let displayData: Partial<DisplayData>;
 	export let defaultOrderBy: Ordering['by'] = 'count';
+	export let ownerId: string;
 
 	export let actions: {
 		tooltip: string;
 		icon: string;
+		buttonAttr?: HTMLButtonAttributes;
+		onClick: () => void;
 	}[] = [];
 
 	let alwaysDisplayData: AlwaysDisplayedData = {
+		name: true,
 		checkbox: true
 	};
 
@@ -83,6 +91,8 @@
 		is: false,
 		message: ''
 	};
+
+	export let selectedUsers: UserDataObject[] = [];
 
 	function createOrderSwap(by: Ordering['by']) {
 		let initialOrder: Ordering['order'];
@@ -157,7 +167,7 @@
 						: undefined,
 				limit: 12,
 				select: {
-					name: !!displayData.name,
+					name: !!alwaysDisplayData.name,
 					image: !!displayData.image,
 					count: !!displayData.takenCount,
 					joinedAt: !!displayData.joinedAt
@@ -190,7 +200,7 @@
 			return {
 				id: item.id,
 				image: displayData.image ? item.image : undefined,
-				name: displayData.name ? item.name : undefined,
+				name: alwaysDisplayData.name ? item.name : undefined,
 				takenCount:
 					displayData.takenCount || displayData.taken
 						? item._count.testRecords
@@ -236,6 +246,8 @@
 				icon={action.icon}
 				buttonClasses="text-2xl"
 				tootlip="Kick user(s) from the group"
+				attr={action.buttonAttr}
+				onClick={action.onClick}
 			/>
 		{/each}
 	</div>
@@ -246,7 +258,7 @@
 		{#if alwaysDisplayData.checkbox}
 			<span style={`grid-column: span ${DATA_GRID_COLUMNS['checkbox']};`} />
 		{/if}
-		{#if displayData.name}
+		{#if alwaysDisplayData.name}
 			<div
 				style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
 				class="relative flex justify-center h-fit"
@@ -265,6 +277,12 @@
 					/>
 				{/if}
 			</div>
+		{/if}
+		{#if displayData.role}
+			<span
+				style={`grid-column: span ${DATA_GRID_COLUMNS['role']};`}
+				class="font-semibold text-center text-body1 h-fit">Role</span
+			>
 		{/if}
 		{#if displayData.image}
 			<span
@@ -343,14 +361,23 @@
 						>
 							<input
 								type="checkbox"
+								bind:group={selectedUsers}
+								value={user}
 								class="checkbox checkbox-primary dark:checkbox-accent"
 							/>
 						</div>
 					{/if}
-					{#if displayData.name}
+					{#if alwaysDisplayData.name}
 						<span
 							style={`grid-column: span ${DATA_GRID_COLUMNS['name']};`}
 							class="font-normal text-center">{user.name}</span
+						>
+					{/if}
+					{#if displayData.role}
+						<span
+							style={`grid-column: span ${DATA_GRID_COLUMNS['role']};`}
+							class="font-normal text-center"
+							>{user.id === ownerId ? 'Owner' : 'User'}</span
 						>
 					{/if}
 					{#if displayData.image}
@@ -394,7 +421,7 @@
 							<span
 								style={`grid-column: span ${DATA_GRID_COLUMNS['joinedAt']};`}
 								class="font-normal text-center"
-								>{transformDate(user.joinedAt)}</span
+								>{transformDate(user.joinedAt, { time: true })}</span
 							>
 						{:else}
 							Unknown

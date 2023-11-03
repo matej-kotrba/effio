@@ -349,7 +349,6 @@ export const groupsRouter = router({
         break
       }
     }
-    console.log(input.ordering.order)
     const users = await ctx.prisma.user.findMany({
       orderBy: orderBy,
       where: {
