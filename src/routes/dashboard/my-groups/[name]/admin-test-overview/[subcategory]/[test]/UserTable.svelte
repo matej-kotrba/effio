@@ -32,11 +32,11 @@
 		takenCount: boolean;
 		joinedAt: boolean;
 		role: boolean;
+		checkbox: boolean;
 	};
 
 	type AlwaysDisplayedData = {
 		name: boolean;
-		checkbox: boolean;
 	};
 
 	const DATA_GRID_COLUMNS: {
@@ -71,8 +71,7 @@
 	}[] = [];
 
 	let alwaysDisplayData: AlwaysDisplayedData = {
-		name: true,
-		checkbox: true
+		name: true
 	};
 
 	let classes = '';
@@ -255,7 +254,7 @@
 		style={`grid-template-columns: repeat(${calculateGridColumnCount()}, 1fr);`}
 		class="grid col-span-12 py-1 border-b-2 border-solid bg-light_whiter dark:bg-dark_light_grey rounded-t-md h-fit border-light_text_black_40 dark:border-dark_text_white_40"
 	>
-		{#if alwaysDisplayData.checkbox}
+		{#if displayData.checkbox}
 			<span style={`grid-column: span ${DATA_GRID_COLUMNS['checkbox']};`} />
 		{/if}
 		{#if alwaysDisplayData.name}
@@ -354,7 +353,7 @@
 						isFetchingBlank ? 'opacity-40' : ''
 					}`}
 				>
-					{#if alwaysDisplayData.checkbox}
+					{#if displayData.checkbox}
 						<div
 							style={`grid-column: span ${DATA_GRID_COLUMNS['checkbox']};`}
 							class="grid font-normal text-center place-content-center"

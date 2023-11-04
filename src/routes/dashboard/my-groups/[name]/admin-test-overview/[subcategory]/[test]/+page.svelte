@@ -109,9 +109,9 @@
 <!-- Content grid -->
 <div class="grid grid-cols-12 gap-2 px-2 main-grid">
 	<UserTable
+		ownerId={data.group.ownerId}
 		displayData={{
 			image: true,
-			name: true,
 			taken: true,
 			takenCount: true
 		}}

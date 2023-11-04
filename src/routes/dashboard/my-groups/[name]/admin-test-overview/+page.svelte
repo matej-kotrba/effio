@@ -56,7 +56,7 @@
 	title={'Are you sure you want to kick these users from the group?'}
 	titleClasses="text-center"
 >
-	<form action="" method="POST">
+	<form action="?/deleteUsers" method="POST">
 		<Space gap={10} />
 		<p class="text-center text-h6">
 			{#each selectedUsers as user, index}
@@ -71,13 +71,13 @@
 		<Space gap={10} />
 		<div class="flex items-center justify-center gap-4">
 			<button type="button" class="btn btn-outline">Cancel</button>
-			<button type="button" class="text-white btn bg-error hover:bg-dark_error"
+			<button type="submit" class="text-white btn bg-error hover:bg-dark_error"
 				>Delete</button
 			>
 		</div>
 	</form>
 </Dialog>
-<div class="@container">
+<div class="@container px-4">
 	<div class="grid @6xl:grid-cols-2 grid-cols-1">
 		<section class="relative p-2">
 			<div class="mb-4">
@@ -163,7 +163,8 @@
 				displayData={{
 					image: true,
 					joinedAt: true,
-					role: true
+					role: true,
+					checkbox: true
 				}}
 				defaultOrderBy="name"
 			/>
