@@ -421,5 +421,44 @@ export const groupsRouter = router({
     })
 
     return count
+  }),
+
+  kickUsersFromGroup: loggedInProcedure.input(z.object({
+    groupSlug: z.string(),
+    userIds: z.array(z.string()),
+  })).query(async ({ ctx, input }) => {
+    if (input.userIds.includes(ctx.userId)) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You can't kick yourself" })
+    }
+
+    const group = await ctx.prisma.group.findUnique({
+      where: {
+        slug: input.groupSlug
+      }
+    })
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
+    }
+
+    if (group.ownerId !== ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to kick users from this group" })
+    }
+
+    const users = await ctx.prisma.groupOnUsers.deleteMany({
+      where: {
+        group: {
+          slug: input.groupSlug
+        },
+        userId: {
+          in: input.userIds
+        }
+      }
+    })
+
+    return {
+      success: true,
+      users: users
+    }
   })
 })

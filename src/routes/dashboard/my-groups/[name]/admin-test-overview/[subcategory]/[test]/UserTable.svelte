@@ -211,6 +211,10 @@
 		users = [...users, ...transformedArray];
 	}
 
+	export const revalidateUsers = () => {
+		getUsers(true);
+	};
+
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
 
 	onMount(() => {

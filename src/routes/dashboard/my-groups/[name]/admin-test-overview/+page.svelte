@@ -8,8 +8,11 @@
 	import type { UserDataObject } from './[subcategory]/[test]/UserTable.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import { enhance } from '$app/forms';
+	import toast from 'svelte-french-toast';
 
 	export let data;
+	export let form;
 
 	type Test =
 		| {
@@ -48,6 +51,7 @@
 	let selectedUsers: UserDataObject[] = [];
 	let kickDialogOpen: () => void;
 	let kickDialogClose: () => void;
+	let revalidateUsers: () => void;
 </script>
 
 <Dialog
@@ -56,13 +60,29 @@
 	title={'Are you sure you want to kick these users from the group?'}
 	titleClasses="text-center"
 >
-	<form action="?/deleteUsers" method="POST">
+	<form
+		action="?/deleteUsers"
+		method="POST"
+		use:enhance={() => {
+			return async ({ result, update }) => {
+				update();
+				if (result['status'] === 200) {
+					toast.success('Users were removed from the group successfuly.');
+					revalidateUsers();
+				} else if (result['type'] === 'failure') {
+					toast.error(form?.message || 'Something went wrong.');
+				}
+				kickDialogClose();
+			};
+		}}
+	>
 		<Space gap={10} />
 		<p class="text-center text-h6">
 			{#each selectedUsers as user, index}
 				<span class="font-semibold text-error dark:text-dark_error"
 					>{user.name}</span
 				>
+				<input type="hidden" readonly value={user.id} name={'' + index} />
 				{#if index !== selectedUsers.length - 1}
 					{' '},{' '}
 				{/if}
@@ -70,7 +90,9 @@
 		</p>
 		<Space gap={10} />
 		<div class="flex items-center justify-center gap-4">
-			<button type="button" class="btn btn-outline">Cancel</button>
+			<button type="button" class="btn btn-outline" on:click={kickDialogClose}
+				>Cancel</button
+			>
 			<button type="submit" class="text-white btn bg-error hover:bg-dark_error"
 				>Delete</button
 			>
@@ -134,6 +156,7 @@
 				<Separator w="100%" h="1px" />
 			</div>
 			<UserTable
+				bind:revalidateUsers
 				bind:selectedUsers
 				ownerId={data.group.ownerId}
 				actions={[
