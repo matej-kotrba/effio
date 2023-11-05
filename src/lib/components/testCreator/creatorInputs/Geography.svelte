@@ -83,6 +83,7 @@
 			error={content.initial.errors ? content.initial.errors[0] : ''}
 		>
 			<TextInputSimple
+				displayOutside={true}
 				title="Initial View Latitude"
 				inputProperties={{ type: 'number' }}
 				titleName="lat"
@@ -98,6 +99,7 @@
 			error={content.initial.errors ? content.initial.errors[1] : ''}
 		>
 			<TextInputSimple
+				displayOutside={true}
 				title="Initial View Latitude"
 				inputProperties={{ type: 'number' }}
 				titleName="lng"

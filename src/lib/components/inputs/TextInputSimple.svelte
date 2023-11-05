@@ -28,8 +28,16 @@
 
 	const dispatch = createEventDispatcher();
 
+	let isFocused = false;
+
 	function validateInput() {
-		const result = validationSchema?.safeParse(inputValue);
+		if (inputRef === undefined) return;
+		let result;
+		if (inputRef?.type === 'number') {
+			result = validationSchema?.safeParse(inputRef.valueAsNumber);
+		} else {
+			result = validationSchema?.safeParse(inputValue);
+		}
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);
 			if (typeof setError === 'function')
@@ -71,8 +79,11 @@
 	<div class="flex items-center justify-between px-1">
 		<label
 			for={titleName}
-			class="text-xs duration-150 text-light_text_black dark:text-dark_text_white text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
-			>{title}</label
+			class={`text-xs duration-150  text-body2 ${
+				isFocused
+					? 'text-light_primary dark:text-dark_primary'
+					: 'text-light_text_black dark:text-dark_text_white'
+			}`}>{title}</label
 		>
 		{#if min !== undefined && max !== undefined && displayOutside === true}
 			<Limit current={inputValue.length} {min} {max} class="text-xs" />
@@ -104,7 +115,11 @@
 				bind:this={inputRef}
 				on:keydown={keyDownFiltering}
 				on:input={dispatchInputChange}
-				on:focusout={validateInput}
+				on:focusout={() => {
+					isFocused = false;
+					validateInput();
+				}}
+				on:focus={() => (isFocused = true)}
 				name={titleName}
 				id={titleName}
 				type="text"
