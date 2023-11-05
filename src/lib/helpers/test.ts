@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -393,7 +393,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         },
         tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
         answerPoint: {
-          location: [53.3498, 6.2603]
+          location: [49.938944, 17.901978]
         }
       }
     },
@@ -433,15 +433,25 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const parsedTolerance = geographyToleranceSchema.safeParse(content.tolerence)
 
       if (parsedTolerance.success === false) {
+        console.log("A")
         isError = true
         message = parsedTolerance.error.errors[0].message
       }
 
-      const parsedLocation = geographyToleranceSchema.safeParse(content.initial.location)
+      const parsedLocation = geographyLocationSchema.safeParse(content.initial.location)
 
       if (parsedLocation.success === false) {
+        console.log("B", content.initial.location)
         isError = true
         message = parsedLocation.error.errors[0].message
+      }
+
+      const answerLocation = geographyLocationSchema.safeParse(content.answerPoint.location)
+
+      if (answerLocation.success === false) {
+        console.log("C")
+        isError = true
+        message = answerLocation.error.errors[0].message
       }
 
       return {
@@ -598,6 +608,7 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
       if (returnResult.isError) {
         isError = true
+        message = returnResult.message
       }
     }
   }

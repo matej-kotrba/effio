@@ -42,6 +42,10 @@ export const CHAT_INPUT_MAX = 255
 export const CHAT_INPUT_MIN = 1
 
 // GEOGRAPHY 
+export const LATITUDE_MAX = 90
+export const LATITUDE_MIN = -90
+export const LONGITUDE_MAX = 180
+export const LONGITUDE_MIN = -180
 
 // SCHEMAS
 export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")
@@ -54,6 +58,6 @@ export const groupNameSchema = z.string().min(GROUP_NAME_MIN, `Mark has to be at
 export const groupDescriptionSchema = z.string().max(GROUP_DESCRIPTION_MAX, `Mark can be max ${GROUP_DESCRIPTION_MAX} characters long.`)
 export const chatInputSchema = z.string().min(CHAT_INPUT_MIN, "Message has to be at least 1 character long.").max(CHAT_INPUT_MAX, "Message can be max 255 characters long.")
 export const geographyToleranceSchema = z.number().min(GEOGRAPHY_TOLERANCE_MIN, "Tolerance cannot be less than 0.").max(GEOGRAPHY_TOLERANCE_MAX, "Tolerance cannot be more than 10000.").positive("Tolerance cannot be negative.")
-export const geographyLocationSchema = z.union([z.number(), z.number()])
-export const latitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(-90, "Number has to be bigger than -90").max(90, "Number has to be smaller than 90");
-export const longitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(-180, "Number has to be bigger than -180").max(180, "Number has to be smaller than 180");
+export const latitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(LATITUDE_MIN, "Number has to be bigger than -90").max(LATITUDE_MAX, "Number has to be smaller than 90");
+export const longitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(LONGITUDE_MIN, "Number has to be bigger than -180").max(LONGITUDE_MAX, "Number has to be smaller than 180");
+export const geographyLocationSchema = z.tuple([latitudeSchema, longitudeSchema], { invalid_type_error: "Latitude and longitude has to be valid numbers." })
