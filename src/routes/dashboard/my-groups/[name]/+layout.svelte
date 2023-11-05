@@ -8,14 +8,20 @@
 <div class="relative h-full grid__container">
 	<div class="p-2">
 		<div
-			class="flex flex-col items-center w-full h-full gap-2 py-2 rounded-md shadow-md bg-light_whiter"
+			class="flex flex-col items-center w-full h-full gap-2 py-2 rounded-md shadow-md bg-light_grey"
 		>
-			<IconButtonExpandable
-				shouldExpand={true}
-				fullText={'This is a long text'}
-			>
-				<iconify-icon icon="ion:home" class="text-2xl" slot="title" />
-			</IconButtonExpandable>
+			<a href="/dashboard/my-groups/{data.group.slug}">
+				<IconButtonExpandable shouldExpand={true} fullText={'Home'}>
+					<iconify-icon icon="ion:home" class="text-2xl" slot="title" />
+				</IconButtonExpandable>
+			</a>
+			{#each data.group['groupsSubcategories'] as category}
+				<a href="/dashboard/my-groups/{data.group.slug}/{category.slug}">
+					<IconButtonExpandable shouldExpand={true} fullText={category.name}>
+						<span slot="title">{category.name.substring(0, 3)}</span>
+					</IconButtonExpandable>
+				</a>
+			{/each}
 		</div>
 	</div>
 	<!-- <div class="relative w-full">
