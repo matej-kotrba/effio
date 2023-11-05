@@ -80,7 +80,7 @@
 	</div>
 {/if}
 <div
-	class="p-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
+	class="py-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
 >
 	{#if displayOutside === false}
 		<label

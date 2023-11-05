@@ -55,10 +55,12 @@ type GeographyQuestion = {
   initial: {
     location: GeographyLocation;
     zoom: number;
+    errors?: [string?, string?]
   },
   tolerence: number,
   answerPoint: {
-    location?: GeographyLocation;
+    location: GeographyLocation;
+    errors?: [string?, string?]
   }
 }
 

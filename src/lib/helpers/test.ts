@@ -393,7 +393,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         },
         tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
         answerPoint: {
-          location: undefined
+          location: [53.3498, 6.2603]
         }
       }
     },
@@ -401,7 +401,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return {
         ...question,
         answerPoint: {
-          location: undefined
+          location: question.initial.location
         }
       }
     },

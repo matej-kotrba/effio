@@ -55,3 +55,5 @@ export const groupDescriptionSchema = z.string().max(GROUP_DESCRIPTION_MAX, `Mar
 export const chatInputSchema = z.string().min(CHAT_INPUT_MIN, "Message has to be at least 1 character long.").max(CHAT_INPUT_MAX, "Message can be max 255 characters long.")
 export const geographyToleranceSchema = z.number().min(GEOGRAPHY_TOLERANCE_MIN, "Tolerance cannot be less than 0.").max(GEOGRAPHY_TOLERANCE_MAX, "Tolerance cannot be more than 10000.").positive("Tolerance cannot be negative.")
 export const geographyLocationSchema = z.union([z.number(), z.number()])
+export const latitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(-90, "Number has to be bigger than -90").max(90, "Number has to be smaller than 90");
+export const longitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(-180, "Number has to be bigger than -180").max(180, "Number has to be smaller than 180");
