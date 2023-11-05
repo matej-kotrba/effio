@@ -1,11 +1,24 @@
 <script>
 	import { page } from '$app/stores';
+	import IconButtonExpandable from '~components/buttons/IconButtonExpandable.svelte';
 
 	export let data;
 </script>
 
 <div class="relative h-full grid__container">
-	<div class="relative w-full">
+	<div class="p-2">
+		<div
+			class="flex flex-col items-center w-full h-full gap-2 py-2 rounded-md shadow-md bg-light_whiter"
+		>
+			<IconButtonExpandable
+				shouldExpand={true}
+				fullText={'This is a long text'}
+			>
+				<iconify-icon icon="ion:home" class="text-2xl" slot="title" />
+			</IconButtonExpandable>
+		</div>
+	</div>
+	<!-- <div class="relative w-full">
 		<ul
 			class="w-full max-h-full min-h-full py-8 border-r-2 border-solid menu border-light_text_black_20 dark:border-dark_text_white_20 sidebar"
 		>
@@ -16,11 +29,11 @@
 					class:active={$page.url.pathname.split('/').at(-1) ===
 						data.group.slug}
 				>
-					<!-- <iconify-icon icon="ion:home" class="text-2xl" /> -->
+					<iconify-icon icon="ion:home" class="text-2xl" />
 					<span
 						class="inline-block w-[170px] py-1 whitespace-nowrap overflow-hidden text-ellipsis text-left"
 					>
-						{data.group.name} as sa
+						{data.group.name}
 					</span>
 				</a>
 			</li>
@@ -37,7 +50,7 @@
 				</li>
 			{/each}
 		</ul>
-	</div>
+	</div> -->
 	<div>
 		<slot />
 	</div>
@@ -46,7 +59,7 @@
 <style>
 	.grid__container {
 		display: grid;
-		grid-template-columns: 13rem 1fr;
+		grid-template-columns: 5rem 1fr;
 	}
 	.active {
 		@apply bg-light_secondary text-white;

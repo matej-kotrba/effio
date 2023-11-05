@@ -98,7 +98,7 @@
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
-							$page.url.pathname === '/dashboard/test-creator'}
+							$page.url.pathname.startsWith('/dashboard/test-creator')}
 					>
 						<iconify-icon
 							icon="material-symbols:edit-square-outline-rounded"
@@ -111,7 +111,7 @@
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
-							$page.url.pathname === '/dashboard/test-collection'}
+							$page.url.pathname.startsWith('/dashboard/test-collection')}
 					>
 						<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
 						collection
@@ -122,7 +122,7 @@
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
-							$page.url.pathname === '/dashboard/test-history'}
+							$page.url.pathname.startsWith('/dashboard/test-history')}
 					>
 						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
 					</a>
@@ -132,7 +132,7 @@
 						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 						class:dark={$applicationStates}
 						class:active={browser &&
-							$page.url.pathname === '/dashboard/my-groups'}
+							$page.url.pathname.startsWith('/dashboard/my-groups')}
 					>
 						<iconify-icon icon="ion:share-social" class="text-2xl" />
 						My Groups
