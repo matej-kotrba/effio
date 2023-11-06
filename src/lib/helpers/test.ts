@@ -90,6 +90,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       if (content.correctAnswerIndex === undefined || content.correctAnswerIndex > content.answers.length - 1 || content.correctAnswerIndex < 0) {
         isError = true
         message = "Please select the correct answer."
+
       }
 
       for (const item in content.answers) {
@@ -406,7 +407,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     checkAnswerPresence: (question: GeographyQuestion): boolean => {
-      return question.answerPoint.location !== undefined
+      return typeof question.answerPoint.location[0] === "number" && typeof question.answerPoint.location[1] === "number"
     },
     checkAnswerCorrectness: (answer: GeographyQuestion, original: GeographyQuestion) => {
       if (!answer.answerPoint.location || !original.answerPoint.location) return false
@@ -601,11 +602,19 @@ export function isTestValid(inputsToValidate: IsTestValid) {
       // Checking the content of the question
       const returnResult = questionContentFunctions[item.questionType]["checkCreatorCorrectFormat"](item.content as any)
 
+      // Setting errors from the check function to test object
       item.content = returnResult.store
+      item.errors.global = returnResult.message
+
+      // TODO: The proccess description:
+      // We call the checkCreatorCorrectFormat function which returns the object with isError and message but also with a store object
+      // which includes all the errors that were found, up here we set them to testObject store via item.content reference
+
 
       if (returnResult.isError) {
         isError = true
-        message = returnResult.message
+        // message = returnResult.message
+        result.questions
       }
     }
   }

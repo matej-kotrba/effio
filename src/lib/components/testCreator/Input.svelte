@@ -26,6 +26,8 @@ will be used in the test creator -->
 		dispatch('dnddrag');
 	}
 
+	$: console.log($testObject.questions[index].errors.global);
+
 	let isCollapsed = false;
 
 	let dropdownRef: HTMLDetailsElement;
@@ -133,44 +135,51 @@ will be used in the test creator -->
 					<Geography on:questionDetails indexParent={index} />
 				{/if}
 			</div>
-			<details
-				class="dropdown dropdown-top"
-				use:clickOutside
-				bind:this={dropdownRef}
-				on:clickoutside={() => {
-					dropdownRef.removeAttribute('open');
-				}}
-			>
-				<summary
-					class="m-1 shadow-md btn dark:bg-dark_terciary dark:border-dark_terciary dark:text-dark_text_white dark:hover:bg-dark_quaternary dark:hover:border-dark_quaternary"
-					>Edit points</summary
+			<div class="flex items-center justify-between">
+				<details
+					class="dropdown dropdown-top"
+					use:clickOutside
+					bind:this={dropdownRef}
+					on:clickoutside={() => {
+						dropdownRef.removeAttribute('open');
+					}}
 				>
-				<div
-					class="p-3 shadow menu dropdown-content z-[1] bg-base-100 dark:bg-dark_terciary rounded-box w-52"
-				>
-					<h6 class="font-semibold text-center">Points for this question?</h6>
-					<p class="text-2xl font-semibold text-center">
-						{$testObject.questions[index].points}
-					</p>
-					<div class="flex items-center gap-1">
-						<button
-							class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
-							on:click={() => onButtonClick(-1)}>-1</button
-						>
-						<input
-							bind:value={$testObject.questions[index].points}
-							type="range"
-							min={MIN_RANGE_VALUE}
-							max={MAX_RANGE_VALUE}
-							class="range range-xs dark:bg-dark_text_white_20"
-						/>
-						<button
-							class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
-							on:click={() => onButtonClick(1)}>+1</button
-						>
+					<summary
+						class="m-1 shadow-md btn dark:bg-dark_terciary dark:border-dark_terciary dark:text-dark_text_white dark:hover:bg-dark_quaternary dark:hover:border-dark_quaternary"
+						>Edit points</summary
+					>
+					<div
+						class="p-3 shadow-md menu dropdown-content z-[1] bg-light_grey dark:bg-dark_terciary rounded-box w-52"
+					>
+						<h6 class="font-semibold text-center">Points for this question?</h6>
+						<p class="text-2xl font-semibold text-center">
+							{$testObject.questions[index].points}
+						</p>
+						<div class="flex items-center gap-1">
+							<button
+								class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+								on:click={() => onButtonClick(-1)}>-1</button
+							>
+							<input
+								bind:value={$testObject.questions[index].points}
+								type="range"
+								min={MIN_RANGE_VALUE}
+								max={MAX_RANGE_VALUE}
+								class="range range-xs dark:bg-dark_text_white_20"
+							/>
+							<button
+								class="grid w-10 font-bold duration-100 rounded-md place-content-center aspect-square dark:bg-dark_quaternary dark:hover:bg-dark_secondary"
+								on:click={() => onButtonClick(1)}>+1</button
+							>
+						</div>
 					</div>
-				</div>
-			</details>
+				</details>
+				<span
+					class={`max-w-[50%] inline-block text-error dark:text-dark_error text-body2 ${
+						$testObject.questions[index].errors.global ? '' : 'opacity-0'
+					}`}>{$testObject.questions[index].errors.global}</span
+				>
+			</div>
 		</div>
 	</div>
 </div>

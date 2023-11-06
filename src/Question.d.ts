@@ -91,8 +91,7 @@ type QuestionClient = {
     points: number;
     errors: {
       [ErrorKey in keyof QuestionClient as ErrorKey extends "errors" ? never : ErrorKey]?: string;
-      global?: string;
-    }
+    } & { global?: string }
   };
 }[keyof QuestionTypeMap];
 

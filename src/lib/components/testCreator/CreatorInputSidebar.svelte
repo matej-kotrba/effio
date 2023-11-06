@@ -52,6 +52,7 @@
 			<div class="item-box">
 				<!-- class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500" -->
 				<!-- on:mousedown={() => onDragEvent(true, index)} -->
+
 				<div
 					class="grid w-full h-full duration-150 place-content-center bg-light_white dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey"
 					bind:this={inputReferences[index]}
@@ -89,6 +90,7 @@
 		box-shadow: 1px 1px 5px var(--light-text-black-40);
 		user-select: none;
 		cursor: pointer;
+		transition: 0.1s scale ease;
 	}
 
 	.item-box > div {
@@ -108,6 +110,30 @@
 		);
 		z-index: -1;
 		pointer-events: none;
+	}
+
+	.item-box > div::after {
+		content: '';
+		position: absolute;
+		inset: 0px;
+		border-radius: inherit;
+		background-attachment: fixed;
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--light-primary),
+			transparent 6rem
+		);
+		opacity: 0;
+		pointer-events: none;
+		transition: 0.3s opacity ease;
+	}
+
+	.item-box > div:hover::after {
+		opacity: 0.1;
+	}
+
+	.item-box:active {
+		scale: 0.95;
 	}
 
 	:global(.dark) .item-box::before {

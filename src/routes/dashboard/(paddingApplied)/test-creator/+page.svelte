@@ -297,7 +297,6 @@
 							questions: $testObject.questions
 						});
 
-						// console.log(result);
 						if (result['store']['questions']) {
 							$testObject['questions'] = result['store']['questions'];
 						}
