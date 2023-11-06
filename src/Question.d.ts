@@ -61,6 +61,9 @@ type GeographyQuestion = {
   answerPoint: {
     location: GeographyLocation;
     errors?: [string?, string?]
+  },
+  errors?: {
+    tolerence?: string;
   }
 }
 

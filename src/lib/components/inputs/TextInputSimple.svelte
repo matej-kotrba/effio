@@ -118,6 +118,7 @@
 				on:focusout={() => {
 					isFocused = false;
 					validateInput();
+					dispatch('focusout');
 				}}
 				on:focus={() => (isFocused = true)}
 				name={titleName}

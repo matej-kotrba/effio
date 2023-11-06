@@ -26,8 +26,6 @@ will be used in the test creator -->
 		dispatch('dnddrag');
 	}
 
-	$: console.log($testObject.questions[index].errors.global);
-
 	let isCollapsed = false;
 
 	let dropdownRef: HTMLDetailsElement;
@@ -103,7 +101,6 @@ will be used in the test creator -->
 			bind:inputValue={$testObject.questions[index].title}
 			validationSchema={titleSchema}
 			on:error={(data) => {
-				console.log(data.detail);
 				$testObject.questions[index]['errors']['title'] = data.detail;
 			}}
 		/>

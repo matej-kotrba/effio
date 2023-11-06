@@ -13,7 +13,9 @@
 		latitudeSchema,
 		longitudeSchema,
 		GEOGRAPHY_TOLERANCE_MIN,
-		GEOGRAPHY_TOLERANCE_MAX
+		GEOGRAPHY_TOLERANCE_MAX,
+		geographyToleranceSchema,
+		GEOGRAPHY_TOLERANCE_DEFAULT
 	} from '~schemas/textInput';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -28,6 +30,8 @@
 	$: content = $testObject.questions[indexParent].content as GeographyQuestion;
 
 	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
+
+	//TODO: Rerender happens even if updating only tolerance
 
 	let initialMarker: Marker;
 	let answerMarker: Marker;
@@ -134,16 +138,16 @@
 				lat: number;
 				lng: number;
 			};
-			initialLocation.lat = String(location.lat);
-			initialLocation.lng = String(location.lng);
+			initialLocation.lat = String(location.lat.toFixed(6));
+			initialLocation.lng = String(location.lng.toFixed(6));
 		});
 		answerMarker.on('dragend', (e) => {
 			const location = e.target.getLatLng() as {
 				lat: number;
 				lng: number;
 			};
-			answerLocation.lat = String(location.lat);
-			answerLocation.lng = String(location.lng);
+			answerLocation.lat = String(location.lat.toFixed(6));
+			answerLocation.lng = String(location.lng.toFixed(6));
 		});
 	});
 </script>
@@ -165,6 +169,14 @@
 						if (!content.initial.errors) content.initial.errors = [];
 						content.initial.errors[0] = event.detail;
 					}}
+					on:focusout={() => {
+						if (
+							initialLocation.lat === '' ||
+							'' + content.initial.location[0] != initialLocation.lat
+						) {
+							initialLocation.lat = String(content.initial.location[0]);
+						}
+					}}
 				/>
 			</ErrorEnhance>
 			<ErrorEnhance
@@ -180,6 +192,14 @@
 					on:error={(event) => {
 						if (!content.initial.errors) content.initial.errors = [];
 						content.initial.errors[1] = event.detail;
+					}}
+					on:focusout={() => {
+						if (
+							initialLocation.lng === '' ||
+							'' + content.initial.location[1] != initialLocation.lng
+						) {
+							initialLocation.lng = String(content.initial.location[1]);
+						}
 					}}
 				/>
 			</ErrorEnhance>
@@ -199,6 +219,14 @@
 						if (!content.answerPoint.errors) content.answerPoint.errors = [];
 						content.answerPoint.errors[0] = event.detail;
 					}}
+					on:focusout={() => {
+						if (
+							answerLocation.lat === '' ||
+							'' + content.answerPoint.location[0] != answerLocation.lat
+						) {
+							answerLocation.lat = String(content.initial.location[0]);
+						}
+					}}
 				/>
 			</ErrorEnhance>
 			<ErrorEnhance
@@ -215,18 +243,48 @@
 						if (!content.answerPoint.errors) content.answerPoint.errors = [];
 						content.answerPoint.errors[1] = event.detail;
 					}}
+					on:focusout={() => {
+						if (
+							answerLocation.lng === '' ||
+							'' + content.answerPoint.location[1] != answerLocation.lng
+						) {
+							answerLocation.lng = String(content.initial.location[1]);
+						}
+					}}
 				/>
 			</ErrorEnhance>
 		</div>
 		<div>
-			<span class="text-body2">Answer Tolerance</span>
-			<input
-				type="range"
-				min={GEOGRAPHY_TOLERANCE_MIN}
-				max={GEOGRAPHY_TOLERANCE_MAX}
-				bind:value={content.tolerence}
-				class="range range-sm range-primary dark:range-accent"
-			/>
+			<div>
+				<span class="text-body2">Answer Tolerance</span>
+				<input
+					type="range"
+					min={GEOGRAPHY_TOLERANCE_MIN}
+					max={GEOGRAPHY_TOLERANCE_MAX}
+					bind:value={content.tolerence}
+					class="range range-sm range-primary dark:range-accent"
+				/>
+			</div>
+			<ErrorEnhance error={content.errors?.tolerence}>
+				<TextInputSimple
+					displayOutside={true}
+					title="Tolerance"
+					inputProperties={{ type: 'number' }}
+					titleName="tolerance"
+					validationSchema={geographyToleranceSchema}
+					bind:inputValue={content.tolerence}
+					on:error={(event) => {
+						if (!content.errors) content.errors = {};
+						content.errors.tolerence = event.detail;
+					}}
+					on:focusout={() => {
+						if (!content.tolerence) {
+							content.tolerence = GEOGRAPHY_TOLERANCE_DEFAULT;
+							if (content.errors) content.errors.tolerence = '';
+						}
+					}}
+				/>
+			</ErrorEnhance>
 		</div>
 	</Collapsible>
 	<!-- Display the map -->
