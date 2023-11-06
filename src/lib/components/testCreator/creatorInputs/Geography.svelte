@@ -98,6 +98,13 @@
 		} catch (e) {}
 	}
 
+	$: {
+		if (typeof content.tolerence === 'string') {
+			content.tolerence =
+				Number(content.tolerence) || GEOGRAPHY_TOLERANCE_DEFAULT;
+		}
+	}
+
 	onMount(async () => {
 		const leaflet = await import('leaflet');
 

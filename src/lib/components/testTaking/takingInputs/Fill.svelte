@@ -6,7 +6,6 @@
 	export let resultFormat: QuestionServerCheckResponse<FillQuestion> | null =
 		null;
 
-	console.log(questionIndex);
 	$: content = $testObject.questions[questionIndex].content as FillQuestion;
 </script>
 

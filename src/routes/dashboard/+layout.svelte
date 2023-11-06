@@ -56,7 +56,7 @@
 	>
 		<aside
 			class="bg-light_white dark:bg-dark_black sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
-			 lg:max-w-[260px] md:block sticky top-0 z-[100] min-h-screen max-h-screen
+			 lg:max-w-[260px] md:block sticky top-0 left-0 z-[100] min-h-screen max-h-screen
 			  border-r-2 border-solid border-light_text_black_20 {isSidebarShown
 				? 'w-full'
 				: ''}"

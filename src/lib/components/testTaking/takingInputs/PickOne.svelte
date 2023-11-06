@@ -5,6 +5,8 @@
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
 
+	$: content = $testObject.questions[questionIndex].content as PickOneQuestion;
+
 	let selectedInput: number = (
 		$testObject.questions[questionIndex]['content'] as PickOneQuestion
 	)['correctAnswerIndex'];
@@ -23,7 +25,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
+	{#each content['answers'] as { answer }, index}
 		<button
 			type="button"
 			disabled={!!resultFormat}
