@@ -433,7 +433,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const parsedTolerance = geographyToleranceSchema.safeParse(content.tolerence)
 
       if (parsedTolerance.success === false) {
-        console.log("A")
         isError = true
         message = parsedTolerance.error.errors[0].message
       }
@@ -441,7 +440,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const parsedLocation = geographyLocationSchema.safeParse(content.initial.location)
 
       if (parsedLocation.success === false) {
-        console.log("B", content.initial.location)
         isError = true
         message = parsedLocation.error.errors[0].message
       }
@@ -449,7 +447,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const answerLocation = geographyLocationSchema.safeParse(content.answerPoint.location)
 
       if (answerLocation.success === false) {
-        console.log("C")
         isError = true
         message = answerLocation.error.errors[0].message
       }

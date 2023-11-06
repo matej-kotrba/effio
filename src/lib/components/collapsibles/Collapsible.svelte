@@ -3,6 +3,7 @@
 	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
+	export let openedTitle: string | undefined = undefined;
 	export let position: 'left' | 'center' | 'right' = 'left';
 	export let shouldWrap = true;
 	let classes = '';
@@ -49,11 +50,14 @@
 				? 'rotate-90'
 				: 'rotate-0'} duration-300 text-light_text_black dark:text-dark_text_white"
 		/>
-		<abbr {title} class="overflow-hidden no-underline text-ellipsis">
+		<abbr
+			title={isOpen && openedTitle ? openedTitle : title}
+			class="overflow-hidden no-underline text-ellipsis"
+		>
 			<span
 				class={`text-body3 md:text-body1 min-h-[1.2em] text-light_text_black dark:text-dark_text_white text-left ${
 					shouldWrap === false ? 'whitespace-nowrap  ' : ''
-				}`}>{title}</span
+				}`}>{isOpen && openedTitle ? openedTitle : title}</span
 			></abbr
 		></button
 	>

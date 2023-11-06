@@ -11,10 +11,14 @@
 		LONGITUDE_MIN,
 		LONGITUDE_MAX,
 		latitudeSchema,
-		longitudeSchema
+		longitudeSchema,
+		GEOGRAPHY_TOLERANCE_MIN,
+		GEOGRAPHY_TOLERANCE_MAX
 	} from '~schemas/textInput';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import Dropdown from '~components/effects/Dropdown.svelte';
+	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 
 	export let indexParent: number;
 
@@ -145,75 +149,87 @@
 </script>
 
 <form class="relative flex flex-col gap-4">
+	<Collapsible title="Show options" openedTitle="Hide options">
+		<div class="flex gap-2">
+			<ErrorEnhance
+				error={content.initial.errors ? content.initial.errors[0] : ''}
+			>
+				<TextInputSimple
+					displayOutside={true}
+					title="Initial View Latitude"
+					inputProperties={{ type: 'number' }}
+					titleName="lat"
+					validationSchema={latitudeSchema}
+					bind:inputValue={initialLocation.lat}
+					on:error={(event) => {
+						if (!content.initial.errors) content.initial.errors = [];
+						content.initial.errors[0] = event.detail;
+					}}
+				/>
+			</ErrorEnhance>
+			<ErrorEnhance
+				error={content.initial.errors ? content.initial.errors[1] : ''}
+			>
+				<TextInputSimple
+					displayOutside={true}
+					title="Initial View Latitude"
+					inputProperties={{ type: 'number' }}
+					titleName="lng"
+					validationSchema={longitudeSchema}
+					bind:inputValue={initialLocation.lng}
+					on:error={(event) => {
+						if (!content.initial.errors) content.initial.errors = [];
+						content.initial.errors[1] = event.detail;
+					}}
+				/>
+			</ErrorEnhance>
+		</div>
+		<div class="flex gap-2">
+			<ErrorEnhance
+				error={content.answerPoint.errors ? content.answerPoint.errors[0] : ''}
+			>
+				<TextInputSimple
+					displayOutside={true}
+					title="Answer Point Latitude"
+					inputProperties={{ type: 'number' }}
+					titleName="lat_answer"
+					validationSchema={latitudeSchema}
+					bind:inputValue={answerLocation.lat}
+					on:error={(event) => {
+						if (!content.answerPoint.errors) content.answerPoint.errors = [];
+						content.answerPoint.errors[0] = event.detail;
+					}}
+				/>
+			</ErrorEnhance>
+			<ErrorEnhance
+				error={content.answerPoint.errors ? content.answerPoint.errors[1] : ''}
+			>
+				<TextInputSimple
+					displayOutside={true}
+					title="Answer Point Latitude"
+					inputProperties={{ type: 'number' }}
+					titleName="lng_answer"
+					validationSchema={longitudeSchema}
+					bind:inputValue={answerLocation.lng}
+					on:error={(event) => {
+						if (!content.answerPoint.errors) content.answerPoint.errors = [];
+						content.answerPoint.errors[1] = event.detail;
+					}}
+				/>
+			</ErrorEnhance>
+		</div>
+		<div>
+			<span class="text-body2">Answer Tolerance</span>
+			<input
+				type="range"
+				min={GEOGRAPHY_TOLERANCE_MIN}
+				max={GEOGRAPHY_TOLERANCE_MAX}
+				bind:value={content.tolerence}
+				class="range range-sm range-primary dark:range-accent"
+			/>
+		</div>
+	</Collapsible>
 	<!-- Display the map -->
-	<div class="flex gap-2">
-		<ErrorEnhance
-			error={content.initial.errors ? content.initial.errors[0] : ''}
-		>
-			<TextInputSimple
-				displayOutside={true}
-				title="Initial View Latitude"
-				inputProperties={{ type: 'number' }}
-				titleName="lat"
-				validationSchema={latitudeSchema}
-				bind:inputValue={initialLocation.lat}
-				on:error={(event) => {
-					if (!content.initial.errors) content.initial.errors = [];
-					content.initial.errors[0] = event.detail;
-				}}
-			/>
-		</ErrorEnhance>
-		<ErrorEnhance
-			error={content.initial.errors ? content.initial.errors[1] : ''}
-		>
-			<TextInputSimple
-				displayOutside={true}
-				title="Initial View Latitude"
-				inputProperties={{ type: 'number' }}
-				titleName="lng"
-				validationSchema={longitudeSchema}
-				bind:inputValue={initialLocation.lng}
-				on:error={(event) => {
-					if (!content.initial.errors) content.initial.errors = [];
-					content.initial.errors[1] = event.detail;
-				}}
-			/>
-		</ErrorEnhance>
-	</div>
-	<div class="flex gap-2">
-		<ErrorEnhance
-			error={content.answerPoint.errors ? content.answerPoint.errors[0] : ''}
-		>
-			<TextInputSimple
-				displayOutside={true}
-				title="Answer Point Latitude"
-				inputProperties={{ type: 'number' }}
-				titleName="lat_answer"
-				validationSchema={latitudeSchema}
-				bind:inputValue={answerLocation.lat}
-				on:error={(event) => {
-					if (!content.answerPoint.errors) content.answerPoint.errors = [];
-					content.answerPoint.errors[0] = event.detail;
-				}}
-			/>
-		</ErrorEnhance>
-		<ErrorEnhance
-			error={content.answerPoint.errors ? content.answerPoint.errors[1] : ''}
-		>
-			<TextInputSimple
-				displayOutside={true}
-				title="Answer Point Latitude"
-				inputProperties={{ type: 'number' }}
-				titleName="lng_answer"
-				validationSchema={longitudeSchema}
-				bind:inputValue={answerLocation.lng}
-				on:error={(event) => {
-					if (!content.answerPoint.errors) content.answerPoint.errors = [];
-					content.answerPoint.errors[1] = event.detail;
-				}}
-			/>
-		</ErrorEnhance>
-	</div>
 	<div class="w-full h-[300px] relative">
 		<div bind:this={mapEl} class="absolute inset-0 z-[10]" />
 	</div>

@@ -15,10 +15,6 @@ export const TITLE_MAX = 40
 export const WRITE_ANSWER_MIN = 1
 export const WRITE_AMSWER_MAX = 30
 
-// GEOGRAPHY SPECIFIC
-export const GEOGRAPHY_TOLERANCE_MIN = 0
-export const GEOGRAPHY_TOLERANCE_MAX = 10000
-export const GEOGRAPHY_TOLERANCE_DEFAULT = 400
 
 // MARKS AND ITS LIMITS
 export const MARK_MIN = 1
@@ -41,11 +37,14 @@ export const GROUP_DESCRIPTION_MIN = 0
 export const CHAT_INPUT_MAX = 255
 export const CHAT_INPUT_MIN = 1
 
-// GEOGRAPHY 
+// GEOGRAPHY SPECIFIC
 export const LATITUDE_MAX = 90
 export const LATITUDE_MIN = -90
 export const LONGITUDE_MAX = 180
 export const LONGITUDE_MIN = -180
+export const GEOGRAPHY_TOLERANCE_MIN = 0
+export const GEOGRAPHY_TOLERANCE_MAX = 10000
+export const GEOGRAPHY_TOLERANCE_DEFAULT = 400
 
 // SCHEMAS
 export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")
