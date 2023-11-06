@@ -9,7 +9,7 @@
 	export { classes as class };
 </script>
 
-<button type="button" class="relative isolate group">
+<button type="button" class="relative isolate group z-[1000]">
 	<div
 		style={`width: ${width}; height: ${width};`}
 		class={twMerge(

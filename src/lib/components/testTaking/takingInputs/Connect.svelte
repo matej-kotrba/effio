@@ -16,6 +16,11 @@
 	];
 
 	export let questionIndex: number;
+
+	$: content = $testObject.questions[questionIndex][
+		'content'
+	] as ConnectQuestion;
+
 	export let resultFormat: QuestionServerCheckResponse<ConnectQuestion> | null =
 		null;
 
@@ -31,19 +36,17 @@
 	let svgPositions: {
 		[key: string]: SvgPositions;
 	} = Object.fromEntries(
-		$testObject.questions[questionIndex]['content']['answers'].map(
-			(_, index) => {
-				return [
-					index,
-					{
-						isDragging: false,
-						ref: undefined,
-						x: undefined,
-						y: undefined
-					}
-				];
-			}
-		)
+		content['answers'].map((_, index) => {
+			return [
+				index,
+				{
+					isDragging: false,
+					ref: undefined,
+					x: undefined,
+					y: undefined
+				}
+			];
+		})
 	);
 
 	let attachPoints: {
@@ -145,10 +148,6 @@
 		}
 	}
 
-	$: content = $testObject.questions[questionIndex][
-		'content'
-	] as ConnectQuestion;
-
 	$: {
 		if (resultFormat) {
 			for (let i in attachPoints) {
@@ -184,7 +183,7 @@
 />
 <div class="grid grid-cols-2 gap-2">
 	<div class="flex flex-col items-center gap-2">
-		{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
+		{#each content['answers'] as { answer }, index}
 			<button
 				type="button"
 				disabled={!!resultFormat}

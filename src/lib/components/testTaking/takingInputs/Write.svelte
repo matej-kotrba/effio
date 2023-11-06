@@ -3,6 +3,9 @@
 	import { testObject } from '~stores/testObject';
 
 	export let questionIndex: number;
+
+	$: content = $testObject.questions[questionIndex].content as WriteQuestion;
+
 	export let resultFormat: QuestionServerCheckResponse<WriteQuestion> | null =
 		null;
 </script>
@@ -12,9 +15,7 @@
 		title="Your answer"
 		inputProperties={{ disabled: !!resultFormat }}
 		titleName="{$testObject.questions[questionIndex]['title']}{questionIndex}"
-		bind:inputValue={$testObject.questions[questionIndex]['content'][
-			'answers'
-		][0]['answer']}
+		bind:inputValue={content['answers'][0]['answer']}
 	/>
 	{#if resultFormat && resultFormat['isCorrect'] === false}
 		<p class="p-2 rounded-md">

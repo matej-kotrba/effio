@@ -2,6 +2,10 @@
 	import { testObject } from '~stores/testObject';
 
 	export let questionIndex: number;
+
+	$: content = $testObject.questions[questionIndex]
+		.content as TrueFalseQuestion;
+
 	export let resultFormat: QuestionServerCheckResponse<TrueFalseQuestion> | null =
 		null;
 
@@ -9,12 +13,11 @@
 		$testObject.questions[questionIndex]['content'] as TrueFalseQuestion
 	)['answers'];
 
-	$: $testObject.questions[questionIndex]['content']['answers'] =
-		checkBoxValues;
+	$: content['answers'] = checkBoxValues;
 </script>
 
 <div class="flex flex-col gap-2">
-	{#each $testObject.questions[questionIndex]['content']['answers'] as { answer }, index}
+	{#each content['answers'] as { answer }, index}
 		<button
 			type="button"
 			disabled={!!resultFormat}
