@@ -389,12 +389,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return {
         type: "geography",
         initial: {
-          location: [50.0755, 14.4378],
+          location: [50.143477, 14.094096],
           zoom: 6
         },
         tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
         answerPoint: {
-          location: [49.938944, 17.901978]
+          location: [49.937082, 17.907414]
         }
       }
     },

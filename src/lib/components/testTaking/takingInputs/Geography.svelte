@@ -11,6 +11,7 @@
 		longitudeSchema
 	} from '~schemas/textInput';
 	import { testObject } from '~stores/testObject';
+	import 'leaflet/dist/leaflet.css';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<GeographyQuestion> | null =
@@ -82,6 +83,11 @@
 			answerLocation.lat = String(location.lat.toFixed(6));
 			answerLocation.lng = String(location.lng.toFixed(6));
 		});
+
+		return () => {
+			map.remove();
+			answerMarker.remove();
+		};
 	});
 
 	$: {
@@ -105,7 +111,7 @@
 
 <div class="flex flex-col gap-2">
 	<span class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
-		>You have tolerance of {content.tolerence}</span
+		>You have tolerance of {content.tolerence} km</span
 	>
 	<div class="w-full h-[300px] relative">
 		<div bind:this={mapEl} class="absolute inset-0 z-[10]" />

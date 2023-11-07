@@ -45,6 +45,8 @@ export const LONGITUDE_MIN = -180
 export const GEOGRAPHY_TOLERANCE_MIN = 0
 export const GEOGRAPHY_TOLERANCE_MAX = 10000
 export const GEOGRAPHY_TOLERANCE_DEFAULT = 400
+export const GEOGRAPHY_ZOOM_MIN = 2
+export const GEOGRAPHY_ZOOM_MAX = 18
 
 // SCHEMAS
 export const answerSchema = z.string().min(ANSWER_MIN, "Answer has to be at least 1 character long.").max(ANSWER_MAX, "Answer can be max 100 characters long.")

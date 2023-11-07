@@ -22,11 +22,14 @@
 		GEOGRAPHY_TOLERANCE_MIN,
 		GEOGRAPHY_TOLERANCE_MAX,
 		geographyToleranceSchema,
-		GEOGRAPHY_TOLERANCE_DEFAULT
+		GEOGRAPHY_TOLERANCE_DEFAULT,
+		GEOGRAPHY_ZOOM_MIN,
+		GEOGRAPHY_ZOOM_MAX
 	} from '~schemas/textInput';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
+	import { map } from '@trpc/server/observable';
 
 	export let indexParent: number;
 
@@ -63,6 +66,15 @@
 				.location[1]
 		)
 	};
+
+	function onZoomRangeInput(
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		if (!e.currentTarget) return;
+		leafletMap.setZoom(e.currentTarget.valueAsNumber ?? GEOGRAPHY_ZOOM_MIN);
+	}
 
 	$: {
 		try {
@@ -106,6 +118,8 @@
 		}
 	}
 
+	let leafletMap: L.Map;
+
 	onMount(async () => {
 		const leaflet = await import('leaflet');
 
@@ -122,7 +136,7 @@
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		const map = leaflet
+		leafletMap = leaflet
 			.map(mapEl)
 			.setView(content.initial.location, content.initial.zoom);
 
@@ -131,19 +145,19 @@
 			leaflet.latLng(LATITUDE_MAX, LONGITUDE_MAX)
 		);
 
-		map.setMaxBounds(bounds);
-		map.setMinZoom(2);
+		leafletMap.setMaxBounds(bounds);
+		leafletMap.setMinZoom(2);
 
 		leaflet
 			.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
-			.addTo(map);
+			.addTo(leafletMap);
 
 		initialMarker = leaflet
 			.marker(content.initial.location, {
 				draggable: true,
 				autoPan: true
 			})
-			.addTo(map)
+			.addTo(leafletMap)
 			.bindTooltip('Initial User View');
 
 		answerMarker = leaflet
@@ -151,7 +165,7 @@
 				draggable: true,
 				autoPan: true
 			})
-			.addTo(map)
+			.addTo(leafletMap)
 			.bindTooltip('Marking answer position');
 
 		initialMarker.on('dragend', (e) => {
@@ -170,6 +184,16 @@
 			answerLocation.lat = String(location.lat.toFixed(6));
 			answerLocation.lng = String(location.lng.toFixed(6));
 		});
+
+		leafletMap.on('zoom', (e) => {
+			content.initial.zoom = leafletMap.getZoom();
+		});
+
+		return () => {
+			leafletMap.remove();
+			answerMarker.remove();
+			initialMarker.remove();
+		};
 	});
 </script>
 
@@ -306,6 +330,17 @@
 					}}
 				/>
 			</ErrorEnhance>
+		</div>
+		<div>
+			<span class="text-body2">Zoom Level</span>
+			<input
+				type="range"
+				min={GEOGRAPHY_ZOOM_MIN}
+				max={GEOGRAPHY_ZOOM_MAX}
+				bind:value={content.initial.zoom}
+				class="range range-sm range-primary dark:range-accent"
+				on:input={onZoomRangeInput}
+			/>
 		</div>
 	</Collapsible>
 	<!-- Display the map -->
