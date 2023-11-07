@@ -306,6 +306,7 @@ export const groupsRouter = router({
   }),
   getGroupUsers: loggedInProcedure.input(z.object({
     groupId: z.string(),
+    excludeOwner: z.boolean().optional(),
     subcategorySlug: z.string().optional(),
     testId: z.string().optional(),
     cursor: z.string().optional(),
@@ -357,6 +358,9 @@ export const groupsRouter = router({
             groupId: input.groupId
           }
         },
+        id: input.excludeOwner ? {
+          not: ctx.userId
+        } : {}
       },
       cursor: input.cursor ? {
         id: input.cursor

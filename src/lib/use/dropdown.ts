@@ -19,6 +19,8 @@ export const dropdown: Action<HTMLElement> = (node, text) => {
   window.document.querySelector("body")?.appendChild(divDropdown)
   const rect = divDropdown.getBoundingClientRect()
 
+  divDropdown.style.top = `${0}px`
+  divDropdown.style.left = `${0}px`
 
   function onHover(e: MouseEvent) {
     divDropdown.style.top = `${e.clientY - rect.height - 10}px`

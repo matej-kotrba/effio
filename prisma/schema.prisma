@@ -155,19 +155,20 @@ model MarkSystem {
 }
 
 model TestRecord {
-  id              String            @id @default(uuid())
-  title           String
-  description     String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  test            TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
-  testId          String
-  questionRecords QuestionRecord[]
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId          String
-  subcategory     GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
-  subacategoryId  String?
-  userPoints      Int               @default(0)
+  id                      String            @id @default(uuid())
+  title                   String
+  description             String
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  test                    TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
+  testId                  String
+  questionRecords         QuestionRecord[]
+  user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String
+  subcategory             GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
+  subacategoryId          String?
+  shouldCountToStatistics Boolean           @default(true)
+  userPoints              Int               @default(0)
 
   @@index([testId])
   @@index([userId])

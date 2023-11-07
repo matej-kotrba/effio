@@ -35,7 +35,8 @@ export const load: ServerLoad = async ({ parent, params }) => {
       },
       subcategory: {
         slug: subacategorySlug
-      }
+      },
+      shouldCountToStatistics: true
     },
     _avg: {
       userPoints: true

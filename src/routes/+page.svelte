@@ -111,7 +111,7 @@
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">
 			<h2
-				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary"
+				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
 			>
 				CREATE<span class="text-light_text_black dark:text-dark_text_white"
 					>,</span

@@ -112,6 +112,7 @@
 <div class="grid grid-cols-12 gap-2 px-2 main-grid">
 	<UserTable
 		ownerId={data.group.ownerId}
+		omitOwnerFromTable={true}
 		displayData={{
 			image: true,
 			taken: true,

@@ -16,12 +16,13 @@ export const recordsRouter = router({
       })
     ),
   })).mutation(async ({ ctx, input }) => {
-    console.log(input)
     if (input.answerContent.length === 0) {
       return {
         success: false,
       }
     }
+
+    let subcategoryOwnerId: string | undefined = undefined;
 
     if (input.subcategoryId) {
       const subcategory = await ctx.prisma.groupSubcategory.findUnique({
@@ -32,14 +33,19 @@ export const recordsRouter = router({
               some: {
                 userId: ctx.userId
               }
-            }
+            },
           }
+        },
+        include: {
+          group: true
         }
       })
 
       if (!subcategory) {
         throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test record in group you are not part of" })
       }
+
+      subcategoryOwnerId = subcategory.group.ownerId
     }
 
     const createdTest = await ctx.prisma.testRecord.create({
@@ -49,6 +55,7 @@ export const recordsRouter = router({
         title: input.title,
         description: input.description,
         subacategoryId: input.subcategoryId,
+        shouldCountToStatistics: !!(input.subcategoryId && ctx.userId !== subcategoryOwnerId),
         userPoints: input.answerContent.reduce((acc, curr) => acc + curr.points, 0),
         questionRecords: {
           createMany: {

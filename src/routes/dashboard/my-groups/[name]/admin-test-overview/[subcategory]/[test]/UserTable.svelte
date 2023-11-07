@@ -62,6 +62,7 @@
 	export let displayData: Partial<DisplayData>;
 	export let defaultOrderBy: Ordering['by'] = 'count';
 	export let ownerId: string;
+	export let omitOwnerFromTable: boolean = false;
 
 	export let actions: {
 		tooltip: string;
@@ -156,6 +157,7 @@
 		let result;
 		try {
 			result = await trpc($page).groups.getGroupUsers.query({
+				excludeOwner: true,
 				groupId: data.groupId,
 				testId: data.testId,
 				subcategorySlug: data.subcategorySlug,
