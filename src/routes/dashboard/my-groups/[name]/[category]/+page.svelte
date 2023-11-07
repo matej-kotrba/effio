@@ -266,7 +266,7 @@
 		</div>
 	</Drawer>
 	<div
-		class="relative max-h-[calc(100vh-70px)] overflow-scroll px-1"
+		class="relative max-h-[calc(100vh-70px)] overflow-y-scroll px-1"
 		bind:this={chatContainerRef}
 		on:scroll={(e) => onScroll(e)}
 	>

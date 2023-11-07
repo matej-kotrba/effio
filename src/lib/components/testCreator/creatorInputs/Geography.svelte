@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+	export type MiddlewareLocation = {
+		lat: string;
+		lng: string;
+	};
+</script>
+
 <script lang="ts">
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { testObject } from '~stores/testObject';
@@ -19,7 +26,6 @@
 	} from '~schemas/textInput';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
-	import Dropdown from '~components/effects/Dropdown.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 
 	export let indexParent: number;
@@ -35,11 +41,6 @@
 
 	let initialMarker: Marker;
 	let answerMarker: Marker;
-
-	type MiddlewareLocation = {
-		lat: string;
-		lng: string;
-	};
 
 	let answerLocation: MiddlewareLocation = {
 		lat: String(
@@ -88,7 +89,7 @@
 			answerLocation.lat = String(content.answerPoint.location[0]);
 		}
 		try {
-			const parsedLng = latitudeSchema.parse(Number(answerLocation.lng));
+			const parsedLng = longitudeSchema.parse(Number(answerLocation.lng));
 			content.answerPoint.location[1] = parsedLng;
 		} catch (e) {
 			answerLocation.lng = String(content.answerPoint.location[1]);
@@ -107,6 +108,19 @@
 
 	onMount(async () => {
 		const leaflet = await import('leaflet');
+
+		let DefaultIcon = leaflet.icon({
+			iconUrl: '/imgs/icons/marker/marker-icon.png',
+			shadowUrl: '/imgs/icons/marker/marker-shadow.png',
+			iconRetinaUrl: '/imgs/icons/marker/marker-icon-2x.png',
+			iconSize: [25, 41],
+			iconAnchor: [12, 41],
+			popupAnchor: [1, -34],
+			tooltipAnchor: [16, -28],
+			shadowSize: [41, 41]
+		});
+
+		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
 		const map = leaflet
 			.map(mapEl)

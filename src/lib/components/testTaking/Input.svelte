@@ -6,6 +6,7 @@
 	import Connect from './takingInputs/Connect.svelte';
 	import Write from './takingInputs/Write.svelte';
 	import Fill from './takingInputs/Fill.svelte';
+	import Geography from './takingInputs/Geography.svelte';
 
 	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let questionIndex: number;
@@ -123,6 +124,14 @@
 				{questionIndex}
 				resultFormat={resultFormat &&
 				resultFormat['userAnswer']['type'] === 'fill'
+					? typedResultFormat
+					: null}
+			/>
+		{:else if $testObject['questions'][questionIndex]['questionType'] === 'geography'}
+			<Geography
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'geography'
 					? typedResultFormat
 					: null}
 			/>
