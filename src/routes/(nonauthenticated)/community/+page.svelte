@@ -9,9 +9,11 @@
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
 	import { onMount } from 'svelte';
 	import type { Tag } from '@prisma/client';
-	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
 	import type { TestFullType } from '~/Prisma.js';
-	import { delayResults } from '~helpers/delay.js';
+	import {
+		createObserver,
+		type CreateObserverReturn
+	} from '~/lib/utils/observers.js';
 
 	export let data;
 
@@ -19,7 +21,7 @@
 
 	let isFetchingNewTests = true;
 
-	let searchQuery: string = $page.url.searchParams.get('search') || '';
+	let searchQuery: string = $page.url.searchParams.get('q') || '';
 
 	let unusedTags: Tag[] = data.tags;
 	let usedTags: Tag[] = [];
@@ -28,7 +30,19 @@
 		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
 	>['tests'] = [];
 
-	let observer: IntersectionObserver;
+	// Updating url on input change
+	function updateUrl(inputValue: string) {
+		const paramsObj: {
+			[index: string]: string;
+		} = {};
+
+		if (inputValue !== '') {
+			paramsObj['q'] = inputValue;
+		}
+
+		const params = new URLSearchParams(paramsObj);
+		goto(`?${params.toString()}`);
+	}
 
 	// Fetching new data
 	async function getTests(
@@ -56,36 +70,26 @@
 		requestedTests = [...requestedTests, ...newData.tests];
 	}
 
+	let addIntersectionUse: CreateObserverReturn['addIntersection'];
+
 	onMount(async () => {
+		const { observer, addIntersection } = createObserver({
+			callback: (entry, observer) => {
+				if (entry.isIntersecting) {
+					getTests();
+
+					observer.unobserve(entry.target);
+				}
+			}
+		});
+		addIntersectionUse = addIntersection;
 		// Get initial state of the tests (by search params if available)
-		getTests(false, $page.url.searchParams.get('search') || undefined);
+		getTests(false, $page.url.searchParams.get('q') || undefined);
 
-		// Observing last element to fetch more tests, then unobserving it
-		observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach(async (entry) => {
-					if (entry.isIntersecting) {
-						getTests();
-
-						observer.unobserve(entry.target);
-					}
-				});
-			},
-			{
-				threshold: 0.5
-			}
-		);
-	});
-
-	function addIntersection(element: HTMLElement) {
-		observer.observe(element);
-
-		return {
-			destroy() {
-				observer.unobserve(element);
-			}
+		return () => {
+			observer.disconnect();
 		};
-	}
+	});
 
 	async function changeToggleStatus(index: number, isActive: boolean) {
 		if (isActive === false) {
@@ -105,30 +109,11 @@
 		isFetchingNewTests = false;
 	}
 
-	// console.log(displayedTests.then((data) => console.log(data)));
-
-	let searchRequests: Array<Promise<string> | string> = [];
-
 	// Search for results on inpput change, wait 500ms befor sending request for optimization
 	async function searchForResults(value: string) {
-		const searchQueryPromise = delayResults(500, value);
-		searchRequests.unshift(searchQueryPromise);
-		const searchQueryResult = await searchQueryPromise;
-		// await goto('/community/?search=' + value);
-
-		if (searchRequests.length === 1) {
-			searchQuery = searchQueryResult;
-			getTests(true);
-		}
-		searchRequests.pop();
-
-		// if (typeof searchRequest === 'string') {
-		// 	searchRequest = await delayResults(1000, value);
-		// 	console.log("aaaa")
-		// }
-		// else {
-		// 	searchRequest
-		// }
+		searchQuery = value;
+		updateUrl(value);
+		await getTests(true);
 	}
 
 	function getTypesafeTags(tags: TestFullType['tags']) {
@@ -140,11 +125,7 @@
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
 	>
-		<SearchBar
-			bind:inputValue={searchQuery}
-			searchFunction={searchForResults}
-			initialValue={searchQuery}
-		/>
+		<SearchBar searchFunction={searchForResults} initialValue={searchQuery} />
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">
@@ -175,7 +156,7 @@
 		{#if requestedTests !== undefined}
 			{#each requestedTests as test, index}
 				{#if index === requestedTests.length - 1}
-					<div use:addIntersection class="w-full">
+					<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
 						<button
 							type="button"
 							on:click={() => {
