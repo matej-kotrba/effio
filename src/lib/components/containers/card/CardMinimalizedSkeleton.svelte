@@ -1,8 +1,10 @@
 <script>
+	import { fade } from 'svelte/transition';
 	import Space from '~components/separators/Space.svelte';
 </script>
 
 <div
+	transition:fade={{ duration: 150 }}
 	class="group flex flex-col justify-between gap-2 text-center bg-white dark:bg-dark_grey
 	 shadow-md w-full max-w-[300px] text-light_text_black dark:text-dark_text_white p-2 rounded-md relative min-h-[180px] overflow-hidden
 	 duration-150"

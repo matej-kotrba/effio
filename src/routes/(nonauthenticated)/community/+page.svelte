@@ -56,6 +56,7 @@
 
 		isFetchingNewTests = true;
 
+		// await new Promise((res) => setTimeout(res, 5000));
 		let newData = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT,
 			cursor: requestedTests[requestedTests.length - 1]?.id ?? undefined,

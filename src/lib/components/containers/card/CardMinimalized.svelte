@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Tag } from '@prisma/client';
+	import { fade } from 'svelte/transition';
 
 	export let title: string;
 	export let description: string;
@@ -11,6 +12,7 @@
 </script>
 
 <div
+	transition:fade={{ duration: 150 }}
 	class="group flex flex-col justify-between gap-2 text-center bg-light_quaternary dark:bg-dark_quaternary cursor-pointer
 	 shadow-md w-full max-w-[300px] text-light_text_black dark:text-dark_text_white p-2 rounded-md relative min-h-[180px] overflow-hidden
 	 hover:scale-105 hover:shadow-lg duration-150"
