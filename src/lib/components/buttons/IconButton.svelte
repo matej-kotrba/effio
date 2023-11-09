@@ -10,9 +10,11 @@
 	let classes = '';
 	export { classes as class };
 	export let buttonClasses = '';
+	export let tooltipClasses = '';
+	export let containerClasses = '';
 </script>
 
-<div class="dropdown dropdown-hover">
+<div class={twMerge('dropdown dropdown-hover rounded-full', containerClasses)}>
 	<button
 		type="button"
 		{...attr}
@@ -26,7 +28,10 @@
 	</button>
 	{#if tootlip}
 		<p
-			class="dropdown-content z-[1] menu p-2 shadow-md bg-light_white dark:bg-dark_terciary rounded-sm w-52"
+			class={twMerge(
+				'dropdown-content dropdown-left z-[1] menu p-2 shadow-md bg-light_white dark:bg-dark_terciary rounded-sm w-52',
+				tooltipClasses
+			)}
 		>
 			{tootlip}
 		</p>
