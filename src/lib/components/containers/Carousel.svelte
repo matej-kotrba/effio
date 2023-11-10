@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
 
@@ -12,29 +13,71 @@
 
 	let scrollerDiv: HTMLDivElement;
 
+	let countOfItems = 6;
+
 	function scrollLeft() {
 		const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
-		console.log(oldValue);
-		scrollerDiv.style.setProperty(
-			'--translate-x',
-			`calc(${oldValue} + 100%/6)`
-		);
+		if (oldValue.indexOf('%') === -1) return;
+		try {
+			let oldValueNumberPercent = +oldValue.replace('%', '');
+			if (oldValueNumberPercent >= 0) return;
+			oldValueNumberPercent = oldValueNumberPercent + 100 / countOfItems;
+			scrollerDiv.style.setProperty(
+				'--translate-x',
+				`${oldValueNumberPercent}%`
+			);
+		} catch (e) {}
 	}
 	function scrollRight() {
 		const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
-		scrollerDiv.style.setProperty(
-			'--translate-x',
-			`calc(${oldValue} - 100%/6)`
-		);
+		if (oldValue.indexOf('%') === -1) return;
+		try {
+			let oldValueNumberPercent = +oldValue.replace('%', '');
+			if (
+				oldValueNumberPercent <=
+				-(100 / countOfItems) * data.length +
+					(100 / countOfItems) * (countOfItems + 1)
+			)
+				return;
+			oldValueNumberPercent = oldValueNumberPercent - 100 / countOfItems;
+			scrollerDiv.style.setProperty(
+				'--translate-x',
+				`${oldValueNumberPercent}%`
+			);
+		} catch (e) {}
 	}
+
+	onMount(() => {
+		function onResize(e: UIEvent) {
+			// const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
+			// const cssItemsCount = Number(
+			// 	scrollerDiv.style.getPropertyValue('--items-count')
+			// );
+			// let oldValueNumberPercent: number;
+			// oldValueNumberPercent = +oldValue.replace('%', '');
+			// if (isNaN(cssItemsCount)) return;
+			// if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
+			// 	return;
+			// }
+			// scrollerDiv.style.setProperty(
+			// 	'--translate-x',
+			// 	`${(oldValueNumberPercent / countOfItems) * cssItemsCount}%`
+			// );
+		}
+
+		scrollerDiv.addEventListener('resize', onResize);
+
+		return () => {
+			scrollerDiv.removeEventListener('resize', onResize);
+		};
+	});
 </script>
 
 <section class="w-full">
 	<div class="flex gap-2">
 		<IconButton
 			icon="ic:round-arrow-left"
-			tootlip="Slide left"
-			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black"
+			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
 			tooltipClasses="bg-light_whiter rounded-md"
 			onClick={scrollLeft}
 		>
@@ -42,8 +85,7 @@
 		</IconButton>
 		<IconButton
 			icon="ic:round-arrow-right"
-			tootlip="Slide right"
-			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black"
+			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
 			tooltipClasses="bg-light_whiter rounded-md"
 			onClick={scrollRight}
 		>
@@ -53,12 +95,13 @@
 	<div class="w-full overflow-hidden">
 		<div
 			bind:this={scrollerDiv}
-			class="@container scroller flex flex-nowrap py-1 w-full translate-x-[calc(-100%/6)]"
-			style="--translate-x: 0%;"
+			class="@container scroller flex flex-nowrap py-1 w-full"
+			style="--translate-x: 0%; --items-count: 6;"
 		>
+			<!-- @xl:min-w-[25%] @4xl:min-w-[20%] @7xl:min-w-[calc(100%/6)] -->
 			{#each data as item}
 				<div
-					class="@xl:min-w-[25%] @4xl:min-w-[20%] @7xl:min-w-[calc(100%/6)] relative aspect-[4/5]"
+					class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
 				>
 					<div class="px-1 w-full max-w-[300px] aspect-[4/5]">
 						<div class="h-full rounded-md shadow-lg bg-light_whiter">
@@ -114,5 +157,23 @@
 	.scroller {
 		transform: translateX(var(--translate-x));
 		transition: transform 0.3s ease-in-out;
+	}
+
+	@container (min-width: 80rem) {
+		.scroller {
+			--items-count: 6;
+			background-color: red;
+			border: 10px red solid;
+		}
+	}
+	@container (min-width: 56rem) {
+		.scroller {
+			--items-count: 5;
+		}
+	}
+	@container (min-width: 36rem) {
+		.scroller {
+			--items-count: 4;
+		}
 	}
 </style>

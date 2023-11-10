@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applicationStates } from '~stores/applicationStates';
-	import Icon from '@iconify/svelte';
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { signOut } from '@auth/sveltekit/client';

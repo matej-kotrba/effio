@@ -75,7 +75,7 @@
 
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
 
-	onMount(async () => {
+	onMount(() => {
 		const { observer, addIntersection } = createObserver({
 			callback: (entry, observer) => {
 				if (entry.isIntersecting) {
@@ -124,7 +124,7 @@
 	}
 </script>
 
-<div>
+<div class="bg">
 	<h3 class="italic font-bold text-h3">Recently popular</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
 		<Carousel
@@ -188,9 +188,9 @@
 				}
 			]}
 		/>
-		<Map
+		<!-- <Map
 			class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 -z-[8]"
-		/>
+		/> -->
 		<svg
 			viewBox="0 0 1000 1000"
 			xmlns="http://www.w3.org/2000/svg"
@@ -294,3 +294,35 @@
 		{/if}
 	</div>
 </div> -->
+<style>
+	.bg {
+		background: radial-gradient(
+					farthest-side at -33.33% 50%,
+					#0000 52%,
+					rgba(101, 50, 240, 0.04) 54% 57%,
+					#0000 59%
+				)
+				0 calc(128px / 2),
+			radial-gradient(
+					farthest-side at 50% 133.33%,
+					#0000 52%,
+					rgba(101, 50, 240, 0.04) 54% 57%,
+					#0000 59%
+				)
+				calc(128px / 2) 0,
+			radial-gradient(
+				farthest-side at 133.33% 50%,
+				#0000 52%,
+				rgba(101, 50, 240, 0.04) 54% 57%,
+				#0000 59%
+			),
+			radial-gradient(
+				farthest-side at 50% -33.33%,
+				#0000 52%,
+				rgba(101, 50, 240, 0.04) 54% 57%,
+				#0000 59%
+			),
+			rgba(71, 212, 255, 0);
+		background-size: calc(128px / 4.667) 128px, 128px calc(128px / 4.667);
+	}
+</style>

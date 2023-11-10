@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Marker } from 'leaflet';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { MiddlewareLocation } from '~components/testCreator/creatorInputs/Geography.svelte';
 	import {
 		LATITUDE_MAX,
@@ -34,6 +34,7 @@
 	};
 
 	let answerMarker: Marker;
+	let map: L.Map;
 
 	onMount(async () => {
 		const leaflet = await import('leaflet');
@@ -51,7 +52,7 @@
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		const map = leaflet
+		map = leaflet
 			.map(mapEl)
 			.setView(content.initial.location, content.initial.zoom);
 
@@ -83,11 +84,11 @@
 			answerLocation.lat = String(location.lat.toFixed(6));
 			answerLocation.lng = String(location.lng.toFixed(6));
 		});
+	});
 
-		return () => {
-			map.remove();
-			answerMarker.remove();
-		};
+	onDestroy(() => {
+		map.remove();
+		answerMarker.remove();
 	});
 
 	$: {

@@ -10,7 +10,7 @@
 	import { testObject } from '~stores/testObject';
 	import { applicationStates } from '~stores/applicationStates';
 	import 'leaflet/dist/leaflet.css';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { Marker } from 'leaflet';
 	import {
 		LATITUDE_MIN,
@@ -188,12 +188,12 @@
 		leafletMap.on('zoom', (e) => {
 			content.initial.zoom = leafletMap.getZoom();
 		});
+	});
 
-		return () => {
-			leafletMap.remove();
-			answerMarker.remove();
-			initialMarker.remove();
-		};
+	onDestroy(() => {
+		leafletMap.remove();
+		answerMarker.remove();
+		initialMarker.remove();
 	});
 </script>
 
