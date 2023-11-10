@@ -49,20 +49,20 @@
 
 	onMount(() => {
 		function onResize(e: UIEvent) {
-			// const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
-			// const cssItemsCount = Number(
-			// 	scrollerDiv.style.getPropertyValue('--items-count')
-			// );
-			// let oldValueNumberPercent: number;
-			// oldValueNumberPercent = +oldValue.replace('%', '');
-			// if (isNaN(cssItemsCount)) return;
-			// if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
-			// 	return;
-			// }
-			// scrollerDiv.style.setProperty(
-			// 	'--translate-x',
-			// 	`${(oldValueNumberPercent / countOfItems) * cssItemsCount}%`
-			// );
+			const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
+			const cssItemsCount = Number(
+				scrollerDiv.style.getPropertyValue('--items-count')
+			);
+			let oldValueNumberPercent: number;
+			oldValueNumberPercent = +oldValue.replace('%', '');
+			if (isNaN(cssItemsCount)) return;
+			if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
+				return;
+			}
+			scrollerDiv.style.setProperty(
+				'--translate-x',
+				`${(oldValueNumberPercent / countOfItems) * cssItemsCount}%`
+			);
 		}
 
 		scrollerDiv.addEventListener('resize', onResize);
