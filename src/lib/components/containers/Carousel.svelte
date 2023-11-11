@@ -49,26 +49,31 @@
 
 	onMount(() => {
 		function onResize(e: UIEvent) {
-			const oldValue = scrollerDiv.style.getPropertyValue('--translate-x');
+			const computedStyle = getComputedStyle(scrollerDiv);
+
+			const oldValue = computedStyle.getPropertyValue('--translate-x');
 			const cssItemsCount = Number(
-				scrollerDiv.style.getPropertyValue('--items-count')
+				computedStyle.getPropertyValue('--items-count')
 			);
-			let oldValueNumberPercent: number;
-			oldValueNumberPercent = +oldValue.replace('%', '');
+			let oldValueNumberPercent = +oldValue.replace('%', '');
 			if (isNaN(cssItemsCount)) return;
 			if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
 				return;
 			}
+			if (cssItemsCount === countOfItems) return;
 			scrollerDiv.style.setProperty(
 				'--translate-x',
-				`${(oldValueNumberPercent / countOfItems) * cssItemsCount}%`
+				`${
+					(100 / cssItemsCount) * (oldValueNumberPercent / (100 / countOfItems))
+				}%`
 			);
+			countOfItems = cssItemsCount;
 		}
 
-		scrollerDiv.addEventListener('resize', onResize);
+		window.addEventListener('resize', onResize);
 
 		return () => {
-			scrollerDiv.removeEventListener('resize', onResize);
+			window.removeEventListener('resize', onResize);
 		};
 	});
 </script>
@@ -172,9 +177,24 @@
 			--items-count: 5;
 		}
 	}
-	@container (min-width: 36rem) and (width < 56rem) {
+	@container (min-width: 44rem) and (width < 56rem) {
 		.scroller {
 			--items-count: 4;
+		}
+	}
+	@container (min-width: 30rem) and (width < 44rem) {
+		.scroller {
+			--items-count: 3;
+		}
+	}
+	@container (min-width: 16rem) and (width < 30rem) {
+		.scroller {
+			--items-count: 2;
+		}
+	}
+	@container (width < 16rem) {
+		.scroller {
+			--items-count: 1;
 		}
 	}
 </style>

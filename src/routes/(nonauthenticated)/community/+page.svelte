@@ -124,7 +124,8 @@
 	}
 </script>
 
-<div class="bg">
+<div class="relative">
+	<div class="absolute w-screen min-h-full left-[0%] bg -z-10" />
 	<h3 class="italic font-bold text-h3">Recently popular</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
 		<Carousel
@@ -191,10 +192,10 @@
 		<!-- <Map
 			class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 -z-[8]"
 		/> -->
-		<svg
+		<!-- <svg
 			viewBox="0 0 1000 1000"
 			xmlns="http://www.w3.org/2000/svg"
-			class="absolute bottom-0 h-[150%] left-1/2 -z-10 top-1/2 -translate-y-1/2 -translate-x-[40%]"
+			class="absolute bottom-0 min-w-[450px] max-w-[60%] h-[150%] left-1/2 -z-10 top-1/2 -translate-y-1/2 -translate-x-[40%]"
 			><defs
 				><clipPath id="a"
 					><path
@@ -208,7 +209,7 @@
 					d="M793.5 612.5Q769 725 676 848t-229.5 52Q310 829 220 732t-97.5-234.5Q115 360 229 294t233-158.5Q581 43 725.5 116T844 344.5q-26 155.5-50.5 268Z"
 				/></g
 			></svg
-		>
+		> -->
 	</div>
 </div>
 
@@ -296,7 +297,12 @@
 </div> -->
 <style>
 	.bg {
-		background: radial-gradient(
+		background-color: #6433f0;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23806CF7'/%3E%3Cstop offset='1' stop-color='%236433F0'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23DBDFFD' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23DBDFFD' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.39'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
+		background-attachment: fixed;
+		background-size: cover;
+		background-position: bottom;
+		/* background: radial-gradient(
 					farthest-side at -33.33% 50%,
 					#0000 52%,
 					rgba(101, 50, 240, 0.04) 54% 57%,
@@ -323,6 +329,6 @@
 				#0000 59%
 			),
 			rgba(71, 212, 255, 0);
-		background-size: calc(128px / 4.667) 128px, 128px calc(128px / 4.667);
+		background-size: calc(128px / 4.667) 128px, 128px calc(128px / 4.667); */
 	}
 </style>
