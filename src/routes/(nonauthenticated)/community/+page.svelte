@@ -15,7 +15,10 @@
 		type CreateObserverReturn
 	} from '~/lib/utils/observers.js';
 	import Map from '~/lib/svg/map.svelte';
-	import Carousel from '~components/containers/Carousel.svelte';
+	import Carousel, {
+		type CarouselItem
+	} from '~components/containers/Carousel.svelte';
+	import toast from 'svelte-french-toast';
 
 	export let data;
 
@@ -44,6 +47,30 @@
 
 		const params = new URLSearchParams(paramsObj);
 		goto(`?${params.toString()}`);
+	}
+
+	async function getPopularTests() {
+		const fetchedData = await trpc($page).getPopularTests.query({
+			take: REQUEST_AMOUNT,
+			timePeriod: 'two-weeks'
+		});
+
+		if (fetchedData.success === true && fetchedData.tests !== undefined) {
+			return fetchedData.tests.map((item) => {
+				return {
+					title: item.title,
+					description: item.description,
+					img: undefined,
+					icon: item.owner.image,
+					createdAt: item.createdAt
+				} satisfies CarouselItem;
+			});
+		} else {
+			toast.error(
+				fetchedData.message || 'Unknown error has occured while fetching tests'
+			);
+			return [];
+		}
 	}
 
 	// Fetching new data
@@ -137,77 +164,15 @@
 			</h3>
 		</div>
 	</div>
-	<!-- style={`min-height: ${carouselsHeight['popular'] + 50}px;`} -->
 	<h3
 		class="relative italic font-bold text-h3 underline-effect -z-[20] after:bg-light_primary"
 	>
 		Recently popular
 	</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
-		<Carousel
-			data={[
-				{
-					title: 'Test 1',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, nec ultricies nisl nisl nec nisl. Sed euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, nec ultricies nisl nisl nec nisl.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 2',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 3',
-					description: 'Lorem ipsum dolor sit amet.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 4',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 5',
-					description:
-						'Lorem ipsum dolor sit amet. asd asd asd xcyxc qusd jad uc hyxj haiusd hajx hxuch yiuch asjdh akusdhuaks dhkuashdasudha udhaus dajkdh',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 1',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, nec ultricies nisl nisl nec nisl. Sed euismod, nisl eget aliquam ultricies, nunc nisl ultricies nunc, nec ultricies nisl nisl nec nisl.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 2',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 3',
-					description: 'Lorem ipsum dolor sit amet.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 4',
-					description:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-					createdAt: new Date()
-				},
-				{
-					title: 'Test 5',
-					description:
-						'Lorem ipsum dolor sit amet. asd asd asd xcyxc qusd jad uc hyxj haiusd hajx hxuch yiuch asjdh akusdhuaks dhkuashdasudha udhaus dajkdh'
-				}
-			]}
-		/>
+		<Carousel data={getPopularTests()} />
 	</div>
 </div>
-<div class="pt-[2000px]" />
 
 <!-- 
 <div>
@@ -341,33 +306,5 @@
 		mask-size: contain;
 		mask-repeat: no-repeat;
 		mask-position: center;
-		/* background: radial-gradient(
-					farthest-side at -33.33% 50%,
-					#0000 52%,
-					rgba(101, 50, 240, 0.04) 54% 57%,
-					#0000 59%
-				)
-				0 calc(128px / 2),
-			radial-gradient(
-					farthest-side at 50% 133.33%,
-					#0000 52%,
-					rgba(101, 50, 240, 0.04) 54% 57%,
-					#0000 59%
-				)
-				calc(128px / 2) 0,
-			radial-gradient(
-				farthest-side at 133.33% 50%,
-				#0000 52%,
-				rgba(101, 50, 240, 0.04) 54% 57%,
-				#0000 59%
-			),
-			radial-gradient(
-				farthest-side at 50% -33.33%,
-				#0000 52%,
-				rgba(101, 50, 240, 0.04) 54% 57%,
-				#0000 59%
-			),
-			rgba(71, 212, 255, 0);
-		background-size: calc(128px / 4.667) 128px, 128px calc(128px / 4.667); */
 	}
 </style>

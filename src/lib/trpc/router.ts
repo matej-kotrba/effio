@@ -156,57 +156,24 @@ export const appRouter = router({
     cursor: z.string().optional(),
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
+    timePeriod: z.enum(["day", "week", "two-weeks", "month", "year"]).optional()
   })).query(async ({ ctx, input }) => {
-    // let test = null
-    // console.log(input.searchQuery)
-    // if (!input.cursor) {
-    //   test = await ctx.prisma.test.findFirst({
-    //     orderBy: [
-    //       {
-    //         stars: "desc"
-    //       },
-    //       {
-    //         updatedAt: "desc"
-    //       }
-    //     ],
-    //     include: {
-    //       tags: {
-    //         include: {
-    //           tag: true
-    //         }
-    //       },
-    //       owner: true,
-    //     },
-    //     where: (input.tags || input.searchQuery) ? {
-    //       tags: input.tags ? {
-    //         some: {
-    //           tag: {
-    //             name: {
-    //               in: input.tags
-    //             }
-    //           }
-    //         }
-    //       } : undefined,
-    //       title: {
-    //         contains: input.searchQuery,
-    //       }
-    //       // AND: {
-    //       //   tags: {
-    //       //     some: {
-    //       //       name: {
-    //       //         startsWith: "A"
-    //       //       }
-    //       //     }
-    //       //   }
-    //       // }
-    //     } : undefined
-    //   })
-    // }
 
-    // if (input.cursor === undefined && !test) return {
-    //   success: true,
-    //   message: "No tests found"
-    // }
+    const timeTable: {
+      [key: string]: number
+    } = {
+      "day": 1,
+      "week": 7,
+      "two-weeks": 14,
+      "month": 30,
+      "year": 365,
+    }
+
+    let dateRange: Date | undefined = undefined;
+    if (input.timePeriod) {
+      dateRange = new Date();
+      dateRange.setDate(dateRange.getDate() - timeTable[input.timePeriod]);
+    }
 
     const tests = await ctx.prisma.test.findMany({
       take: input.take || 8,
@@ -233,7 +200,10 @@ export const appRouter = router({
         },
         owner: true,
       },
-      where: (input.tags || input.searchQuery) ? {
+      where: {
+        createdAt: dateRange ? {
+          gte: dateRange
+        } : undefined,
         tags: input.tags ? {
           some: {
             tag: {
@@ -246,7 +216,7 @@ export const appRouter = router({
         title: {
           contains: input.searchQuery
         }
-      } : undefined
+      }
     })
 
 
