@@ -18,6 +18,7 @@
 	import Carousel, {
 		type CarouselItem
 	} from '~components/containers/Carousel.svelte';
+	import { browser } from '$app/environment';
 	import toast from 'svelte-french-toast';
 
 	export let data;
@@ -62,7 +63,8 @@
 					description: item.description,
 					img: undefined,
 					icon: item.owner.image,
-					createdAt: item.createdAt
+					createdAt: item.createdAt,
+					stars: item.stars
 				} satisfies CarouselItem;
 			});
 		} else {
@@ -170,7 +172,9 @@
 		Recently popular
 	</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
-		<Carousel data={getPopularTests()} />
+		{#if browser}
+			<Carousel data={getPopularTests()} />
+		{/if}
 	</div>
 </div>
 

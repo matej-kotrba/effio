@@ -5,6 +5,7 @@
 		img?: string | null;
 		icon?: string | null;
 		createdAt?: Date;
+		stars?: number;
 	};
 
 	export type CarouselItemInput = CarouselItem[] | Promise<CarouselItem[]>;
@@ -14,13 +15,13 @@
 	import { onMount } from 'svelte';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import SkeletonLine from '~components/informatic/SkeletonLine.svelte';
 
 	export let data: CarouselItemInput;
 	let resolvedData: CarouselItem[] | undefined = undefined;
 
 	if (!isDataResolved(data)) {
 		data.then((resolvedArray) => {
-			console.log('RESOLVED', resolvedArray);
 			resolvedData = resolvedArray;
 		});
 	}
@@ -68,35 +69,38 @@
 		} catch (e) {}
 	}
 
-	onMount(() => {
-		function onResize(e: UIEvent) {
-			const computedStyle = getComputedStyle(scrollerDiv);
+	function onResize() {
+		if (scrollerDiv === undefined) return;
+		const computedStyle = getComputedStyle(scrollerDiv);
 
-			const oldValue = computedStyle.getPropertyValue('--translate-x');
-			const cssItemsCount = Number(
-				computedStyle.getPropertyValue('--items-count')
-			);
-			let oldValueNumberPercent = +oldValue.replace('%', '');
-			if (isNaN(cssItemsCount)) return;
-			if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
-				return;
-			}
-			if (cssItemsCount === countOfItems) return;
-			scrollerDiv.style.setProperty(
-				'--translate-x',
-				`${
-					(100 / cssItemsCount) * (oldValueNumberPercent / (100 / countOfItems))
-				}%`
-			);
-			countOfItems = cssItemsCount;
+		const oldValue = computedStyle.getPropertyValue('--translate-x');
+		const cssItemsCount = Number(
+			computedStyle.getPropertyValue('--items-count')
+		);
+		let oldValueNumberPercent = +oldValue.replace('%', '');
+		if (isNaN(cssItemsCount)) return;
+		if (oldValueNumberPercent === undefined || isNaN(oldValueNumberPercent)) {
+			return;
 		}
+		if (cssItemsCount === countOfItems) return;
+		scrollerDiv.style.setProperty(
+			'--translate-x',
+			`${
+				(100 / cssItemsCount) * (oldValueNumberPercent / (100 / countOfItems))
+			}%`
+		);
+		countOfItems = cssItemsCount;
+	}
 
+	onMount(() => {
 		window.addEventListener('resize', onResize);
 
 		return () => {
 			window.removeEventListener('resize', onResize);
 		};
 	});
+
+	$: onResize(), scrollerDiv;
 </script>
 
 <section class="w-full">
@@ -120,7 +124,26 @@
 	</div>
 	<div class="w-full overflow-hidden">
 		{#await data}
-			<span class="loading loading-infinity loading-lg" />
+			<div class="flex w-full py-1 scroller flex-nowrap">
+				{#each Array(countOfItems).fill('') as _}
+					<div
+						class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
+					>
+						<div class="px-1 w-full max-w-[300px] aspect-[4/5]">
+							<div class="h-full rounded-md shadow-lg bg-light_whiter">
+								<div class="relative w-full aspect-video">
+									<SkeletonLine class="w-full h-full aspect-video" />
+								</div>
+								<SkeletonLine class="w-[80%] mt-2" />
+								<SkeletonLine class="w-[50%] mt-4 h-4" />
+								<SkeletonLine class="w-[50%] mt-1 h-4" />
+								<SkeletonLine class="w-[50%] mt-1 h-4" />
+							</div>
+						</div>
+					</div>
+				{/each}
+				<span class="loading loading-infinity loading-lg" />
+			</div>
 		{:then awaitedData}
 			<div class="@container">
 				<div
@@ -139,6 +162,19 @@
 					"
 									>
 										<div>
+											{#if item.stars !== undefined}
+												<div
+													class="absolute flex items-center gap-1 right-1 top-1"
+												>
+													<span class="text-white">
+														{item.stars}
+													</span>
+													<iconify-icon
+														icon="ic:round-star-outline"
+														class="text-3xl text-yellow-300 duration-100"
+													/>
+												</div>
+											{/if}
 											<img
 												src={item.icon ?? '/imgs/content_imgs/liska.avif'}
 												alt="User Icon"
