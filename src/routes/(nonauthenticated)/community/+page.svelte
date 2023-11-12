@@ -130,11 +130,19 @@
 		class="absolute left-0 w-full bg z-[0] h-[var(--height-value)] -translate-y-[calc(var(--height-value)/2-50%)] text-white cover-text"
 	>
 		<div class="inner-text">
-			<h3 class="italic font-bold text-h3">Recently popular</h3>
+			<h3
+				class="relative italic font-bold text-h3 underline-effect after:bg-light_quaternary"
+			>
+				Recently popular
+			</h3>
 		</div>
 	</div>
 	<!-- style={`min-height: ${carouselsHeight['popular'] + 50}px;`} -->
-	<h3 class="italic font-bold text-h3 -z-[20]">Recently popular</h3>
+	<h3
+		class="relative italic font-bold text-h3 underline-effect -z-[20] after:bg-light_primary"
+	>
+		Recently popular
+	</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
 		<Carousel
 			data={[
@@ -284,6 +292,28 @@
 	</div>
 </div> -->
 <style>
+	.underline-effect::after {
+		content: '';
+		width: 100%;
+		height: 4px;
+		position: absolute;
+		left: 0;
+		bottom: 6px;
+		z-index: -1;
+		border-radius: 50px;
+		animation: underline_appear 0.8s ease-out forwards;
+		transform-origin: left;
+	}
+
+	@keyframes underline_appear {
+		from {
+			transform: scaleX(0);
+		}
+		to {
+			transform: scaleX(1);
+		}
+	}
+
 	.inner-text {
 		position: absolute;
 		left: 0;
@@ -302,12 +332,10 @@
 		height: 100%;
 	}
 	.bg {
-		min-height: 100%;
-		background-color: #6433f0;
+		min-height: 100px;
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 800 400'%3E%3Cdefs%3E%3CradialGradient id='a' cx='396' cy='281' r='514' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23806CF7'/%3E%3Cstop offset='1' stop-color='%236433F0'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='400' y1='148' x2='400' y2='333'%3E%3Cstop offset='0' stop-color='%23DBDFFD' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23DBDFFD' stop-opacity='0.5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23a)' width='800' height='400'/%3E%3Cg fill-opacity='0.39'%3E%3Ccircle fill='url(%23b)' cx='267.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='532.5' cy='61' r='300'/%3E%3Ccircle fill='url(%23b)' cx='400' cy='30' r='300'/%3E%3C/g%3E%3C/svg%3E");
-		background-attachment: fixed;
 		background-size: cover;
-		background-position: center;
+		background-position: bottom;
 		background-repeat: no-repeat;
 		mask-image: url('/masks/community/blob.png');
 		mask-size: contain;
