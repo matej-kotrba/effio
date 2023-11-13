@@ -15,11 +15,11 @@
 		type CreateObserverReturn
 	} from '~/lib/utils/observers.js';
 	import Map from '~/lib/svg/map.svelte';
-	import Carousel, {
-		type CarouselItem
-	} from '~components/containers/Carousel.svelte';
+	import Carousel from '~components/containers/Carousel.svelte';
 	import { browser } from '$app/environment';
 	import toast from 'svelte-french-toast';
+	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 
 	export let data;
 
@@ -65,7 +65,7 @@
 					icon: item.owner.image,
 					createdAt: item.createdAt,
 					stars: item.stars
-				} satisfies CarouselItem;
+				} satisfies CardAlternativeProps;
 			});
 		} else {
 			toast.error(
@@ -80,6 +80,29 @@
 		shouldReset: boolean = false,
 		specificQuery: string | undefined = undefined
 	) {
+		requestedTests = [
+			...requestedTests,
+			{
+				id: 0,
+				createdAt: new Date(),
+				title: 'asdasda sasdas',
+				description:
+					'awhdas dhasd uxych usd hahdcyuixch yxjhc uiawsh djakshdais',
+				owner: { name: 'aaaaaa aaaaa', image: '' },
+				stars: 0,
+				views: 0,
+				tags: [],
+				isPublic: false,
+				ownerId: '',
+				questions: [],
+				__typename: 'Test',
+				published: true,
+				testVersions: 1,
+				updatedAt: new Date(),
+				version: 1
+			}
+		];
+		return;
 		if (requestedTests === undefined) return;
 		if (shouldReset) {
 			requestedTests = [];
@@ -162,14 +185,14 @@
 			<h3
 				class="relative italic font-bold text-h3 underline-effect after:bg-light_quaternary"
 			>
-				Recently popular
+				New and popular
 			</h3>
 		</div>
 	</div>
 	<h3
 		class="relative italic font-bold text-h3 underline-effect -z-[20] after:bg-light_primary"
 	>
-		Recently popular
+		New and popular
 	</h3>
 	<div class="max-h-[24rem] h-[24rem] relative isolate">
 		{#if browser}
@@ -178,7 +201,6 @@
 	</div>
 </div>
 
-<!-- 
 <div>
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
@@ -222,14 +244,15 @@
 							}}
 							class="w-full"
 						>
-							<CardMinimalized
-								title={test.title}
-								description={test.description}
-								author={test.owner.name || 'Anonymous'}
-								authorImg={test.owner.image}
-								stars={test.stars}
-								views={test.views}
-								tags={getTypesafeTags(test.tags)}
+							<CardAlternative
+								data={{
+									title: test.title,
+									description: test.description,
+									img: undefined,
+									icon: test.owner.image,
+									createdAt: test.createdAt,
+									stars: test.stars
+								}}
 							/>
 						</button>
 					</div>
@@ -240,14 +263,15 @@
 							goto(`/tests/${test.id}`);
 						}}
 					>
-						<CardMinimalized
-							title={test.title}
-							description={test.description}
-							author={test.owner.name || 'Anonymous'}
-							authorImg={test.owner.image}
-							stars={test.stars}
-							views={test.views}
-							tags={getTypesafeTags(test.tags)}
+						<CardAlternative
+							data={{
+								title: test.title,
+								description: test.description,
+								img: undefined,
+								icon: test.owner.image,
+								createdAt: test.createdAt,
+								stars: test.stars
+							}}
 						/>
 					</button>
 				{/if}
@@ -259,7 +283,8 @@
 			{/each}
 		{/if}
 	</div>
-</div> -->
+</div>
+
 <style>
 	.underline-effect::after {
 		content: '';

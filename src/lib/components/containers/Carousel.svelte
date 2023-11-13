@@ -1,24 +1,20 @@
 <script lang="ts" context="module">
-	export type CarouselItem = {
-		title: string;
-		description?: string;
-		img?: string | null;
-		icon?: string | null;
-		createdAt?: Date;
-		stars?: number;
-	};
+	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
 
-	export type CarouselItemInput = CarouselItem[] | Promise<CarouselItem[]>;
+	export type CarouselItemInput =
+		| CardAlternativeProps[]
+		| Promise<CardAlternativeProps[]>;
 </script>
 
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import Star from '~components/globals/Star.svelte';
 	import SkeletonLine from '~components/informatic/SkeletonLine.svelte';
 
 	export let data: CarouselItemInput;
-	let resolvedData: CarouselItem[] | undefined = undefined;
+	let resolvedData: CardAlternativeProps[] | undefined = undefined;
 
 	if (!isDataResolved(data)) {
 		data.then((resolvedArray) => {
@@ -30,7 +26,9 @@
 
 	let countOfItems = 6;
 
-	function isDataResolved(data: CarouselItemInput): data is CarouselItem[] {
+	function isDataResolved(
+		data: CarouselItemInput
+	): data is CardAlternativeProps[] {
 		// @ts-expect-error
 		return data.then === undefined;
 	}
@@ -110,17 +108,13 @@
 			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
 			tooltipClasses="bg-light_whiter rounded-md"
 			onClick={scrollLeft}
-		>
-			<iconify-icon icon="ic:round-arrow-left" class="text-3xl" />
-		</IconButton>
+		/>
 		<IconButton
 			icon="ic:round-arrow-right"
 			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
 			tooltipClasses="bg-light_whiter rounded-md"
 			onClick={scrollRight}
-		>
-			<iconify-icon icon="ic:round-arrow-right" class="text-3xl" />
-		</IconButton>
+		/>
 	</div>
 	<div class="w-full overflow-hidden">
 		{#await data}
@@ -164,15 +158,12 @@
 										<div>
 											{#if item.stars !== undefined}
 												<div
-													class="absolute flex items-center gap-1 right-1 top-1"
+													class="absolute flex items-center gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white"
 												>
-													<span class="text-white">
+													<span class="text-light_text_black text-body2">
 														{item.stars}
 													</span>
-													<iconify-icon
-														icon="ic:round-star-outline"
-														class="text-3xl text-yellow-300 duration-100"
-													/>
+													<Star />
 												</div>
 											{/if}
 											<img
@@ -184,7 +175,7 @@
 										<img
 											src={'/imgs/content_imgs/liska.avif'}
 											alt={item.title}
-											class="object-cover w-full h-full rounded-t-lg"
+											class="object-cover w-full h-full rounded-t-md"
 										/>
 									</div>
 									<div class="p-2 mt-3">
@@ -202,7 +193,9 @@
 											>
 										{/if}
 										{#if item.description}
-											<div class="mt-2 text-center line-clamp-3 text-body2">
+											<div
+												class="mt-2 text-center break-all line-clamp-3 text-body2 text-over"
+											>
 												{item.description}
 											</div>
 										{/if}
