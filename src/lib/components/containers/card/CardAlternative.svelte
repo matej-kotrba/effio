@@ -49,7 +49,7 @@
 								isIconFallback = true;
 								// e.target.src = '/imgs/svgs/user-circle.svg';
 							}}
-							class="object-cover w-full h-full"
+							class="object-cover w-full h-full rounded-full"
 						/>
 					{:else}
 						<div
