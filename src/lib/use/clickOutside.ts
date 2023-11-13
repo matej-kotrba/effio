@@ -1,4 +1,4 @@
-import type { Action } from "svelte/types/runtime/action/index"
+import type { Action } from "svelte/action"
 
 // On clicking outside of the element, dispatch a custom event - 'clickOutside'
 export const clickOutside: Action<HTMLElement> = (node: HTMLElement) => {

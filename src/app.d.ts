@@ -26,6 +26,7 @@ declare global {
 			"onfinalize"?: (event: CustomEvent) => void;
 			"onconsider"?: (event: CustomEvent) => void;
 			"ondnddrag"?: (event: CustomEvent) => void;
+			"onimageerror"?: (event: CustomEvent) => void
 		}
 	}
 }

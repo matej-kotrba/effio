@@ -249,7 +249,7 @@
 									title: test.title,
 									description: test.description,
 									img: undefined,
-									icon: test.owner.image,
+									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
 									stars: test.stars
 								}}
@@ -268,7 +268,7 @@
 								title: test.title,
 								description: test.description,
 								img: undefined,
-								icon: test.owner.image,
+								icon: test?.owner?.image || 'error',
 								createdAt: test.createdAt,
 								stars: test.stars
 							}}

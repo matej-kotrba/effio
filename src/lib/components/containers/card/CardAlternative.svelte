@@ -11,8 +11,10 @@
 
 <script lang="ts">
 	import { transformDate } from '~/lib/utils/date';
-
 	import Star from '~components/globals/Star.svelte';
+	import { onImageLoad } from '~use/onImageLoad';
+
+	let isIconFallback = false;
 
 	export let data: CardAlternativeProps;
 </script>
@@ -34,11 +36,29 @@
 						<Star />
 					</div>
 				{/if}
-				<img
-					src={data.icon ?? '/imgs/content_imgs/liska.avif'}
-					alt="User Icon"
-					class="absolute object-cover w-12 -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 border-light_secondary"
-				/>
+				<div
+					class="absolute w-12 text-white -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 bg-light_secondary border-light_secondary"
+				>
+					{#if isIconFallback === false}
+						<img
+							src={data.icon ?? '/imgs/content_imgs/liska.avif'}
+							alt=""
+							loading="lazy"
+							use:onImageLoad
+							on:imageerror={(e) => {
+								isIconFallback = true;
+								// e.target.src = '/imgs/svgs/user-circle.svg';
+							}}
+							class="object-cover w-full h-full"
+						/>
+					{:else}
+						<div
+							class="absolute grid -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 place-content-center"
+						>
+							<iconify-icon icon="fa:user-circle" class="text-4xl" />
+						</div>
+					{/if}
+				</div>
 			</div>
 			<img
 				src={'/imgs/content_imgs/liska.avif'}
