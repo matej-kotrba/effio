@@ -7,6 +7,7 @@
 	export let initialValue: string = '';
 	export let onSubmitSearch: boolean = true;
 	export let onInputSearch: boolean = false;
+	export let backgroundApplied: boolean = true;
 
 	export let inputValue: string = '';
 
@@ -16,9 +17,16 @@
 		searchFunction(inputRef.value);
 	}
 
-	function eraseInputText() {
+	function eraseInputText(
+		e: MouseEvent & {
+			currentTarget: EventTarget & HTMLButtonElement;
+		}
+	) {
+		e.preventDefault();
+		let previousValue = inputRef.value;
 		inputRef.value = '';
 		inputRef.focus();
+		if (previousValue === inputRef.value) return;
 		searchFunction(inputRef.value);
 	}
 
@@ -37,9 +45,12 @@
 	}
 </script>
 
-<form method="POST" on:submit={onSubmit}>
+<form method="POST" on:submit={onSubmit} class="sticky top-2 z-[100]">
+	{#if backgroundApplied}
+		<div class="w-screen h-full bg-red-400" />
+	{/if}
 	<div
-		class="flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-md"
+		class="outline-2 focus-within:outline-light_primary dark:focus-within:outline-dark_primary outline-transparent outline flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-lg duration-100"
 	>
 		<button
 			type="button"
@@ -58,7 +69,7 @@
 		/>
 		<button
 			type="button"
-			on:click={eraseInputText}
+			on:click={(e) => eraseInputText(e)}
 			class="relative flex items-center gap-1 px-2 py-1 duration-150 rounded-md hover:text-error dark:text-dark_error"
 		>
 			<iconify-icon icon="ic:round-close" class="text-3xl" />

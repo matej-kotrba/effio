@@ -176,6 +176,8 @@
 	}
 </script>
 
+<SearchBar searchFunction={searchForResults} initialValue={searchQuery} />
+<Space gap={10} />
 <div class="relative">
 	<div
 		style={`--height-value: 120%;`}
@@ -205,7 +207,6 @@
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
 	>
-		<SearchBar searchFunction={searchForResults} initialValue={searchQuery} />
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
 		<div class="flex flex-wrap gap-1">
