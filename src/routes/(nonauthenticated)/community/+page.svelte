@@ -29,7 +29,6 @@
 
 	let searchQuery: string = $page.url.searchParams.get('q') || '';
 
-	let unusedTags: Tag[] = data.tags;
 	let usedTags: Tag[] = [];
 
 	let requestedTests: Awaited<
@@ -80,7 +79,8 @@
 	// Fetching new data
 	async function getTests(
 		shouldReset: boolean = false,
-		specificQuery: string | undefined = undefined
+		specificQuery: string | undefined = undefined,
+		usedTags: string[] = []
 	) {
 		// requestedTests = [
 		// 	...requestedTests,
@@ -116,8 +116,8 @@
 		let newData = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT,
 			cursor: requestedTests[requestedTests.length - 1]?.id ?? undefined,
-			tags: usedTags.length !== 0 ? usedTags.map((tag) => tag.name) : undefined,
-			searchQuery: specificQuery ?? searchQuery ?? undefined
+			tags: usedTags.length !== 0 ? usedTags : undefined,
+			searchQuery: specificQuery ?? undefined
 		});
 
 		isFetchingNewTests = false;
@@ -133,7 +133,11 @@
 		const { observer, addIntersection } = createObserver({
 			callback: (entry, observer) => {
 				if (entry.isIntersecting) {
-					getTests();
+					getTests(
+						false,
+						searchQuery,
+						usedTags.map((tag) => tag.name)
+					);
 
 					observer.unobserve(entry.target);
 				}
@@ -141,27 +145,40 @@
 		});
 		addIntersectionUse = addIntersection;
 		// Get initial state of the tests (by search params if available)
-		getTests(false, $page.url.searchParams.get('q') || undefined);
+		getTests(
+			false,
+			$page.url.searchParams.get('q') || undefined,
+			usedTags.map((tag) => tag.name)
+		);
 
 		return () => {
 			observer.disconnect();
 		};
 	});
 
-	async function changeToggleStatus(index: number, isActive: boolean) {
+	function findTagFromArrayBySlug(slug: Tag['slug'], tags: Tag[]) {
+		return tags.find((item) => item.slug === slug);
+	}
+
+	async function changeToggleStatus(slug: string, isActive: boolean) {
 		if (isActive === false) {
-			usedTags = usedTags.filter((tag) => tag.id !== unusedTags[index].id);
+			const tag = findTagFromArrayBySlug(slug, usedTags);
+			if (!tag) return;
+			usedTags = usedTags.filter((tempTag) => tempTag.id !== tag.id);
+		} else {
+			const tag = findTagFromArrayBySlug(slug, data.tags);
+			if (!tag) return;
+			if (usedTags.includes(tag)) return;
+			usedTags = [...usedTags, tag];
 		}
-		if (usedTags.includes(unusedTags[index])) return;
-		usedTags = [...usedTags, unusedTags[index]];
 
 		isFetchingNewTests = true;
 
-		requestedTests = (
-			await trpc($page).getPopularTests.query({
-				tags: usedTags.map((tag) => tag.name)
-			})
-		).tests;
+		getTests(
+			true,
+			searchQuery,
+			usedTags.map((tag) => tag.name)
+		);
 
 		isFetchingNewTests = false;
 	}
@@ -177,7 +194,11 @@
 		if (value === searchQuery) return;
 		searchQuery = value;
 		updateUrl(value);
-		await getTests(true);
+		await getTests(
+			true,
+			value,
+			usedTags.map((tag) => tag.name)
+		);
 	}
 
 	function getTypesafeTags(tags: TestFullType['tags']) {
@@ -218,25 +239,29 @@
 	>
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
-		<div class="flex flex-wrap gap-1">
-			{#each unusedTags as tag, index}
-				<TagContainer
-					title={tag.name}
-					color={tag.color}
-					isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
-					on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
-				/>
-			{/each}
-		</div>
-		<div class="flex flex-wrap gap-1">
-			{#each usedTags as tag, index}
-				<TagContainer
-					title={tag.name}
-					color={tag.color}
-					isActive={usedTags.some((tag) => tag.id === unusedTags[index].id)}
-					on:activeToggle={(data) => changeToggleStatus(index, data.detail)}
-				/>
-			{/each}
+		<div class="flex flex-col gap-1 min-h-[6rem] justify-center">
+			<div class="flex flex-wrap gap-1">
+				{#each data.tags.filter((tag) => !usedTags.includes(tag)) as tag, index}
+					<TagContainer
+						title={tag.name}
+						color={tag.color}
+						isActive={false}
+						on:activeToggle={(data) =>
+							changeToggleStatus(tag.slug, data.detail)}
+					/>
+				{/each}
+			</div>
+			<div class="flex flex-wrap gap-1">
+				{#each data.tags.filter((tag) => usedTags.includes(tag)) as tag, index}
+					<TagContainer
+						title={tag.name}
+						color={tag.color}
+						isActive={true}
+						on:activeToggle={(data) =>
+							changeToggleStatus(tag.slug, data.detail)}
+					/>
+				{/each}
+			</div>
 		</div>
 		<Space gap={10} />
 	</div>
