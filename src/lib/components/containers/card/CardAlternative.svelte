@@ -11,18 +11,20 @@
 
 <script lang="ts">
 	import { transformDate } from '~/lib/utils/date';
+	import IconButton from '~components/buttons/IconButton.svelte';
 	import Star from '~components/globals/Star.svelte';
 	import { onImageLoad } from '~use/onImageLoad';
 
 	let isIconFallback = false;
 
 	export let data: CardAlternativeProps;
+	export let navigationLink: string | null = null;
 </script>
 
 <div class="px-1 w-full max-w-[300px] aspect-[4/5]">
 	<div class="h-full rounded-md shadow-lg bg-light_whiter">
 		<div
-			class="relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute
+			class="relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
 					"
 		>
 			<div>
@@ -37,7 +39,7 @@
 					</div>
 				{/if}
 				<div
-					class="absolute w-12 text-white -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 bg-light_secondary border-light_secondary"
+					class="absolute w-12 text-white -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 bg-light_secondary border-light_secondary z-[2]"
 				>
 					{#if isIconFallback === false}
 						<img
@@ -60,11 +62,22 @@
 					{/if}
 				</div>
 			</div>
-			<img
-				src={'/imgs/content_imgs/liska.avif'}
-				alt={data.title}
-				class="object-cover w-full h-full rounded-t-md"
-			/>
+			<div class="relative w-full h-full overflow-hidden group effect">
+				<IconButton
+					icon="ic:round-arrow-right"
+					containerClasses="absolute -translate-x-1/2 translate-y-1/2 left-1/2 
+					bottom-1/2 border-2 border-solid border-light_text_black_60 bg-transparent 
+					backdrop-blur-sm hover:backdrop-blur-xl hover:bg-transparent 
+					pointer-events-none opacity-0 group-hover:opacity-100 duration-150"
+				/>
+				<a href={navigationLink || '#'} class="w-full h-full">
+					<img
+						src={'/imgs/content_imgs/liska.avif'}
+						alt={data.title}
+						class="object-cover w-full h-full duration-150 origin-bottom rounded-t-md"
+					/>
+				</a>
+			</div>
 		</div>
 		<div class="p-2 mt-3">
 			<abbr title={data.title} class="no-underline">
@@ -89,3 +102,37 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.effect::after {
+		content: '';
+		width: 12px;
+		height: 300%;
+		rotate: 45deg;
+		left: -100%;
+		top: -100%;
+		transform: translateY(-50%) translateX(-0%);
+		background-color: white;
+		filter: blur(8px);
+		position: absolute;
+		pointer-events: none;
+	}
+
+	:global(.dark) .effect::after {
+		background-color: var(--dark-text-white-60);
+	}
+
+	.effect:hover::after {
+		animation: slide 0.5s linear forwards;
+	}
+	@keyframes slide {
+		from {
+			left: -100%;
+			top: -100%;
+		}
+		to {
+			left: 100%;
+			top: 100%;
+		}
+	}
+</style>
