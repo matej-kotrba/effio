@@ -15,18 +15,30 @@ declare global {
 		};
 	}
 
-	declare namespace svelte.JSX {
-		interface HTMLProps<T> {
-			"onintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
-			"onunintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
-			"onclickoutside"?: (event: CustomEvent<MouseEvent>) => void;
-			"onquestionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
-			"ontitleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
-			"ondeleteInput"?: (event: CustomEvent) => void;
-			"onfinalize"?: (event: CustomEvent) => void;
-			"onconsider"?: (event: CustomEvent) => void;
-			"ondnddrag"?: (event: CustomEvent) => void;
-			"onimageerror"?: (event: CustomEvent) => void
+	declare namespace svelteHTML {
+		// interface HTMLProps<T> {
+		// 	"on:intersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+		// 	"on:unintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+		// 	"on:clickoutside"?: (event: CustomEvent<MouseEvent>) => void;
+		// 	"on:questionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
+		// 	"on:titleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
+		// 	"on:deleteInput"?: (event: CustomEvent) => void;
+		// 	"on:finalize"?: (event: CustomEvent) => void;
+		// 	"on:consider"?: (event: CustomEvent) => void;
+		// 	"on:dnddrag"?: (event: CustomEvent) => void;
+		// 	"on:imageerror"?: (event: CustomEvent) => void
+		// }
+		interface HTMLAttributes<T> {
+			"on:intersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+			"on:unintersect"?: (event: CustomEvent<IntersectionObserverEntry>) => void;
+			"on:clickoutside"?: (event: CustomEvent<MouseEvent>) => void;
+			"on:questionDetails"?: (event: CustomEvent<{ detail: QuestionContent }>) => void;
+			"on:titleDetails"?: (event: CustomEvent<{ detail: string }>) => void;
+			"on:deleteInput"?: (event: CustomEvent) => void;
+			"on:finalize"?: (event: CustomEvent) => void;
+			"on:consider"?: (event: CustomEvent) => void;
+			"on:dnddrag"?: (event: CustomEvent) => void;
+			"on:imageerror"?: (event: CustomEvent) => void
 		}
 	}
 }

@@ -36,6 +36,8 @@
 		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
 	>['tests'] = [];
 
+	let allTestsRef: HTMLDivElement;
+
 	// Updating url on input change
 	function updateUrl(inputValue: string) {
 		const paramsObj: {
@@ -166,6 +168,13 @@
 
 	// Search for results on inpput change, wait 500ms befor sending request for optimization
 	async function searchForResults(value: string) {
+		if (allTestsRef) {
+			window.scrollTo({
+				top: allTestsRef.getBoundingClientRect().top + window.scrollY - 100,
+				behavior: 'smooth'
+			});
+		}
+		if (value === searchQuery) return;
 		searchQuery = value;
 		updateUrl(value);
 		await getTests(true);
@@ -232,6 +241,7 @@
 		<Space gap={10} />
 	</div>
 	<div
+		bind:this={allTestsRef}
 		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
 	>
 		{#if requestedTests !== undefined}
@@ -271,7 +281,8 @@
 								img: undefined,
 								icon: test?.owner?.image || 'error',
 								createdAt: test.createdAt,
-								stars: test.stars
+								stars: test.stars,
+								tags: getTypesafeTags(test.tags)
 							}}
 						/>
 					</button>

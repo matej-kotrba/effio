@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+	import type { Tag } from '@prisma/client';
+
 	export type CardAlternativeProps = {
 		title: string;
 		description?: string;
@@ -6,6 +8,8 @@
 		icon?: string | null;
 		createdAt?: Date;
 		stars?: number;
+		views?: number;
+		tags?: Tag[];
 	};
 </script>
 
@@ -22,9 +26,9 @@
 </script>
 
 <div class="px-1 w-full max-w-[300px] aspect-[4/5]">
-	<div class="h-full rounded-md shadow-lg bg-light_whiter">
+	<div class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter">
 		<div
-			class="relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
+			class=" relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
 					"
 		>
 			<div>
@@ -62,7 +66,7 @@
 					{/if}
 				</div>
 			</div>
-			<div class="relative w-full h-full overflow-hidden group effect">
+			<div class="relative w-full overflow-hidden group effect">
 				<IconButton
 					icon="ic:round-arrow-right"
 					containerClasses="absolute -translate-x-1/2 translate-y-1/2 left-1/2 
@@ -70,40 +74,60 @@
 					backdrop-blur-sm hover:backdrop-blur-xl hover:bg-transparent 
 					pointer-events-none opacity-0 group-hover:opacity-100 duration-150"
 				/>
-				<a href={navigationLink || '#'} class="w-full h-full">
+				<a href={navigationLink || '#'} class="w-full">
 					<img
 						src={'/imgs/content_imgs/liska.avif'}
 						alt={data.title}
-						class="object-cover w-full h-full duration-150 origin-bottom rounded-t-md"
+						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md"
 					/>
 				</a>
 			</div>
 		</div>
-		<div class="p-2 mt-3">
-			<abbr title={data.title} class="no-underline">
-				<h3
-					class="w-full overflow-hidden font-semibold text-center text-h6 overflow-ellipsis whitespace-nowrap"
-				>
-					{data.title}
-				</h3>
-			</abbr>
-			{#if data.createdAt}
-				<span class="block text-center text-body2 text-light_text_black_80"
-					>{transformDate(data.createdAt, { time: true })}</span
-				>
-			{/if}
-			{#if data.description}
-				<div
-					class="mt-2 text-center break-all line-clamp-3 text-body2 text-over"
-				>
-					{data.description}
-				</div>
-			{/if}
+		<div class="flex flex-col justify-between grow-[1]">
+			<div class="p-2 mt-3">
+				<abbr title={data.title} class="no-underline">
+					<h3
+						class="w-full overflow-hidden font-semibold text-center text-h6 overflow-ellipsis whitespace-nowrap"
+					>
+						{data.title}
+					</h3>
+				</abbr>
+				{#if data.createdAt}
+					<span class="block text-center text-body2 text-light_text_black_80"
+						>{transformDate(data.createdAt, { time: true })}</span
+					>
+				{/if}
+				{#if data.description}
+					<div
+						class="mt-2 text-center break-all line-clamp-3 text-body2 text-over"
+					>
+						{data.description}
+					</div>
+				{/if}
+			</div>
+			<div>
+				{#if data.tags}
+					<div
+						class="flex flex-wrap justify-center gap-1 p-1 overflow-x-scroll max-h-10 scroll-snap"
+					>
+						{#each data.tags as tag}
+							<span
+								class="px-2 py-1 text-xs text-center rounded-sm shadow-sm bg-light_grey text-light_text_black_60"
+								>{tag.name}</span
+							>
+						{/each}
+					</div>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
 
 <style>
+	.scroll-snap {
+		scroll-snap-type: y mandatory;
+	}
+
 	.effect::after {
 		content: '';
 		width: 12px;
