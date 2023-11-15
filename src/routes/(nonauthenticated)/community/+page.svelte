@@ -112,19 +112,22 @@
 		// return;
 		if (requestedTests === undefined) return;
 
-		isResetting = true;
+		if (shouldReset) isResetting = true;
 		isFetchingNewTests = true;
 
 		// await new Promise((res) => setTimeout(res, 5000));
 		let newData = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT,
-			cursor: requestedTests[requestedTests.length - 1]?.id ?? undefined,
+			cursor:
+				shouldReset === false
+					? requestedTests[requestedTests.length - 1]?.id ?? undefined
+					: undefined,
 			tags: usedTags.length !== 0 ? usedTags : undefined,
 			searchQuery: specificQuery ?? undefined
 		});
 
 		isFetchingNewTests = false;
-		isResetting = false;
+		if (shouldReset) isResetting = false;
 
 		if (shouldReset) {
 			requestedTests = [];
@@ -324,7 +327,8 @@
 										img: undefined,
 										icon: test?.owner?.image || 'error',
 										createdAt: test.createdAt,
-										stars: test.stars
+										stars: test.stars,
+										tags: getTypesafeTags(test.tags)
 									}}
 								/>
 							</button>
