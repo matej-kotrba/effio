@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
-	import CardMinimalized from '~components/containers/card/CardMinimalized.svelte';
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
@@ -14,18 +13,24 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers.js';
-	import Map from '~/lib/svg/map.svelte';
 	import Carousel from '~components/containers/Carousel.svelte';
 	import { browser } from '$app/environment';
 	import toast from 'svelte-french-toast';
 	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import { crossfade } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+
+	const [send, receive] = crossfade({
+		duration: 150
+	});
 
 	export let data;
 
-	const REQUEST_AMOUNT = 8;
+	const REQUEST_AMOUNT = 12;
 
 	let isFetchingNewTests = true;
+	let isResetting = false;
 
 	let searchQuery: string = $page.url.searchParams.get('q') || '';
 
@@ -106,10 +111,8 @@
 		// ];
 		// return;
 		if (requestedTests === undefined) return;
-		if (shouldReset) {
-			requestedTests = [];
-		}
 
+		isResetting = true;
 		isFetchingNewTests = true;
 
 		// await new Promise((res) => setTimeout(res, 5000));
@@ -121,6 +124,11 @@
 		});
 
 		isFetchingNewTests = false;
+		isResetting = false;
+
+		if (shouldReset) {
+			requestedTests = [];
+		}
 
 		if (!newData.tests) return;
 
@@ -239,27 +247,39 @@
 	>
 		<Space gap={10} />
 		<h4>Filter by a tag</h4>
-		<div class="flex flex-col gap-1 min-h-[6rem] justify-center">
-			<div class="flex flex-wrap gap-1">
-				{#each data.tags.filter((tag) => !usedTags.includes(tag)) as tag, index}
-					<TagContainer
-						title={tag.name}
-						color={tag.color}
-						isActive={false}
-						on:activeToggle={(data) =>
-							changeToggleStatus(tag.slug, data.detail)}
-					/>
+		<div class="flex flex-col justify-center gap-1">
+			<div class="flex flex-wrap gap-1 min-h-[3rem]">
+				{#each data.tags.filter((tag) => !usedTags.includes(tag)) as tag, index (tag.slug)}
+					<div
+						in:send={{ key: tag.slug }}
+						out:receive={{ key: tag.slug }}
+						animate:flip={{ duration: 100 }}
+					>
+						<TagContainer
+							title={tag.name}
+							color={tag.color}
+							isActive={false}
+							on:activeToggle={(data) =>
+								changeToggleStatus(tag.slug, data.detail)}
+						/>
+					</div>
 				{/each}
 			</div>
-			<div class="flex flex-wrap gap-1">
-				{#each data.tags.filter((tag) => usedTags.includes(tag)) as tag, index}
-					<TagContainer
-						title={tag.name}
-						color={tag.color}
-						isActive={true}
-						on:activeToggle={(data) =>
-							changeToggleStatus(tag.slug, data.detail)}
-					/>
+			<div class="flex flex-wrap gap-1 min-h-[3rem]">
+				{#each data.tags.filter( (tag) => usedTags.includes(tag) ) as tag, index (tag.slug)}
+					<div
+						in:send={{ key: tag.slug }}
+						out:receive={{ key: tag.slug }}
+						animate:flip={{ duration: 100 }}
+					>
+						<TagContainer
+							title={tag.name}
+							color={tag.color}
+							isActive={true}
+							on:activeToggle={(data) =>
+								changeToggleStatus(tag.slug, data.detail)}
+						/>
+					</div>
 				{/each}
 			</div>
 		</div>
@@ -267,18 +287,54 @@
 	</div>
 	<div
 		bind:this={allTestsRef}
-		class="grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+		class={`relative grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 min-h-[24rem] ${
+			isResetting ? 'opacity-40' : 'opacity-100'
+		}`}
 	>
 		{#if requestedTests !== undefined}
-			{#each requestedTests as test, index}
-				{#if index === requestedTests.length - 1}
-					<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
+			{#if requestedTests.length === 0}
+				<div
+					class="absolute left-0 w-full text-center -translate-y-1/2 top-1/2"
+				>
+					<iconify-icon
+						icon="solar:mask-sad-linear"
+						class="text-8xl text-light_text_black_20 dark:text-dark_text_white_20"
+					/>
+					<h3
+						class="font-semibold text-center uppercase text-h4 text-light_text_black_60"
+					>
+						No test matches this criteria.
+					</h3>
+				</div>
+			{:else}
+				{#each requestedTests as test, index}
+					{#if index === requestedTests.length - 1}
+						<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
+							<button
+								type="button"
+								on:click={() => {
+									goto(`/tests/${test.id}`);
+								}}
+								class="w-full"
+							>
+								<CardAlternative
+									data={{
+										title: test.title,
+										description: test.description,
+										img: undefined,
+										icon: test?.owner?.image || 'error',
+										createdAt: test.createdAt,
+										stars: test.stars
+									}}
+								/>
+							</button>
+						</div>
+					{:else}
 						<button
 							type="button"
 							on:click={() => {
 								goto(`/tests/${test.id}`);
 							}}
-							class="w-full"
 						>
 							<CardAlternative
 								data={{
@@ -287,32 +343,14 @@
 									img: undefined,
 									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
-									stars: test.stars
+									stars: test.stars,
+									tags: getTypesafeTags(test.tags)
 								}}
 							/>
 						</button>
-					</div>
-				{:else}
-					<button
-						type="button"
-						on:click={() => {
-							goto(`/tests/${test.id}`);
-						}}
-					>
-						<CardAlternative
-							data={{
-								title: test.title,
-								description: test.description,
-								img: undefined,
-								icon: test?.owner?.image || 'error',
-								createdAt: test.createdAt,
-								stars: test.stars,
-								tags: getTypesafeTags(test.tags)
-							}}
-						/>
-					</button>
-				{/if}
-			{/each}
+					{/if}
+				{/each}
+			{/if}
 		{/if}
 		{#if isFetchingNewTests}
 			{#each Array(REQUEST_AMOUNT) as _}

@@ -158,6 +158,7 @@ export const appRouter = router({
     searchQuery: z.string().optional(),
     timePeriod: z.enum(["day", "week", "two-weeks", "month", "year"]).optional()
   })).query(async ({ ctx, input }) => {
+    console.log(input.tags)
 
     const timeTable: {
       [key: string]: number

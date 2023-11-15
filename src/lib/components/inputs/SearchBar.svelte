@@ -7,7 +7,6 @@
 	export let initialValue: string = '';
 	export let onSubmitSearch: boolean = true;
 	export let onInputSearch: boolean = false;
-	export let backgroundApplied: boolean = true;
 
 	export let inputValue: string = '';
 
@@ -46,9 +45,6 @@
 </script>
 
 <form method="POST" on:submit={onSubmit} class="sticky top-2 z-[100]">
-	{#if backgroundApplied}
-		<div class="w-screen h-full bg-red-400" />
-	{/if}
 	<div
 		class="outline-2 focus-within:outline-light_primary dark:focus-within:outline-dark_primary outline-transparent outline flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-lg duration-100"
 	>
