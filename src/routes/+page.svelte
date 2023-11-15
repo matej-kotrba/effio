@@ -11,10 +11,6 @@
 	import ScrollIndicator from '~components/informatic/ScrollIndicator.svelte';
 
 	export let data;
-
-	$: if (data.hasLoggedOut) {
-		toast.success('You were successfully logged out!');
-	}
 </script>
 
 <Toaster />

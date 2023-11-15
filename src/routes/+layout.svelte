@@ -5,6 +5,18 @@
 	import { browser } from '$app/environment';
 	import { applicationStates } from '~stores/applicationStates';
 
+	export let data;
+
+	$: if (data.hasLoggedOut) {
+		toast.success('You were successfully logged out!');
+	}
+
+	$: if (data.message.text) {
+		if (data.message.type === 'success') toast.success(data.message.text);
+		else if (data.message.type === 'error') toast.error(data.message.text);
+		else toast.error(data.message.text);
+	}
+
 	setContext('toast', toast);
 
 	let htmlTag: HTMLElement | undefined | null = undefined;

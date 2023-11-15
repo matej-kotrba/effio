@@ -7,13 +7,13 @@ export const load: ServerLoad = async (request) => {
 
   const id = request.params.id;
 
-  if (!id) throw redirect(307, "/")
+  if (!id) throw redirect(307, "/?message=This test does not exist&type=error")
 
   const context = await createContext(request)
 
   const test = await appRouter.createCaller(context).getTestById({ id: id });
 
-  if (!test) throw redirect(307, "/")
+  if (!test) throw redirect(307, "/?message=This test does not exist&type=error")
 
   try {
     return {
@@ -24,7 +24,7 @@ export const load: ServerLoad = async (request) => {
     }
   }
   catch (e) {
-    throw redirect(307, "/")
+    throw redirect(307, "/?message=This test does not exist&type=error")
   }
 
 }

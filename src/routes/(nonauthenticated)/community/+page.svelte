@@ -313,13 +313,7 @@
 				{#each requestedTests as test, index}
 					{#if index === requestedTests.length - 1}
 						<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
-							<button
-								type="button"
-								on:click={() => {
-									goto(`/tests/${test.id}`);
-								}}
-								class="w-full"
-							>
+							<a href={`/tests/${test.id}`} class="w-full">
 								<CardAlternative
 									data={{
 										title: test.title,
@@ -331,15 +325,10 @@
 										tags: getTypesafeTags(test.tags)
 									}}
 								/>
-							</button>
+							</a>
 						</div>
 					{:else}
-						<button
-							type="button"
-							on:click={() => {
-								goto(`/tests/${test.id}`);
-							}}
-						>
+						<a href={`/tests/${test.id}`}>
 							<CardAlternative
 								data={{
 									title: test.title,
@@ -351,7 +340,7 @@
 									tags: getTypesafeTags(test.tags)
 								}}
 							/>
-						</button>
+						</a>
 					{/if}
 				{/each}
 			{/if}
