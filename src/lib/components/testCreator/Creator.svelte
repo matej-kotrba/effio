@@ -197,6 +197,7 @@
 				</form>
 			</dialog>
 			<div
+				role="group"
 				class="relative flex flex-col gap-2 p-2"
 				on:dragleave|self={() => {
 					displayedActivatorId = -1;
@@ -227,6 +228,8 @@
 					</div>
 				{:else}
 					<div
+						role="button"
+						tabindex="0"
 						class="flex flex-col w-full gap-3 lg:w-4/5 xl:w-full max-w-[600px]"
 						use:dndzone={{
 							items: $testObject['questions'],

@@ -8,7 +8,7 @@ export default {
 				light_primary_transparent: '#6433F025',
 				light_primary_dark: '#5521e4',
 				light_secondary: '#646FD4',
-				light_terciary: '#806CF7',
+				light_terciary: '#8677ff',
 				light_quaternary: '#DBDFFD',
 				light_text_black: '#343540',
 				light_text_black_80: '#343540cc',

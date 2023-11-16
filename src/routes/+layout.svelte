@@ -45,6 +45,6 @@
 </script>
 
 <div>
-	<Toaster containerStyle={'z-index: 100;'} />
+	<Toaster containerStyle={'z-index: 100; text-align: center;'} />
 	<slot />
 </div>

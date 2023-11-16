@@ -128,7 +128,7 @@
 				maxlength={doesLimit ? max : undefined}
 				class={twMerge(
 					`input_edit resize-none ${
-						displayOutside === false ? 'my-1' : 'mb-1'
+						displayOutside === false ? 'my-0' : 'mb-1'
 					} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full

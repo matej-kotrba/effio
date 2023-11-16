@@ -52,7 +52,7 @@
 	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: true,
+		templateDone: false,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -158,12 +158,100 @@
 			console.log(e);
 		}
 	}
+
+	function onNavigationButtonClick() {
+		if (canUserContinue() === false) return;
+		if (testCreationProgress.templateDone === false) {
+			testCreationProgress.templateDone = true;
+		} else if (testCreationProgress.constructingDone === false) {
+			const result = isTestValid({
+				questions: $testObject.questions
+			});
+
+			if (result['store']['questions']) {
+				$testObject['questions'] = result['store']['questions'];
+			}
+
+			$testObject = $testObject;
+			if (result['isError']) {
+				toast.error(
+					result['message'] ||
+						'Something with validating your test went wrong 😕'
+				);
+				return;
+			}
+			testCreationProgress.constructingDone = true;
+		}
+	}
+
+	$: canUserContinue = () => {
+		if (!Number.isInteger(templatesActive)) return false;
+		return true;
+	};
 </script>
 
+<!-- <BasicButton
+				title="Continue"
+				onClick={() => {
+					testCreationProgress.templateDone = true;
+				}}
+				buttonAttributes={{ disabled: !Number.isInteger(templatesActive) }}
+			>
+				<Icon icon="bxs:right-arrow" class="text-md" />
+			</BasicButton>
+			<BasicButton
+					title="Continue"
+					onClick={async () => {
+						// const result = await isValidatInputServer($testObject);
+						// $testObject['questions'] = result['obj']['questions'];
+						// if (!result['success']) return;
+						// testCreationProgress.constructingDone = true;
+
+						const result = isTestValid({
+							questions: $testObject.questions
+						});
+
+						if (result['store']['questions']) {
+							$testObject['questions'] = result['store']['questions'];
+						}
+
+						$testObject = $testObject;
+						if (result['isError']) return;
+						testCreationProgress.constructingDone = true;
+					}}
+					buttonAttributes={{ disabled: false }}
+				>
+					<Icon icon="bxs:right-arrow" class="text-md" />
+				</BasicButton> -->
 <DashboardTitle
 	title="Create your new test"
 	subtitle="Choose a template and make a new test using many prebuilt inputs."
 />
+
+{#if testCreationProgress.templateDone === true && testCreationProgress.constructingDone === false}
+	<div
+		transition:fly={{ x: 200 }}
+		class={`fixed grid place-content-center z-10
+	 shadow-md bottom-2 md:bottom-6 right-2 md:right-6 
+		`}
+	>
+		<!-- <span class="font-semibold text-h5"> Continue </span> -->
+		<!-- <iconify-icon icon="iconamoon:arrow-right-6-circle-thin" class="text-4xl" /> -->
+		<button
+			type="button"
+			on:click={onNavigationButtonClick}
+			disabled={!canUserContinue()}
+			class={`group grid place-content-center p-1 duration-150 border-2 border-solid rounded-lg md:p-3 bg-light_terciary text-light_whiter
+	  disabled:bg-gray-300 disabled:text-light_whiter border-light_terciary hover:bg-light_whiter hover:text-light_terciary`}
+		>
+			<!-- <div
+			class="w-[150%] aspect-square rounded-lg bg-light_grey scale-0 group-disabled:scale-0 group-hover:scale-100 duration-150 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
+		/> -->
+			<iconify-icon icon="iconamoon:arrow-right-2-duotone" class="text-5xl" />
+		</button>
+	</div>
+{/if}
+
 <div class="text-sm breadcrumbs">
 	<ul>
 		<li
@@ -284,7 +372,7 @@
 			<Creator inputTemplates={data.questionsTypes} />
 			<Space />
 
-			{#if $testObject.questions.length > 0}
+			<!-- {#if $testObject.questions.length > 0}
 				<BasicButton
 					title="Continue"
 					onClick={async () => {
@@ -309,7 +397,7 @@
 				>
 					<Icon icon="bxs:right-arrow" class="text-md" />
 				</BasicButton>
-			{/if}
+			{/if} -->
 		</div>
 	{:else}
 		<div

@@ -66,12 +66,12 @@
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
-				<div class="flex items-start gap-1">
+				<div class="flex gap-1">
 					<RemoveButton
 						questionLimit={1}
 						deleteQuestion={() => deleteQuestion(index)}
 						questionLength={answersLength}
-						class="w-10 h-10 rounded-full"
+						class="rounded-sm"
 					/>
 					<TextInputSimple
 						title="Answer option {index + 1}"
@@ -83,6 +83,7 @@
 						inputProperties={{
 							placeholder: 'Your answer option ...'
 						}}
+						class="rounded-sm"
 						on:error={(e) => {
 							content.answers[index].error = e.detail;
 						}}
