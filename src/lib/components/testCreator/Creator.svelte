@@ -35,6 +35,7 @@
 	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
 	import toast from 'svelte-french-toast';
 	import { QUESTION_LIMIT, questionMethods } from '~helpers/test';
+	import { fly } from 'svelte/transition';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -146,9 +147,9 @@
 <div
 	class="relative bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div class="grid__container">
+	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
 		{#if $testObject.questions.length > 0}
-			<div>
+			<div transition:fly={{ x: -300 }}>
 				<CreatorInputSidebar
 					inputs={inputTemplates}
 					class="self-start"
@@ -156,7 +157,7 @@
 				/>
 			</div>
 		{/if}
-		<div class="p-4 {$testObject.questions.length === 0 ? 'col-span-2' : ''}">
+		<div class="p-4 {$testObject.questions.length === 0 ? 'col-start-2' : ''}">
 			<!-- The dropdown for new input -->
 			<dialog class="modal" bind:this={newInputModal}>
 				<form
@@ -205,7 +206,7 @@
 			>
 				<!-- Displaying the initial create button -->
 				{#if $testObject.questions.length === 0}
-					<div class="flex flex-col items-center gap-3 mx-auto">
+					<div class="flex flex-col items-center gap-3">
 						<h4
 							class="font-semibold text-h6 text-light_text_black dark:text-dark_text_white"
 						>
@@ -305,6 +306,11 @@
 	.grid__container {
 		display: grid;
 		grid-template-columns: 340px 1fr;
+	}
+
+	.grid__container.empty {
+		display: grid;
+		grid-template-columns: 1px 1fr;
 	}
 
 	/* .new-input-button {

@@ -52,7 +52,7 @@
 	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: false,
+		templateDone: true,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -185,7 +185,8 @@
 	}
 
 	$: canUserContinue = () => {
-		if (!Number.isInteger(templatesActive)) return false;
+		//TODO: Uncomment
+		// if (!Number.isInteger(templatesActive)) return false;
 		return true;
 	};
 </script>
