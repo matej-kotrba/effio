@@ -148,16 +148,18 @@
 	class="relative bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
 	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
-		{#if $testObject.questions.length > 0}
-			<div transition:fly={{ x: -300 }}>
-				<CreatorInputSidebar
-					inputs={inputTemplates}
-					class="self-start"
-					on:drop={onInputDrop}
-				/>
-			</div>
-		{/if}
-		<div class="p-4 {$testObject.questions.length === 0 ? 'col-start-2' : ''}">
+		<div class="relative">
+			{#if $testObject.questions.length > 0}
+				<div transition:fly={{ x: -300 }} class="h-full">
+					<CreatorInputSidebar
+						inputs={inputTemplates}
+						class="self-start"
+						on:drop={onInputDrop}
+					/>
+				</div>
+			{/if}
+		</div>
+		<div class="p-4">
 			<!-- The dropdown for new input -->
 			<dialog class="modal" bind:this={newInputModal}>
 				<form
@@ -308,9 +310,15 @@
 		grid-template-columns: 340px 1fr;
 	}
 
-	.grid__container.empty {
-		display: grid;
-		grid-template-columns: 1px 1fr;
+	.empty > *:nth-child(1) {
+		grid-column-start: 1;
+		grid-row-start: 1;
+	}
+
+	.empty > *:nth-child(2) {
+		grid-column-start: 1;
+		grid-row-start: 1;
+		grid-column-end: 3;
 	}
 
 	/* .new-input-button {

@@ -31,6 +31,8 @@
 	}
 
 	onMount(() => {
+		asideElement.style.setProperty('--blur-x', `${-9999}px`);
+		asideElement.style.setProperty('--blur-y', `${-9999}px`);
 		for (let i in inputReferences) {
 			inputReferences[i].addEventListener('dragend', (e) => {
 				dispatch('drop', { input: inputs[i] });
@@ -41,7 +43,7 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 <aside
-	class="sticky top-0 w-full h-full parent"
+	class="sticky top-[10%] left-0 w-full parent"
 	style="--blur-x: 0px;
 		--blur-y: 0px;"
 	bind:clientWidth={asideWidth}
@@ -54,6 +56,7 @@
 				<!-- on:mousedown={() => onDragEvent(true, index)} -->
 
 				<div
+					role="listitem"
 					class="grid w-full h-full duration-150 place-content-center bg-light_white dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey"
 					bind:this={inputReferences[index]}
 					draggable="true"
@@ -77,7 +80,6 @@
 	}
 
 	.parent {
-		position: relative;
 		isolation: isolate;
 	}
 
