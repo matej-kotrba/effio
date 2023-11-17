@@ -253,8 +253,8 @@
 	</div>
 {/if}
 
-<div class="text-sm breadcrumbs">
-	<ul>
+<div class="max-w-[98vw] text-sm breadcrumbs">
+	<ul class="">
 		<li
 			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.templateDone}
@@ -298,7 +298,7 @@
 	]}
 	color={'var(--light-primary)'}
 /> -->
-<h3 class="text-h4 text-light_text_black dark:text-dark_text_white">
+<h3 class="text-h5 md:text-h4 text-light_text_black dark:text-dark_text_white">
 	{#if testCreationProgress.templateDone === false}
 		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
 			>Start with picking a template</span

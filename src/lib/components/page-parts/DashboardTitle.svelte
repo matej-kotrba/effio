@@ -6,11 +6,13 @@
 </script>
 
 <h2
-	class="text-h3 font-extralight text-light_text_black dark:text-dark_text_white"
+	class="text-h4 md:text-h3 font-extralight text-light_text_black dark:text-dark_text_white"
 >
 	{title}
 </h2>
-<p class="text-body1 text-light_text_black dark:text-dark_text_white_40">
+<p
+	class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white_40"
+>
 	{subtitle}
 </p>
 <Space />

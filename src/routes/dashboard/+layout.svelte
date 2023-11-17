@@ -50,105 +50,194 @@
 	class="min-h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible}
 >
-	<div
-		class={isSidebarShown ? '' : isSidebarCollapsible ? 'overflow-hidden' : ''}
-	>
-		<aside
-			class="bg-light_white dark:bg-dark_black sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
+	<div class={isSidebarShown ? '' : 'overflow-hidden'}>
+		{#if isSidebarCollapsible === false || (isSidebarCollapsible === true && isSidebarShown === true)}
+			<aside
+				class="bg-light_white dark:bg-dark_black sm:bg-none xs:min-w-[210px] md:max-w-[210px]
 			 lg:max-w-[260px] md:block sticky top-0 left-0 z-[100] min-h-screen max-h-screen
 			  border-r-2 border-solid border-light_text_black_20 {isSidebarShown
-				? 'w-full'
-				: ''}"
-		>
-			{#if isSidebarCollapsible}
-				<div class="flex justify-end">
-					<button
-						type="button"
-						class="ml-auto"
-						on:click={() => (isSidebarShown = !isSidebarShown)}
+					? 'min-w-[100vw]'
+					: ''}"
+			>
+				{#if isSidebarCollapsible}
+					<div class="flex justify-end">
+						<button
+							type="button"
+							class="ml-auto"
+							on:click={() => (isSidebarShown = !isSidebarShown)}
+						>
+							<iconify-icon icon="ic:round-close" class="text-3xl" />
+						</button>
+					</div>
+				{/if}
+				<div class="flex flex-col items-center px-2 xl:px-4">
+					<a
+						class="w-[160px]"
+						on:click={() => (isSidebarShown = false)}
+						href="/"
 					>
-						<iconify-icon icon="ic:round-close" class="text-3xl" />
-					</button>
+						<img
+							src={$applicationStates['darkMode']['isDarkMode']
+								? '/imgs/effio/text-dark.png'
+								: '/imgs/effio/text.png'}
+							alt="Effio logo"
+							class="drop-shadow-primary"
+						/>
+					</a>
+					<div class="flex flex-col items-center gap-2">
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/dashboard"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+							class:active={browser && $page.url.pathname === '/dashboard'}
+							class:dark={$applicationStates['darkMode']['isDarkMode']}
+						>
+							<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
+						</a>
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/dashboard/test-creator"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+							class:dark={$applicationStates}
+							class:active={browser &&
+								$page.url.pathname.startsWith('/dashboard/test-creator')}
+						>
+							<iconify-icon
+								icon="material-symbols:edit-square-outline-rounded"
+								class="text-2xl"
+							/> Create a new test
+						</a>
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/dashboard/test-collection"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+							class:dark={$applicationStates}
+							class:active={browser &&
+								$page.url.pathname.startsWith('/dashboard/test-collection')}
+						>
+							<iconify-icon
+								icon="heroicons-solid:collection"
+								class="text-2xl"
+							/> Test collection
+						</a>
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/dashboard/test-history"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+							class:dark={$applicationStates}
+							class:active={browser &&
+								$page.url.pathname.startsWith('/dashboard/test-history')}
+						>
+							<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
+						</a>
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/dashboard/my-groups"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+							class:dark={$applicationStates}
+							class:active={browser &&
+								$page.url.pathname.startsWith('/dashboard/my-groups')}
+						>
+							<iconify-icon icon="ion:share-social" class="text-2xl" />
+							My Groups
+						</a>
+						<a
+							on:click={() => (isSidebarShown = false)}
+							href="/community"
+							class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
+						>
+							<iconify-icon
+								icon="fluent:people-community-24-filled"
+								class="text-2xl"
+							/> Community place
+						</a>
+					</div>
+					{#if isSidebarCollapsible === true}
+						<div
+							class="absolute left-0 flex justify-between w-full gap-1 px-2 bottom-2"
+						>
+							<div class="dropdown dropdown-hover dropdown-right dropdown-top">
+								<button type="button">
+									<img
+										src={data.session?.user?.image}
+										alt="Icon"
+										width="50"
+										referrerpolicy="no-referrer"
+										class="object-cover rounded-full aspect-square"
+									/>
+								</button>
+								<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+								<ul
+									tabindex="0"
+									class="dropdown-content z-[1] menu p-3 shadow bg-base-100 dark:bg-dark_light_grey rounded-box w-52"
+								>
+									<div class="flex flex-col">
+										<span
+											class="font-semibold text-center uppercase text-light_text_black dark:text-dark_text_white"
+											>{data.session?.user?.name}</span
+										>
+										<span
+											class="text-center text-light_text_black dark:text-dark_text_white_40 text-body3"
+											>{data.session?.user?.email}</span
+										>
+									</div>
+									<button
+										class="flex items-center gap-1 px-2 py-1 mt-4 ml-auto duration-100 rounded-md hover:bg-light_grey dark:hover:bg-dark_text_white_20"
+										type="button"
+										on:click={async () =>
+											await signOut({
+												redirect: false,
+												callbackUrl: '/?logout=true'
+											})}
+										>Log out
+										<iconify-icon icon="mingcute:exit-line" class="text-2xl" />
+									</button>
+								</ul>
+							</div>
+							<button
+								class="relative grid h-10 place-content-center"
+								type="button"
+								on:click={() => $applicationStates.darkMode.setIsDarkMode()}
+							>
+								{#if $applicationStates['darkMode']['isDarkMode']}
+									<iconify-icon
+										icon="lucide:moon"
+										class="text-4xl"
+										in:fly={{
+											y: -100,
+											x: 0,
+											duration: 150,
+											delay: 150
+										}}
+										out:fly={{
+											y: 100,
+											x: 0,
+											duration: 150
+										}}
+									/>
+								{:else}
+									<iconify-icon
+										icon="mi:sun"
+										class="text-4xl"
+										in:fly={{
+											y: -100,
+											x: 0,
+											duration: 150,
+											delay: 150
+										}}
+										out:fly={{
+											y: 100,
+											x: 0,
+											duration: 150
+										}}
+									/>
+								{/if}
+							</button>
+						</div>
+					{/if}
 				</div>
-			{/if}
-			<div class="flex flex-col items-center px-2 xl:px-4">
-				<a class="w-[160px]" on:click={() => (isSidebarShown = false)} href="/">
-					<img
-						src={$applicationStates['darkMode']['isDarkMode']
-							? '/imgs/effio/text-dark.png'
-							: '/imgs/effio/text.png'}
-						alt="Effio logo"
-						class="drop-shadow-primary"
-					/>
-				</a>
-				<div class="flex flex-col items-center gap-2">
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/dashboard"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-						class:active={browser && $page.url.pathname === '/dashboard'}
-						class:dark={$applicationStates['darkMode']['isDarkMode']}
-					>
-						<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
-					</a>
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/dashboard/test-creator"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-						class:dark={$applicationStates}
-						class:active={browser &&
-							$page.url.pathname.startsWith('/dashboard/test-creator')}
-					>
-						<iconify-icon
-							icon="material-symbols:edit-square-outline-rounded"
-							class="text-2xl"
-						/> Create a new test
-					</a>
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/dashboard/test-collection"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-						class:dark={$applicationStates}
-						class:active={browser &&
-							$page.url.pathname.startsWith('/dashboard/test-collection')}
-					>
-						<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
-						collection
-					</a>
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/dashboard/test-history"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-						class:dark={$applicationStates}
-						class:active={browser &&
-							$page.url.pathname.startsWith('/dashboard/test-history')}
-					>
-						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
-					</a>
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/dashboard/my-groups"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-						class:dark={$applicationStates}
-						class:active={browser &&
-							$page.url.pathname.startsWith('/dashboard/my-groups')}
-					>
-						<iconify-icon icon="ion:share-social" class="text-2xl" />
-						My Groups
-					</a>
-					<a
-						on:click={() => (isSidebarShown = false)}
-						href="/community"
-						class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
-					>
-						<iconify-icon
-							icon="fluent:people-community-24-filled"
-							class="text-2xl"
-						/> Community place
-					</a>
-				</div>
-			</div>
-		</aside>
+			</aside>
+		{/if}
 	</div>
 
 	<div class="nav__flex__container">
@@ -166,7 +255,7 @@
 			{/if}
 
 			<!-- Upper part navigation -->
-			<div class="mr-auto text-sm breadcrumbs">
+			<div class="max-w-[70vw] md:max-w-[50vw] mr-auto text-sm breadcrumbs">
 				<ul>
 					{#each pathname as segment, index (index)}
 						{#if !['', 'edit', 'delete'].includes(segment)}
@@ -191,78 +280,83 @@
 				</ul>
 			</div>
 
-			<button
-				class="relative grid h-10 place-content-center"
-				type="button"
-				on:click={() => $applicationStates.darkMode.setIsDarkMode()}
-			>
-				{#if $applicationStates['darkMode']['isDarkMode']}
-					<iconify-icon
-						icon="lucide:moon"
-						class="text-4xl"
-						in:fly={{
-							y: -100,
-							x: 0,
-							duration: 150,
-							delay: 150
-						}}
-						out:fly={{
-							y: 100,
-							x: 0,
-							duration: 150
-						}}
-					/>
-				{:else}
-					<iconify-icon
-						icon="mi:sun"
-						class="text-4xl"
-						in:fly={{
-							y: -100,
-							x: 0,
-							duration: 150,
-							delay: 150
-						}}
-						out:fly={{
-							y: 100,
-							x: 0,
-							duration: 150
-						}}
-					/>
-				{/if}
-			</button>
-			<div class="dropdown dropdown-hover dropdown-end dropdown-bottom">
-				<img
-					src={data.session?.user?.image}
-					alt="Icon"
-					width="50"
-					referrerpolicy="no-referrer"
-					class="object-cover rounded-full aspect-square"
-				/>
-				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-				<ul
-					tabindex="0"
-					class="dropdown-content z-[1] menu p-3 shadow bg-base-100 dark:bg-dark_light_grey rounded-box w-52"
+			{#if isSidebarCollapsible === false}
+				<button
+					class="relative grid h-10 place-content-center"
+					type="button"
+					on:click={() => $applicationStates.darkMode.setIsDarkMode()}
 				>
-					<div class="flex flex-col">
-						<span
-							class="font-semibold text-center uppercase text-light_text_black dark:text-dark_text_white"
-							>{data.session?.user?.name}</span
-						>
-						<span
-							class="text-center text-light_text_black dark:text-dark_text_white_40 text-body3"
-							>{data.session?.user?.email}</span
-						>
-					</div>
-					<button
-						class="flex items-center gap-1 px-2 py-1 mt-4 ml-auto duration-100 rounded-md hover:bg-light_grey dark:hover:bg-dark_text_white_20"
-						type="button"
-						on:click={async () =>
-							await signOut({ redirect: false, callbackUrl: '/?logout=true' })}
-						>Log out
-						<iconify-icon icon="mingcute:exit-line" class="text-2xl" />
-					</button>
-				</ul>
-			</div>
+					{#if $applicationStates['darkMode']['isDarkMode']}
+						<iconify-icon
+							icon="lucide:moon"
+							class="text-4xl"
+							in:fly={{
+								y: -100,
+								x: 0,
+								duration: 150,
+								delay: 150
+							}}
+							out:fly={{
+								y: 100,
+								x: 0,
+								duration: 150
+							}}
+						/>
+					{:else}
+						<iconify-icon
+							icon="mi:sun"
+							class="text-4xl"
+							in:fly={{
+								y: -100,
+								x: 0,
+								duration: 150,
+								delay: 150
+							}}
+							out:fly={{
+								y: 100,
+								x: 0,
+								duration: 150
+							}}
+						/>
+					{/if}
+				</button>
+				<div class="dropdown dropdown-hover dropdown-end dropdown-bottom">
+					<img
+						src={data.session?.user?.image}
+						alt="Icon"
+						width="50"
+						referrerpolicy="no-referrer"
+						class="object-cover rounded-full aspect-square"
+					/>
+					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+					<ul
+						tabindex="0"
+						class="dropdown-content z-[1] menu p-3 shadow bg-base-100 dark:bg-dark_light_grey rounded-box w-52"
+					>
+						<div class="flex flex-col">
+							<span
+								class="font-semibold text-center uppercase text-light_text_black dark:text-dark_text_white"
+								>{data.session?.user?.name}</span
+							>
+							<span
+								class="text-center text-light_text_black dark:text-dark_text_white_40 text-body3"
+								>{data.session?.user?.email}</span
+							>
+						</div>
+						<button
+							class="flex items-center gap-1 px-2 py-1 mt-4 ml-auto duration-100 rounded-md hover:bg-light_grey dark:hover:bg-dark_text_white_20"
+							type="button"
+							on:click={async () =>
+								await signOut({
+									redirect: false,
+									callbackUrl: '/?logout=true'
+								})}
+							>Log out
+							<iconify-icon icon="mingcute:exit-line" class="text-2xl" />
+						</button>
+					</ul>
+				</div>
+			{/if}
 		</nav>
 		<!-- px-4 pt-6 md:px-8 xl:px-16 -->
 		<div class="relative flex-1 content">
@@ -280,6 +374,12 @@
 
 	.grid__layout.layout__hidden {
 		grid-template-columns: 0px 1fr;
+	}
+
+	@media (max-width: 1024px) {
+		.grid__layout {
+			grid-template-columns: 0px 1fr;
+		}
 	}
 
 	:global(.dark) .active {

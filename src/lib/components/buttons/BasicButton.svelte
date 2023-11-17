@@ -30,5 +30,9 @@
 >
 	{#if isLoading}
 		<span class="loading loading-spinner" />
-	{/if}{title}<slot /></button
+	{/if}
+	<span class="text-body3 md:text-body2">
+		{title}
+	</span>
+	<slot /></button
 >

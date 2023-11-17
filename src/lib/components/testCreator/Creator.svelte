@@ -86,7 +86,7 @@
 		newInputModal.close();
 		addNewQuestion(
 			newQuestionData as QuestionClient,
-			$testObject.questions.length - 1
+			$testObject.questions.length
 		);
 		isDropdownOpen = false;
 	}
@@ -179,14 +179,14 @@
 			{:else if $testObject.questions.length > 0 && !(isInputSidebarOpen === true || windowWidth >= XL)}
 				<button
 					type="button"
-					on:click={newInputModal?.show}
-					class="sticky left-0 grid w-12 p-2 duration-150 -translate-y-full rounded-md shadow-md bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark aspect-square"
+					on:click={() => newInputModal?.showModal()}
+					class="sticky left-0 grid w-full h-full p-2 duration-150 rounded-md shadow-md sm:w-12 top-2 bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark sm:aspect-square"
 				>
 					<iconify-icon icon="tabler:dots" class="text-3xl" />
 				</button>
 			{/if}
 		</div>
-		<div class="p-4">
+		<div class="px-4">
 			<!-- The dropdown for new input -->
 			<dialog class="modal" bind:this={newInputModal}>
 				<form
@@ -228,7 +228,7 @@
 			</dialog>
 			<div
 				role="group"
-				class="relative flex flex-col gap-2 p-2"
+				class="relative flex flex-col gap-2 px-2"
 				on:dragleave|self={() => {
 					displayedActivatorId = -1;
 				}}
@@ -237,7 +237,7 @@
 				{#if $testObject.questions.length === 0}
 					<div class="flex flex-col items-center gap-3">
 						<h4
-							class="font-semibold text-h6 text-light_text_black dark:text-dark_text_white"
+							class="font-semibold text-body2 sm:text-body1 md:text-h6 text-light_text_black dark:text-dark_text_white"
 						>
 							Start with the first question!
 						</h4>
@@ -245,7 +245,7 @@
 							<img
 								src="/imgs/svgs/piece.svg"
 								width="500"
-								class="max-w-[500px] min-w-[150px] col-start-1 row-start-1 col-span-2 row-span-2"
+								class="max-w-[500px] min-w-[150px] w-[80%] col-start-1 row-start-1 col-span-2 row-span-2"
 								alt=""
 							/>
 							<div class="grid col-start-2 row-start-2 place-content-center">
@@ -340,7 +340,14 @@
 
 	@media (max-width: 1280px) {
 		.grid__container {
-			grid-template-columns: 0px 1fr;
+			grid-template-columns: 40px 1fr;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.grid__container {
+			grid-template-columns: 1fr;
+			grid-template-rows: 40px 1fr;
 		}
 	}
 
