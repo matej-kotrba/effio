@@ -315,7 +315,7 @@
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="p-2">
+<div class="p-2 @container">
 	{#if testCreationProgress.templateDone === false}
 		<div
 			in:fly={{
@@ -329,7 +329,7 @@
 			}}
 			class=""
 		>
-			<div class="flex items-center gap-4">
+			<div class="templates-grid">
 				{#each templates as template, index}
 					<TemplateCard
 						title={template.title}
@@ -560,6 +560,18 @@
 </div>
 
 <style>
+	.templates-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 250px));
+		gap: 16px;
+	}
+
+	@container (max-width: 768px) {
+		.templates-grid {
+			grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+		}
+	}
+
 	.done {
 		color: var(--light-primary);
 	}

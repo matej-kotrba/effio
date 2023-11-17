@@ -37,12 +37,13 @@
 			class="text-center text-h6 text-light_text_black dark:text-dark_text_white"
 		>
 			Import file<br />
-			<span class="text-xs">({additionalText})</span>
 		</h4>
+		<span class="block text-xs text-center">({additionalText})</span>
 		<div class="grid place-content-center">
 			<img
 				src={'/imgs/svgs/import.svg'}
-				alt="Tempalte"
+				alt=""
+				role="presentation"
 				class="object-cover"
 				width="150"
 			/>
