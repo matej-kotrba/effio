@@ -36,6 +36,9 @@
 	import toast from 'svelte-french-toast';
 	import { QUESTION_LIMIT, questionMethods } from '~helpers/test';
 	import { fly } from 'svelte/transition';
+	import { XL } from '~/utils/responsive';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
@@ -43,6 +46,22 @@
 	// Dropdown state
 	let isDropdownOpen = false;
 	let newInputModal: HTMLDialogElement;
+
+	// Mobile version sidebar
+	let isInputSidebarOpen = false;
+	let windowWidth = browser && window ? window.innerWidth : 1920;
+
+	onMount(() => {
+		function onResize() {
+			windowWidth = browser && window ? window.innerWidth : 1920;
+		}
+
+		window.addEventListener('resize', onResize);
+
+		return () => {
+			window.removeEventListener('resize', (e) => onResize);
+		};
+	});
 
 	// Ensuring that the draggable inputs are not draggable when the user doesnt use the specific area
 	let dragDisable: boolean = true;
@@ -149,7 +168,7 @@
 >
 	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
 		<div class="relative">
-			{#if $testObject.questions.length > 0}
+			{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
 				<div transition:fly={{ x: -300 }} class="h-full">
 					<CreatorInputSidebar
 						inputs={inputTemplates}
@@ -157,6 +176,14 @@
 						on:drop={onInputDrop}
 					/>
 				</div>
+			{:else if $testObject.questions.length > 0 && !(isInputSidebarOpen === true || windowWidth >= XL)}
+				<button
+					type="button"
+					on:click={newInputModal?.show}
+					class="sticky left-0 grid w-12 p-2 duration-150 -translate-y-full rounded-md shadow-md bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark aspect-square"
+				>
+					<iconify-icon icon="tabler:dots" class="text-3xl" />
+				</button>
 			{/if}
 		</div>
 		<div class="p-4">
@@ -308,6 +335,13 @@
 	.grid__container {
 		display: grid;
 		grid-template-columns: 340px 1fr;
+		transition: grid-template-columns 0.3s ease-in-out;
+	}
+
+	@media (max-width: 1280px) {
+		.grid__container {
+			grid-template-columns: 0px 1fr;
+		}
 	}
 
 	.empty > *:nth-child(1) {

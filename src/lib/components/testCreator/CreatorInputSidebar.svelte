@@ -76,7 +76,7 @@
 
 <style>
 	.grid__container {
-		grid-template-columns: repeat(auto-fit, 150px);
+		grid-template-columns: repeat(2, minmax(120px, 1fr));
 	}
 
 	.parent {
