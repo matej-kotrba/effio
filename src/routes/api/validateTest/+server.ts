@@ -1,6 +1,6 @@
 import { json, error } from "@sveltejs/kit"
 import type { RequestEvent } from "../../dashboard/$types"
-import { isTestValid } from "~helpers/test"
+import { isTestValidAndSetErrorsToTestObject } from "~helpers/test"
 
 export async function POST(event: RequestEvent) {
   if (!(await event.locals.getSession())?.user?.name) throw error(401, "Unauthorized")
@@ -13,7 +13,9 @@ export async function POST(event: RequestEvent) {
     questions: data.questions || undefined
   }
 
-  const response = isTestValid(props)
+  console.log(props)
+
+  const response = isTestValidAndSetErrorsToTestObject(props)
 
   return json(response)
   // const body = (await event.request.json()) as TestObject

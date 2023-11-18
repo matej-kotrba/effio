@@ -51,6 +51,8 @@
 	let isInputSidebarOpen = false;
 	let windowWidth = browser && window ? window.innerWidth : 1920;
 
+	let inputs: HTMLDivElement[] = [];
+
 	onMount(() => {
 		function onResize() {
 			windowWidth = browser && window ? window.innerWidth : 1920;
@@ -68,6 +70,14 @@
 
 	// THE STORE DOES IT NOW -> Stores the data of questions created, from this then will be created JSON which will be sent to the DB ❗
 	// The questionsDataType can contain questions or blank object so its ready for input
+
+	export function scrollToInput(index: number) {
+		if (!inputs[index]) return;
+		window.scrollTo({
+			top: inputs[index].getBoundingClientRect().top + window.scrollY - 20,
+			behavior: 'smooth'
+		});
+	}
 
 	function addNewQuestion(input: QuestionClient, index: number) {
 		const data = [...$testObject.questions];
@@ -288,7 +298,7 @@
 						<!-- Separator with add new input -->
 						{#each $testObject['questions'] as question, index (question['id'])}
 							<!-- Div which needs to be here for draggeble to be in creator and not in input -->
-							<div animate:flip={{ duration: 300 }}>
+							<div bind:this={inputs[index]} animate:flip={{ duration: 300 }}>
 								<!-- {#if index === 0}
 							<CreatorInputDropdownActivator />
 							{/if} -->

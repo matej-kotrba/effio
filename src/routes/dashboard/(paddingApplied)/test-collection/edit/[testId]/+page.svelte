@@ -16,8 +16,8 @@
 	import { testObject } from '~stores/testObject.js';
 	import {
 		initializeTestToTestStore,
-		isTestValid,
-		isValidInputServer
+		isTestValidAndSetErrorsToTestObject,
+		isValidInputServerAndSetErrorsToTestObject
 	} from '~/lib/helpers/test';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
@@ -46,7 +46,7 @@
 			goto('/dashboard/test-collection');
 			return;
 		}
-		const result = isTestValid({
+		const result = isTestValidAndSetErrorsToTestObject({
 			title: $testObject.title,
 			questions: $testObject.questions,
 			description: $testObject.description,
@@ -55,13 +55,10 @@
 
 		if (result['isError']) {
 			$testObject.errors = result['store']['errors'];
-			if (result['store']['questions']) {
-				$testObject.questions = result['store']['questions'];
-			}
 			return;
 		}
 
-		const serverResult = await isValidInputServer({
+		const serverResult = await isValidInputServerAndSetErrorsToTestObject({
 			title: $testObject.title,
 			description: $testObject.description,
 			questions: $testObject.questions,
@@ -70,9 +67,6 @@
 
 		if (serverResult.success === false) {
 			$testObject.errors = result['store']['errors'];
-			if (result['store']['questions']) {
-				$testObject.questions = result['store']['questions'];
-			}
 			return;
 		}
 

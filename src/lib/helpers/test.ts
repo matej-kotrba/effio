@@ -7,6 +7,8 @@ import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
 import type { Prisma, TestRecord } from "@prisma/client";
 import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte";
+import { browser } from "$app/environment";
+import { get } from "svelte/store";
 
 type QuestionMethods = {
   [Key in keyof QuestionTypeMap]: {
@@ -514,8 +516,22 @@ type IsTestValid = {
   markSystem?: MarkSystemJSON
 }
 
+type IsTestValidResponse = {
+  store: {
+    errors: {
+      title?: string,
+      description?: string;
+      markSystem?: ClientTest["errors"]["markSystem"]
+    };
+    inputsToValidateUpdatedParts: Pick<IsTestValid, "questions">
+  };
+  isError: boolean;
+  message?: string;
+}
+
+// TODO: Return actuall errors from the server and set them to the test object from isTestValidAndSetErrorsToTestObject function
 // Check the validity of the test object on the server
-export async function isValidInputServer(obj: IsTestValid): Promise<{ success: boolean, obj: IsTestValid }> {
+export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValid): Promise<IsTestValidResponse> {
   const res = await enviromentFetch({
     path: "validateTest",
     method: "POST",
@@ -524,40 +540,61 @@ export async function isValidInputServer(obj: IsTestValid): Promise<{ success: b
       "Content-Type": "application/json"
     }
   })
-  // const res = await fetch(`${dev ? "http://localhost:5173/api/validateTest" : "https://effio.vercel.app/api/validateTest"}`, {
-  //   method: 'POST',
-  //   body: JSON.stringify(obj),
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  // });
-  // TODO: PLEASE rewrite this so it makes a little sence
 
-  const data = (await res.json()) as { store: QuestionClient[]; error: boolean };
-  obj.questions = data.store as QuestionClient[];
+  const data = (await res.json()) as ReturnType<typeof isTestValidAndSetErrorsToTestObject>;
+
+  // If the function is called in the browser then set all the errors to the test object
+  if (browser) {
+    const currentTestObject = get(testObject)
+    if (data.store.inputsToValidateUpdatedParts.questions !== undefined) {
+      currentTestObject.questions = data.store.inputsToValidateUpdatedParts.questions
+    }
+    if (data.store.errors.title !== undefined) {
+      currentTestObject.title = data.store.errors.title
+    }
+    if (data.store.errors.description !== undefined) {
+      currentTestObject.description = data.store.errors.description
+    }
+    if (data.store.errors.markSystem !== undefined) {
+      currentTestObject.errors.markSystem = { marks: [] }
+      currentTestObject.errors.markSystem.marks = data.store.errors.markSystem.marks
+      currentTestObject.errors.markSystem.message = data.store.errors.markSystem.message
+    }
+    console.log(currentTestObject)
+    testObject.set(
+      currentTestObject
+    )
+  }
   return {
-    success: !data.error,
-    obj: obj
+    isError: data.isError,
+    store: data.store,
+    message: data.message
   };
 }
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
-// TODO: Rewrite this to use zod
-export function isTestValid(inputsToValidate: IsTestValid) {
+export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestValid): IsTestValidResponse {
 
   const { title, description, questions, markSystem } = inputsToValidate
   let isError = false
   let message = ""
 
+  // TODO: Maybe return whole inputsToValidate because now errors are set here in question specific functions but on server it would not work,
+  // so we could return all data which then got returned in the isValidInputServer function and set it there to testObject
   const result: {
     errors: {
       title?: string,
       description?: string;
       markSystem?: ClientTest["errors"]["markSystem"]
     };
-    questions?: QuestionClient[];
+    inputsToValidateUpdatedParts: Pick<IsTestValid, "questions">
+    // questions_errors: QuestionClient["errors"][];
   } = {
-    errors: {}
+    errors: {},
+    inputsToValidateUpdatedParts: {
+      questions: []
+    }
+    // questions_errors: []
   }
 
   const titleParse = titleSchema.safeParse(title)
@@ -604,17 +641,21 @@ export function isTestValid(inputsToValidate: IsTestValid) {
 
       // Setting errors from the check function to test object
       item.content = returnResult.store
+      // Global error of the specific question
       item.errors.global = returnResult.message
 
       // TODO: The proccess description:
       // We call the checkCreatorCorrectFormat function which returns the object with isError and message but also with a store object
       // which includes all the errors that were found, up here we set them to testObject store via item.content reference
 
+      // @ts-expect-error we know that the function got correct type but we cant prove that to TS
+      result["inputsToValidateUpdatedParts"].questions?.push({
+        ...item,
+        content: returnResult.store
+      })
 
       if (returnResult.isError) {
         isError = true
-        // message = returnResult.message
-        result.questions
       }
     }
   }
@@ -646,6 +687,12 @@ export function isTestValid(inputsToValidate: IsTestValid) {
         result.errors.markSystem.marks[i]["limit"] = parsedLimit.error.errors[0].message
       }
     }
+  }
+
+  // Check if error is true and message is not set, if so we set message to "Some inputs are incorrect", on client then navigate to them
+  // It means that every error which does not have anything to do with inputs should set a message so it makes sense
+  if (isError && message === "") {
+    message = "Some inputs are incorrect."
   }
 
   console.log({

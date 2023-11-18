@@ -26,8 +26,8 @@
 	} from '~schemas/textInput';
 	import {
 		initializeNewTestToTestStore,
-		isTestValid,
-		isValidInputServer
+		isTestValidAndSetErrorsToTestObject,
+		isValidInputServerAndSetErrorsToTestObject
 	} from '~/lib/helpers/test';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
@@ -49,7 +49,7 @@
 		questions: []
 	});
 
-	// TODO: Refactor of this file - isTestValid and isValidInputServer are not returning same object
+	// TODO: Refactor of this file - isTestValidAndSetErrorsToTestObject and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
 		templateDone: true,
@@ -74,7 +74,7 @@
 		if (isSubmitting) return;
 		isSubmitting = true;
 
-		const result = isTestValid({
+		const result = isTestValidAndSetErrorsToTestObject({
 			title: $testObject.title,
 			description: $testObject.description,
 			questions: $testObject.questions,
@@ -83,24 +83,20 @@
 
 		if (result['isError']) {
 			$testObject.errors = result['store']['errors'];
-			if (result['store']['questions']) {
-				$testObject.questions = result['store']['questions'];
-			}
 			return;
 		}
 
-		const serverResponse = await isValidInputServer({
+		const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
 			title: $testObject.title,
 			description: $testObject.description,
 			questions: $testObject.questions,
 			markSystem: $testObject.markSystem
 		});
 
+		// TODO: Make errors from server validation
+
 		if (serverResponse.success === false) {
 			$testObject.errors = result['store']['errors'];
-			if (result['store']['questions']) {
-				$testObject.questions = result['store']['questions'];
-			}
 			return;
 		}
 
@@ -115,7 +111,7 @@
 							marks: $testObject.markSystem.marks.map((item) => {
 								return {
 									name: item.name,
-									// Checked in the isTestValid
+									// Checked in the isTestValidAndSetErrorsToTestObject
 									limit: item.limit as number
 								};
 							})
@@ -123,7 +119,7 @@
 					: undefined,
 				includedInGroups: $testObject.includedInGroups
 			});
-			console.log('RESPONSE', response);
+			// console.log('RESPONSE', response);
 			isSuccess = response.success;
 			isSubmitting = false;
 
@@ -159,21 +155,37 @@
 		}
 	}
 
-	function onNavigationButtonClick() {
+	async function onNavigationButtonClick() {
 		if (canUserContinue() === false) return;
+
 		if (testCreationProgress.templateDone === false) {
 			testCreationProgress.templateDone = true;
 		} else if (testCreationProgress.constructingDone === false) {
-			const result = isTestValid({
+			const result = isTestValidAndSetErrorsToTestObject({
 				questions: $testObject.questions
 			});
-
-			if (result['store']['questions']) {
-				$testObject['questions'] = result['store']['questions'];
-			}
+			// if (result['store']['questions_errors']) {
+			// 	result.store.questions_errors.forEach((item, index) => {
+			// 		$testObject.questions[index].errors = item;
+			// 	});
+			// }
 
 			$testObject = $testObject;
 			if (result['isError']) {
+				// console.log(result.store);
+				// if (result.store?.questions_errors) {
+				// 	const firstErrorIndex = result['store']['questions_errors'].findIndex(
+				// 		(item) => {
+				// 			return (
+				// 				Object.entries(item).reduce((acc, [_, value]) => {
+				// 					if (value) return acc + 1;
+				// 					return acc;
+				// 				}, 0) > 0
+				// 			);
+				// 		}
+				// 	);
+				// 	console.log(firstErrorIndex);
+				// }
 				toast.error(
 					result['message'] ||
 						'Something with validating your test went wrong 😕'
@@ -189,6 +201,9 @@
 		// if (!Number.isInteger(templatesActive)) return false;
 		return true;
 	};
+
+	// Function to scroll on error to specific input
+	let scrollToInput: ((index: number) => void) | undefined = undefined;
 </script>
 
 <!-- <BasicButton
@@ -208,7 +223,7 @@
 						// if (!result['success']) return;
 						// testCreationProgress.constructingDone = true;
 
-						const result = isTestValid({
+						const result = isTestValidAndSetErrorsToTestObject({
 							questions: $testObject.questions
 						});
 
@@ -370,7 +385,7 @@
 				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
 			}}
 		>
-			<Creator inputTemplates={data.questionsTypes} />
+			<Creator inputTemplates={data.questionsTypes} bind:scrollToInput />
 			<Space />
 
 			<!-- {#if $testObject.questions.length > 0}
@@ -382,7 +397,7 @@
 						// if (!result['success']) return;
 						// testCreationProgress.constructingDone = true;
 
-						const result = isTestValid({
+						const result = isTestValidAndSetErrorsToTestObject({
 							questions: $testObject.questions
 						});
 
@@ -467,7 +482,7 @@
 					/>
 					<BasicButton
 						onClick={() => {
-							const result = isTestValid({
+							const result = isTestValidAndSetErrorsToTestObject({
 								title: $testObject.title,
 								description: $testObject.description,
 								questions: $testObject.questions,
@@ -476,9 +491,6 @@
 
 							if (result['isError']) {
 								$testObject.errors = result['store']['errors'];
-								if (result['store']['questions']) {
-									$testObject.questions = result['store']['questions'];
-								}
 								return;
 							}
 							finishModal?.showModal();
