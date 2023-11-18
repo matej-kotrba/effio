@@ -509,21 +509,21 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
   })
 }
 
-type IsTestValid = {
+export type IsTestValidProps = {
   title?: string,
   description?: string,
   questions?: QuestionClient[]
   markSystem?: MarkSystemJSON
 }
 
-type IsTestValidResponse = {
+export type IsTestValidResponse = {
   store: {
     errors: {
       title?: string,
       description?: string;
       markSystem?: ClientTest["errors"]["markSystem"]
     };
-    inputsToValidateUpdatedParts: Pick<IsTestValid, "questions">
+    inputsToValidateUpdatedParts: Pick<IsTestValidProps, "questions">
   };
   isError: boolean;
   message?: string;
@@ -531,7 +531,7 @@ type IsTestValidResponse = {
 
 // TODO: Return actuall errors from the server and set them to the test object from isTestValidAndSetErrorsToTestObject function
 // Check the validity of the test object on the server
-export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValid): Promise<IsTestValidResponse> {
+export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValidProps): Promise<IsTestValidResponse> {
   const res = await enviromentFetch({
     path: "validateTest",
     method: "POST",
@@ -573,7 +573,7 @@ export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestVali
 }
 
 // Validates if the test object is valid - meaning that all the inputs are filled and so on
-export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestValid): IsTestValidResponse {
+export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestValidProps): IsTestValidResponse {
 
   const { title, description, questions, markSystem } = inputsToValidate
   let isError = false
@@ -587,7 +587,7 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
       description?: string;
       markSystem?: ClientTest["errors"]["markSystem"]
     };
-    inputsToValidateUpdatedParts: Pick<IsTestValid, "questions">
+    inputsToValidateUpdatedParts: Pick<IsTestValidProps, "questions">
     // questions_errors: QuestionClient["errors"][];
   } = {
     errors: {},

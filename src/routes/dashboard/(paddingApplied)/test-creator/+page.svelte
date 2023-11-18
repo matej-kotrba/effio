@@ -37,6 +37,7 @@
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
 	import { TRPCClientError } from '@trpc/client';
+	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
 
 	export let data;
 
@@ -74,65 +75,89 @@
 		if (isSubmitting) return;
 		isSubmitting = true;
 
-		const result = isTestValidAndSetErrorsToTestObject({
-			title: $testObject.title,
-			description: $testObject.description,
-			questions: $testObject.questions,
-			markSystem: $testObject.markSystem
-		});
-
-		if (result['isError']) {
-			$testObject.errors = result['store']['errors'];
-			return;
-		}
-
-		const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
-			title: $testObject.title,
-			description: $testObject.description,
-			questions: $testObject.questions,
-			markSystem: $testObject.markSystem
-		});
-
-		// TODO: Make errors from server validation
-
-		if (serverResponse.success === false) {
-			$testObject.errors = result['store']['errors'];
-			return;
-		}
-
-		try {
-			const response = await trpc($page).protected.saveTest.mutate({
+		await validateTestAndRecordIt({
+			type: 'create',
+			data: {
 				title: $testObject.title,
 				description: $testObject.description,
-				questionContent: JSON.stringify($testObject.questions),
-				isPublished: isPublished,
-				markSystem: $testObject.markSystem?.marks
-					? {
-							marks: $testObject.markSystem.marks.map((item) => {
-								return {
-									name: item.name,
-									// Checked in the isTestValidAndSetErrorsToTestObject
-									limit: item.limit as number
-								};
-							})
-					  }
-					: undefined,
-				includedInGroups: $testObject.includedInGroups
-			});
-			// console.log('RESPONSE', response);
-			isSuccess = response.success;
-			isSubmitting = false;
+				questions: $testObject.questions,
+				markSystem: $testObject.markSystem,
+				isPublished: isPublished
+			},
+			callbacks: {
+				onSaveToDB(response) {
+					isSuccess = response.success;
+					isSubmitting = false;
 
-			if (isSuccess) {
-				goto('/dashboard/test-collection');
-			} else {
+					if (isSuccess) {
+						goto('/dashboard/test-collection');
+					}
+				},
+				onErrorSaveToDB(e) {
+					if (e instanceof TRPCClientError) {
+						createTRPCErrorNotification(e);
+					}
+					isSubmitting = false;
+				}
 			}
-		} catch (e) {
-			if (e instanceof TRPCClientError) {
-				createTRPCErrorNotification(e);
-			}
-			isSubmitting = false;
-		}
+		});
+		// const result = isTestValidAndSetErrorsToTestObject({
+		// 	title: $testObject.title,
+		// 	description: $testObject.description,
+		// 	questions: $testObject.questions,
+		// 	markSystem: $testObject.markSystem
+		// });
+
+		// if (result['isError']) {
+		// 	$testObject.errors = result['store']['errors'];
+		// 	return;
+		// }
+
+		// const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
+		// 	title: $testObject.title,
+		// 	description: $testObject.description,
+		// 	questions: $testObject.questions,
+		// 	markSystem: $testObject.markSystem
+		// });
+
+		// if (serverResponse.isError === true) {
+		// 	$testObject.errors = result['store']['errors'];
+		// 	return;
+		// }
+
+		// try {
+		// 	const response = await trpc($page).protected.saveTest.mutate({
+		// 		title: $testObject.title,
+		// 		description: $testObject.description,
+		// 		questionContent: JSON.stringify($testObject.questions),
+		// 		isPublished: isPublished,
+		// 		markSystem: $testObject.markSystem?.marks
+		// 			? {
+		// 					marks: $testObject.markSystem.marks.map((item) => {
+		// 						return {
+		// 							name: item.name,
+		// 							// Checked in the isTestValidAndSetErrorsToTestObject
+		// 							limit: item.limit as number
+		// 						};
+		// 					})
+		// 			  }
+		// 			: undefined,
+		// 		includedInGroups: $testObject.includedInGroups
+		// 	});
+		// 	// console.log('RESPONSE', response);
+		// 	isSuccess = response.success;
+		// 	isSubmitting = false;
+
+		// 	if (isSuccess) {
+		// 		goto('/dashboard/test-collection');
+		// 	} else {
+		// 	}
+		// } catch (e) {
+		// 	if (e instanceof TRPCClientError) {
+		// 		createTRPCErrorNotification(e);
+		// 	}
+		// 	isSubmitting = false;
+		// }
 	}
 
 	function handleParsedData(e: CustomEvent) {

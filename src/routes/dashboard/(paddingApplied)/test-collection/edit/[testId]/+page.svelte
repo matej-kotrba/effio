@@ -30,6 +30,7 @@
 	import { TRPCClientError } from '@trpc/client';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
+	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
 
 	export let data;
 
@@ -41,71 +42,103 @@
 
 	async function postEditedTest() {
 		if (isSubmitting) return;
+
 		if (!$testObject.id || $testObject.published === undefined) {
 			alert('Sorry, but this test is not valid and cannot be edited.');
 			goto('/dashboard/test-collection');
 			return;
 		}
-		const result = isTestValidAndSetErrorsToTestObject({
-			title: $testObject.title,
-			questions: $testObject.questions,
-			description: $testObject.description,
-			markSystem: $testObject.markSystem
-		});
 
-		if (result['isError']) {
-			$testObject.errors = result['store']['errors'];
-			return;
-		}
+		isSubmitting = true;
 
-		const serverResult = await isValidInputServerAndSetErrorsToTestObject({
-			title: $testObject.title,
-			description: $testObject.description,
-			questions: $testObject.questions,
-			markSystem: $testObject.markSystem
-		});
-
-		if (serverResult.success === false) {
-			$testObject.errors = result['store']['errors'];
-			return;
-		}
-
-		let data;
-		try {
-			isSubmitting = true;
-			data = await trpc($page).protected.updateTest.mutate({
-				testGroupId: $testObject.id as string,
+		await validateTestAndRecordIt({
+			type: 'update',
+			data: {
 				title: $testObject.title,
 				description: $testObject.description,
-				isPublished: $testObject.published as boolean,
-				questionContent: JSON.stringify($testObject.questions),
-				markSystem: $testObject.markSystem?.marks
-					? {
-							marks: $testObject.markSystem.marks.map((item) => {
-								return {
-									name: item.name,
-									// Checked in the isTestValid
-									limit: item.limit as number
-								};
-							})
-					  }
-					: undefined,
-				includedInGroups: $testObject.includedInGroups
-			});
-		} catch (e) {
-			if (e instanceof TRPCClientError) {
-				toast['error'](
-					e.message || 'An error occurred while updating the test'
-				);
+				questions: $testObject.questions,
+				markSystem: $testObject.markSystem,
+				isPublished: $testObject.published
+			},
+			callbacks: {
+				onSaveToDB(response) {
+					isSubmitting = false;
+					if (response['success']) {
+						toast['success']('Test updated successfully');
+						goto('/dashboard/test-collection');
+					}
+				},
+				onErrorSaveToDB(e) {
+					if (e instanceof TRPCClientError) {
+						toast['error'](
+							e.message || 'An error occurred while updating the test'
+						);
+					}
+					isSubmitting = false;
+					return;
+				}
 			}
-			return;
-		} finally {
-			isSubmitting = false;
-		}
-		if (data['success']) {
-			toast['success']('Test updated successfully');
-			goto('/dashboard/test-collection');
-		}
+		});
+
+		// const result = isTestValidAndSetErrorsToTestObject({
+		// 	title: $testObject.title,
+		// 	questions: $testObject.questions,
+		// 	description: $testObject.description,
+		// 	markSystem: $testObject.markSystem
+		// });
+
+		// if (result['isError']) {
+		// 	$testObject.errors = result['store']['errors'];
+		// 	return;
+		// }
+
+		// const serverResult = await isValidInputServerAndSetErrorsToTestObject({
+		// 	title: $testObject.title,
+		// 	description: $testObject.description,
+		// 	questions: $testObject.questions,
+		// 	markSystem: $testObject.markSystem
+		// });
+
+		// if (serverResult.isError === true) {
+		// 	$testObject.errors = result['store']['errors'];
+		// 	return;
+		// }
+
+		// let data;
+		// try {
+		// 	data = await trpc($page).protected.updateTest.mutate({
+		// 		testGroupId: $testObject.id as string,
+		// 		title: $testObject.title,
+		// 		description: $testObject.description,
+		// 		isPublished: $testObject.published as boolean,
+		// 		questionContent: JSON.stringify($testObject.questions),
+		// 		markSystem: $testObject.markSystem?.marks
+		// 			? {
+		// 					marks: $testObject.markSystem.marks.map((item) => {
+		// 						return {
+		// 							name: item.name,
+		// 							// Checked in the isTestValid
+		// 							limit: item.limit as number
+		// 						};
+		// 					})
+		// 			  }
+		// 			: undefined,
+		// 		includedInGroups: $testObject.includedInGroups
+		// 	});
+		// } catch (e) {
+		// 	if (e instanceof TRPCClientError) {
+		// 		toast['error'](
+		// 			e.message || 'An error occurred while updating the test'
+		// 		);
+		// 	}
+		// 	return;
+		// } finally {
+		// 	isSubmitting = false;
+		// }
+		// if (data['success']) {
+		// 	toast['success']('Test updated successfully');
+		// 	goto('/dashboard/test-collection');
+		// }
 	}
 </script>
 
