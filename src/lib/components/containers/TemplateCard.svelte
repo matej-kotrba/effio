@@ -7,7 +7,7 @@
 
 <button
 	type="button"
-	class="w-full p-5 rounded-xl shadow-surrounding max-w-xxs aspect-square box duration-300
+	class="w-full h-full p-5 rounded-xl shadow-surrounding max-w-xxs aspect-square box duration-300
 	 {customClasses}"
 	on:click={(event) => onClick(event)}
 >
@@ -17,7 +17,12 @@
 		{title}
 	</h4>
 	<div class="grid place-content-center">
-		<img src={imageSrc} alt="Tempalte" class="object-cover" width="150" />
+		<img
+			src={imageSrc}
+			alt="Tempalte"
+			class="object-cover w-[100px] sm:w-[150px]"
+			width="150"
+		/>
 	</div>
 </button>
 

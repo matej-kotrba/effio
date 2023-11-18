@@ -48,6 +48,14 @@
 	--incorrect: #b00020;
 	--dark_incorrect: #a0001f;
 
+	/* RESPONSIVE VALUES */
+	--XS: 420px;
+	--SM: 640px;
+	--MD: 768px;
+	--LG: 1024px;
+	--XL: 1280px;
+	--_2XL: 1536px;
+
 	color: var(--light-text-black);
 }
 
@@ -56,7 +64,7 @@ html {
 }
 
 body {
-	@apply min-h-screen font-normal font-primary text-body1 text-light_text_black dark:text-dark_text_white bg-light_white dark:bg-dark_black;
+	@apply min-h-screen font-normal font-primary text-body2 sm:text-body1 text-light_text_black dark:text-dark_text_white bg-light_white dark:bg-dark_black;
 	box-sizing: border-box;
 	/* overflow-x: hidden; */
 }

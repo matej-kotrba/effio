@@ -44,7 +44,7 @@
 				src={'/imgs/svgs/import.svg'}
 				alt=""
 				role="presentation"
-				class="object-cover"
+				class="object-cover w-[100px] sm:w-[150px]"
 				width="150"
 			/>
 		</div>

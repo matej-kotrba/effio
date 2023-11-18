@@ -103,5 +103,5 @@
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>
-	<Toaster />
+	<!-- <Toaster /> -->
 </form>

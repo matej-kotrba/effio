@@ -232,5 +232,5 @@
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNewPart} title="Add new part" />
 	</div>
-	<Toaster />
+	<!-- <Toaster /> -->
 </form>

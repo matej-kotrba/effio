@@ -79,7 +79,7 @@
 	<div class="flex items-center justify-between px-1">
 		<label
 			for={titleName}
-			class={`text-xs duration-150  text-body2 ${
+			class={`text-xs duration-150 text-body3 sm:text-body2 ${
 				isFocused
 					? 'text-light_primary dark:text-dark_primary'
 					: 'text-light_text_black dark:text-dark_text_white'
@@ -96,7 +96,7 @@
 	{#if displayOutside === false}
 		<label
 			for={titleName}
-			class="absolute z-10 text-xs duration-150 top-2 left-2 text-light_text_black dark:text-dark_text_white text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
+			class="absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
 			>{title}</label
 		>
 	{/if}

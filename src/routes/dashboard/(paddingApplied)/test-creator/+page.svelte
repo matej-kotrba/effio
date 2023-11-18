@@ -315,7 +315,7 @@
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="p-2 @container">
+<div class="p-1 sm:p-2 @container">
 	{#if testCreationProgress.templateDone === false}
 		<div
 			in:fly={{
@@ -569,6 +569,12 @@
 	@container (max-width: 768px) {
 		.templates-grid {
 			grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+		}
+	}
+
+	@container (max-width: 420px) {
+		.templates-grid {
+			grid-template-columns: repeat(auto-fit, minmax(100px, 150px));
 		}
 	}
 

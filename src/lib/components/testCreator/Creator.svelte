@@ -186,7 +186,7 @@
 				</button>
 			{/if}
 		</div>
-		<div class="px-4">
+		<div class="px-1 sm:px-2 md:px-4">
 			<!-- The dropdown for new input -->
 			<dialog class="modal" bind:this={newInputModal}>
 				<form
@@ -228,7 +228,7 @@
 			</dialog>
 			<div
 				role="group"
-				class="relative flex flex-col gap-2 px-2"
+				class="relative flex flex-col gap-2 px-0 sm:px-2"
 				on:dragleave|self={() => {
 					displayedActivatorId = -1;
 				}}

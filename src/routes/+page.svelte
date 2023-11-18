@@ -13,7 +13,7 @@
 	export let data;
 </script>
 
-<Toaster />
+<!-- <Toaster /> -->
 <header>
 	<section
 		class={`px-2 py-20 xl:px-8 ${
