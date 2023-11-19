@@ -9,9 +9,11 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { applicationStates } from '~stores/applicationStates';
 	import ScrollIndicator from '~components/informatic/ScrollIndicator.svelte';
-	import { draw } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { draw, fly } from 'svelte/transition';
+	import { cubicIn, cubicOut } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
+	import Counter from '~components/informatic/Counter.svelte';
+	import Separator from '~components/separators/Separator.svelte';
 
 	export let data;
 
@@ -24,9 +26,7 @@
 		class="container relative grid h-screen max-h-screen px-2 mx-auto md:px-6 landing-section grid__container"
 	>
 		<div class="w-full h-[var(--nav-height)] bg-blue-500" />
-		<div
-			class="relative grid grid-cols-12 grid-rows-6 gap-x-8 gap-y-4 bg-slate-400"
-		>
+		<div class="relative grid grid-cols-12 grid-rows-6 gap-x-8 gap-y-4">
 			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
 				<img
 					src="/imgs/effio/effio-white-cropped.png"
@@ -58,7 +58,7 @@
 				>
 					{#if displayUnderline}
 						<path
-							transition:draw={{ duration: 600, easing: cubicOut }}
+							transition:draw={{ duration: 1000, easing: cubicIn }}
 							d="M0 12C4.96629 12 218.23 5.33333 324.242 2H680L144.213 22H465.112"
 							stroke="#6433F0"
 							stroke-width="3"
@@ -66,17 +66,78 @@
 					{/if}
 				</svg>
 			</div>
-			<div
-				class="col-span-5 row-span-1 row-start-4 font-medium bg-blue-400 text-h5 2xl:text-h4"
-			>
-				<p>
+			<div class="col-span-5 row-span-1 row-start-4">
+				<p class="font-medium text-h5 2xl:text-h4">
 					Create test, share them, try to take tests of others and learn new
 					stuff in process all in user friendly environement
 				</p>
 			</div>
 			<div
-				class="relative grid w-full h-full col-span-7 row-span-6 overflow-hidden place-items-center"
+				class="flex flex-col justify-end col-span-5 row-span-2 row-start-5 gap-1 p-2 pb-8"
 			>
+				<p>All you need is a Google or Github account</p>
+				<div class="relative grid grid-cols-2 gap-4">
+					<a
+						href={data.session?.user ? '/dashboard' : '/login'}
+						class="px-8 py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+					>
+						{data.session?.user ? 'Go to Dashboard' : 'Start now'}
+					</a>
+					<a
+						href={data.session?.user ? '/dashboard' : '/login'}
+						class="px-8 py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_secondary dark:hover:bg-dark_primary hover:brightness-125"
+					>
+						Learn More
+					</a>
+				</div>
+			</div>
+			<div
+				class="relative grid w-full h-full col-span-7 row-span-6 place-items-center"
+			>
+				<img
+					src="/imgs/svgs/homepage/mobile.png"
+					role="presentation"
+					alt=""
+					class="absolute w-3/5 -bottom-[10%] z-[2]"
+				/>
+				<div class="absolute bottom-0 p-6 grid w-full grid-cols-2 gap-6 z-[3]">
+					<div
+						class="p-2 2xl:p-4 aspect-video rounded-xl animat"
+						style="background-color: #6433f050; backdrop-filter: blur(14px);"
+					>
+						<div class="flex flex-col gap-1">
+							<div class="flex items-center justify-center gap-1">
+								<span class="text-light_whiter text-body2 2xl:text-body1"
+									>Types of inputs available:</span
+								>
+								<Counter
+									count={6}
+									class="bg-transparent shadow-none"
+									numberClasses="text-h1"
+									color="white"
+								/>
+							</div>
+							<Separator
+								color="var(--dark-text-white-40)"
+								w={'80%'}
+								h={'2px'}
+							/>
+							<div class="flex justify-center text-white w-fit">
+								<p class="w-fit">
+									Available features: <b>Test Creator</b>,
+									<b>Marking</b> <b>Groups</b>,
+									<b>Community place</b>, <b>Test History</b>,
+									<b>Test Editing</b>
+									and more
+								</p>
+							</div>
+						</div>
+					</div>
+					<div
+						class="p-2 aspect-video rounded-xl"
+						style="background-color: #6433f050; backdrop-filter: blur(14px);"
+					/>
+				</div>
 				<img
 					src="/imgs/svgs/rounded-container.png"
 					role="presentation"
