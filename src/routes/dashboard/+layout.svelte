@@ -240,9 +240,9 @@
 		{/if}
 	</div>
 
-	<div class="nav__flex__container">
+	<div class="nav__flex__container max-w-[100vw]">
 		<nav
-			class="flex items-center gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
+			class="flex items-center max-w-[100vw] gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
 		>
 			{#if isSidebarCollapsible}
 				<button
@@ -359,7 +359,7 @@
 			{/if}
 		</nav>
 		<!-- px-4 pt-6 md:px-8 xl:px-16 -->
-		<div class="relative flex-1 content">
+		<div class="relative flex-1 px-2 md:px-0">
 			<slot />
 		</div>
 	</div>

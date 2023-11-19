@@ -368,7 +368,7 @@
 			}}
 			class=""
 		>
-			<div class="templates-grid">
+			<div class="items-center justify-center xs:justify-start templates-grid">
 				{#each templates as template, index}
 					<TemplateCard
 						title={template.title}

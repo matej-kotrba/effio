@@ -36,7 +36,7 @@
 				/>
 			</div>
 			<div
-				class="col-span-5 row-span-1 row-start-3 mx-auto bg-green-300 w-fit"
+				class="col-span-5 row-span-1 row-start-3 mx-auto w-fit"
 				use:intersect
 				on:intersect={() => {
 					displayUnderline = true;
@@ -45,7 +45,7 @@
 					displayUnderline = false;
 				}}
 			>
-				<h1 class="font-semibold text-center text-h1">
+				<h1 class="font-semibold text-center text-h2 2xl:text-h1">
 					Online test creation tool
 				</h1>
 				<svg
@@ -58,13 +58,21 @@
 				>
 					{#if displayUnderline}
 						<path
-							transition:draw={{ duration: 1000, easing: cubicOut }}
+							transition:draw={{ duration: 600, easing: cubicOut }}
 							d="M0 12C4.96629 12 218.23 5.33333 324.242 2H680L144.213 22H465.112"
 							stroke="#6433F0"
 							stroke-width="3"
 						/>
 					{/if}
 				</svg>
+			</div>
+			<div
+				class="col-span-5 row-span-1 row-start-4 font-medium bg-blue-400 text-h5 2xl:text-h4"
+			>
+				<p>
+					Create test, share them, try to take tests of others and learn new
+					stuff in process all in user friendly environement
+				</p>
 			</div>
 			<div
 				class="relative grid w-full h-full col-span-7 row-span-6 overflow-hidden place-items-center"
