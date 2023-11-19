@@ -36,7 +36,9 @@
 	let svgPositions: {
 		[key: string]: SvgPositions;
 	} = Object.fromEntries(
-		content['answers'].map((_, index) => {
+		($testObject.questions[questionIndex]['content'] as ConnectQuestion)[
+			'answers'
+		].map((_, index) => {
 			return [
 				index,
 				{

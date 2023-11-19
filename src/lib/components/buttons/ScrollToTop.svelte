@@ -37,7 +37,12 @@
 	>
 		<iconify-icon
 			icon="solar:map-arrow-up-bold"
-			class="text-3xl duration-100 group-hover:-translate-y-1"
+			class="text-3xl duration-200"
 		/>
 	</button>
 {/if}
+
+<style>
+	button:hover > * {
+	}
+</style>

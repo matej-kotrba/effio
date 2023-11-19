@@ -11,7 +11,7 @@
 	} `}
 >
 	<div class="container flex justify-between h-full px-5 mx-auto">
-		<div class="flex items-center h-full">
+		<div class="flex items-center h-full logo">
 			<a href="/">
 				<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 			</a>
@@ -76,3 +76,18 @@
 		</ul>
 	</div>
 </nav>
+
+<style>
+	.logo:hover {
+		animation: rotate 0.4s ease forwards;
+	}
+
+	@keyframes rotate {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
+</style>
