@@ -9,13 +9,76 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { applicationStates } from '~stores/applicationStates';
 	import ScrollIndicator from '~components/informatic/ScrollIndicator.svelte';
+	import { draw } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { intersect } from '~use/intersectionObserver';
 
 	export let data;
+
+	let displayUnderline = false;
 </script>
 
 <!-- <Toaster /> -->
 <header>
 	<section
+		class="container relative grid h-screen max-h-screen px-2 mx-auto md:px-6 landing-section grid__container"
+	>
+		<div class="w-full h-[var(--nav-height)] bg-blue-500" />
+		<div
+			class="relative grid grid-cols-12 grid-rows-6 gap-x-8 gap-y-4 bg-slate-400"
+		>
+			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
+				<img
+					src="/imgs/effio/effio-white-cropped.png"
+					role="presentation"
+					alt=""
+					class="object-contain w-full h-full"
+				/>
+			</div>
+			<div
+				class="col-span-5 row-span-1 row-start-3 mx-auto bg-green-300 w-fit"
+				use:intersect
+				on:intersect={() => {
+					displayUnderline = true;
+				}}
+				on:unintersect={() => {
+					displayUnderline = false;
+				}}
+			>
+				<h1 class="font-semibold text-center text-h1">
+					Online test creation tool
+				</h1>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="681"
+					height="24"
+					viewBox="0 0 681 24"
+					fill="none"
+					class="w-full px-2"
+				>
+					{#if displayUnderline}
+						<path
+							transition:draw={{ duration: 1000, easing: cubicOut }}
+							d="M0 12C4.96629 12 218.23 5.33333 324.242 2H680L144.213 22H465.112"
+							stroke="#6433F0"
+							stroke-width="3"
+						/>
+					{/if}
+				</svg>
+			</div>
+			<div
+				class="relative grid w-full h-full col-span-7 row-span-6 overflow-hidden place-items-center"
+			>
+				<img
+					src="/imgs/svgs/rounded-container.png"
+					role="presentation"
+					alt=""
+					class="w-full h-full"
+				/>
+			</div>
+		</div>
+	</section>
+	<!-- <section
 		class={`px-2 py-20 xl:px-8 ${
 			$applicationStates.darkMode.isDarkMode
 				? 'hero__section_dark'
@@ -94,7 +157,7 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 </header>
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<img
@@ -233,6 +296,25 @@
 </main>
 
 <style>
+	.landing-section {
+		--y-padding: 4rem;
+		--nav-height: 50px;
+		padding-block: var(--y-padding);
+	}
+
+	.gradient-bg {
+		background-image: url('/imgs/gradient-bg.png');
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+	}
+
+	.grid__container {
+		grid-template-rows: auto calc(
+				100vh - var(--y-padding) * 2 - var(--nav-height)
+			);
+	}
+
 	.hero__section {
 		background: linear-gradient(
 			103.97deg,

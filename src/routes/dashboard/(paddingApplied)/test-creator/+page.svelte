@@ -53,7 +53,7 @@
 	// TODO: Refactor of this file - isTestValidAndSetErrorsToTestObject and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: true,
+		templateDone: false,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -222,8 +222,7 @@
 	}
 
 	$: canUserContinue = () => {
-		//TODO: Uncomment
-		// if (!Number.isInteger(templatesActive)) return false;
+		if (!Number.isInteger(templatesActive)) return false;
 		return true;
 	};
 

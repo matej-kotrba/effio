@@ -49,7 +49,7 @@ export default {
 				dark_incorrect: '#a0001f'
 			},
 			fontSize: {
-				h1: '65px',
+				h1: '45px',
 				h2: '36px',
 				h3: '33px',
 				h4: '28px',

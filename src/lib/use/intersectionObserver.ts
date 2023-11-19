@@ -1,4 +1,4 @@
-import type { Action } from "svelte/types/runtime/action/index"
+import type { Action } from "svelte/action"
 import { browser } from "$app/environment"
 
 let observer: IntersectionObserver | null = null
@@ -58,6 +58,31 @@ export function onUnintersect(event: CustomEvent<IntersectionObserverEntry>, cla
   if (event.target) {
     for (const item of classesToApply) {
       (event.target as HTMLElement).classList.remove(item)
+    }
+  }
+}
+
+// V2 of intersection observer
+
+export const intersect = (node: Element, options: (IntersectionObserverInit & { once?: boolean }) = {}) => {
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.dispatchEvent(new CustomEvent('intersect'))
+        if (options?.once) intersectionObserver.unobserve(entry.target)
+      }
+      else {
+        entry.target.dispatchEvent(new CustomEvent('unintersect'))
+      }
+    })
+  }, options)
+
+  intersectionObserver.observe(node)
+
+  return {
+    destroy() {
+      intersectionObserver.unobserve(node)
+      intersectionObserver.disconnect()
     }
   }
 }
