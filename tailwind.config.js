@@ -92,6 +92,32 @@ export default {
 			},
 			screens: {
 				xs: '420px'
+			},
+			keyframes: {
+				fly_x: {
+					'0%': {
+						transform: 'translateX(-200%)',
+						opacity: 0
+					},
+					'100%': {
+						transform: 'translateX(0)',
+						opacity: 1
+					}
+				},
+				fly_x_reversed: {
+					'0%': {
+						transform: 'translateX(200%)',
+						opacity: 0
+					},
+					'100%': {
+						transform: 'translateX(0)',
+						opacity: 1
+					}
+				}
+			},
+			animation: {
+				fly_x: 'fly_x 0.8s ease-out',
+				fly_x_reversed: 'fly_x_reversed 0.8s ease-out'
 			}
 		}
 	},
@@ -103,21 +129,13 @@ export default {
 			{
 				effio: {
 					primary: '#6433f0',
-
 					secondary: '#d926a9',
-
 					accent: '#0092ca',
-
 					neutral: '#2a323c',
-
 					'base-100': '#f5f5f5',
-
 					info: '#3abff8',
-
 					success: '#36d399',
-
 					warning: '#fbbd23',
-
 					error: '#B00020'
 				}
 			}

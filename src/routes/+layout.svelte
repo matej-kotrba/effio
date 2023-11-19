@@ -4,6 +4,7 @@
 	import { setContext } from 'svelte';
 	import { browser } from '$app/environment';
 	import { applicationStates } from '~stores/applicationStates';
+	// import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 
 	export let data;
 
@@ -45,6 +46,7 @@
 </script>
 
 <div>
-	<Toaster containerStyle={'z-index: 100; text-align: center;'} />
+	<!-- <ScrollToTop /> -->
+	<Toaster containerStyle={'z-index: 1000; text-align: center;'} />
 	<slot />
 </div>

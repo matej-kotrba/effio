@@ -2,9 +2,14 @@
 	import { signOut } from '@auth/sveltekit/client';
 
 	export let user: UpdatedSession | undefined;
+	export let includeSeparator = true;
 </script>
 
-<nav class="bg-transparent h-[70px] border-b-2 border-light_text_black_20">
+<nav
+	class={`bg-transparent h-[70px] z-[105] backdrop-blur-xl ${
+		includeSeparator ? 'border-b-2 border-light_text_black_20' : ''
+	} `}
+>
 	<div class="container flex justify-between h-full px-5 mx-auto">
 		<div class="flex items-center h-full">
 			<a href="/">

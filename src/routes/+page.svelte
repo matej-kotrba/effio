@@ -14,6 +14,8 @@
 	import { intersect } from '~use/intersectionObserver';
 	import Counter from '~components/informatic/Counter.svelte';
 	import Separator from '~components/separators/Separator.svelte';
+	import Navbar from '~components/page-parts/Navbar.svelte';
+	import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 
 	export let data;
 
@@ -21,11 +23,13 @@
 </script>
 
 <!-- <Toaster /> -->
+<ScrollToTop />
 <header>
 	<section
 		class="container relative grid h-screen max-h-screen px-2 mx-auto md:px-6 landing-section grid__container"
 	>
-		<div class="w-full h-[var(--nav-height)] bg-blue-500" />
+		<!-- <div class="w-full h-[var(--nav-height)] bg-light_quaternary rounded-4xl" /> -->
+		<Navbar includeSeparator={false} user={data.session} />
 		<div class="relative grid grid-cols-12 grid-rows-6 gap-x-8 gap-y-4">
 			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
 				<img
@@ -68,8 +72,8 @@
 			</div>
 			<div class="col-span-5 row-span-1 row-start-4">
 				<p class="font-medium text-h5 2xl:text-h4">
-					Create test, share them, try to take tests of others and learn new
-					stuff in process all in user friendly environement
+					Create a test, share them, try to take tests of others and learn new
+					stuff in process all in user friendly environment
 				</p>
 			</div>
 			<div
@@ -100,9 +104,11 @@
 					alt=""
 					class="absolute w-3/5 -bottom-[10%] z-[2]"
 				/>
-				<div class="absolute bottom-0 p-6 grid w-full grid-cols-2 gap-6 z-[3]">
+				<div
+					class="absolute overflow-hidden bottom-0 p-6 grid w-full grid-cols-2 gap-6 z-[3]"
+				>
 					<div
-						class="p-2 2xl:p-4 aspect-video rounded-xl animat"
+						class="p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x"
 						style="background-color: #6433f050; backdrop-filter: blur(14px);"
 					>
 						<div class="flex flex-col gap-1">
@@ -134,9 +140,28 @@
 						</div>
 					</div>
 					<div
-						class="p-2 aspect-video rounded-xl"
+						class="w-full h-full p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x_reversed"
 						style="background-color: #6433f050; backdrop-filter: blur(14px);"
-					/>
+					>
+						<div class="flex flex-col justify-between h-full gap-1">
+							<div>
+								<h5 class="font-semibold text-white text-body1">
+									Explore what the communnity has created!
+								</h5>
+							</div>
+							<!-- <Separator
+								color="var(--dark-text-white-40)"
+								w={'80%'}
+								h={'2px'}
+							/> -->
+							<a
+								href={data.session?.user ? '/dashboard' : '/login'}
+								class="px-8 py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+							>
+								Visit community place
+							</a>
+						</div>
+					</div>
 				</div>
 				<img
 					src="/imgs/svgs/rounded-container.png"
@@ -366,8 +391,9 @@
 
 <style>
 	.landing-section {
+		--gap: 1rem;
 		--y-padding: 4rem;
-		--nav-height: 50px;
+		--nav-height: 70px;
 		padding-block: var(--y-padding);
 	}
 
@@ -379,8 +405,9 @@
 	}
 
 	.grid__container {
+		gap: var(--gap);
 		grid-template-rows: auto calc(
-				100vh - var(--y-padding) * 2 - var(--nav-height)
+				100vh - var(--y-padding) * 2 - var(--nav-height) - var(--gap)
 			);
 	}
 
