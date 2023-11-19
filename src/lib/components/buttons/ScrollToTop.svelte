@@ -10,6 +10,10 @@
 
 	let isShown = false;
 
+	function onClick() {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
 	function setVisibility() {
 		isShown = shouldAppear();
 	}
@@ -29,6 +33,7 @@
 {#if isShown}
 	<button
 		transition:fly={{ y: 100, duration: 150 }}
+		on:click={onClick}
 		type="button"
 		class={twMerge(
 			'group fixed bottom-4 right-4 hover:bg-light_grey duration-150 bg-light_whiter p-4 rounded-md shadow-md grid place-content-center',
@@ -44,5 +49,7 @@
 
 <style>
 	button:hover > * {
+		transform: translateY(-5px);
+		transition: transform 0.2s ease;
 	}
 </style>
