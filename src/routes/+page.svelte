@@ -26,17 +26,17 @@
 <ScrollToTop />
 <header>
 	<section
-		class="container relative grid h-screen max-h-screen px-2 mx-auto md:px-6 landing-section grid__container"
+		class="container relative px-2 mx-auto xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
 	>
 		<!-- <div class="w-full h-[var(--nav-height)] bg-light_quaternary rounded-4xl" /> -->
 		<Navbar includeSeparator={false} user={data.session} />
-		<div class="relative grid grid-cols-12 grid-rows-6 gap-x-8 gap-y-4">
+		<div class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4">
 			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
 				<img
 					src="/imgs/effio/effio-white-cropped.png"
 					role="presentation"
 					alt=""
-					class="object-contain w-full h-full"
+					class="object-contain w-full h-full max-w-[500px]"
 				/>
 			</div>
 			<div
@@ -49,7 +49,7 @@
 					displayUnderline = false;
 				}}
 			>
-				<h1 class="font-semibold text-center text-h2 2xl:text-h1">
+				<h1 class="font-semibold text-center text-h4 sm:text-h2 2xl:text-h1">
 					Online test creation tool
 				</h1>
 				<svg
@@ -71,7 +71,7 @@
 				</svg>
 			</div>
 			<div class="col-span-5 row-span-1 row-start-4">
-				<p class="font-medium text-h5 2xl:text-h4">
+				<p class="font-medium text-h6 sm:text-h5 2xl:text-h4">
 					Create a test, share them, try to take tests of others and learn new
 					stuff in process all in user friendly environment
 				</p>
@@ -80,16 +80,16 @@
 				class="flex flex-col justify-end col-span-5 row-span-2 row-start-5 gap-1 p-2 pb-8"
 			>
 				<p>All you need is a Google or Github account</p>
-				<div class="relative grid grid-cols-2 gap-4">
+				<div class="relative grid gap-4 sm:grid-cols-2">
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="px-8 py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+						class="py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
 					>
 						{data.session?.user ? 'Go to Dashboard' : 'Start now'}
 					</a>
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="px-8 py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_secondary dark:hover:bg-dark_primary hover:brightness-125"
+						class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_secondary dark:hover:bg-dark_primary hover:brightness-125"
 					>
 						Learn More
 					</a>
@@ -102,10 +102,16 @@
 					src="/imgs/svgs/homepage/mobile.png"
 					role="presentation"
 					alt=""
-					class="absolute w-3/5 -bottom-[10%] z-[2]"
+					class="absolute w-3/5 top-[5%] sm:top-auto sm:-bottom-[10%] z-[2]"
+				/>
+				<img
+					src="/imgs/svgs/rounded-container.png"
+					role="presentation"
+					alt=""
+					class="w-full h-full max-h-[800px]"
 				/>
 				<div
-					class="absolute overflow-hidden bottom-0 p-6 grid w-full grid-cols-2 gap-6 z-[3]"
+					class="sm:absolute overflow-hidden bottom-0 p-2 sm:p-6 grid w-full sm:grid-cols-2 gap-6 z-[3]"
 				>
 					<div
 						class="p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x"
@@ -156,19 +162,13 @@
 							/> -->
 							<a
 								href={data.session?.user ? '/dashboard' : '/login'}
-								class="px-8 py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+								class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
 							>
 								Visit community place
 							</a>
 						</div>
 					</div>
 				</div>
-				<img
-					src="/imgs/svgs/rounded-container.png"
-					role="presentation"
-					alt=""
-					class="w-full h-full"
-				/>
 			</div>
 		</div>
 	</section>
