@@ -1,4 +1,4 @@
-import type { Action } from "svelte/types/runtime/action/index"
+import type { Action } from "svelte/action"
 
 export const dropdown: Action<HTMLElement> = (node, text) => {
   let lastAnim: Animation

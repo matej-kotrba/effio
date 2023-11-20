@@ -55,6 +55,7 @@
 		"gift-pegjs": "^0.2.1",
 		"leaflet": "^1.9.4",
 		"superjson": "^1.13.1",
+		"svelte-cloudinary": "^1.1.1",
 		"svelte-french-toast": "1.2.0",
 		"sveltekit-superforms": "^1.0.0",
 		"tailwind-merge": "^1.13.1",

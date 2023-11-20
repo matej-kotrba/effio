@@ -72,8 +72,8 @@
 			</div>
 			<div class="col-span-5 row-span-1 row-start-4">
 				<p class="font-medium text-h6 sm:text-h5 2xl:text-h4">
-					Create a test, share them, try to take tests of others and learn new
-					stuff in process all in user friendly environment
+					Create a test, share it, try to take tests of others and learn new
+					stuff in process and all of it in user friendly environment
 				</p>
 			</div>
 			<div
