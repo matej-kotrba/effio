@@ -1,0 +1,1 @@
+export const IMAGE_IMPORT_SIZE_IN_MB = 2
