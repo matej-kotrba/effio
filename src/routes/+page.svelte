@@ -83,13 +83,13 @@
 				<div class="relative grid gap-4 sm:grid-cols-2">
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+						class="py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white hover:bg-light_primary hover:brightness-125"
 					>
 						{data.session?.user ? 'Go to Dashboard' : 'Start now'}
 					</a>
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_secondary dark:hover:bg-dark_primary hover:brightness-125"
+						class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary text-light_white hover:bg-light_secondary hover:brightness-125"
 					>
 						Learn More
 					</a>
@@ -162,7 +162,7 @@
 							/> -->
 							<a
 								href={data.session?.user ? '/dashboard' : '/login'}
-								class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
+								class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
 							>
 								Visit community place
 							</a>
@@ -253,13 +253,20 @@
 		</div>
 	</section> -->
 </header>
+<img
+	src={$applicationStates.darkMode.isDarkMode
+		? '/imgs/layer_dark4.svg'
+		: '/imgs/layer3.svg'}
+	alt="Layer"
+	class="w-full min-h-[120px] object-cover sm:object-contain"
+/>
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<img
 		src={$applicationStates.darkMode.isDarkMode
 			? '/imgs/layer_dark3.svg'
 			: '/imgs/layer2.svg'}
 		alt="Layer"
-		class="w-full min-h-[120px] object-cover sm:object-contain"
+		class="w-full min-h-[120px] object-cover sm:object-contain -translate-y-[1px]"
 	/>
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<LineConnectorWithTitle title="Community place">

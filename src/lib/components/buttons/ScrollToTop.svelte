@@ -36,7 +36,7 @@
 		on:click={onClick}
 		type="button"
 		class={twMerge(
-			'group fixed bottom-4 right-4 hover:bg-light_grey duration-150 bg-light_whiter p-4 rounded-md shadow-md grid place-content-center',
+			'group fixed z-[1000] bottom-4 right-4 hover:bg-light_grey duration-150 bg-light_whiter dark:bg-dark_grey p-4 rounded-md shadow-md grid place-content-center',
 			classes
 		)}
 	>

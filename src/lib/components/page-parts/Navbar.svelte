@@ -10,7 +10,7 @@
 <div
 	class={`fixed ${
 		isShown ? 'top-0' : '-top-full'
-	} left-0 w-full h-screen z-[106] bg-light_white md:hidden duration-200 flex flex-col justify-around`}
+	} left-0 w-full h-screen z-[106] bg-light_white dark:bg-dark_black md:hidden duration-200 flex flex-col justify-around`}
 >
 	<ul
 		class="flex flex-col items-center justify-center gap-2 text-sm uppercase text-light_text_black dark:text-dark_text_white"
