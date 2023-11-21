@@ -194,7 +194,7 @@
 					? 'bg-white dark:bg-dark_light_grey'
 					: ''} {!resultFormat && 'hover:bg-slate-50 active:bg-slate-100'}"
 				style="background-color: {resultFormat &&
-					resultFormat.isCorrect === false &&
+					resultFormat.isCorrect !== true &&
 					wrongAnswerHiglightColors[index]};"
 			>
 				<span>{answer}</span>
@@ -255,7 +255,7 @@
 					: ''}
 			"
 				style="background-color: {resultFormat &&
-					resultFormat.isCorrect === false &&
+					resultFormat.isCorrect !== true &&
 					wrongAnswerHiglightColors[
 						resultFormat['correctAnswer']['answers'].findIndex(
 							(item) =>

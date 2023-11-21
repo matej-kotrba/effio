@@ -31,9 +31,9 @@
 
 {#if result}
 	<div class="mb-2">
-		{#if maxPoints !== null && userPoints !== null && mark !== null}
+		{#if maxPoints !== null && userPoints !== null}
 			<h3 class="text-h4">
-				Your result is: <span class="font-semibold">{mark}</span>, {userPoints}/{maxPoints}
+				Your result is: <span class="font-semibold">{mark || ''}</span>, {userPoints}/{maxPoints}
 				- {(userPoints / maxPoints || 0) * 100}%
 			</h3>
 		{:else}
@@ -49,10 +49,15 @@
 					data-tip="Go to {$testObject.questions[index].title}"
 				>
 					<div class="absolute top-0 right-0 text-xl">
-						{#if question.isCorrect}
+						{#if question.isCorrect === true}
 							<iconify-icon
 								icon="ic:round-check"
 								class="text-xl text-green-500"
+							/>
+						{:else if question.isCorrect === 'partial'}
+							<iconify-icon
+								icon="material-symbols:stroke-partial"
+								class="text-xl text-warning"
 							/>
 						{:else}
 							<iconify-icon

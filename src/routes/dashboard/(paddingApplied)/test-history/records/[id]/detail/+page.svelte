@@ -36,6 +36,7 @@
 			updatedAt: data.record.updatedAt,
 			ownerId: data.record.userId,
 			published: data.record.test.testGroup.published,
+			isPublic: data.record.test.testGroup.isPublic,
 			testVersions: [
 				{
 					...data.record.test,

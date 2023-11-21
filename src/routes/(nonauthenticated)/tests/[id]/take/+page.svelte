@@ -29,6 +29,8 @@
 				}>)
 		| undefined = undefined;
 
+	$: console.log(result);
+
 	let openDialog: () => void;
 
 	initializeTestToTestStore(data.testContent);
@@ -129,7 +131,7 @@
 							: 'border-transparent'
 					}`}
 					resultFormat={result === null ? null : result[index]}
-					points={returnedTestRecord && markSystem
+					points={returnedTestRecord
 						? {
 								got: returnedTestRecord?.questionRecords[index].userPoints,
 								max: data.testContent.testVersions[0].questions[index].points
@@ -164,6 +166,11 @@
 				/>
 			{/if}
 		</div>
+	</div>
+{:else}
+	<div class="grid place-content-center">
+		<p>Oops, something with this test is not correct</p>
+		<a class="btn btn-outline" href="/community">Back to community place</a>
 	</div>
 {/if}
 <!-- <div class="h-[1200px]" /> -->

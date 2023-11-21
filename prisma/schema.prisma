@@ -168,7 +168,7 @@ model TestRecord {
   subcategory             GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
   subacategoryId          String?
   shouldCountToStatistics Boolean           @default(true)
-  userPoints              Int               @default(0)
+  userPoints              Float             @default(0)
 
   @@index([testId])
   @@index([userId])
@@ -182,7 +182,7 @@ model QuestionRecord {
   question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId   String
   content      Json
-  userPoints   Int        @default(0)
+  userPoints   Float      @default(0)
 
   @@index([testRecordId])
   @@index([questionId])
