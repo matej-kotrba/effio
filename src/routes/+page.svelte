@@ -30,7 +30,9 @@
 	>
 		<!-- <div class="w-full h-[var(--nav-height)] bg-light_quaternary rounded-4xl" /> -->
 		<Navbar includeSeparator={false} user={data.session} />
-		<div class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4">
+		<div
+			class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4 xl:max-h-[800px]"
+		>
 			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
 				<img
 					src="/imgs/effio/effio-white-cropped.png"

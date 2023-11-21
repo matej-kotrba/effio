@@ -89,6 +89,7 @@ model Test {
   testVersions            TestVersion[]
   title                   String
   description             String
+  imageUrl                String                    @default("")
   published               Boolean                   @default(false)
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
@@ -237,6 +238,7 @@ model Group {
   id                  String             @id @default(uuid())
   name                String
   description         String             @default("")
+  imageUrl            String             @default("")
   slug                String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt

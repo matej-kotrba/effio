@@ -18,6 +18,7 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import { createGroupSchema, joinGroupSchema } from './schemas';
 	import toast from 'svelte-french-toast';
+	import { IMAGE_IMPORT_SIZE_IN_MB } from '~/lib/helpers/constants';
 
 	export let data;
 
@@ -47,6 +48,14 @@
 		const file = e.currentTarget.files[0];
 		if (!file) return;
 
+		if (file.size > IMAGE_IMPORT_SIZE_IN_MB * 1024 * 1024) {
+			toast.error(`Image is too big! Max size is ${IMAGE_IMPORT_SIZE_IN_MB}MB`);
+			e.currentTarget.value = '';
+			imageRef.src = '';
+
+			return;
+		}
+
 		const reader = new FileReader();
 		reader.readAsDataURL(file);
 
@@ -74,6 +83,7 @@
 		<form
 			slot="create"
 			method="POST"
+			enctype="multipart/form-data"
 			use:enhance={{
 				onResult: ({ result }) => {
 					if (result['status'] === 200) {
@@ -111,6 +121,7 @@
 					>
 						<input
 							type="file"
+							name="image"
 							on:change={onImageUpload}
 							accept="image/jpeg, image/png, image/jpg, image/webp, image/avif"
 							class="absolute w-full h-full opacity-0 cursor-pointer"

@@ -4,7 +4,8 @@ import { joinCodeSchema } from "~schemas/inviteCode";
 
 export const createGroupSchema = z.object({
   name: groupNameSchema,
-  description: groupDescriptionSchema
+  description: groupDescriptionSchema,
+  image: z.string().optional()
 })
 
 export const joinGroupSchema = z.object({

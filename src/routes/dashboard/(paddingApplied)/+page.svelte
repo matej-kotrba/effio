@@ -7,8 +7,6 @@
 	import type { ChartData, ChartConfiguration } from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
 	import OverviewLinks from '~components/page-parts/OverviewLinks.svelte';
-	import { IMAGE_IMPORT_SIZE_IN_MB } from '~helpers/constants.js';
-	import toast from 'svelte-french-toast';
 
 	export let data;
 
@@ -21,34 +19,6 @@
 		templates = (await trpc(
 			$page
 		).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
-	}
-
-	let imageRef: HTMLImageElement | null = null;
-	function onImageUpload(
-		e: Event & {
-			currentTarget: EventTarget & HTMLInputElement;
-		}
-	) {
-		if (imageRef === null || !e.currentTarget.files) return;
-		const file = e.currentTarget.files[0];
-
-		if (!file) return;
-
-		if (file.size > IMAGE_IMPORT_SIZE_IN_MB * 1024 * 1024) {
-			toast.error(
-				'Sorry, your image is too large, maximum is ' +
-					IMAGE_IMPORT_SIZE_IN_MB +
-					'MB'
-			);
-			return;
-		}
-
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-
-		reader.onload = (e) => {
-			imageRef!.src = reader.result as string;
-		};
 	}
 
 	onMount(async () => {
@@ -212,29 +182,4 @@
 	<div class="w-full">
 		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
 	</div>
-</div>
-
-<div
-	class="relative grid duration-100 border-2 border-dashed rounded-md group w-28 border-light_text_black_80 dark:border-dark_text_white_80 aspect-square place-content-center hover:bg-light_white dark:hover:bg-dark_quaternary"
->
-	<input
-		type="file"
-		on:change={onImageUpload}
-		accept="image/jpeg, image/png, image/jpg, image/webp, image/avif"
-		class="absolute w-full h-full opacity-0 cursor-pointer"
-	/>
-	<div
-		class="absolute w-full overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-md pointer-events-none aspect-square left-1/2 top-1/2"
-	>
-		<img
-			bind:this={imageRef}
-			src=""
-			alt="Group icon"
-			class="object-cover w-full h-full text-transparent"
-		/>
-	</div>
-	<iconify-icon
-		icon="uil:plus"
-		class="text-5xl pointer-events-none group-hover:z-10 drop-shadow-md"
-	/>
 </div>

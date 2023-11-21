@@ -35,6 +35,9 @@ dependencies:
   chart.js:
     specifier: ^4.3.3
     version: 4.3.3
+  cloudinary:
+    specifier: ^1.41.0
+    version: 1.41.0
   gift-format-generator:
     specifier: ^0.2.8
     version: 0.2.8
