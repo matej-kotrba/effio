@@ -108,7 +108,7 @@
 			<div>
 				{#if data.tags}
 					<div
-						class="flex flex-wrap justify-center gap-1 p-1 overflow-x-scroll max-h-10 scroll-snap"
+						class="flex flex-wrap justify-center gap-1 p-1 overflow-x-auto max-h-10 scroll-snap"
 					>
 						{#each data.tags as tag}
 							<span

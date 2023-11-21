@@ -13,7 +13,9 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers.js';
-	import Carousel from '~components/containers/Carousel.svelte';
+	import Carousel, {
+		type IdCardAlternativeProps
+	} from '~components/containers/Carousel.svelte';
 	import { browser } from '$app/environment';
 	import toast from 'svelte-french-toast';
 	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
@@ -65,13 +67,14 @@
 		if (fetchedData.success === true && fetchedData.tests !== undefined) {
 			return fetchedData.tests.map((item) => {
 				return {
+					id: item.id,
 					title: item.title,
 					description: item.description,
 					img: undefined,
 					icon: item.owner.image,
 					createdAt: item.createdAt,
 					stars: item.stars
-				} satisfies CardAlternativeProps;
+				} satisfies IdCardAlternativeProps;
 			});
 		} else {
 			toast.error(
@@ -313,23 +316,8 @@
 				{#each requestedTests as test, index}
 					{#if index === requestedTests.length - 1}
 						<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
-							<a href={`/tests/${test.id}`} class="w-full">
-								<CardAlternative
-									data={{
-										title: test.title,
-										description: test.description,
-										img: undefined,
-										icon: test?.owner?.image || 'error',
-										createdAt: test.createdAt,
-										stars: test.stars,
-										tags: getTypesafeTags(test.tags)
-									}}
-								/>
-							</a>
-						</div>
-					{:else}
-						<a href={`/tests/${test.id}`}>
 							<CardAlternative
+								navigationLink={`/tests/${test.id}`}
 								data={{
 									title: test.title,
 									description: test.description,
@@ -340,7 +328,20 @@
 									tags: getTypesafeTags(test.tags)
 								}}
 							/>
-						</a>
+						</div>
+					{:else}
+						<CardAlternative
+							navigationLink={`/tests/${test.id}`}
+							data={{
+								title: test.title,
+								description: test.description,
+								img: undefined,
+								icon: test?.owner?.image || 'error',
+								createdAt: test.createdAt,
+								stars: test.stars,
+								tags: getTypesafeTags(test.tags)
+							}}
+						/>
 					{/if}
 				{/each}
 			{/if}

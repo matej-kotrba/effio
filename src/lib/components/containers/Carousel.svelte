@@ -1,9 +1,11 @@
 <script lang="ts" context="module">
 	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
 
+	export type IdCardAlternativeProps = CardAlternativeProps & { id: string };
+
 	export type CarouselItemInput =
-		| CardAlternativeProps[]
-		| Promise<CardAlternativeProps[]>;
+		| IdCardAlternativeProps[]
+		| Promise<IdCardAlternativeProps[]>;
 </script>
 
 <script lang="ts">
@@ -29,7 +31,7 @@
 
 	function isDataResolved(
 		data: CarouselItemInput
-	): data is CardAlternativeProps[] {
+	): data is IdCardAlternativeProps[] {
 		// @ts-expect-error
 		return data.then === undefined;
 	}
@@ -151,6 +153,7 @@
 							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
 						>
 							<CardAlternative
+								navigationLink={'/tests/' + item.id}
 								data={{
 									...item
 								}}
