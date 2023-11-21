@@ -29,7 +29,6 @@ export const actions = {
   createGroup: async (event) => {
     const formData = await event.request.formData()
     const form = await superValidate(formData, createGroupSchema)
-    console.log("POSTED FORM")
 
     if (!form.valid) {
       return fail(400, { form })

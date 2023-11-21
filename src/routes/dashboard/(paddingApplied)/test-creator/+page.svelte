@@ -40,7 +40,6 @@
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
-	import { error } from '@sveltejs/kit';
 
 	export let data;
 
@@ -53,11 +52,9 @@
 		questions: []
 	});
 
-	// TODO: Refactor of this file - isTestValidAndSetErrorsToTestObject and isValidInputServer are not returning same object
-
 	let testCreationProgress = {
-		templateDone: true,
-		constructingDone: true,
+		templateDone: false,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -68,6 +65,7 @@
 	let templatesActive: number;
 
 	let finishModal: HTMLDialogElement;
+	let testImageFile: File | undefined = undefined;
 
 	let isSubmitting = false;
 	let isSuccess = false;
@@ -85,7 +83,8 @@
 				description: $testObject.description,
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
-				isPublished: isPublished
+				isPublished: isPublished,
+				image: testImageFile
 			},
 			callbacks: {
 				onSaveToDB(response) {
@@ -492,7 +491,7 @@
 							/>
 						</ErrorEnhance>
 					</div>
-					<ImageImport title="Test photo" />
+					<ImageImport title="Test photo" bind:exportedFile={testImageFile} />
 				</div>
 				<div class="flex justify-end">
 					<GroupSelection />

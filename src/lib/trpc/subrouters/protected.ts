@@ -15,6 +15,7 @@ export const protectedRouter = router({
       }))
     }).optional(),
     isPublished: z.boolean(),
+    imageUrl: z.string().optional(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
     let questions;
@@ -55,6 +56,7 @@ export const protectedRouter = router({
         title: input.title,
         description: input.description,
         isPublic: isPublic,
+        imageUrl: input.imageUrl,
         testVersions: {
           create: {
             version: 1,
@@ -120,6 +122,7 @@ export const protectedRouter = router({
     description: z.string(),
     questionContent: z.string(),
     isPublished: z.boolean(),
+    imageUrl: z.string().optional(),
     markSystem: z.object({
       marks: z.array(z.object({
         name: z.string(),
@@ -230,6 +233,7 @@ export const protectedRouter = router({
           title: input.title,
           description: input.description,
           isPublic,
+          imageUrl: input.imageUrl,
         }
       })
 

@@ -6,7 +6,6 @@ import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 import { groupInvitesRouter } from "./subrouters/groupInvite";
 
-
 // Schema of template question type
 const questionTemplateSchema = z.object({
   id: z.string(),
@@ -235,7 +234,7 @@ export const appRouter = router({
   records: recordsRouter,
   groups: groupsRouter,
   groupMessages: groupMessagesRouter,
-  groupInvites: groupInvitesRouter
+  groupInvites: groupInvitesRouter,
 })
 
 export type Router = typeof appRouter

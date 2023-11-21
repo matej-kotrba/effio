@@ -6,6 +6,7 @@ import { trpc } from "../trpc/client";
 import { page } from "$app/stores"
 import { goto } from "$app/navigation";
 import { createTRPCErrorNotification } from "../utils/notification";
+import toast from "svelte-french-toast";
 
 // Awaited<
 //   ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
@@ -34,13 +35,13 @@ const defaultCallbacks: Callbacks<Awaited<
 
 type Props = {
   type: "create",
-  data: Required<IsTestValidProps> & { isPublished: boolean },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
   >, unknown>
 } | {
   type: "update",
-  data: Required<IsTestValidProps> & { isPublished: boolean },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["updateTest"]['mutate']>
   >, unknown>
@@ -51,7 +52,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
   if (props.callbacks.onErrorSaveToDB === undefined) props.callbacks.onErrorSaveToDB = defaultCallbacks.onErrorSaveToDB
 
   const currentStore = get(testObject);
-  console.log(props)
+
   const result = isTestValidAndSetErrorsToTestObject({
     title: props.data.title,
     description: props.data.description,
@@ -78,6 +79,29 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
+  // Setup the image
+  let data: string | undefined = undefined;
+  if (props.data.image !== undefined) {
+    const form = new FormData()
+    form.append("image", props.data.image)
+
+    const response = await fetch("/api/cloudinary/uploadImage", {
+      method: "POST",
+      body: form,
+      // Headers should not be set here
+      // headers: {
+      //   "Content-Type": "multipart/form-data"
+      // }
+    })
+    const json: any = await response.json()
+    if (json.url !== undefined) {
+      data = json.url
+    }
+    else if (json.error) {
+      toast.error(json.error)
+    }
+  }
+
   let action;
   if (props.type === "create") {
     action = trpc(get(page)).protected.saveTest.mutate;
@@ -93,6 +117,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
       description: props.data.description,
       questionContent: JSON.stringify(props.data.questions),
       isPublished: props.data.isPublished,
+      imageUrl: data || undefined,
       markSystem: props.data.markSystem?.marks
         ? {
           marks: currentStore.markSystem.marks.map((item) => {

@@ -5,6 +5,7 @@
 
 	export let title: string;
 	export let maxImageSizeInMB = IMAGE_IMPORT_SIZE_IN_MB;
+	export let exportedFile: File | null = null;
 
 	let classes = '';
 	export { classes as class };
@@ -18,6 +19,8 @@
 	) {
 		if (imageRef === null || !e.currentTarget.files) return;
 		const file = e.currentTarget.files[0];
+		exportedFile = file;
+
 		if (!file) return;
 
 		if (file.size > maxImageSizeInMB * 1024 * 1024) {
