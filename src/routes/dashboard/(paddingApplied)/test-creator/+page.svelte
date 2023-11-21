@@ -38,6 +38,9 @@
 	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
 	import { TRPCClientError } from '@trpc/client';
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
+	import ImageImport from '~components/inputs/ImageImport.svelte';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import { error } from '@sveltejs/kit';
 
 	export let data;
 
@@ -53,8 +56,8 @@
 	// TODO: Refactor of this file - isTestValidAndSetErrorsToTestObject and isValidInputServer are not returning same object
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -452,48 +455,45 @@
 			}}
 		>
 			<div class="flex flex-col gap-4">
-				<TextInput
-					title="What will be the name of your test?"
-					titleName="name"
-					inputValue={$testObject['title']}
-					validationSchema={titleSchema}
-					max={TITLE_MAX}
-					min={TITLE_MIN}
-					on:inputChange={(data) => {
-						$testObject['title'] = data.detail;
-					}}
-					on:error={(data) => {
-						$testObject.errors.title = data.detail;
-					}}
-				/>
-				<p
-					class={`text-body2 text-error dark:text-dark_error ${
-						$testObject.errors.title ? 'opacity-100' : 'opacity-0'
-					}`}
-				>
-					{$testObject.errors.title || 'Placeholder error'}
-				</p>
-				<TextAreaInput
-					title="Describe what will your test be about."
-					titleName="name"
-					inputValue={$testObject['description']}
-					validationSchema={descriptionSchema}
-					min={DESCRIPTION_MIN}
-					max={DESCRIPTION_MAX}
-					on:inputChange={(data) => {
-						$testObject['description'] = data.detail;
-					}}
-					on:error={(data) => {
-						$testObject.errors.description = data.detail;
-					}}
-				/>
-				<p
-					class={`text-body2 text-error dark:text-dark_error ${
-						$testObject.errors.description ? 'opacity-100' : 'opacity-0'
-					}`}
-				>
-					{$testObject.errors.description || 'Placeholder error'}
-				</p>
+				<ErrorEnhance error={$testObject.errors.title}>
+					<TextInput
+						displayOutside={true}
+						title="What will be the name of your test?"
+						titleName="name"
+						inputValue={$testObject['title']}
+						validationSchema={titleSchema}
+						max={TITLE_MAX}
+						min={TITLE_MIN}
+						on:inputChange={(data) => {
+							$testObject['title'] = data.detail;
+						}}
+						on:error={(data) => {
+							$testObject.errors.title = data.detail;
+						}}
+					/>
+				</ErrorEnhance>
+
+				<div class="flex gap-4">
+					<div class="w-full">
+						<ErrorEnhance error={$testObject.errors.description}>
+							<TextAreaInput
+								title="Describe what will your test be about."
+								titleName="name"
+								inputValue={$testObject['description']}
+								validationSchema={descriptionSchema}
+								min={DESCRIPTION_MIN}
+								max={DESCRIPTION_MAX}
+								on:inputChange={(data) => {
+									$testObject['description'] = data.detail;
+								}}
+								on:error={(data) => {
+									$testObject.errors.description = data.detail;
+								}}
+							/>
+						</ErrorEnhance>
+					</div>
+					<ImageImport title="Test photo" />
+				</div>
 				<div class="flex justify-end">
 					<GroupSelection />
 				</div>

@@ -53,7 +53,7 @@
 							class="relative grid w-full rounded-md shadow-md group-item bg-light_whiter dark:bg-dark_grey aspect-square place-content-center"
 						>
 							<img
-								src="/imgs/content_imgs/liska.avif"
+								src={group.imageUrl || '/imgs/logo_original.png'}
 								alt=""
 								class="w-[50%] aspect-square object-cover mx-auto rounded-sm"
 							/>

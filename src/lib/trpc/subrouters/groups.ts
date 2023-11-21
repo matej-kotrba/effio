@@ -26,6 +26,7 @@ export const groupsRouter = router({
   createGroup: loggedInProcedure.input(z.object({
     name: z.string(),
     description: z.string().optional(),
+    imageUrl: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const slug = transformStringIntoSlug(input.name, ctx.user!.name!)
@@ -44,6 +45,7 @@ export const groupsRouter = router({
       data: {
         name: input.name,
         description: input.description,
+        imageUrl: input.imageUrl,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ownerId: ctx.user!.id!,
         slug: slug,

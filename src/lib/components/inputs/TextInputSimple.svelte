@@ -75,71 +75,73 @@
 	// }
 </script>
 
-{#if displayOutside === true}
-	<div class="flex items-center justify-between px-1">
-		<label
-			for={titleName}
-			class={`text-xs duration-150 text-body3 sm:text-body2 ${
-				isFocused
-					? 'text-light_primary dark:text-dark_primary'
-					: 'text-light_text_black dark:text-dark_text_white'
-			}`}>{title}</label
-		>
-		{#if min !== undefined && max !== undefined && displayOutside === true}
-			<Limit current={inputValue.length} {min} {max} class="text-xs" />
-		{/if}
-	</div>
-{/if}
-<div
-	class="py-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
->
-	{#if displayOutside === false}
-		<label
-			for={titleName}
-			class="absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
-			>{title}</label
-		>
+<div>
+	{#if displayOutside === true}
+		<div class="flex items-center justify-between px-1">
+			<label
+				for={titleName}
+				class={`text-xs duration-150 text-body3 sm:text-body2 ${
+					isFocused
+						? 'text-light_primary dark:text-dark_primary'
+						: 'text-light_text_black dark:text-dark_text_white'
+				}`}>{title}</label
+			>
+			{#if min !== undefined && max !== undefined && displayOutside === true}
+				<Limit current={inputValue.length} {min} {max} class="text-xs" />
+			{/if}
+		</div>
 	{/if}
-	<div class="relative">
-		{#if min !== undefined && max !== undefined && displayOutside === false}
-			<Limit
-				current={inputValue.length}
-				{min}
-				{max}
-				class="absolute text-xs top-1 right-1"
-			/>
+	<div
+		class="py-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
+	>
+		{#if displayOutside === false}
+			<label
+				for={titleName}
+				class="absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
+				>{title}</label
+			>
 		{/if}
-		<div class="flex items-center gap-1">
-			<input
-				bind:value={inputValue}
-				bind:this={inputRef}
-				on:keydown={keyDownFiltering}
-				on:input={dispatchInputChange}
-				on:focusout={() => {
-					isFocused = false;
-					validateInput();
-					dispatch('focusout');
-				}}
-				on:focus={() => (isFocused = true)}
-				name={titleName}
-				id={titleName}
-				type="text"
-				autocomplete="off"
-				maxlength={doesLimit ? max : undefined}
-				class={twMerge(
-					`input_edit resize-none ${
-						displayOutside === false ? 'my-0' : 'mb-1'
-					} outline-none bg-white dark:bg-dark_light_grey
+		<div class="relative">
+			{#if min !== undefined && max !== undefined && displayOutside === false}
+				<Limit
+					current={inputValue.length}
+					{min}
+					{max}
+					class="absolute text-xs top-1 right-1"
+				/>
+			{/if}
+			<div class="flex items-center gap-1">
+				<input
+					bind:value={inputValue}
+					bind:this={inputRef}
+					on:keydown={keyDownFiltering}
+					on:input={dispatchInputChange}
+					on:focusout={() => {
+						isFocused = false;
+						validateInput();
+						dispatch('focusout');
+					}}
+					on:focus={() => (isFocused = true)}
+					name={titleName}
+					id={titleName}
+					type="text"
+					autocomplete="off"
+					maxlength={doesLimit ? max : undefined}
+					class={twMerge(
+						`input_edit resize-none ${
+							displayOutside === false ? 'my-0' : 'mb-1'
+						} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full
 			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150 
 				
 			`,
-					classes
-				)}
-				{...inputProperties}
-			/>
-			{trailing}
+						classes
+					)}
+					{...inputProperties}
+				/>
+				{trailing}
+			</div>
 		</div>
 	</div>
 </div>

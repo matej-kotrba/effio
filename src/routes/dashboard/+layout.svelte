@@ -50,7 +50,7 @@
 	class="min-h-full duration-100 grid__layout dark:bg-dark_black"
 	class:layout__hidden={isSidebarCollapsible}
 >
-	<div class={isSidebarShown ? '' : 'overflow-hidden'}>
+	<div class={isSidebarShown ? '' : ''}>
 		{#if isSidebarCollapsible === false || (isSidebarCollapsible === true && isSidebarShown === true)}
 			<aside
 				class="bg-light_white dark:bg-dark_black sm:bg-none xs:min-w-[210px] md:max-w-[210px]

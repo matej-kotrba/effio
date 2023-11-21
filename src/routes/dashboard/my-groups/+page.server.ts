@@ -65,18 +65,18 @@ export const actions = {
       return fail(400, { form, error: "Image is not a file" })
     }
 
-    console.log(uploadStream.public_id, uploadStream.url)
-    // try {
-    //   await (await trpcServer(event)).groups.createGroup({
-    //     name: form.data.name,
-    //     description: form.data.description
-    //   })
-    // }
-    // catch (e) {
-    //   if (e instanceof TRPCError) {
-    //     return fail(400, { form, error: e.message })
-    //   }
-    // }
+    try {
+      await (await trpcServer(event)).groups.createGroup({
+        name: form.data.name,
+        description: form.data.description,
+        imageUrl: uploadStream?.url,
+      })
+    }
+    catch (e) {
+      if (e instanceof TRPCError) {
+        return fail(400, { form, error: e.message })
+      }
+    }
 
     return { form }
   },
