@@ -172,7 +172,7 @@
 	});
 </script>
 
-<OverviewLinks />
+<!-- <OverviewLinks /> -->
 <div
 	class="mx-auto max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 place-items-center"
 >

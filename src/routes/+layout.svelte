@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '@total-typescript/ts-reset';
 	import '../app.css';
 	import { toast, Toaster } from 'svelte-french-toast';
 	import { setContext } from 'svelte';

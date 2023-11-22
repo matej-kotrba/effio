@@ -9,6 +9,8 @@
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import { getContext } from 'svelte';
 	import type { TestFullType } from '~/Prisma';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import type { Tag } from '@prisma/client';
 
 	const modalTabsGenerator = getContext('modalTabsGenerator');
 
@@ -95,6 +97,20 @@
 		searchRequests.pop();
 	}
 
+	function getTestTags(indexOfTest: number) {
+		const tags = tests[indexOfTest].tags.filter(({ tag }) => tag !== null);
+		return tags.map(({ tag }) => {
+			return {
+				id: tag?.id,
+				name: tag?.name,
+				slug: tag?.slug,
+				color: tag?.color,
+				createdAt: tag?.createdAt,
+				updatedAt: tag?.updatedAt
+			} as Tag;
+		});
+	}
+
 	onMount(async () => {
 		// Observing last element to fetch more tests, then unobserving it
 		observer = new IntersectionObserver(
@@ -160,8 +176,20 @@
 		<div
 			class="grid gap-2 @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
 		>
-			{#each tests as test}
-				<div
+			{#each tests as test, index}
+				<CardAlternative
+					data={{
+						title: test.title,
+						stars: test.stars,
+						createdAt: test.createdAt,
+						description: test.description,
+						icon: test.owner.image,
+						img: test.imageUrl,
+						tags: getTestTags(index),
+						views: test.views
+					}}
+				/>
+				<!-- <div
 					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter hover:bg-light_quaternary dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
 				>
 					{#if test === tests[tests.length - 1]}
@@ -233,59 +261,8 @@
 							>
 						</div>
 					{/if}
-					<!-- {#if test === tests[tests.length - 1]}
-						<div
-							class="absolute top-0 left-0 flex items-center justify-between w-full p-1"
-							use:addIntersection
-						>
-							<div class="flex items-center">
-								<iconify-icon
-									icon="ic:round-star-outline"
-									class="text-3xl duration-100"
-								/>
-								<span class="text-sm">{test.stars}</span>
-							</div>
-							<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
-								<iconify-icon
-									icon="fluent:settings-24-filled"
-									class="text-xl text-light_text_black dark:text-dark_text_white"
-								/>
-							</DropdownSelect>
-						</div>
-
-						<h6>{test.title}</h6>
-						<p
-							class="text-center text-body3 text-dark_text_white_40 whitespace-nowrap overflow-ellipsis"
-						>
-							{test.description}
-						</p>
-					{:else}
-						<div
-							class="absolute top-0 left-0 flex items-center justify-between w-full p-1"
-						>
-							<div class="flex items-center">
-								<iconify-icon
-									icon="ic:round-star-outline"
-									class="text-3xl duration-100"
-								/>
-								<span class="text-sm">{test.stars}</span>
-							</div>
-							<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
-								<iconify-icon
-									icon="fluent:settings-24-filled"
-									class="text-xl text-light_text_black dark:text-dark_text_white"
-								/>
-							</DropdownSelect>
-						</div>
-
-						<h6>{test.title}</h6>
-						<p
-							class="text-center text-body3 text-dark_text_white_40 whitespace-nowrap overflow-ellipsis"
-						>
-							{test.description}
-						</p>
-					{/if} -->
-				</div>
+					
+				</div> -->
 			{/each}
 		</div>
 	{/if}

@@ -43,5 +43,4 @@ declare global {
 	}
 }
 
-
 export { };

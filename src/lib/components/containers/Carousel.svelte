@@ -10,9 +10,7 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
-	import Star from '~components/globals/Star.svelte';
 	import SkeletonLine from '~components/informatic/SkeletonLine.svelte';
 	import CardAlternative from './card/CardAlternative.svelte';
 
@@ -108,14 +106,14 @@
 	<div class="flex gap-2">
 		<IconButton
 			icon="ic:round-arrow-left"
-			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
-			tooltipClasses="bg-light_whiter rounded-md"
+			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white dark:bg-dark_grey"
+			tooltipClasses="bg-light_whiter dark:bg-dark_light_grey rounded-md"
 			onClick={scrollLeft}
 		/>
 		<IconButton
 			icon="ic:round-arrow-right"
-			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white"
-			tooltipClasses="bg-light_whiter rounded-md"
+			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white dark:bg-dark_grey"
+			tooltipClasses="bg-light_whiter dark:bg-dark_light_grey rounded-md"
 			onClick={scrollRight}
 		/>
 	</div>
@@ -127,7 +125,9 @@
 						class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
 					>
 						<div class="px-1 w-full max-w-[300px] aspect-[4/5]">
-							<div class="h-full rounded-md shadow-lg bg-light_whiter">
+							<div
+								class="h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
+							>
 								<div class="relative w-full aspect-video">
 									<SkeletonLine class="w-full h-full aspect-video" />
 								</div>

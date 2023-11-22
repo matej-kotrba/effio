@@ -17,6 +17,7 @@
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Star from '~components/globals/Star.svelte';
+	import { applicationStates } from '~stores/applicationStates';
 	import { onImageLoad } from '~use/onImageLoad';
 
 	let isIconFallback = false;
@@ -26,7 +27,9 @@
 </script>
 
 <div class="px-1 w-full max-w-[300px] aspect-[4/5]">
-	<div class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter">
+	<div
+		class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
+	>
 		<div
 			class=" relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
 					"
@@ -34,9 +37,11 @@
 			<div>
 				{#if data.stars !== undefined}
 					<div
-						class="absolute flex items-center gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white"
+						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey"
 					>
-						<span class="text-light_text_black text-body2">
+						<span
+							class="text-light_text_black dark:text-dark_text_white text-body2"
+						>
 							{data.stars}
 						</span>
 						<Star />
@@ -47,7 +52,7 @@
 				>
 					{#if isIconFallback === false}
 						<img
-							src={data.icon ?? '/imgs/content_imgs/poly.png'}
+							src={data.icon}
 							alt=""
 							loading="lazy"
 							use:onImageLoad
@@ -76,7 +81,9 @@
 				/>
 				<a href={navigationLink || '#'} class="w-full">
 					<img
-						src={data.img || '/imgs/content_imgs/poly.png'}
+						src={data.img || $applicationStates['darkMode']['isDarkMode']
+							? '/imgs/content_imgs/poly_dark.png'
+							: '/imgs/content_imgs/poly.png'}
 						alt={data.title}
 						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md"
 					/>
@@ -93,7 +100,8 @@
 					</h3>
 				</abbr>
 				{#if data.createdAt}
-					<span class="block text-center text-body2 text-light_text_black_80"
+					<span
+						class="block text-center text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
 						>{transformDate(data.createdAt, { time: true })}</span
 					>
 				{/if}

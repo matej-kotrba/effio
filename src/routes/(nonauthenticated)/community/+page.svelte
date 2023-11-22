@@ -225,11 +225,11 @@
 <div class="relative">
 	<div
 		style={`--height-value: 120%;`}
-		class="absolute left-0 w-full bg z-[0] h-[var(--height-value)] -translate-y-[calc(var(--height-value)/2-50%)] text-white cover-text"
+		class="absolute left-0 w-full bg z-[0] h-[var(--height-value)] -translate-y-[calc(var(--height-value)/2-50%)] text-white dark:text-indigo-300 cover-text"
 	>
 		<div class="inner-text">
 			<h3
-				class="relative italic font-bold text-h3 underline-effect after:bg-light_quaternary"
+				class="relative italic font-bold text-h3 underline-effect after:bg-light_quaternary dark:after:bg-dark_text_white"
 			>
 				New and popular
 			</h3>
