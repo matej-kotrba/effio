@@ -47,7 +47,7 @@
 				>
 					{#if isIconFallback === false}
 						<img
-							src={data.icon ?? '/imgs/content_imgs/liska.avif'}
+							src={data.icon ?? '/imgs/content_imgs/poly.png'}
 							alt=""
 							loading="lazy"
 							use:onImageLoad
@@ -76,7 +76,7 @@
 				/>
 				<a href={navigationLink || '#'} class="w-full">
 					<img
-						src={'/imgs/content_imgs/liska.avif'}
+						src={data.img || '/imgs/content_imgs/poly.png'}
 						alt={data.title}
 						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md"
 					/>

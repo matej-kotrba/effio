@@ -84,7 +84,7 @@
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
 				isPublished: isPublished,
-				image: testImageFile
+				image: testImageFile || undefined
 			},
 			callbacks: {
 				onSaveToDB(response) {

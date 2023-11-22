@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import Space from '~components/separators/Space.svelte';
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
+	import { onImageLoad } from '~use/onImageLoad';
 
 	export let redirectLink: string = '#';
 	export let imageLink: string = ''; //'/imgs/content_imgs/liska.avif';
@@ -16,6 +17,8 @@
 		action: (e: MouseEvent) => void;
 	}[] = [];
 	export let createdAt: Date | undefined = undefined;
+
+	let isIconFallback = false;
 </script>
 
 <div
@@ -27,8 +30,13 @@
 				{#if imageLink}
 					<img
 						class="rounded-lg w-[100%] aspect-[3/2] object-cover group-hover:blur-md overflow-hidden duration-200"
-						src={imageLink}
+						src={imageLink || '/imgs/effio/text.png'}
 						alt={imageAlt}
+						use:onImageLoad
+						on:imageerror={(e) => {
+							isIconFallback = true;
+							// e.target.src = '/imgs/svgs/user-circle.svg';
+						}}
 					/>
 				{:else}
 					<div
@@ -57,7 +65,7 @@
 					</p>
 				</div>
 			</div>
-			<Icon
+			<iconify-icon
 				icon="iconamoon:enter"
 				class="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] text-5xl text-white opacity-0 group-hover:opacity-100 duration-200"
 			/>

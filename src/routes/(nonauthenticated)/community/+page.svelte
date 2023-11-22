@@ -321,7 +321,7 @@
 								data={{
 									title: test.title,
 									description: test.description,
-									img: undefined,
+									img: test['imageUrl'],
 									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
 									stars: test.stars,
@@ -335,7 +335,7 @@
 							data={{
 								title: test.title,
 								description: test.description,
-								img: undefined,
+								img: test['imageUrl'],
 								icon: test?.owner?.image || 'error',
 								createdAt: test.createdAt,
 								stars: test.stars,

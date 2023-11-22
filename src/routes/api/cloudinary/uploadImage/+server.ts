@@ -6,10 +6,6 @@ export const POST = async ({ request }) => {
   const formData = await request.formData()
   const image = formData.get("image")
 
-  console.log(request)
-  console.log(formData)
-  console.log(image)
-
   if (!image) {
     return json({
       error: "No image provided"

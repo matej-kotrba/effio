@@ -66,6 +66,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
+  // TODO:
   const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
     title: props.data.title,
     description: props.data.description,
@@ -79,9 +80,18 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
+  let action;
+  if (props.type === "create") {
+    action = trpc(get(page)).protected.saveTest.mutate;
+  }
+  else if (props.type === "update") {
+    action = trpc(get(page)).protected.updateTest.mutate;
+  }
+  else return;
+
   // Setup the image
   let data: string | undefined = undefined;
-  if (props.data.image !== undefined) {
+  if (props.data.image !== undefined && props.data.image !== null) {
     const form = new FormData()
     form.append("image", props.data.image)
 
@@ -101,15 +111,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
       toast.error(json.error)
     }
   }
-
-  let action;
-  if (props.type === "create") {
-    action = trpc(get(page)).protected.saveTest.mutate;
-  }
-  else if (props.type === "update") {
-    action = trpc(get(page)).protected.updateTest.mutate;
-  }
-  else return;
 
   try {
     const response = await action({

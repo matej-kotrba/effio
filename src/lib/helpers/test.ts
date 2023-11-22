@@ -545,23 +545,23 @@ export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestVali
   const data = (await res.json()) as ReturnType<typeof isTestValidAndSetErrorsToTestObject>;
 
   // If the function is called in the browser then set all the errors to the test object
+  // Maybe currentTestObject.errors.title should be swaped for currentTestObject.title and so on, not sure now
   if (browser) {
     const currentTestObject = get(testObject)
     if (data.store.inputsToValidateUpdatedParts.questions !== undefined) {
       currentTestObject.questions = data.store.inputsToValidateUpdatedParts.questions
     }
     if (data.store.errors.title !== undefined) {
-      currentTestObject.title = data.store.errors.title
+      currentTestObject.errors.title = data.store.errors.title
     }
     if (data.store.errors.description !== undefined) {
-      currentTestObject.description = data.store.errors.description
+      currentTestObject.errors.description = data.store.errors.description
     }
     if (data.store.errors.markSystem !== undefined) {
       currentTestObject.errors.markSystem = { marks: [] }
       currentTestObject.errors.markSystem.marks = data.store.errors.markSystem.marks
       currentTestObject.errors.markSystem.message = data.store.errors.markSystem.message
     }
-    // console.log(currentTestObject)
     testObject.set(
       currentTestObject
     )
