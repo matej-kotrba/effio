@@ -532,7 +532,7 @@ export type IsTestValidResponse = {
 // TODO: Return actuall errors from the server and set them to the test object from isTestValidAndSetErrorsToTestObject function
 // Check the validity of the test object on the server
 export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValidProps): Promise<IsTestValidResponse> {
-  console.log("SERVER VALIDATION", obj)
+  // console.log("SERVER VALIDATION", obj)
   const res = await enviromentFetch({
     path: "validateTest",
     method: "POST",
@@ -696,11 +696,11 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
     message = "Some inputs are incorrect."
   }
 
-  console.log({
-    store: result,
-    isError,
-    message
-  })
+  // console.log({
+  //   store: result,
+  //   isError,
+  //   message
+  // })
 
   return {
     store: result,
@@ -756,6 +756,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
   })
 
   const responseData = await res.json() as CheckTestResponse
+  console.log(responseData)
 
   if (responseData.success === undefined) throw new Error("Server error")
 
@@ -784,15 +785,19 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
         isCorrect: item.isCorrect,
         correctAnswer: item.correctAnswer,
         userAnswer: item.userAnswer,
+        id: item.questionRecordId
       }
     })
   }
+
   catch (e) {
     return {
       error: "Incorrect inputs",
       success: false
     }
   }
+
+  // TODO: Currently working with ids and ordering, maybe find out better solution
 
   if (!questionData) return {
     error: "Incorrect inputs",
@@ -807,6 +812,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     answerContent: questionData.map((item, index) => {
       return {
+        questionRecordId: item.id,
         questionId: test.questions[index].id,
         userContent: item.userAnswer,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -815,6 +821,24 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
       }
     })
   })
+
+  if (!recordedTest || !recordedTest.test?.questionRecords) return {
+    success: false
+  }
+
+  // TODO: Like really try to think this through
+
+  const shuffledArray = []
+  for (const i in questionData) {
+    for (const k in recordedTest.test.questionRecords) {
+      if (recordedTest.test.questionRecords[k].id === questionData[i].id) {
+        shuffledArray.push(recordedTest.test.questionRecords[k])
+        break;
+      }
+    }
+  }
+
+  recordedTest.test.questionRecords = shuffledArray
 
   return {
     error: responseData?.error ?? undefined,
@@ -830,7 +854,6 @@ export function getMarkBasedOnPoints(marks: MarkSystemJSON["marks"], userPoints:
   const percentigeValue = userPoints / maxPoints * 100
 
   for (let i = 0; i < marks.length - 1; i++) {
-    console.log(i)
     const mark = marks[i]
     if (mark.limit === undefined) continue
     if (percentigeValue >= mark.limit) return mark

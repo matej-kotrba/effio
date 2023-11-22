@@ -12,7 +12,8 @@ export const recordsRouter = router({
       z.object({
         questionId: z.string(),
         userContent: z.object({}).passthrough(),
-        points: z.number()
+        points: z.number(),
+        questionRecordId: z.string().optional(),
       })
     ),
   })).mutation(async ({ ctx, input }) => {
@@ -61,9 +62,10 @@ export const recordsRouter = router({
           createMany: {
             data: input.answerContent.map(item => {
               return {
+                id: item.questionRecordId,
                 questionId: item.questionId,
                 content: item.userContent,
-                userPoints: item.points
+                userPoints: item.points,
               }
             })
           }

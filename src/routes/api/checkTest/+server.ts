@@ -7,6 +7,7 @@ export type CheckTestResponse = {
   error?: string;
   success?: boolean;
   data?: {
+    questionRecordId: string;
     isCorrect?: boolean;
     correctAnswer?: QuestionContent;
     userAnswer?: QuestionContent;
@@ -59,7 +60,8 @@ export async function POST(event) {
       // @ts-ignore
       isCorrect: questionContentFunctions[question.questionType].checkAnswerCorrectness(question.content, compareQuestion.content),
       correctAnswer: compareQuestion.content,
-      userAnswer: question.content
+      userAnswer: question.content,
+      questionRecordId: crypto.randomUUID()
     } as CheckTestResponse
   })
 
