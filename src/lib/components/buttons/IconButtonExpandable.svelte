@@ -13,7 +13,7 @@
 	<div
 		style={`width: ${width}; height: ${width};`}
 		class={twMerge(
-			'flex items-center duration-150 shadow-md rounded-xl bg-light_white hover:bg-light_whiter hover:rounded-lg',
+			'flex items-center duration-150 shadow-md rounded-xl bg-light_white dark:bg-dark_light_grey hover:bg-light_whiter dark:hover:bg-dark_terciary hover:rounded-lg',
 			classes
 		)}
 	>
@@ -22,7 +22,7 @@
 		</div>
 		{#if shouldExpand}
 			<div
-				class="w-0 group-hover:w-fit overflow-hidden absolute flex items-center h-full px-0 group-hover:px-4 shadow-md whitespace-nowrap bg-light_whiter rounded-r-2xl text-body2 z-[-10] left-[10%] group-hover:left-[90%] duration-100"
+				class="w-0 group-hover:w-fit overflow-hidden absolute flex items-center h-full px-0 group-hover:px-4 shadow-md whitespace-nowrap bg-light_whiter dark:bg-dark_light_grey rounded-r-2xl text-body2 z-[-10] left-[10%] group-hover:left-[90%] duration-100"
 			>
 				{fullText}
 			</div>

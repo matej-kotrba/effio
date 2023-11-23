@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { applicationStates } from '~stores/applicationStates';
+
 	export let test: {
 		title: string;
 		description: string;
+		imageUrl?: string;
 	};
+
+	let isFallback = false;
 
 	export let url: string;
 </script>
@@ -15,7 +20,11 @@
 							hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
 	>
 		<img
-			src="/imgs/content_imgs/liska.avif"
+			src={test.imageUrl
+				? test.imageUrl
+				: $applicationStates.darkMode.isDarkMode
+				? '/imgs/content_imgs/poly_dark.png'
+				: '/imgs/content_imgs/poly.png'}
 			alt="Test"
 			class="object-cover w-full h-full duration-200 group-hover:blur-md group-hover:scale-110"
 		/>

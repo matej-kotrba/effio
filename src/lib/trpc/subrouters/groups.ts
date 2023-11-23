@@ -291,6 +291,7 @@ export const groupsRouter = router({
           select: {
             title: true,
             description: true,
+            imageUrl: true
           }
         },
         sender: true,

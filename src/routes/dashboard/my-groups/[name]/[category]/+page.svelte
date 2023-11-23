@@ -13,6 +13,7 @@
 	} from '~schemas/textInput.js';
 	import Drawer from '~components/collapsibles/Drawer.svelte';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data;
 
@@ -212,7 +213,7 @@
 					<div class="relative">
 						{#if data.group.ownerId === data.session.user?.id}
 							<a
-								href={`dashboard/my-groups/${data.group.slug}/admin-test-overview/${data.subcategory.slug}/${test.testId}`}
+								href={`/dashboard/my-groups/${data.group.slug}/admin-test-overview/${data.subcategory.slug}/${test.testId}`}
 								class="absolute top-0 left-0 z-10 p-1 icon-gradient"
 							>
 								<iconify-icon
@@ -369,7 +370,11 @@
 												<div>
 													<div class="overflow-hidden">
 														<img
-															src="/imgs/content_imgs/liska.avif"
+															src={message.test?.imageUrl
+																? message.test.imageUrl
+																: $applicationStates['darkMode']['isDarkMode']
+																? '/imgs/content_imgs/poly_dark.png'
+																: '/imgs/content_imgs/poly.png'}
 															alt="{message.test.title} cover"
 															class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
 															loading="lazy"

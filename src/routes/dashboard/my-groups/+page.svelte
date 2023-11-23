@@ -18,7 +18,6 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import { createGroupSchema, joinGroupSchema } from './schemas';
 	import toast from 'svelte-french-toast';
-	import { IMAGE_IMPORT_SIZE_IN_MB } from '~/lib/helpers/constants';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 
 	export let data;

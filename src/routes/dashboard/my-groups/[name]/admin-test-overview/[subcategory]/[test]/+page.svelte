@@ -10,8 +10,6 @@
 
 	export let data;
 
-	console.log(data);
-
 	let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
 	let overallAverageGraph: HTMLCanvasElement;
@@ -62,8 +60,10 @@
 </div>
 
 <!-- Content grid -->
-<div class="grid grid-cols-12 gap-2 px-2 main-grid">
-	<GraphContainer class="flex flex-col items-center col-span-2 gap-1">
+<div class="grid grid-cols-12 gap-2 px-2 main-grid @container">
+	<GraphContainer
+		class="flex flex-col items-center col-span-3 @6xl:col-span-2 gap-1"
+	>
 		<span class="font-semibold text-h4">Taken by</span>
 		<Counter count={data.count} />
 		<span
@@ -71,7 +71,9 @@
 			>*Also includes duplicate completion</span
 		>
 	</GraphContainer>
-	<GraphContainer class="flex flex-col justify-between col-span-3">
+	<GraphContainer
+		class="flex flex-col justify-between col-span-4 @6xl:col-span-3"
+	>
 		<span class="font-semibold">Avarage achieved score</span>
 		<canvas bind:this={overallAverageGraph} width="400" class="w-full" />
 	</GraphContainer>

@@ -49,6 +49,10 @@
 		@apply bg-slate-100;
 	}
 
+	:global(.dark) .toggle-input {
+		@apply bg-dark_terciary;
+	}
+
 	.toggle-input span {
 		width: var(--container-height);
 		aspect-ratio: 1/1;
@@ -67,5 +71,13 @@
 		left: calc(100% - var(--container-height));
 		background-color: var(--light-primary);
 		animation: scaling 200ms ease-in-out;
+	}
+
+	:global(.dark) .toggle-input.active {
+		border: 1px solid var(--dark-primary);
+	}
+
+	:global(.dark) .toggle-input.active span {
+		background-color: var(--dark-primary);
 	}
 </style>

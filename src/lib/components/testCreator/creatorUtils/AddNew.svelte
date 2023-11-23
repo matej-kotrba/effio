@@ -6,9 +6,9 @@
 <button
 	type="button"
 	on:click={onClick}
-	class={`px-8 shadow-lg bg-light_whiter btn
+	class={`px-8 shadow-lg bg-light_whiter dark:bg-dark_light_grey btn
 	 text-success hover:bg-white dark:hover:bg-dark_light_grey
-	  hover:text-success border-2 border-solid border-light_grey hover:border-success`}
+	  hover:text-success border-2 border-solid border-light_grey dark:border-dark_terciary hover:border-success dark:hover:border-success`}
 	>{title || 'Add'}</button
 >
 <!-- <button
