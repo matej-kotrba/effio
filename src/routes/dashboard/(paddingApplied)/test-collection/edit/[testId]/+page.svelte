@@ -31,12 +31,15 @@
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
+	import ImageImport from '~components/inputs/ImageImport.svelte';
 
 	export let data;
 
 	const toast: typeof Toast = getContext('toast');
 
 	let isSubmitting = false;
+
+	let testImageFile: File | null = null;
 
 	initializeTestToTestStore(data.testData);
 
@@ -173,19 +176,27 @@
 	/>
 </ErrorEnhance>
 
-<ErrorEnhance error={$testObject.errors.description}>
-	<TextAreaInput
-		title="Test description"
-		titleName="description"
-		inputValue={$testObject.description}
-		min={DESCRIPTION_MIN}
-		max={DESCRIPTION_MAX}
-		validationSchema={descriptionSchema}
-		on:inputChange={(e) => ($testObject.description = e.detail)}
-		on:error={(e) => ($testObject.errors.description = e.detail)}
+<div class="flex gap-4">
+	<div class="w-full">
+		<ErrorEnhance error={$testObject.errors.description}>
+			<TextAreaInput
+				title="Test description"
+				titleName="description"
+				inputValue={$testObject.description}
+				min={DESCRIPTION_MIN}
+				max={DESCRIPTION_MAX}
+				validationSchema={descriptionSchema}
+				on:inputChange={(e) => ($testObject.description = e.detail)}
+				on:error={(e) => ($testObject.errors.description = e.detail)}
+			/>
+		</ErrorEnhance>
+	</div>
+	<ImageImport
+		title="Test photo"
+		bind:exportedFile={testImageFile}
+		defualtImage={data.testData.imageUrl}
 	/>
-</ErrorEnhance>
-
+</div>
 <MarkSystem
 	isAdded={!!$testObject.markSystem['marks']}
 	defaultValue={$testObject.markSystem['marks']}

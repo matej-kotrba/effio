@@ -87,8 +87,8 @@
 	});
 
 	onDestroy(() => {
-		map.remove();
-		answerMarker.remove();
+		map?.remove();
+		answerMarker?.remove();
 	});
 
 	$: {

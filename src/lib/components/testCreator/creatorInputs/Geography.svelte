@@ -191,9 +191,9 @@
 	});
 
 	onDestroy(() => {
-		leafletMap.remove();
-		answerMarker.remove();
-		initialMarker.remove();
+		leafletMap?.remove();
+		answerMarker?.remove();
+		initialMarker?.remove();
 	});
 </script>
 

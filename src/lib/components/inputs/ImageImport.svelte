@@ -5,6 +5,7 @@
 
 	export let title: string;
 	export let maxImageSizeInMB = IMAGE_IMPORT_SIZE_IN_MB;
+	export let defualtImage: string | undefined = undefined;
 	export let exportedFile: File | null = null;
 
 	let classes = '';
@@ -62,7 +63,7 @@
 		>
 			<img
 				bind:this={imageRef}
-				src=""
+				src={defualtImage}
 				alt="Group icon"
 				class="object-cover w-full h-full text-transparent"
 			/>

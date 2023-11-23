@@ -44,6 +44,8 @@
 	$: pathname = $page['url']['pathname']
 		.split('/')
 		.filter((item) => item !== '');
+
+	$: console.log($page.params);
 </script>
 
 <main
