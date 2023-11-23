@@ -18,7 +18,6 @@
 	} from '~components/containers/Carousel.svelte';
 	import { browser } from '$app/environment';
 	import toast from 'svelte-french-toast';
-	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
@@ -70,7 +69,7 @@
 					id: item.id,
 					title: item.title,
 					description: item.description,
-					img: undefined,
+					img: item.imageUrl,
 					icon: item.owner.image,
 					createdAt: item.createdAt,
 					stars: item.stars

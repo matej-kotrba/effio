@@ -49,7 +49,7 @@
 		includeSeparator ? 'border-b-2 border-light_text_black_20' : ''
 	} `}
 >
-	<div class="container">
+	<div class="container mx-auto">
 		<div
 			class="items-center justify-between hidden w-full h-full px-5 mx-auto md:flex"
 		>

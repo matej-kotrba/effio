@@ -81,7 +81,9 @@
 				/>
 				<a href={navigationLink || '#'} class="w-full">
 					<img
-						src={data.img || $applicationStates['darkMode']['isDarkMode']
+						src={data.img
+							? data.img
+							: $applicationStates['darkMode']['isDarkMode']
 							? '/imgs/content_imgs/poly_dark.png'
 							: '/imgs/content_imgs/poly.png'}
 						alt={data.title}
