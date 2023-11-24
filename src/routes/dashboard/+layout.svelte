@@ -41,11 +41,20 @@
 		return resultedPath;
 	}
 
+	const routeNameChanges: {
+		[key: string]: string;
+	} = {
+		name: 'Group',
+		category: 'Group channel',
+		test: 'Test',
+		testId: 'Test'
+	};
+
 	$: pathname = $page['url']['pathname']
 		.split('/')
 		.filter((item) => item !== '');
 
-	$: console.log($page.params);
+	$: route = $page['route']['id']?.split('/').filter((item) => item !== '');
 </script>
 
 <main
@@ -259,7 +268,12 @@
 			<!-- Upper part navigation -->
 			<div class="max-w-[70vw] md:max-w-[50vw] mr-auto text-sm breadcrumbs">
 				<ul>
-					{#each pathname as segment, index (index)}
+					{#each pathname as segment, index}
+						{@const routeSegment = route
+							? routeNameChanges[
+									route[index].substring(1, route[index].length - 1)
+							  ]
+							: undefined}
 						{#if !['', 'edit', 'delete'].includes(segment)}
 							<li>
 								<a
@@ -268,8 +282,12 @@
 										? 'text-light_primary dark:text-dark_primary'
 										: ''}
 								>
-									{segment.replace('-', ' ')[0].toUpperCase() +
-										segment.replaceAll('-', ' ').slice(1, segment.length)}
+									{#if routeSegment}
+										{routeSegment}
+									{:else}
+										{segment.replace('-', ' ')[0].toUpperCase() +
+											segment.replaceAll('-', ' ').slice(1, segment.length)}
+									{/if}
 								</a>
 							</li>
 						{:else}
