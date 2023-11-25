@@ -57,11 +57,13 @@
 		await validateTestAndRecordIt({
 			type: 'update',
 			data: {
+				id: $testObject.id as string,
 				title: $testObject.title,
 				description: $testObject.description,
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
-				isPublished: $testObject.published
+				isPublished: $testObject.published,
+				image: testImageFile || undefined
 			},
 			callbacks: {
 				onSaveToDB(response) {

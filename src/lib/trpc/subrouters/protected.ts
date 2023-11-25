@@ -272,7 +272,8 @@ export const protectedRouter = router({
       return {
         test: testData,
         questions: questionsData,
-        success: true
+        success: true,
+        testImage: test.imageUrl
       }
     }
     catch (e) {

@@ -7,6 +7,7 @@ import { page } from "$app/stores"
 import { goto } from "$app/navigation";
 import { createTRPCErrorNotification } from "../utils/notification";
 import toast from "svelte-french-toast";
+import { enviromentFetch } from "./fetch";
 
 // Awaited<
 //   ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
@@ -41,7 +42,7 @@ type Props = {
   >, unknown>
 } | {
   type: "update",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, id: string },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["updateTest"]['mutate']>
   >, unknown>
@@ -80,15 +81,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
-  let action;
-  if (props.type === "create") {
-    action = trpc(get(page)).protected.saveTest.mutate;
-  }
-  else if (props.type === "update") {
-    action = trpc(get(page)).protected.updateTest.mutate;
-  }
-  else return;
-
   // Setup the image
   let data: string | undefined = undefined;
   if (props.data.image !== undefined && props.data.image !== null) {
@@ -113,26 +105,68 @@ export const validateTestAndRecordIt = async (props: Props) => {
   }
 
   try {
-    const response = await action({
-      title: props.data.title,
-      description: props.data.description,
-      questionContent: JSON.stringify(props.data.questions),
-      isPublished: props.data.isPublished,
-      imageUrl: data || undefined,
-      markSystem: props.data.markSystem?.marks
-        ? {
-          marks: currentStore.markSystem.marks.map((item) => {
-            return {
-              name: item.name,
-              // Checked in the isTestValidAndSetErrorsToTestObject
-              limit: item.limit as number
-            };
-          })
-        }
-        : undefined,
-      includedInGroups: currentStore.includedInGroups,
-      testGroupId: currentStore.id as string
-    });
+    let response;
+
+    if (props.type === "create") {
+      response = await trpc(get(page)).protected.saveTest.mutate({
+        title: props.data.title,
+        description: props.data.description,
+        questionContent: JSON.stringify(props.data.questions),
+        isPublished: props.data.isPublished,
+        imageUrl: data || undefined,
+        markSystem: props.data.markSystem?.marks
+          ? {
+            marks: currentStore.markSystem.marks.map((item) => {
+              return {
+                name: item.name,
+                // Checked in the isTestValidAndSetErrorsToTestObject
+                limit: item.limit as number
+              };
+            })
+          }
+          : undefined,
+        includedInGroups: currentStore.includedInGroups,
+      });
+    }
+    else if (props.type === "update") {
+      const imageUrlToDeleteTest = await trpc(get(page)).getTestById.query({
+        id: props.data.id,
+      })
+
+      if (imageUrlToDeleteTest === null) return
+
+      response = await trpc(get(page)).protected.updateTest.mutate({
+        title: props.data.title,
+        description: props.data.description,
+        questionContent: JSON.stringify(props.data.questions),
+        isPublished: props.data.isPublished,
+        imageUrl: data || undefined,
+        markSystem: props.data.markSystem?.marks
+          ? {
+            marks: currentStore.markSystem.marks.map((item) => {
+              return {
+                name: item.name,
+                // Checked in the isTestValidAndSetErrorsToTestObject
+                limit: item.limit as number
+              };
+            })
+          }
+          : undefined,
+        includedInGroups: currentStore.includedInGroups,
+        testGroupId: currentStore.id as string
+      });
+
+      // if (response.test && imageUrlToDeleteTest.imageUrl !== response.testImage) {
+      enviromentFetch({
+        path: "cloudinary/deleteImage",
+        method: "POST",
+        body: JSON.stringify({
+          imageUrl: imageUrlToDeleteTest.imageUrl
+        })
+      })
+      // }
+    }
+
     if (props.callbacks.onSaveToDB !== undefined) {
       if (props.type === "create")
         props.callbacks.onSaveToDB(response as Awaited<
