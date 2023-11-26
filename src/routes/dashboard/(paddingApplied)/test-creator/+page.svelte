@@ -38,6 +38,7 @@
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import ProgressNavigation from '~components/navigation/ProgressNavigation.svelte';
+	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 
 	export let data;
 
@@ -452,7 +453,9 @@
 		>
 			{#if testType === 'questions'}
 				<Creator inputTemplates={data.questionsTypes} bind:scrollToInput />
-			{:else if testType === 'programming'}{/if}
+			{:else if testType === 'programming'}
+				<ProgrammingCreator />
+			{/if}
 			<Space />
 
 			<!-- {#if $testObject.questions.length > 0}

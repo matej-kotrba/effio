@@ -1,6 +1,6 @@
 import type { Action } from "svelte/action"
 
-export const dropdown: Action<HTMLElement> = (node, text) => {
+export const dropdown: Action<HTMLElement> = (node, text: string | undefined) => {
   let lastAnim: Animation
 
   const divDropdown = window.document.createElement("div")

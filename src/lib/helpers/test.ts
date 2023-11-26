@@ -472,7 +472,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "createNew": () => {
       return {
         type: 'programming',
-        title: '',
         description: '',
         code: '',
         language: 'js',
@@ -483,7 +482,8 @@ export const questionContentFunctions: QuestionContentTransformation = {
             error: ''
           }
         ],
-        hints: []
+        hints: [],
+        errors: {}
       }
     },
     "separateAnswer": (question: ProgrammingQuestion): PartialPick<ProgrammingQuestion, "code"> => {
@@ -515,11 +515,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       if (!content.tests) {
         isError = true
         message = "Please add the tests."
-      }
-
-      if (!content.title) {
-        isError = true
-        message = "Please add the title."
       }
 
       if (!content.description) {

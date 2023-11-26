@@ -58,6 +58,7 @@
 		"gift-pegjs": "^0.2.1",
 		"leaflet": "^1.9.4",
 		"lodash": "^4.17.21",
+		"monaco-editor": "^0.44.0",
 		"superjson": "^1.13.1",
 		"svelte-cloudinary": "^1.1.1",
 		"svelte-french-toast": "1.2.0",

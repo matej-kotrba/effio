@@ -69,7 +69,6 @@ type GeographyQuestion = {
 
 type ProgrammingQuestion = {
   type: "programming",
-  title: string,
   description: string,
   code: string,
   language: "js",
@@ -79,6 +78,16 @@ type ProgrammingQuestion = {
     error?: string,
   }[],
   hints: string[],
+  errors: {
+    description?: string,
+    code?: string,
+    language?: string,
+    tests?: {
+      input?: string,
+      output?: string,
+    }[],
+    hints?: string[],
+  }
 }
 
 type Answer<T = string> = {
