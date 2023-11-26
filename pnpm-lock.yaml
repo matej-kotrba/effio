@@ -14,6 +14,9 @@ dependencies:
   '@auth/sveltekit':
     specifier: ^0.3.1
     version: 0.3.1(@sveltejs/kit@1.15.2)(svelte@4.2.3)
+  '@nyariv/sandboxjs':
+    specifier: ^0.8.23
+    version: 0.8.23
   '@prisma/client':
     specifier: ^5.0.0
     version: 5.0.0(prisma@5.0.0)
@@ -47,6 +50,9 @@ dependencies:
   leaflet:
     specifier: ^1.9.4
     version: 1.9.4
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   superjson:
     specifier: ^1.13.1
     version: 1.13.1
@@ -82,6 +88,9 @@ devDependencies:
   '@total-typescript/ts-reset':
     specifier: ^0.4.2
     version: 0.4.2
+  '@types/lodash':
+    specifier: ^4.14.202
+    version: 4.14.202
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.57.1
     version: 5.57.1(@typescript-eslint/parser@5.57.1)(eslint@8.37.0)(typescript@5.0.3)
@@ -546,6 +555,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@nyariv/sandboxjs@0.8.23:
+    resolution: {integrity: sha512-OaD3i0czFTZzQFQdwgFVEqNyZVK19N6Jzmx/LjmDc+kiV751FQ2h3xscYkAeY4jfau2vZTZau+xR8fpkKrv/Ng==}
+    dev: false
+
   /@panva/hkdf@1.1.1:
     resolution: {integrity: sha512-dhPeilub1NuIG0X5Kvhh9lH4iW3ZsHlnzwgwbOlgwQ2wG1IqFzsgHqmKPk3WzsdWAeaxKJxgM0+W433RmN45GA==}
     dev: false
@@ -800,6 +813,10 @@ packages:
     dependencies:
       '@types/geojson': 7946.0.12
     dev: false
+
+  /@types/lodash@4.14.202:
+    resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
+    dev: true
 
   /@types/node@18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}

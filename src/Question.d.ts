@@ -93,6 +93,7 @@ type QuestionTypeMap = {
   'write': WriteQuestion;
   'fill': FillQuestion;
   'geography': GeographyQuestion;
+  "programming": ProgrammingQuestion;
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

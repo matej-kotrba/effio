@@ -9,6 +9,7 @@ import type { Prisma, TestRecord } from "@prisma/client";
 import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte";
 import { browser } from "$app/environment";
 import { get } from "svelte/store";
+import { validateCode } from "./validateCode";
 
 type QuestionMethods = {
   [Key in keyof QuestionTypeMap]: {
@@ -34,6 +35,9 @@ export const questionMethods: QuestionMethods = {
   },
   "geography": {
     icon: "tabler:globe-filled"
+  },
+  "programming": {
+    icon: "solar:programming-bold"
   }
 }
 
@@ -462,6 +466,75 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     calculatePoints: (q1: GeographyQuestion, q2: GeographyQuestion, maxPoints: number) => {
       return questionContentFunctions["geography"].checkAnswerCorrectness(q1, q2) ? maxPoints : 0
+    }
+  },
+  "programming": {
+    "createNew": () => {
+      return {
+        type: 'programming',
+        title: '',
+        description: '',
+        code: '',
+        language: 'js',
+        tests: [
+          {
+            input: '',
+            output: '',
+            error: ''
+          }
+        ],
+        hints: []
+      }
+    },
+    "separateAnswer": (question: ProgrammingQuestion): PartialPick<ProgrammingQuestion, "code"> => {
+      return {
+        ...question,
+        code: ""
+      }
+    },
+    "checkAnswerPresence": (question: ProgrammingQuestion): boolean => {
+      return true
+    },
+    "checkAnswerCorrectness": (answer: ProgrammingQuestion, original: ProgrammingQuestion) => {
+      const data = validateCode(answer.code, original.tests)
+      const isAllRight = data.testPasses.find(item => item === false) === undefined
+      if (isAllRight) return true
+      const isAnyRight = data.testPasses.find(item => item === true) !== undefined
+      if (isAnyRight) return "partial"
+      return false
+    },
+    "checkCreatorCorrectFormat": (content: ProgrammingQuestion) => {
+      let isError = false
+      let message = ""
+
+      if (!content.language) {
+        isError = true
+        message = "Please select the language."
+      }
+
+      if (!content.tests) {
+        isError = true
+        message = "Please add the tests."
+      }
+
+      if (!content.title) {
+        isError = true
+        message = "Please add the title."
+      }
+
+      if (!content.description) {
+        isError = true
+        message = "Please add the description."
+      }
+
+      return {
+        isError: isError,
+        message: message,
+        store: content
+      }
+    },
+    "calculatePoints": (q1: ProgrammingQuestion, q2: ProgrammingQuestion, maxPoints: number) => {
+      return questionContentFunctions["programming"]["checkAnswerCorrectness"](q1, q2) ? maxPoints : 0
     }
   }
 }
