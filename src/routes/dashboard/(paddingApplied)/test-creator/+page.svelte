@@ -13,8 +13,6 @@
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { trpc } from '$lib/trpc/client';
 	import { testObject } from '~stores/testObject';
 	import {
 		DESCRIPTION_MAX,
@@ -26,8 +24,7 @@
 	} from '~schemas/textInput';
 	import {
 		initializeNewTestToTestStore,
-		isTestValidAndSetErrorsToTestObject,
-		isValidInputServerAndSetErrorsToTestObject
+		isTestValidAndSetErrorsToTestObject
 	} from '~/lib/helpers/test';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
@@ -40,6 +37,7 @@
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import ProgressNavigation from '~components/navigation/ProgressNavigation.svelte';
 
 	export let data;
 
@@ -62,7 +60,16 @@
 		{ title: 'Blank', image: '/imgs/svgs/empty.svg' }
 	];
 
-	let templatesActive: number;
+	let programmingTemplates: { title: string; image: string }[] = [
+		{
+			title: 'Blank',
+			image: '/imgs/svgs/construction.svg'
+		}
+	];
+
+	let templatesActive: number | undefined;
+
+	let testType: 'questions' | 'programming' = 'questions';
 
 	let finishModal: HTMLDialogElement;
 	let testImageFile: File | undefined = undefined;
@@ -223,6 +230,14 @@
 		}
 	}
 
+	function onTestTypeChangeClick(type: 'questions' | 'programming') {
+		testCreationProgress.templateDone = false;
+		testCreationProgress.constructingDone = false;
+		testCreationProgress.detailsDone = false;
+		testType = type;
+		templatesActive = undefined;
+	}
+
 	$: canUserContinue = () => {
 		if (!Number.isInteger(templatesActive)) return false;
 		return true;
@@ -331,14 +346,6 @@
 		</li>
 	</ul>
 </div>
-<!-- <ProgressNavigation
-	parts={[
-		{ title: 'Picking a template', onClick: () => {}, buttonProps: { disabled: false } },
-		{ title: 'Constructing a test', onClick: () => {}, buttonProps: { disabled: true } },
-		{ title: 'Details', onClick: () => {}, buttonProps: { disabled: true } }
-	]}
-	color={'var(--light-primary)'}
-/> -->
 <h3 class="text-h5 md:text-h4 text-light_text_black dark:text-dark_text_white">
 	{#if testCreationProgress.templateDone === false}
 		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
@@ -370,21 +377,53 @@
 			}}
 			class=""
 		>
-			<div class="items-center justify-center xs:justify-start templates-grid">
-				{#each templates as template, index}
-					<TemplateCard
-						title={template.title}
-						imageSrc={templates[index].image}
-						onClick={() => (templatesActive = index)}
-						customClasses={index === templatesActive
-							? ' border-light_primary dark:border-dark_primary border-4 border-solid shadow-primary dark:shadow-primary_dark shadow-2xl'
-							: ' border-transparent border-4 border-solid'}
-					/>
-				{/each}
-				<FileImport
-					on:parsedFile={handleParsedData}
-					additionalText={'In GIFT format'}
+			<div>
+				<ProgressNavigation
+					parts={[
+						{
+							title: 'Basic test',
+							onClick: () => {
+								onTestTypeChangeClick('questions');
+							}
+						},
+						{
+							title: 'Programming test',
+							onClick: () => {
+								onTestTypeChangeClick('programming');
+							}
+						}
+					]}
 				/>
+			</div>
+			<Space gap={15} />
+			<div class="items-center justify-center xs:justify-start templates-grid">
+				{#if testType === 'questions'}
+					{#each templates as template, index}
+						<TemplateCard
+							title={template.title}
+							imageSrc={templates[index].image}
+							onClick={() => (templatesActive = index)}
+							customClasses={index === templatesActive
+								? ' border-light_primary dark:border-dark_primary border-4 border-solid shadow-primary dark:shadow-primary_dark shadow-2xl'
+								: ' border-transparent border-4 border-solid'}
+						/>
+					{/each}
+					<FileImport
+						on:parsedFile={handleParsedData}
+						additionalText={'In GIFT format'}
+					/>
+				{:else if testType === 'programming'}
+					{#each programmingTemplates as template, index}
+						<TemplateCard
+							title={template.title}
+							imageSrc={template.image}
+							onClick={() => (templatesActive = index)}
+							customClasses={index === templatesActive
+								? ' border-light_primary dark:border-dark_primary border-4 border-solid shadow-primary dark:shadow-primary_dark shadow-2xl'
+								: ' border-transparent border-4 border-solid'}
+						/>
+					{/each}
+				{/if}
 			</div>
 			<Space />
 
@@ -411,7 +450,9 @@
 				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
 			}}
 		>
-			<Creator inputTemplates={data.questionsTypes} bind:scrollToInput />
+			{#if testType === 'questions'}
+				<Creator inputTemplates={data.questionsTypes} bind:scrollToInput />
+			{:else if testType === 'programming'}{/if}
 			<Space />
 
 			<!-- {#if $testObject.questions.length > 0}
