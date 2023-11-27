@@ -27,6 +27,7 @@ export const appRouter = router({
   }),
   getQuestionsTypes: procedure.query(async ({ ctx }) => {
     const questionsTypes = await ctx.prisma.questionType.findMany()
+
     // Manual check if the field is correct will be performed here because of the JSON field
     const result = []
     for (const questionType of questionsTypes) {

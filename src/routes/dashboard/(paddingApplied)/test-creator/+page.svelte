@@ -52,7 +52,7 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
+		templateDone: true,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -70,7 +70,7 @@
 
 	let templatesActive: number | undefined;
 
-	let testType: 'questions' | 'programming' = 'questions';
+	let testType: 'questions' | 'programming' = 'programming';
 
 	let finishModal: HTMLDialogElement;
 	let testImageFile: File | undefined = undefined;
@@ -300,7 +300,7 @@
 			on:click={onNavigationButtonClick}
 			disabled={!canUserContinue()}
 			class={`group grid place-content-center p-1 duration-150 border-2 border-solid rounded-lg md:p-3 bg-light_terciary text-light_whiter
-	  disabled:bg-gray-300 disabled:text-light_whiter border-light_terciary hover:bg-light_whiter hover:text-light_terciary`}
+	  disabled:bg-gray-300 disabled:text-light_whiter dark:disabled:bg-dark_terciary border-light_terciary dark:border-dark_primary hover:bg-light_whiter hover:text-light_terciary`}
 		>
 			<!-- <div
 			class="w-[150%] aspect-square rounded-lg bg-light_grey scale-0 group-disabled:scale-0 group-hover:scale-100 duration-150 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
