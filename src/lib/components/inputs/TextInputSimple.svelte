@@ -16,6 +16,7 @@
 	export let doesLimit: boolean = false;
 	export let trailing: string = '';
 	export let displayOutside: boolean = false;
+	export let displayTitle: boolean = true;
 
 	let classes = '';
 	export { classes as class };
@@ -76,7 +77,7 @@
 </script>
 
 <div>
-	{#if displayOutside === true}
+	{#if displayOutside === true && displayTitle === true}
 		<div class="flex items-center justify-between px-1">
 			<label
 				for={titleName}
@@ -94,7 +95,7 @@
 	<div
 		class="py-1 group underline_effect w-full before:content-[''] relative {customContainerStyles}"
 	>
-		{#if displayOutside === false}
+		{#if displayOutside === false && displayTitle === true}
 			<label
 				for={titleName}
 				class="absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"

@@ -73,11 +73,7 @@
 			cases as possible</span
 		>
 		<div>
-			{#each content['tests'] as test}
-				<div>
-					<InputOutputSetter />
-				</div>
-			{/each}
+			<InputOutputSetter questionIndex={INDEX_OF_QUESTION} />
 		</div>
 	</div>
 </div>

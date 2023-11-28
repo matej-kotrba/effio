@@ -1,51 +1,71 @@
 <script lang="ts">
-	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
+	import 'monaco-editor/min/vs/editor/editor.main.css';
+	import type { editor } from 'monaco-editor';
+	import { browser } from '$app/environment';
+	import { testObject } from '~stores/testObject';
 
-	// export let testObjectReference:
+	export let questionIndex: number;
 	export let title = '';
 
-	const SUPPORTED_TYPES = [
-		'string',
-		'number',
-		'boolean',
-		'array',
-		'object'
-	] as const;
+	$: content = $testObject.questions[questionIndex]
+		.content as ProgrammingQuestion;
 
-	export let selectedType: (typeof SUPPORTED_TYPES)[number] | undefined =
-		undefined;
+	let editorContainer: HTMLDivElement;
 
-	function onSelectChange(
-		e: Event & {
-			currentTarget: EventTarget & HTMLSelectElement;
+	let monaco: typeof import('monaco-editor');
+	let editor: editor.IStandaloneCodeEditor;
+
+	// export let selectedType: (typeof SUPPORTED_TYPES)[number] | undefined =
+	// 	undefined;
+
+	// function onSelectChange(
+	// 	e: Event & {
+	// 		currentTarget: EventTarget & HTMLSelectElement;
+	// 	}
+	// ) {
+	// 	selectedType = e.currentTarget.value as (typeof SUPPORTED_TYPES)[number];
+	// }
+
+	onMount(async () => {
+		monaco = await import('monaco-editor');
+
+		await Promise.all([
+			import('monaco-editor/esm/vs/language/json/json.worker?worker'),
+			import('monaco-editor/esm/vs/editor/editor.worker?worker')
+		]).then(([jsonWorker, editorWorker]) => {
+			self.MonacoEnvironment = {
+				getWorker(_, label) {
+					return new jsonWorker.default();
+				}
+			};
+		});
+		editor = monaco.editor.create(editorContainer, {
+			value: '{\n\t\n}',
+			language: 'json',
+			theme: 'vs-dark-plus'
+		});
+
+		window.addEventListener('resize', () => editor.layout());
+	});
+
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('resize', () => editor.layout());
+			editor.dispose();
 		}
-	) {
-		selectedType = e.currentTarget.value as (typeof SUPPORTED_TYPES)[number];
-	}
+	});
 </script>
 
+<Dialog title="Test edit">
+	<div id="container" bind:this={editorContainer} />
+</Dialog>
 <div>
 	<h6>{title}</h6>
-	<div class="w-fit">
-		<select
-			class="w-full h-full max-w-xs select select-bordered"
-			on:change={(e) => onSelectChange(e)}
-		>
-			<option disabled selected>Select</option>
-			{#each SUPPORTED_TYPES as type}
-				<option class="font-semibold capitalize">{type}</option>
-			{/each}
-			<div class="w-full">
-				<TextInputSimple
-					title="Input"
-					titleName="input"
-					displayOutside={true}
-					on:error={(event) =>
-						($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
-							event.detail)}
-					bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
-				/>
-			</div>
-		</select>
+	<div>
+		{#each content['tests'] as test, index}
+			<div>Test {index + 1}</div>
+		{/each}
 	</div>
 </div>
