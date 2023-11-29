@@ -33,7 +33,7 @@ if (browser) {
 }
 // Adds intersection observer for provided element
 // On intersect observer will dispatch intersect event
-export const intersection: Action<HTMLElement> = (node: HTMLElement, once: boolean | undefined) => {
+export const intersection: Action<HTMLElement, any> = (node: HTMLElement, once: boolean | undefined) => {
   if (!once) observer?.observe(node)
   else observerOnce?.observe(node)
 

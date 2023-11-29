@@ -9,7 +9,10 @@
 </script>
 
 {#if visible}
-	<div class={twMerge('flex flex-col items-center justify-center', classes)} in:fade>
+	<div
+		class={twMerge('flex flex-col items-center justify-center', classes)}
+		in:fade
+	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			width="256"
