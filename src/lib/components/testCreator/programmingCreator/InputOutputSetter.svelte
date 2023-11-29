@@ -12,7 +12,7 @@
 	export let questionIndex: number;
 	export let title = '';
 
-	$: content = $testObject.questions[questionIndex]
+	$: content = $testObject?.questions[questionIndex]
 		.content as ProgrammingQuestion;
 
 	let inputEditorContainer: HTMLDivElement;
@@ -54,6 +54,8 @@
 			output: content.tests[index].output
 		};
 		openDialog();
+		inputEditor.layout();
+		outputEditor.layout();
 	}
 
 	function onDialogClose(indexOfTest: number) {
@@ -195,7 +197,8 @@
 		bind:this={inputEditorContainer}
 	/>
 	<p class="text-body2 text-error dark:text-dark_error">
-		{content.errors.tests &&
+		{content &&
+		content.errors.tests &&
 		content.errors.tests[currentDropdownData.index].input
 			? content.errors.tests[currentDropdownData.index].input
 			: ''}
@@ -210,7 +213,8 @@
 		bind:this={outputEditorContainer}
 	/>
 	<p class="text-body2 text-error dark:text-dark_error">
-		{content.errors.tests &&
+		{content &&
+		content.errors.tests &&
 		content.errors.tests[currentDropdownData.index].output
 			? content.errors.tests[currentDropdownData.index].output
 			: ''}
