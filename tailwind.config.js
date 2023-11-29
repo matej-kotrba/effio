@@ -113,11 +113,20 @@ export default {
 						transform: 'translateX(0)',
 						opacity: 1
 					}
+				},
+				fade: {
+					'0%': {
+						opacity: 0
+					},
+					'100%': {
+						opacity: 1
+					}
 				}
 			},
 			animation: {
 				fly_x: 'fly_x 0.8s ease-out',
-				fly_x_reversed: 'fly_x_reversed 0.8s ease-out'
+				fly_x_reversed: 'fly_x_reversed 0.8s ease-out',
+				fade: 'fade 0.2s ease-out'
 			}
 		}
 	},

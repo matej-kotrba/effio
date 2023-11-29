@@ -23,7 +23,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.57.1",
 		"@typescript-eslint/parser": "^5.57.1",
 		"autoprefixer": "^10.4.14",
-		"daisyui": "^3.0.20",
+		"daisyui": "^4.4.14",
 		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-svelte3": "^4.0.0",
