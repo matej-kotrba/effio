@@ -94,6 +94,7 @@ model Test {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   isPublic                Boolean                   @default(false)
+  type                    TestType                  @default(REGULAR)
   tags                    TagOnTests[]
   stars                   Int                       @default(0)
   views                   Int                       @default(0)
@@ -299,4 +300,9 @@ model GroupSubcategoryMessage {
 enum MessageTypes {
   MESSAGE
   TEST
+}
+
+enum TestType {
+  REGULAR
+  PROGRAMMING
 }

@@ -92,6 +92,7 @@
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
 				isPublished: isPublished,
+				testType: testType,
 				image: testImageFile || undefined
 			},
 			callbacks: {
@@ -111,6 +112,7 @@
 				}
 			}
 		});
+
 		// const result = isTestValidAndSetErrorsToTestObject({
 		// 	title: $testObject.title,
 		// 	description: $testObject.description,

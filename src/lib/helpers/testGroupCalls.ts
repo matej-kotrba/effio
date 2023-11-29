@@ -8,6 +8,7 @@ import { goto } from "$app/navigation";
 import { createTRPCErrorNotification } from "../utils/notification";
 import toast from "svelte-french-toast";
 import { enviromentFetch } from "./fetch";
+import type { TestType } from "@prisma/client";
 
 // Awaited<
 //   ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
@@ -36,7 +37,7 @@ const defaultCallbacks: Callbacks<Awaited<
 
 type Props = {
   type: "create",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, testType: TestType },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
   >, unknown>
@@ -114,6 +115,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
         questionContent: JSON.stringify(props.data.questions),
         isPublished: props.data.isPublished,
         imageUrl: data || undefined,
+        testType: props.data.testType,
         markSystem: props.data.markSystem?.marks
           ? {
             marks: currentStore.markSystem.marks.map((item) => {

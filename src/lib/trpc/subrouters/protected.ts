@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
-import type { Prisma } from "@prisma/client"
+import type { Prisma, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 
 export const protectedRouter = router({
@@ -15,6 +15,7 @@ export const protectedRouter = router({
       }))
     }).optional(),
     isPublished: z.boolean(),
+    testType: z.enum(["REGULAR", "PROGRAMMING"]).default("REGULAR"),
     imageUrl: z.string().optional(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
@@ -57,6 +58,7 @@ export const protectedRouter = router({
         description: input.description,
         isPublic: isPublic,
         imageUrl: input.imageUrl,
+        type: input.testType,
         testVersions: {
           create: {
             version: 1,
