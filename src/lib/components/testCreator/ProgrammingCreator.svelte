@@ -66,14 +66,6 @@
 		bind:inputValue={content['description']}
 	/>
 	<div class="mt-4">
-		<h5 class="text-h5">Tests</h5>
-		<span
-			class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
-			>* For sake of your task you should create as many test with as many edge
-			cases as possible</span
-		>
-		<div>
-			<InputOutputSetter questionIndex={INDEX_OF_QUESTION} />
-		</div>
+		<InputOutputSetter questionIndex={INDEX_OF_QUESTION} />
 	</div>
 </div>

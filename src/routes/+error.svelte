@@ -7,7 +7,17 @@
 		>
 	</span>
 	<div class="flex items-center gap-2">
-		<button type="button" on:click={history.back} class="btn btn-outline">
+		<button
+			type="button"
+			on:click={() => {
+				try {
+					history.back();
+				} catch (_) {
+					location.href = '/';
+				}
+			}}
+			class="btn btn-outline"
+		>
 			<iconify-icon icon="vaadin:arrow-backward" class="text-3xl" />
 		</button>
 		<a href="/" class="btn btn-outline"> Back to homepage </a>

@@ -113,10 +113,8 @@
 							class:active={browser &&
 								$page.url.pathname.startsWith('/dashboard/test-creator')}
 						>
-							<iconify-icon
-								icon="material-symbols:edit-square-outline-rounded"
-								class="text-2xl"
-							/> Create a new test
+							<iconify-icon icon="system-uicons:create" class="text-2xl" /> Create
+							a new test
 						</a>
 						<a
 							on:click={() => (isSidebarShown = false)}

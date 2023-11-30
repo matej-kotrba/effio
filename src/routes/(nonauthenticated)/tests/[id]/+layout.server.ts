@@ -3,6 +3,7 @@ import { appRouter } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
+// TODO: Can be client, no .server needed
 export const load: ServerLoad = async (request) => {
 
   const id = request.params.id;

@@ -2,6 +2,8 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import { createContext } from "~/lib/trpc/context";
 import { appRouter } from "~/lib/trpc/router";
 
+
+// TODO: Can be client, no .server needed
 export const load: ServerLoad = async (request) => {
   const id = request.params.id
   console.log(id)

@@ -48,6 +48,12 @@
 	// }
 
 	function openDropdown(index: number) {
+		if (content.tests[index] === undefined) {
+			content.tests[index] = {
+				input: '',
+				output: ''
+			};
+		}
 		currentDropdownData = {
 			index: index,
 			input: content.tests[index].input,
@@ -60,6 +66,7 @@
 
 	function onDialogClose(indexOfTest: number) {
 		const inputCode = inputEditor.getValue();
+		const outputCode = outputEditor.getValue();
 		let isError = false;
 
 		try {
@@ -79,6 +86,8 @@
 					'Input must be a string, number, boolean, array or object'
 				);
 			}
+
+			console.log(currentDropdownData);
 
 			const input = JSON.stringify(inputCode);
 
@@ -105,7 +114,7 @@
 
 		try {
 			// Check if input is valid and not an expression
-			const exec = sandbox.compile(`return ${inputCode}`);
+			const exec = sandbox.compile(`return ${outputCode}`);
 			const scriptResult = exec().run();
 			console.log('RESULT', scriptResult, typeof scriptResult);
 			if (
@@ -121,7 +130,7 @@
 				);
 			}
 
-			const input = JSON.stringify(inputCode);
+			const input = JSON.stringify(outputCode);
 
 			content.tests[indexOfTest].output = input;
 
@@ -147,6 +156,20 @@
 		if (!isError) {
 			closeDialog();
 		}
+	}
+
+	function onAddTest() {
+		content.tests = [
+			...content.tests,
+			{
+				input: '',
+				output: ''
+			}
+		];
+	}
+
+	function deleteTest(index: number) {
+		content.tests = content.tests.filter((_, i) => i !== index);
 	}
 
 	onMount(async () => {
@@ -185,6 +208,8 @@
 			outputEditor.dispose();
 		}
 	});
+
+	$: console.log(content);
 </script>
 
 <Dialog title="Test edit" bind:open={openDialog} bind:close={closeDialog}>
@@ -228,15 +253,56 @@
 		>
 	</div>
 </Dialog>
+
+<div class="flex gap-2">
+	<h5 class="text-h5">Tests</h5>
+	<button
+		type="button"
+		on:click={onAddTest}
+		class={`grid p-1 border-2 rounded-md bg-light_whiter dark:bg-dark_light_grey place-content-center
+		 border-light_text_black_40 dark:border-dark_text_white_40 hover:bg-light_grey duration-150`}
+	>
+		<iconify-icon icon="ic:round-plus" class="text-3xl" />
+	</button>
+</div>
+<span class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
+	>* For sake of your task you should create as many test with as many edge
+	cases as possible</span
+>
 <div>
 	<h6>{title}</h6>
 	<div>
 		{#each content['tests'] as test, index}
-			<button
-				type="button"
-				class="btn min-w-[240px]"
-				on:click={() => openDropdown(index)}>Test {index + 1}</button
-			>
+			<div class="relative w-fit group">
+				<button
+					type="button"
+					class="btn max-w-[240px] min-w-[240px] flex justify-between flex-nowrap gap-2"
+					on:click={() => openDropdown(index)}
+				>
+					<span class="font-semibold text-h6">{index + 1}.</span>
+					<div
+						class="w-full overflow-x-hidden text-left text-ellipsis whitespace-nowrap"
+					>
+						<span>I: </span>
+						<span
+							class={`${test.input ? '' : 'text-error dark:text-dark_error'}`}
+							>{test.input ? JSON.parse(test.input) : 'Unset'}</span
+						>
+						<span>O: </span>
+						<span
+							class={`${test.output ? '' : 'text-error dark:text-dark_error'}`}
+							>{test.output ? JSON.parse(test.output) : 'Unset'}</span
+						>
+					</div>
+				</button>
+				<button
+					type="button"
+					on:click={() => deleteTest(index)}
+					class="absolute grid p-1 duration-100 -translate-y-1/2 rounded-md opacity-0 right-2 top-1/2 place-content-center group-hover:opacity-100 hover:bg-light_grey_dark"
+				>
+					<iconify-icon icon="fluent:delete-28-filled" class="text-2xl" />
+				</button>
+			</div>
 		{/each}
 	</div>
 </div>

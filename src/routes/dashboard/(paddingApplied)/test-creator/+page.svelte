@@ -92,7 +92,7 @@
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
 				isPublished: isPublished,
-				testType: testType,
+				testType: testType === 'programming' ? 'PROGRAMMING' : 'REGULAR',
 				image: testImageFile || undefined
 			},
 			callbacks: {

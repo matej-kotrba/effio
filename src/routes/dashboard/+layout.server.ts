@@ -3,6 +3,7 @@ import { createContext } from "~/lib/trpc/context";
 import { appRouter } from "~/lib/trpc/router";
 // import prisma from "~/lib/prisma"
 
+// TODO: Can be client, no .server needed
 export const load: ServerLoad = async (event) => {
 
   const context = await createContext(event)
