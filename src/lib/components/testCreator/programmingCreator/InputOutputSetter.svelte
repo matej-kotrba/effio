@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { afterUpdate, beforeUpdate, onDestroy, onMount, tick } from 'svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import 'monaco-editor/min/vs/editor/editor.main.css';
 	import type { editor } from 'monaco-editor';
@@ -8,9 +8,14 @@
 	import Space from '~components/separators/Space.svelte';
 	import toast from 'svelte-french-toast';
 	import Sandbox from '@nyariv/sandboxjs';
+	import { gsap } from 'gsap';
+	import { Flip } from 'gsap/dist/Flip';
+	import { filter } from 'lodash';
 
 	export let questionIndex: number;
 	export let title = '';
+
+	gsap.registerPlugin(Flip);
 
 	$: content = $testObject?.questions[questionIndex]
 		.content as ProgrammingQuestion;
@@ -60,6 +65,20 @@
 			output: content.tests[index].output
 		};
 		openDialog();
+		let inputData = content.tests[index].input;
+		let outputData = content.tests[index].output;
+		try {
+			inputData = (JSON.parse(inputData) as string).toString();
+		} catch (e) {
+			inputData = inputData;
+		}
+		try {
+			outputData = (JSON.parse(outputData) as string).toString();
+		} catch (e) {
+			outputData = outputData;
+		}
+		inputEditor.setValue(inputData);
+		outputEditor.setValue(outputData);
 		inputEditor.layout();
 		outputEditor.layout();
 	}
@@ -86,8 +105,6 @@
 					'Input must be a string, number, boolean, array or object'
 				);
 			}
-
-			console.log(currentDropdownData);
 
 			const input = JSON.stringify(inputCode);
 
@@ -168,8 +185,29 @@
 		];
 	}
 
-	function deleteTest(index: number) {
+	async function deleteTest(index: number) {
 		content.tests = content.tests.filter((_, i) => i !== index);
+
+		const items = document.querySelectorAll('.test');
+
+		let state: Flip.FlipState;
+		let state_to: Flip.FlipState;
+		items.forEach(async (item, index) => {
+			if (index === 0) return;
+			state = Flip.getState(item);
+			state_to = Flip.getState(items[index - 1]);
+
+			await tick();
+			Flip.from(state, {
+				duration: 0.6,
+				absolute: true
+			});
+
+			Flip.to(state_to, {
+				duration: 0.6,
+				absolute: true
+			});
+		});
 	}
 
 	onMount(async () => {
@@ -224,6 +262,7 @@
 	<p class="text-body2 text-error dark:text-dark_error">
 		{content &&
 		content.errors.tests &&
+		content.errors.tests[currentDropdownData.index] &&
 		content.errors.tests[currentDropdownData.index].input
 			? content.errors.tests[currentDropdownData.index].input
 			: ''}
@@ -240,6 +279,7 @@
 	<p class="text-body2 text-error dark:text-dark_error">
 		{content &&
 		content.errors.tests &&
+		content.errors.tests[currentDropdownData.index] &&
 		content.errors.tests[currentDropdownData.index].output
 			? content.errors.tests[currentDropdownData.index].output
 			: ''}
@@ -269,14 +309,16 @@
 	>* For sake of your task you should create as many test with as many edge
 	cases as possible</span
 >
-<div>
+<div class="@container">
 	<h6>{title}</h6>
-	<div>
+	<div
+		class="grid gap-2 @sm:grid-cols-2 @xl:grid-cols-3 @4xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-6"
+	>
 		{#each content['tests'] as test, index}
-			<div class="relative w-fit group">
+			<div class="relative w-full group test">
 				<button
 					type="button"
-					class="btn max-w-[240px] min-w-[240px] flex justify-between flex-nowrap gap-2"
+					class="flex justify-between w-full gap-2 btn flex-nowrap"
 					on:click={() => openDropdown(index)}
 				>
 					<span class="font-semibold text-h6">{index + 1}.</span>
