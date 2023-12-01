@@ -134,7 +134,7 @@
 						} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full dark:placeholder:text-dark_text_white_40
-			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary duration-150 
+			outline-1 outline-transparent outline group-focus-within:outline-primary dark:group-focus-within:outline-dark_primary input-specific-transition
 				
 			`,
 						classes
@@ -154,6 +154,10 @@
 
 	.input_edit:disabled {
 		@apply bg-gray-300 text-light_text_black_40;
+	}
+
+	.input-specific-transition {
+		transition: 150ms outline;
 	}
 
 	:global(.dark) .input_edit:disabled {

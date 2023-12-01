@@ -8,15 +8,17 @@
 		PROGRAMMING_DESCRIPTION_MAX,
 		PROGRAMMING_DESCRIPTION_MIN,
 		answerSchema,
+		descriptionSchema,
 		programminDescriptionSchema
 	} from '~schemas/textInput';
 	import { testObject } from '~stores/testObject';
 	import InputOutputSetter from './programmingCreator/InputOutputSetter.svelte';
+	import { SOURCES, dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
 
-	$testObject.questions = [];
 	$testObject.questions.push({
 		content: questionContentFunctions['programming']['createNew'](),
 		title: '',
@@ -31,10 +33,54 @@
 	$: content = $testObject.questions[INDEX_OF_QUESTION]
 		.content as ProgrammingQuestion;
 
+	let hints: {
+		id: string;
+		text: string;
+	}[] = [];
+
+	function addHint() {
+		hints = [
+			...hints,
+			{
+				id: crypto.randomUUID(),
+				text: ''
+			}
+		];
+		// content['hints'] = [...content['hints'], ''];
+	}
+
+	let dragDisable = true;
+
+	function onOrderChange(e: {
+		detail: { items: { id: string; text: string }[]; info: { source: any } };
+	}) {
+		console.log(e.detail.items);
+		hints = e.detail.items;
+		// content.hints = e.detail.items.map((item) => item.text);
+		if (e.detail.info.source === SOURCES.POINTER) {
+			dragDisable = true;
+		}
+	}
+
+	function onOrderConsideration(e: {
+		detail: { items: { id: string; text: string }[] };
+	}) {
+		hints = e.detail.items;
+		// content.hints = e.detail.items.map((item) => item.text);
+	}
+
+	function startDrag(e: Event) {
+		e.preventDefault();
+		dragDisable = false;
+	}
+
 	onMount(() => {
-		return () => {
-			$testObject.questions = [];
-		};
+		hints = [
+			{
+				id: crypto.randomUUID(),
+				text: ''
+			}
+		];
 	});
 </script>
 
@@ -67,5 +113,75 @@
 	/>
 	<div class="mt-4">
 		<InputOutputSetter questionIndex={INDEX_OF_QUESTION} />
+	</div>
+	<div class="mt-4">
+		<div class="flex items-center gap-2">
+			<h5 class="text-h5">Hints</h5>
+			<button
+				type="button"
+				on:click={addHint}
+				class={`grid p-1 border-2 rounded-md bg-light_whiter dark:bg-dark_light_grey place-content-center
+		 border-light_text_black_40 dark:border-dark_text_white_40 hover:bg-light_grey duration-150`}
+			>
+				<iconify-icon icon="ic:round-plus" class="text-3xl" />
+			</button>
+		</div>
+		<p class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60">
+			* If users run out of ideas your hints might help them
+		</p>
+		<div
+			role="list"
+			use:dndzone={{
+				items: hints,
+				flipDurationMs: 300,
+				dragDisabled: dragDisable,
+				dropTargetClasses: [
+					'outline-light_primary',
+					'outline-solid',
+					'rounded-md'
+				],
+				dropTargetStyle: {
+					outline: '2px dashed var(--light-primary)'
+				}
+			}}
+			on:finalize={onOrderChange}
+			on:consider={onOrderConsideration}
+			on:dragover={(e) => {
+				if (e?.dataTransfer?.effectAllowed) {
+					e.preventDefault();
+					e.dataTransfer.dropEffect = 'move';
+				}
+			}}
+		>
+			{#each hints as hint, index (hint['id'])}
+				<div animate:flip={{ duration: 200 }} class="flex items-center">
+					<button
+						class="grid h-full place-content-center"
+						on:mousedown={startDrag}
+						on:touchstart={startDrag}
+					>
+						<iconify-icon
+							icon="akar-icons:drag-horizontal"
+							class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
+						/>
+					</button>
+					<TextInputSimple
+						inputProperties={{ placeholder: 'Hint' }}
+						title={``}
+						titleName={'hint'}
+						validationSchema={descriptionSchema}
+						displayOutside={true}
+						class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
+						on:error={(event) => {
+							if (content['errors']['hints'] === undefined) {
+								content['errors']['hints'] = [];
+							}
+							content['errors']['hints'][index] = event.detail;
+						}}
+						bind:inputValue={hint.text}
+					/>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>

@@ -188,26 +188,25 @@
 	async function deleteTest(index: number) {
 		content.tests = content.tests.filter((_, i) => i !== index);
 
-		const items = document.querySelectorAll('.test');
+		// const items = document.querySelectorAll('.test');
 
-		let state: Flip.FlipState;
-		let state_to: Flip.FlipState;
-		items.forEach(async (item, index) => {
-			if (index === 0) return;
-			state = Flip.getState(item);
-			state_to = Flip.getState(items[index - 1]);
+		// let state: Flip.FlipState;
 
-			await tick();
-			Flip.from(state, {
-				duration: 0.6,
-				absolute: true
-			});
+		// items.forEach(async (item, index) => {
+		// 	if (index === 0) return;
 
-			Flip.to(state_to, {
-				duration: 0.6,
-				absolute: true
-			});
-		});
+		// 	const temp = item.cloneNode();
+
+		// 	await tick();
+		// 	Flip.fit(temp, item);
+		// state = Flip.getState(item);
+
+		// await tick();
+		// Flip.from(state, {
+		// 	duration: 0.6,
+		// 	absolute: true
+		// });
+		// });
 	}
 
 	onMount(async () => {
@@ -246,8 +245,6 @@
 			outputEditor.dispose();
 		}
 	});
-
-	$: console.log(content);
 </script>
 
 <Dialog title="Test edit" bind:open={openDialog} bind:close={closeDialog}>
