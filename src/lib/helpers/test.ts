@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, programmingTestInputSchema, programmingTestSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingTestSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -514,8 +514,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       if (!content.description) {
         isError = true
-        message = "Please add the description."
-        content.errors.description = "Please add the description"
+
+        const parsedDescription = programmingDescriptionSchema.safeParse(content.description)
+        if (parsedDescription.success === false) {
+          isError = true
+          content.errors.description = parsedDescription.error.errors[0].message
+        }
       }
 
       if (content.tests === undefined) {
@@ -529,16 +533,28 @@ export const questionContentFunctions: QuestionContentTransformation = {
           if (input.success === false) {
             isError = true
             if (content.errors.tests === undefined) content.errors.tests = []
+            if (content.errors.tests[i] === undefined) content.errors.tests[i] = {}
             content.errors.tests[i].input = input.error.errors[0].message
           }
 
-          const output = programmingTestInputSchema.safeParse(content.tests[i].output)
+          const output = programmingTestOutputSchema.safeParse(content.tests[i].output)
 
           if (output.success === false) {
             isError = true
             if (content.errors.tests === undefined) content.errors.tests = []
+            if (content.errors.tests[i] === undefined) content.errors.tests[i] = {}
             content.errors.tests[i].output = output.error.errors[0].message
           }
+        }
+      }
+
+      for (const i in content.hints) {
+        const hint = answerSchema.safeParse(content.hints[i])
+
+        if (hint.success === false) {
+          isError = true
+          if (content.errors.hints === undefined) content.errors.hints = []
+          content.errors.hints[i] = hint.error.errors[0].message
         }
       }
 

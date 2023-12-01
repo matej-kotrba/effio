@@ -78,8 +78,6 @@
 	let isSubmitting = false;
 	let isSuccess = false;
 
-	$: console.log($testObject.questions);
-
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean
 	) {

@@ -19,6 +19,7 @@ export const protectedRouter = router({
     imageUrl: z.string().optional(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
+    console.log("INPUT", input)
     let questions;
     try {
       questions = JSON.parse(input.questionContent) as QuestionClient[]

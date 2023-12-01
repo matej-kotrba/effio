@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,8 +22,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -76,30 +72,31 @@ model Template {
 }
 
 model QuestionType {
-  id         String     @id @default(uuid())
-  name       String     @unique
-  slug       String     @unique
-  createdAt  DateTime   @default(now())
-  properties Json       @default("{}")
+  id         String            @id @default(uuid())
+  name       String            @unique
+  slug       String            @unique
+  createdAt  DateTime          @default(now())
+  properties Json
+  type       QuestionType_type @default(REGULAR)
   questions  Question[]
 }
 
 model Test {
   id                      String                    @id @default(uuid())
-  testVersions            TestVersion[]
   title                   String
   description             String
-  imageUrl                String                    @default("")
   published               Boolean                   @default(false)
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
-  isPublic                Boolean                   @default(false)
-  type                    TestType                  @default(REGULAR)
-  tags                    TagOnTests[]
   stars                   Int                       @default(0)
   views                   Int                       @default(0)
-  owner                   User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId                 String
+  isPublic                Boolean                   @default(false)
+  imageUrl                String                    @default("")
+  type                    TestType                  @default(REGULAR)
+  testVersions            TestVersion[]
+  tags                    TagOnTests[]
+  owner                   User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   subcategories           GroupSubcategoryOnTests[]
   groupSubcategoryMessage GroupSubcategoryMessage[]
 
@@ -113,14 +110,11 @@ model TestVersion {
   updatedAt      DateTime     @updatedAt
   version        Int
   testId         String
+  markSystemJSON Json
+  totalPoints    Int          @default(0)
   testGroup      Test         @relation(fields: [testId], references: [id], onDelete: Cascade)
   questions      Question[]
   records        TestRecord[]
-  markSystemJSON Json         @default("{}")
-  totalPoints    Int          @default(0)
-  // markSystem   MarkSystem?  @relation(fields: [markSystemId], references: [id], onDelete: Cascade)
-  // markSystemId String?
-  // @@index([markSystemId])
 
   @@index([testId])
   @@index([version])
@@ -131,13 +125,13 @@ model Question {
   title     String
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
-  type      QuestionType     @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId    String
-  test      TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   testId    String
-  records   QuestionRecord[]
-  content   Json             @default("{}")
+  content   Json
   points    Int              @default(0)
+  type      QuestionType     @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  test      TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
+  records   QuestionRecord[]
 
   @@index([typeId])
   @@index([testId])
@@ -147,11 +141,10 @@ model MarkSystem {
   id                String   @id @default(uuid())
   name              String
   markInterfaceJSON Json
-  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId           String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  // tests             TestVersion[]
+  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([ownerId])
 }
@@ -162,15 +155,15 @@ model TestRecord {
   description             String
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
-  test                    TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   testId                  String
+  userId                  String
+  subacategoryId          String?
+  userPoints              Float             @default(0)
+  shouldCountToStatistics Boolean           @default(true)
+  test                    TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   questionRecords         QuestionRecord[]
   user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                  String
   subcategory             GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
-  subacategoryId          String?
-  shouldCountToStatistics Boolean           @default(true)
-  userPoints              Float             @default(0)
 
   @@index([testId])
   @@index([userId])
@@ -179,12 +172,12 @@ model TestRecord {
 
 model QuestionRecord {
   id           String     @id @default(uuid())
-  testRecord   TestRecord @relation(fields: [testRecordId], references: [id], onDelete: Cascade)
   testRecordId String
-  question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId   String
   content      Json
   userPoints   Float      @default(0)
+  testRecord   TestRecord @relation(fields: [testRecordId], references: [id], onDelete: Cascade)
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@index([testRecordId])
   @@index([questionId])
@@ -192,10 +185,10 @@ model QuestionRecord {
 
 model TagOnTests {
   id     Int     @id @default(autoincrement())
-  test   Test?   @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  tag    Tag?    @relation(fields: [tagId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   testId String?
   tagId  String?
+  test   Test?   @relation(fields: [testId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag    Tag?    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([testId])
   @@index([tagId])
@@ -213,11 +206,11 @@ model Tag {
 
 model GroupSubcategoryOnTests {
   id            Int              @id @default(autoincrement())
-  test          Test             @relation(fields: [testId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   testId        String
   subcategoryId String
   addedDate     DateTime         @default(now())
+  test          Test             @relation(fields: [testId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([testId])
   @@index([subcategoryId])
@@ -225,11 +218,11 @@ model GroupSubcategoryOnTests {
 
 model GroupOnUsers {
   id       Int      @id @default(autoincrement())
-  user     User?    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  group    Group?   @relation(fields: [groupId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId   String?
   groupId  String?
   joinedAt DateTime @default(now())
+  user     User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  group    Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([userId])
   @@index([groupId])
@@ -238,14 +231,14 @@ model GroupOnUsers {
 model Group {
   id                  String             @id @default(uuid())
   name                String
-  description         String             @default("")
-  imageUrl            String             @default("")
   slug                String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
+  description         String             @default("")
+  ownerId             String
+  imageUrl            String             @default("")
   users               GroupOnUsers[]
   owner               User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId             String
   groupsSubcategories GroupSubcategory[]
   groupInvites        GroupInvite[]
 
@@ -254,9 +247,9 @@ model Group {
 
 model GroupInvite {
   id        String   @id @default(uuid())
-  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   String
   createdAt DateTime @default(now())
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@index([groupId])
 }
@@ -267,8 +260,8 @@ model GroupSubcategory {
   slug        String
   createdAt   DateTime                  @default(now())
   updatedAt   DateTime                  @updatedAt
-  group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId     String
+  group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   tests       GroupSubcategoryOnTests[]
   testRecords TestRecord[]
   messages    GroupSubcategoryMessage[]
@@ -279,9 +272,7 @@ model GroupSubcategory {
 
 model GroupSubcategoryMessage {
   id                 String           @id @default(uuid())
-  groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
   groupSubcategoryId String
-  sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
   senderId           String
   messageType        MessageTypes
   createdAt          DateTime         @default(now())
@@ -289,6 +280,8 @@ model GroupSubcategoryMessage {
   title              String?
   content            String?
   testId             String?
+  groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
+  sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
   test               Test?            @relation(fields: [testId], references: [id])
 
   @@index([senderId])
@@ -303,6 +296,11 @@ enum MessageTypes {
 }
 
 enum TestType {
+  REGULAR
+  PROGRAMMING
+}
+
+enum QuestionType_type {
   REGULAR
   PROGRAMMING
 }

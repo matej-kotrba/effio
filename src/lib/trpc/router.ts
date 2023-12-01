@@ -5,6 +5,7 @@ import { groupMessagesRouter } from "./subrouters/groupMessages"
 import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 import { groupInvitesRouter } from "./subrouters/groupInvite";
+import type { QuestionType } from "@prisma/client"
 
 // Schema of template question type
 const questionTemplateSchema = z.object({
@@ -21,12 +22,34 @@ const questionTemplateSchema = z.object({
 export type QuestionTemplate = z.infer<typeof questionTemplateSchema>
 
 export const appRouter = router({
-  getTemplates: procedure.query(async ({ ctx }) => {
+  getTemplates: procedure.query(async ({ ctx, input }) => {
     const templates = await ctx.prisma.template.findMany()
     return templates
   }),
-  getQuestionsTypes: procedure.query(async ({ ctx }) => {
-    const questionsTypes = await ctx.prisma.questionType.findMany()
+  getQuestionsTypes: procedure.input(z.object({
+    onlyRegular: z.boolean().optional(),
+    onlyProgramming: z.boolean().optional(),
+  }).optional()).query(async ({ ctx, input }) => {
+    let questionsTypes: QuestionType[]
+
+    if (input === undefined || input.onlyRegular === true && input.onlyProgramming === true) {
+      questionsTypes = await ctx.prisma.questionType.findMany()
+    }
+    else if (input.onlyRegular === true) {
+      questionsTypes = await ctx.prisma.questionType.findMany({
+        where: {
+          type: "REGULAR"
+        }
+      })
+    }
+    else if (input.onlyProgramming === true) {
+      questionsTypes = await ctx.prisma.questionType.findMany({
+        where: {
+          type: "PROGRAMMING"
+        }
+      })
+    }
+    else return []
 
     // Manual check if the field is correct will be performed here because of the JSON field
     const result = []

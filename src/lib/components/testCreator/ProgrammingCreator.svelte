@@ -9,7 +9,8 @@
 		PROGRAMMING_DESCRIPTION_MIN,
 		answerSchema,
 		descriptionSchema,
-		programminDescriptionSchema
+		programmingDescriptionSchema,
+		titleSchema
 	} from '~schemas/textInput';
 	import { testObject } from '~stores/testObject';
 	import InputOutputSetter from './programmingCreator/InputOutputSetter.svelte';
@@ -91,7 +92,7 @@
 			inputProperties={{ placeholder: 'Program a cute seal' }}
 			title="Code name"
 			titleName="codeName"
-			validationSchema={answerSchema}
+			validationSchema={titleSchema}
 			displayOutside={true}
 			on:error={(event) =>
 				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
@@ -107,7 +108,7 @@
 			}}
 			title="Describe what the code should do"
 			titleName="description"
-			validationSchema={programminDescriptionSchema}
+			validationSchema={programmingDescriptionSchema}
 			doesLimit={true}
 			min={PROGRAMMING_DESCRIPTION_MIN}
 			max={PROGRAMMING_DESCRIPTION_MAX}
@@ -159,37 +160,39 @@
 			}}
 		>
 			{#each hints as hint, index (hint['id'])}
-				<div animate:flip={{ duration: 200 }} class="flex items-center">
-					<button
-						class="grid h-full place-content-center"
-						on:mousedown={startDrag}
-						on:touchstart={startDrag}
-					>
-						<iconify-icon
-							icon="akar-icons:drag-horizontal"
-							class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
-						/>
-					</button>
+				<div animate:flip={{ duration: 200 }} class="flex">
 					<ErrorEnhance
 						error={content['errors'].hints
 							? content['errors'].hints[index]
 							: undefined}
 					>
-						<TextInputSimple
-							inputProperties={{ placeholder: 'Hint' }}
-							title={``}
-							titleName={'hint'}
-							validationSchema={descriptionSchema}
-							displayOutside={true}
-							class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
-							on:error={(event) => {
-								if (content['errors']['hints'] === undefined) {
-									content['errors']['hints'] = [];
-								}
-								content['errors']['hints'][index] = event.detail;
-							}}
-							bind:inputValue={hint.text}
-						/>
+						<div class="flex items-center">
+							<button
+								class="grid h-full place-content-center"
+								on:mousedown={startDrag}
+								on:touchstart={startDrag}
+							>
+								<iconify-icon
+									icon="akar-icons:drag-horizontal"
+									class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
+								/>
+							</button>
+							<TextInputSimple
+								inputProperties={{ placeholder: 'Hint' }}
+								title={``}
+								titleName={'hint'}
+								validationSchema={descriptionSchema}
+								displayOutside={true}
+								class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
+								on:error={(event) => {
+									if (content['errors']['hints'] === undefined) {
+										content['errors']['hints'] = [];
+									}
+									content['errors']['hints'][index] = event.detail;
+								}}
+								bind:inputValue={hint.text}
+							/>
+						</div>
 					</ErrorEnhance>
 				</div>
 			{/each}

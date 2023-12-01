@@ -92,7 +92,6 @@
 			// Check if input is valid and not an expression
 			const exec = sandbox.compile(`return ${inputCode}`);
 			const scriptResult = exec().run();
-			console.log('RESULT', scriptResult, typeof scriptResult);
 			if (
 				typeof scriptResult !== 'string' &&
 				typeof scriptResult !== 'number' &&
@@ -133,7 +132,6 @@
 			// Check if input is valid and not an expression
 			const exec = sandbox.compile(`return ${outputCode}`);
 			const scriptResult = exec().run();
-			console.log('RESULT', scriptResult, typeof scriptResult);
 			if (
 				typeof scriptResult !== 'string' &&
 				typeof scriptResult !== 'number' &&

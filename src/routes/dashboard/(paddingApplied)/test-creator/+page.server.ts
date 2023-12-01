@@ -8,8 +8,18 @@ export const load: ServerLoad = async (event) => {
   const context = await createContext(event)
 
   const templates = appRouter.createCaller(context).getTemplates();
-  const questionTemplates = appRouter.createCaller(context).getQuestionsTypes()
+  const questionTemplates = await appRouter.createCaller(context).getQuestionsTypes({
+    onlyRegular: true
+  })
+  console.log(questionTemplates)
 
+  // const data = await prisma.questionType.delete({
+  //   where: {
+  //     slug: "programming",
+  //     type: "SPECIAL"
+  //   }
+  // })
+  // console.log(data)
 
   return {
     templates: templates,
