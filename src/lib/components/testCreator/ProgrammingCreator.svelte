@@ -15,6 +15,7 @@
 	import InputOutputSetter from './programmingCreator/InputOutputSetter.svelte';
 	import { SOURCES, dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
@@ -85,32 +86,36 @@
 </script>
 
 <div>
-	<TextInputSimple
-		inputProperties={{ placeholder: 'Program a cute seal' }}
-		title="Code name"
-		titleName="codeName"
-		validationSchema={answerSchema}
-		displayOutside={true}
-		on:error={(event) =>
-			($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
-				event.detail)}
-		bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
-	/>
+	<ErrorEnhance error={$testObject.questions[INDEX_OF_QUESTION].errors.title}>
+		<TextInputSimple
+			inputProperties={{ placeholder: 'Program a cute seal' }}
+			title="Code name"
+			titleName="codeName"
+			validationSchema={answerSchema}
+			displayOutside={true}
+			on:error={(event) =>
+				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
+					event.detail)}
+			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
+		/>
+	</ErrorEnhance>
 	<Space gap={10} />
-	<TextAreaInput
-		inputProperties={{
-			placeholder: 'This code should create a really nice seal ...'
-		}}
-		title="Describe what the code should do"
-		titleName="description"
-		validationSchema={programminDescriptionSchema}
-		doesLimit={true}
-		min={PROGRAMMING_DESCRIPTION_MIN}
-		max={PROGRAMMING_DESCRIPTION_MAX}
-		customStyles="text-body2"
-		on:error={(event) => (content['errors']['description'] = event.detail)}
-		bind:inputValue={content['description']}
-	/>
+	<ErrorEnhance error={content.errors.description}>
+		<TextAreaInput
+			inputProperties={{
+				placeholder: 'This code should create a really nice seal ...'
+			}}
+			title="Describe what the code should do"
+			titleName="description"
+			validationSchema={programminDescriptionSchema}
+			doesLimit={true}
+			min={PROGRAMMING_DESCRIPTION_MIN}
+			max={PROGRAMMING_DESCRIPTION_MAX}
+			customStyles="text-body2"
+			on:error={(event) => (content['errors']['description'] = event.detail)}
+			bind:inputValue={content['description']}
+		/>
+	</ErrorEnhance>
 	<div class="mt-4">
 		<InputOutputSetter questionIndex={INDEX_OF_QUESTION} />
 	</div>
@@ -165,21 +170,27 @@
 							class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
 						/>
 					</button>
-					<TextInputSimple
-						inputProperties={{ placeholder: 'Hint' }}
-						title={``}
-						titleName={'hint'}
-						validationSchema={descriptionSchema}
-						displayOutside={true}
-						class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
-						on:error={(event) => {
-							if (content['errors']['hints'] === undefined) {
-								content['errors']['hints'] = [];
-							}
-							content['errors']['hints'][index] = event.detail;
-						}}
-						bind:inputValue={hint.text}
-					/>
+					<ErrorEnhance
+						error={content['errors'].hints
+							? content['errors'].hints[index]
+							: undefined}
+					>
+						<TextInputSimple
+							inputProperties={{ placeholder: 'Hint' }}
+							title={``}
+							titleName={'hint'}
+							validationSchema={descriptionSchema}
+							displayOutside={true}
+							class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
+							on:error={(event) => {
+								if (content['errors']['hints'] === undefined) {
+									content['errors']['hints'] = [];
+								}
+								content['errors']['hints'][index] = event.detail;
+							}}
+							bind:inputValue={hint.text}
+						/>
+					</ErrorEnhance>
 				</div>
 			{/each}
 		</div>

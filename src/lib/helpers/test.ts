@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, programmingTestInputSchema, programmingTestSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -512,14 +512,34 @@ export const questionContentFunctions: QuestionContentTransformation = {
         message = "Please select the language."
       }
 
-      if (!content.tests) {
-        isError = true
-        message = "Please add the tests."
-      }
-
       if (!content.description) {
         isError = true
         message = "Please add the description."
+        content.errors.description = "Please add the description"
+      }
+
+      if (content.tests === undefined) {
+        isError = true
+        message = "Please add the tests."
+      }
+      else {
+        for (const i in content.tests) {
+          const input = programmingTestInputSchema.safeParse(content.tests[i].input)
+
+          if (input.success === false) {
+            isError = true
+            if (content.errors.tests === undefined) content.errors.tests = []
+            content.errors.tests[i].input = input.error.errors[0].message
+          }
+
+          const output = programmingTestInputSchema.safeParse(content.tests[i].output)
+
+          if (output.success === false) {
+            isError = true
+            if (content.errors.tests === undefined) content.errors.tests = []
+            content.errors.tests[i].output = output.error.errors[0].message
+          }
+        }
       }
 
       return {

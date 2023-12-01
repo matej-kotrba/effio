@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { randomId } from "~helpers/randomId"
 
 // GENERAL ANSWER
 export const ANSWER_MIN = 1
@@ -51,6 +50,9 @@ export const GEOGRAPHY_ZOOM_MAX = 18
 // PROGRAMMING SPECIFIC
 export const PROGRAMMING_DESCRIPTION_MIN = 15
 export const PROGRAMMING_DESCRIPTION_MAX = 1024
+export const PROGRAMMING_TEST_MIN = 1
+export const PROGRAMMING_TEST_MAX = 255
+
 
 // SCHEMAS
 export const answerSchema = z.string().min(ANSWER_MIN, `Answer has to be at least ${ANSWER_MIN} character long.`).max(ANSWER_MAX, `Answer can be max ${ANSWER_MAX} characters long.`)
@@ -67,3 +69,12 @@ export const latitudeSchema = z.number({ invalid_type_error: "Input has to be a 
 export const longitudeSchema = z.number({ invalid_type_error: "Input has to be a valid number" }).min(LONGITUDE_MIN, "Number has to be bigger than -180").max(LONGITUDE_MAX, "Number has to be smaller than 180");
 export const geographyLocationSchema = z.tuple([latitudeSchema, longitudeSchema], { invalid_type_error: "Latitude and longitude has to be valid numbers." })
 export const programminDescriptionSchema = z.string().min(ANSWER_MIN, `Description has to be at least ${PROGRAMMING_DESCRIPTION_MIN} character long.`).max(ANSWER_MAX, `Description can be max ${PROGRAMMING_DESCRIPTION_MAX} characters long.`)
+export const programmingTestInputSchema = z.string().min(PROGRAMMING_DESCRIPTION_MIN, `Input has to be at least ${PROGRAMMING_DESCRIPTION_MIN} character long.`).max(PROGRAMMING_DESCRIPTION_MAX, `Input can be max ${PROGRAMMING_DESCRIPTION_MAX} characters long.`)
+export const programmingTestOutputSchema = z.string().min(PROGRAMMING_DESCRIPTION_MIN, `Output has to be at least ${PROGRAMMING_DESCRIPTION_MIN} character long.`).max(PROGRAMMING_DESCRIPTION_MAX, `Output can be max ${PROGRAMMING_DESCRIPTION_MAX} characters long.`)
+export const programmingTestSchema = z.object<{
+  [Key in keyof ProgrammingQuestion["tests"][number]]: z.ZodString;
+}>({
+  input: programmingTestInputSchema,
+  output: programmingTestOutputSchema
+})
+export const programmingHintSchema = z.string().min(PROGRAMMING_TEST_MIN, `Input has to be at least ${PROGRAMMING_TEST_MIN} character long.`).max(PROGRAMMING_TEST_MAX, `Input can be max ${PROGRAMMING_TEST_MAX} characters long.`)

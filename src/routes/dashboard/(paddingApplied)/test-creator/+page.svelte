@@ -68,7 +68,7 @@
 		}
 	];
 
-	let templatesActive: number | undefined;
+	let templatesActive: number | undefined = 0;
 
 	let testType: 'questions' | 'programming' = 'programming';
 
@@ -77,6 +77,8 @@
 
 	let isSubmitting = false;
 	let isSuccess = false;
+
+	$: console.log($testObject.questions);
 
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean
@@ -201,6 +203,7 @@
 			const result = isTestValidAndSetErrorsToTestObject({
 				questions: $testObject.questions
 			});
+			console.log(result);
 			// if (result['store']['questions_errors']) {
 			// 	result.store.questions_errors.forEach((item, index) => {
 			// 		$testObject.questions[index].errors = item;
