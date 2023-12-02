@@ -13,6 +13,8 @@
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 	import type { Prisma, TestRecord, TestRecordPayload } from '@prisma/client';
 	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
+	import RegularTest from './RegularTest.svelte';
+	import ProgrammingTest from './ProgrammingTest.svelte';
 
 	export let data;
 
@@ -29,47 +31,11 @@
 				}>)
 		| undefined = undefined;
 
-	$: console.log(result);
-
 	let openDialog: () => void;
 
 	initializeTestToTestStore(data.testContent);
-
-	// TODO: Create a check for the JSON so we make sure that the JSON is in correct format
-	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
-		data.testContent.testVersions[0].markSystemJSON
-	);
-
-	let questionContainerRef: HTMLDivElement | null = null;
-
-	let higlightedInputIndex: number | null = null;
 </script>
 
-{#if result && returnedTestRecord}
-	{@const maxPoints = data.testContent.testVersions[0].questions.reduce(
-		(acc, item) => acc + item.points,
-		0
-	)}
-	{@const userPoints =
-		returnedTestRecord?.questionRecords.reduce((count, item) => {
-			if (item['userPoints']) {
-				return count + item['userPoints'];
-			} else {
-				return count;
-			}
-		}, 0) || 0}
-	<TestTakingNavigation
-		session={data.session}
-		{questionContainerRef}
-		{result}
-		bind:markedIndex={higlightedInputIndex}
-		{maxPoints}
-		{userPoints}
-		mark={markSystem
-			? getMarkBasedOnPoints(markSystem, userPoints, maxPoints).name
-			: undefined}
-	/>
-{/if}
 <Dialog bind:open={openDialog}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		You are about to submit the test, after that you want be able to change your
@@ -115,62 +81,32 @@
 	</div>
 </Dialog>
 {#if $testObject}
-	<div class="mx-auto max-w-[650px]">
-		<h2 class="font-thin text-h3">{data.testContent.title}</h2>
-		<p class="text-light_text_black dark:text-dark_text_white_60">
-			{data.testContent.description}
-		</p>
-		<Space gap={40} />
-		<div bind:this={questionContainerRef}>
-			{#each data.testContent.testVersions[0].questions as _, index}
-				<Input
-					questionIndex={index}
-					class={`border-2 border-solid ${
-						$testObject.questions[index].errors.content
-							? ' border-error'
-							: 'border-transparent'
-					}`}
-					resultFormat={result === null ? null : result[index]}
-					points={returnedTestRecord
-						? {
-								got: returnedTestRecord?.questionRecords[index].userPoints,
-								max: data.testContent.testVersions[0].questions[index].points
-						  }
-						: undefined}
-				/>
-				<Space gap={10} />
-				{#if $testObject.questions[index].errors.content}
-					<p class="text-error dark:text-dark_error text-body2">
-						{$testObject.questions[index].errors.content}
-					</p>
-				{/if}
-			{/each}
+	{#if data.testContent.type === 'REGULAR'}
+		<div class="mx-auto max-w-[650px]">
+			<RegularTest
+				{data}
+				{isSubmitting}
+				{submitError}
+				{openDialog}
+				{result}
+				{returnedTestRecord}
+			/>
 		</div>
-		<Space gap={40} />
-		<div class="flex items-center justify-between">
-			{#if submitError}
-				<p class="text-error dark:text-dark_error text-body2">
-					{submitError}
-				</p>
-			{/if}
-			{#if result === null}
-				<BasicButton
-					title={'Check'}
-					onClick={async () => {
-						if (openDialog) {
-							openDialog();
-						}
-					}}
-					isLoading={isSubmitting}
-					class="ml-auto"
-				/>
-			{/if}
+	{:else if data.testContent.type === 'PROGRAMMING'}
+		<div class="mx-auto max-w-[1200px]">
+			<ProgrammingTest
+				{data}
+				{isSubmitting}
+				{submitError}
+				{openDialog}
+				{result}
+				{returnedTestRecord}
+			/>
 		</div>
-	</div>
+	{/if}
 {:else}
 	<div class="grid place-content-center">
 		<p>Oops, something with this test is not correct</p>
 		<a class="btn btn-outline" href="/community">Back to community place</a>
 	</div>
 {/if}
-<!-- <div class="h-[1200px]" /> -->

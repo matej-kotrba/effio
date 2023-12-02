@@ -29,10 +29,6 @@
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		testContent.testVersions[0].markSystemJSON
 	);
-
-	function startTest() {
-		goto(`${testLink}`);
-	}
 </script>
 
 <div class="max-w-[1200px] mx-auto p-3 rounded-md">
@@ -86,5 +82,7 @@
 		{/if}
 	</p>
 	<Space gap={30} />
-	<BasicButton title="Take test" onClick={startTest} />
+	<a href={testLink}>
+		<BasicButton title="Take test" />
+	</a>
 </div>
