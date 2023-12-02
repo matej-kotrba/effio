@@ -10,7 +10,6 @@ export const handwrite: Action<HTMLElement, { duration?: number } | undefined> =
     const span = document.createElement("span")
     span.innerHTML = char
     span.style.opacity = "0"
-    span.style.borderRight = "4px solid black"
     span.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1, delay: (duration / text.length) * index, fill: "forwards" })
 
     element.appendChild(span)

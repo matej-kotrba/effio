@@ -33,6 +33,8 @@
 
 	let openDialog: () => void;
 
+	console.log(data.testContent);
+
 	initializeTestToTestStore(data.testContent);
 </script>
 
