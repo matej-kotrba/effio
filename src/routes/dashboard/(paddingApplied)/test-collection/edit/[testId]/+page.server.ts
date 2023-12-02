@@ -8,12 +8,17 @@ export const load: ServerLoad = async (event) => {
 
   const context = await createContext(event)
 
-  const data = await appRouter.createCaller(context).getTestById({ id: event.params.testId as string, includeGroupSubcategories: true });
+  const data = appRouter.createCaller(context).getTestById({ id: event.params.testId as string, includeGroupSubcategories: true });
+
+  const questionTemplates = appRouter.createCaller(context).getQuestionsTypes({
+    onlyRegular: true
+  })
 
   if (!data) {
     throw redirect(307, "/dashboard/test-collection")
   }
   return {
-    testData: data
+    testData: data,
+    questionTemplates: questionTemplates
   }
 }

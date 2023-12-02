@@ -7,11 +7,15 @@ export const load: ServerLoad = async (event) => {
 
   const context = await createContext(event)
 
-  const templates = appRouter.createCaller(context).getTemplates();
-  const questionTemplates = await appRouter.createCaller(context).getQuestionsTypes({
+  const templatesPromise = appRouter.createCaller(context).getTemplates();
+  const questionTemplatesPromise = appRouter.createCaller(context).getQuestionsTypes({
     onlyRegular: true
   })
-  console.log(questionTemplates)
+  const programmingTemplatePromise = appRouter.createCaller(context).getQuestionsTypes({
+    onlyProgramming: true
+  })
+
+  const [templates, questionTemplates, programmingTemplate] = await Promise.all([templatesPromise, questionTemplatesPromise, programmingTemplatePromise])
 
   // const data = await prisma.questionType.delete({
   //   where: {
@@ -23,6 +27,7 @@ export const load: ServerLoad = async (event) => {
 
   return {
     templates: templates,
-    questionTemplates: questionTemplates
+    questionTemplates: questionTemplates,
+    programmingTemplate: programmingTemplate[0]
   }
 }

@@ -17,6 +17,9 @@
 	import { SOURCES, dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import type { QuestionTemplate } from '~/lib/trpc/router';
+
+	export let programmingTemplate: QuestionTemplate;
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
@@ -28,7 +31,7 @@
 		points: 2,
 		questionType: 'programming',
 		displayType: 'Programming',
-		questionTypeId: '',
+		questionTypeId: programmingTemplate.id,
 		errors: {}
 	});
 
@@ -56,7 +59,6 @@
 	function onOrderChange(e: {
 		detail: { items: { id: string; text: string }[]; info: { source: any } };
 	}) {
-		console.log(e.detail.items);
 		hints = e.detail.items;
 		// content.hints = e.detail.items.map((item) => item.text);
 		if (e.detail.info.source === SOURCES.POINTER) {

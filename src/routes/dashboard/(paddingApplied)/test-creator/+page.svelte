@@ -42,6 +42,8 @@
 
 	export let data;
 
+	$: console.log(data);
+
 	const SECTION_TRANSITION_DURATION = 400;
 
 	initializeNewTestToTestStore({
@@ -455,9 +457,9 @@
 			}}
 		>
 			{#if testType === 'questions'}
-				<Creator inputTemplates={data.questionsTypes} bind:scrollToInput />
+				<Creator inputTemplates={data.questionTemplates} bind:scrollToInput />
 			{:else if testType === 'programming'}
-				<ProgrammingCreator />
+				<ProgrammingCreator programmingTemplate={data.programmingTemplate} />
 			{/if}
 			<Space />
 

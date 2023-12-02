@@ -34,7 +34,7 @@
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 
 	export let data;
-
+	console.log(data)
 	const toast: typeof Toast = getContext('toast');
 
 	let isSubmitting = false;
@@ -204,7 +204,7 @@
 	defaultValue={$testObject.markSystem['marks']}
 />
 
-<Creator inputTemplates={data.questionsTypes} />
+<Creator inputTemplates={data.} />
 
 <Space />
 <BasicButton
