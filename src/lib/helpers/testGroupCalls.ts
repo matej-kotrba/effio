@@ -62,9 +62,14 @@ export const validateTestAndRecordIt = async (props: Props) => {
     markSystem: props.data.markSystem
   });
 
+  console.log(result)
+
   if (result['isError']) {
     currentStore.errors = result['store']['errors'];
     testObject.set(currentStore)
+    if (props.callbacks.onErrorSaveToDB !== undefined) {
+      props.callbacks.onErrorSaveToDB(currentStore.errors)
+    }
     return;
   }
 

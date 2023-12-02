@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import { testObject, type TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingTestSchema, titleSchema } from "~schemas/textInput"
+import { answerSchema as answerObjectSchema, answerSchema, descriptionSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyLocationSchema, geographyToleranceSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, programmingDescriptionSchema, programmingHintSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingTestSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "./fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../trpc/client";
@@ -549,7 +549,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
 
       for (const i in content.hints) {
-        const hint = answerSchema.safeParse(content.hints[i])
+        const hint = programmingHintSchema.safeParse(content.hints[i])
 
         if (hint.success === false) {
           isError = true

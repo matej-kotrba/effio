@@ -7,9 +7,12 @@
 	import {
 		PROGRAMMING_DESCRIPTION_MAX,
 		PROGRAMMING_DESCRIPTION_MIN,
+		PROGRAMMING_TEST_MAX,
+		PROGRAMMING_TEST_MIN,
 		answerSchema,
 		descriptionSchema,
 		programmingDescriptionSchema,
+		programmingHintSchema,
 		titleSchema
 	} from '~schemas/textInput';
 	import { testObject } from '~stores/testObject';
@@ -42,6 +45,8 @@
 		id: string;
 		text: string;
 	}[] = [];
+
+	$: content.hints = hints.map((hint) => hint.text);
 
 	function addHint() {
 		hints = [
@@ -183,8 +188,10 @@
 								inputProperties={{ placeholder: 'Hint' }}
 								title={``}
 								titleName={'hint'}
-								validationSchema={descriptionSchema}
-								displayOutside={true}
+								validationSchema={programmingHintSchema}
+								min={PROGRAMMING_TEST_MIN}
+								max={PROGRAMMING_TEST_MAX}
+								displayOutside={false}
 								class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
 								on:error={(event) => {
 									if (content['errors']['hints'] === undefined) {

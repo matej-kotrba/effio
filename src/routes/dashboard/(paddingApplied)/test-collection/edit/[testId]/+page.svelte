@@ -32,6 +32,7 @@
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
+	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 
 	export let data;
 	console.log(data);
@@ -204,7 +205,14 @@
 	defaultValue={$testObject.markSystem['marks']}
 />
 
-<Creator inputTemplates={data.questionTemplates} />
+<!-- TODO: Find out why the question is spawned twice in test object -->
+
+{#if data.testData.type === 'REGULAR'}
+	<Creator inputTemplates={data.questionTemplates} />
+{:else if data.testData.type === 'PROGRAMMING'}
+	<Space gap={10} />
+	<ProgrammingCreator programmingTemplate={data.programmingTemplate} />
+{/if}
 
 <Space />
 <BasicButton

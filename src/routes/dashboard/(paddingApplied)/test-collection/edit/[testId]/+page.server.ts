@@ -9,12 +9,13 @@ export const load: ServerLoad = async (event) => {
   const context = await createContext(event)
 
   const dataPromise = appRouter.createCaller(context).getTestById({ id: event.params.testId as string, includeGroupSubcategories: true });
+  const programmingTemplatesPromise = appRouter.createCaller(context).getQuestionsTypes({ onlyProgramming: true })
 
   const questionTemplatesPromise = appRouter.createCaller(context).getQuestionsTypes({
     onlyRegular: true
   })
 
-  const [data, questionTemplates] = await Promise.all([dataPromise, questionTemplatesPromise])
+  const [data, programmingTemplates, questionTemplates] = await Promise.all([dataPromise, programmingTemplatesPromise, questionTemplatesPromise])
 
   if (data === null) {
     throw redirect(307, "/dashboard/test-collection")
@@ -22,7 +23,8 @@ export const load: ServerLoad = async (event) => {
   else {
     return {
       testData: data as NonNullable<typeof data>,
-      questionTemplates: questionTemplates
+      questionTemplates: questionTemplates,
+      programmingTemplate: programmingTemplates[0]
     }
   }
 }
