@@ -48,23 +48,35 @@
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
 
+	let selectedTestIndex: number = 0;
+	let testsConsoleLogs: string[][] = [];
+
 	function compileCode() {
 		const code = codeEditor.getValue();
 
-		const exec = sandbox.compile(code);
-
-		for (const item of content.tests) {
+		const originalConsoleLog = console.log;
+		for (const i in content.tests) {
+			const item = content.tests[i];
+			console.log = (...args: any[]) => {
+				args.forEach((arg) => {
+					if (typeof arg === 'object' || typeof arg === 'function') {
+						testsConsoleLogs[i].push(JSON.stringify(arg));
+					} else {
+						testsConsoleLogs[i].push(arg);
+					}
+				});
+			};
 			try {
+				const exec = sandbox.compile(code);
 				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
 				const output = JSON.parse(item.output);
+				console.log(scriptResult, output);
 				if (scriptResult === output) {
 					console.log('success');
 				} else {
 					console.log('fail');
 				}
-			} catch (e) {
-				// console.log(e);
-			}
+			} catch (e) {}
 		}
 	}
 
@@ -81,8 +93,7 @@
 			};
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
-			value:
-				'/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that `return solution(data)`\ndata - has all the values from test cases */\n\nfunction solution(data) {\n\treturn\n}\n\nreturn solution(data)',
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\treturn\n}\n\nreturn solution(data)`,
 			language: 'javascript',
 			theme: 'vs-dark'
 		});
@@ -111,10 +122,45 @@
 			bind:this={codeEditorContainer}
 			class="w-full min-h-[400px] rounded-md overflow-hidden"
 		/>
-		<div class="flex justify-end mt-4">
+		<div class="flex gap-2 mt-4">
 			<BasicButton title="Run" onClick={compileCode}>
 				<iconify-icon icon="raphael:run" class="text-2xl" />
 			</BasicButton>
+			<BasicButton title="Submit" buttonAttributes={{ disabled: true }}>
+				<iconify-icon icon="raphael:run" class="text-2xl" />
+			</BasicButton>
+		</div>
+		<div class="mt-4">
+			<span class="font-semibold text-h6">Tests</span>
+			<Separator w={'100%'} h="1px" />
+			<div class="grid grid-cols-6 mt-2">
+				<div
+					class="max-h-[300px] flex flex-col col-span-1 gap-1 overflow-y-auto"
+				>
+					{#each content['tests'] as { input, output }, index}
+						<button
+							type="button"
+							class="w-full btn"
+							on:click={() => (selectedTestIndex = index)}
+						>
+							{index + 1}. Input: {input}
+						</button>
+					{/each}
+				</div>
+				<div class="col-span-5 pl-2">
+					<span class="font-semibold">{selectedTestIndex + 1}.</span>
+					<div>
+						<span>Input: </span><span class="font-semibold"
+							>{content['tests'][selectedTestIndex].input}</span
+						>
+					</div>
+					<div>
+						<span>Output: </span><span class="font-semibold"
+							>{content['tests'][selectedTestIndex].output}</span
+						>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
