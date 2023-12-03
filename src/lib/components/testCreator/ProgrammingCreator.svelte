@@ -23,20 +23,23 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 
 	export let programmingTemplate: QuestionTemplate;
+	export let createNewQuestion: boolean = true;
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
 
-	$testObject.questions.push({
-		content: questionContentFunctions['programming']['createNew'](),
-		title: '',
-		id: crypto.randomUUID(),
-		points: 2,
-		questionType: 'programming',
-		displayType: 'Programming',
-		questionTypeId: programmingTemplate.id,
-		errors: {}
-	});
+	if (createNewQuestion) {
+		$testObject.questions.push({
+			content: questionContentFunctions['programming']['createNew'](),
+			title: '',
+			id: crypto.randomUUID(),
+			points: 2,
+			questionType: 'programming',
+			displayType: 'Programming',
+			questionTypeId: programmingTemplate.id,
+			errors: {}
+		});
+	}
 
 	$: content = $testObject.questions[INDEX_OF_QUESTION]
 		.content as ProgrammingQuestion;
@@ -44,7 +47,14 @@
 	let hints: {
 		id: string;
 		text: string;
-	}[] = [];
+	}[] = (
+		$testObject.questions[INDEX_OF_QUESTION].content as ProgrammingQuestion
+	).hints.map((hint) => {
+		return {
+			id: crypto.randomUUID(),
+			text: hint
+		};
+	});
 
 	$: content.hints = hints.map((hint) => hint.text);
 
@@ -56,7 +66,10 @@
 				text: ''
 			}
 		];
-		// content['hints'] = [...content['hints'], ''];
+	}
+
+	function deleteHint(id: string) {
+		hints = hints.filter((hint) => hint.id !== id);
 	}
 
 	let dragDisable = true;
@@ -82,15 +95,6 @@
 		e.preventDefault();
 		dragDisable = false;
 	}
-
-	onMount(() => {
-		hints = [
-			{
-				id: crypto.randomUUID(),
-				text: ''
-			}
-		];
-	});
 </script>
 
 <div>
@@ -167,7 +171,7 @@
 			}}
 		>
 			{#each hints as hint, index (hint['id'])}
-				<div animate:flip={{ duration: 200 }} class="flex">
+				<div class="flex">
 					<ErrorEnhance
 						error={content['errors'].hints
 							? content['errors'].hints[index]
@@ -184,23 +188,35 @@
 									class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
 								/>
 							</button>
-							<TextInputSimple
-								inputProperties={{ placeholder: 'Hint' }}
-								title={``}
-								titleName={'hint'}
-								validationSchema={programmingHintSchema}
-								min={PROGRAMMING_TEST_MIN}
-								max={PROGRAMMING_TEST_MAX}
-								displayOutside={false}
-								class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
-								on:error={(event) => {
-									if (content['errors']['hints'] === undefined) {
-										content['errors']['hints'] = [];
-									}
-									content['errors']['hints'][index] = event.detail;
-								}}
-								bind:inputValue={hint.text}
-							/>
+							<div class="relative">
+								<TextInputSimple
+									inputProperties={{ placeholder: 'Hint', value: hint.text }}
+									title={``}
+									titleName={'hint'}
+									validationSchema={programmingHintSchema}
+									min={PROGRAMMING_TEST_MIN}
+									max={PROGRAMMING_TEST_MAX}
+									displayOutside={false}
+									class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
+									on:error={(event) => {
+										if (content['errors']['hints'] === undefined) {
+											content['errors']['hints'] = [];
+										}
+										content['errors']['hints'][index] = event.detail;
+									}}
+									bind:inputValue={hint.text}
+								/>
+								<button
+									type="button"
+									on:click={() => deleteHint(hint.id)}
+									class="absolute bottom-0 right-0 grid translate-y-1/2 rounded-full shadow-md bg-light_whiter place-content-center group z-[2]"
+								>
+									<iconify-icon
+										icon="fluent:delete-28-filled"
+										class="p-1 text-2xl duration-100 group-hover:text-error dark:group-hover:text-dark_error"
+									/>
+								</button>
+							</div>
 						</div>
 					</ErrorEnhance>
 				</div>

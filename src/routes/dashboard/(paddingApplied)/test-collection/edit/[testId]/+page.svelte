@@ -35,7 +35,7 @@
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 
 	export let data;
-	console.log(data);
+
 	const toast: typeof Toast = getContext('toast');
 
 	let isSubmitting = false;
@@ -205,13 +205,14 @@
 	defaultValue={$testObject.markSystem['marks']}
 />
 
-<!-- TODO: Find out why the question is spawned twice in test object -->
-
 {#if data.testData.type === 'REGULAR'}
 	<Creator inputTemplates={data.questionTemplates} />
 {:else if data.testData.type === 'PROGRAMMING'}
 	<Space gap={10} />
-	<ProgrammingCreator programmingTemplate={data.programmingTemplate} />
+	<ProgrammingCreator
+		programmingTemplate={data.programmingTemplate}
+		createNewQuestion={false}
+	/>
 {/if}
 
 <Space />
