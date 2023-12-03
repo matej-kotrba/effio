@@ -6,6 +6,9 @@
 	import { handwrite } from '~use/handwrite';
 	import Hints from './Hints.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import Separator from '~components/separators/Separator.svelte';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Sandbox from '@nyariv/sandboxjs';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -40,8 +43,30 @@
 
 	let monaco: typeof import('monaco-editor');
 
+	const sandbox = new Sandbox();
+
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
+
+	function compileCode() {
+		const code = codeEditor.getValue();
+
+		const exec = sandbox.compile(code);
+
+		for (const item of content.tests) {
+			try {
+				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
+				const output = JSON.parse(item.output);
+				if (scriptResult === output) {
+					console.log('success');
+				} else {
+					console.log('fail');
+				}
+			} catch (e) {
+				// console.log(e);
+			}
+		}
+	}
 
 	onMount(async () => {
 		monaco = await import('monaco-editor');
@@ -57,7 +82,7 @@
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
 			value:
-				'/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that `return solution()` */\n\nfunction solution() {\n\treturn\n}\n\nreturn solution()',
+				'/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that `return solution(data)`\ndata - has all the values from test cases */\n\nfunction solution(data) {\n\treturn\n}\n\nreturn solution(data)',
 			language: 'javascript',
 			theme: 'vs-dark'
 		});
@@ -76,10 +101,20 @@
 			</h3>
 			<p use:handwrite>{content.description}</p>
 			<Space gap={10} />
+			<Separator w={'100%'} h="1px" />
+			<Space gap={10} />
 			<Hints hints={content.hints} />
 		</div>
 	</div>
 	<div>
-		<div bind:this={codeEditorContainer} class="w-full min-h-[400px]" />
+		<div
+			bind:this={codeEditorContainer}
+			class="w-full min-h-[400px] rounded-md overflow-hidden"
+		/>
+		<div class="flex justify-end mt-4">
+			<BasicButton title="Run" onClick={compileCode}>
+				<iconify-icon icon="raphael:run" class="text-2xl" />
+			</BasicButton>
+		</div>
 	</div>
 </div>

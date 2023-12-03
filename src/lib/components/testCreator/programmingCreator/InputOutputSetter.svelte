@@ -10,7 +10,6 @@
 	import Sandbox from '@nyariv/sandboxjs';
 	import { gsap } from 'gsap';
 	import { Flip } from 'gsap/dist/Flip';
-	import { filter } from 'lodash';
 
 	export let questionIndex: number;
 	export let title = '';
@@ -105,7 +104,7 @@
 				);
 			}
 
-			const input = JSON.stringify(inputCode);
+			const input = inputCode;
 
 			content.tests[indexOfTest].input = input;
 
@@ -145,7 +144,7 @@
 				);
 			}
 
-			const input = JSON.stringify(outputCode);
+			const input = outputCode;
 
 			content.tests[indexOfTest].output = input;
 

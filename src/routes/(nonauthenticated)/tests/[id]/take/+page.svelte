@@ -33,8 +33,6 @@
 
 	let openDialog: () => void;
 
-	console.log(data.testContent);
-
 	initializeTestToTestStore(data.testContent);
 </script>
 
@@ -95,7 +93,7 @@
 			/>
 		</div>
 	{:else if data.testContent.type === 'PROGRAMMING'}
-		<div class="mx-auto max-w-[1200px]">
+		<div class="mx-auto max-w-[1400px]">
 			<ProgrammingTest
 				{data}
 				{isSubmitting}
