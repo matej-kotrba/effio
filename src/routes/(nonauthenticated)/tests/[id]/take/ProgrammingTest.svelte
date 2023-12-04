@@ -43,38 +43,56 @@
 
 	let monaco: typeof import('monaco-editor');
 
+	let testsConsoleLogs: string[][] = [];
+
+	const oldConsoleLog = console.log;
+	console.log = (...args: any[]) => {
+		args.forEach((arg) => {
+			console.log(arg);
+			if (typeof arg === 'object' || typeof arg === 'function') {
+				testsConsoleLogs[testsConsoleLogs.length - 1].push(JSON.stringify(arg));
+			} else {
+				testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
+			}
+		});
+	};
 	const sandbox = new Sandbox();
+	console.log = oldConsoleLog;
 
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
 
 	let selectedTestIndex: number = 0;
-	let testsConsoleLogs: string[][] = [];
 	let testsInfo: { result: string; passed: boolean }[] = [];
 
-	function compileCode() {
+	async function compileCode() {
 		const code = codeEditor.getValue();
 
-		const originalConsoleLog = console.log;
+		testsConsoleLogs = [];
 		for (const i in content.tests) {
 			const item = content.tests[i];
 			testsConsoleLogs[i] = [];
-			console.log = (...args: any[]) => {
-				args.forEach((arg) => {
-					if (typeof arg === 'object' || typeof arg === 'function') {
-						testsConsoleLogs[i].push(JSON.stringify(arg));
-					} else {
-						testsConsoleLogs[i].push(arg);
-					}
-				});
-			};
+
 			try {
+				// sandbox.context.options.prototypeReplacements?.set(
+				// 	console.log.prototype,
+				// 	(args: any[]) => {
+				// 		args.forEach((arg) => {
+				// 			if (typeof arg === 'object' || typeof arg === 'function') {
+				// 				testsConsoleLogs[i].push(JSON.stringify(arg));
+				// 			} else {
+				// 				testsConsoleLogs[i].push(arg);
+				// 			}
+				// 		});
+				// 	}
+				// );
+
 				const exec = sandbox.compile(code);
 				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
 				const output = JSON.parse(item.output);
 				if (scriptResult === output) {
 					testsInfo[i] = {
-						result: 'Passed',
+						result: JSON.stringify(scriptResult),
 						passed: true
 					};
 				} else {
@@ -83,9 +101,14 @@
 						passed: false
 					};
 				}
-			} catch (e) {}
+			} catch (e) {
+				console.log(e);
+			}
+
+			console.log(testsConsoleLogs);
 		}
-		console.log = originalConsoleLog;
+
+		console.log(testsConsoleLogs);
 	}
 
 	onMount(async () => {
@@ -101,7 +124,7 @@
 			};
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
-			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\treturn\n}\n\nreturn solution(data)`,
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd"); return\n}\n\nreturn solution(data)`,
 			language: 'javascript',
 			theme: 'vs-dark'
 		});
@@ -155,39 +178,48 @@
 						</button>
 					{/each}
 				</div>
-				<div class="col-span-5 pl-2">
-					<span class="font-semibold">{selectedTestIndex + 1}.</span>
+				<div class="flex justify-between col-span-5 gap-2 pl-2">
 					<div>
-						<span>Input: </span><span class="font-semibold"
-							>{content['tests'][selectedTestIndex].input}</span
-						>
+						<span class="font-semibold">{selectedTestIndex + 1}.</span>
+						<div>
+							<span>Input: </span><span class="font-semibold"
+								>{content['tests'][selectedTestIndex].input}</span
+							>
+						</div>
+						<div>
+							<span>Output: </span><span class={`font-semibold`}
+								>{testsInfo[selectedTestIndex]
+									? testsInfo[selectedTestIndex].result
+									: ''}</span
+							>
+						</div>
+						<div>
+							<span>Result: </span><span
+								class={`font-semibold ${
+									testsInfo[selectedTestIndex] &&
+									testsInfo[selectedTestIndex].passed
+										? 'text-success'
+										: 'text-error dark:text-dark_error'
+								}`}
+								>{testsInfo[selectedTestIndex]
+									? testsInfo[selectedTestIndex].passed
+										? 'Passed'
+										: 'Failed'
+									: ''}</span
+							>
+						</div>
+						<div>
+							<span>Expected Output: </span><span class="font-semibold"
+								>{content['tests'][selectedTestIndex].output}</span
+							>
+						</div>
 					</div>
-					<div>
-						<span>Output: </span><span class={`font-semibold`}
-							>{testsInfo[selectedTestIndex]
-								? testsInfo[selectedTestIndex].result
-								: ''}</span
-						>
-					</div>
-					<div>
-						<span>Result: </span><span
-							class={`font-semibold ${
-								testsInfo[selectedTestIndex] &&
-								testsInfo[selectedTestIndex].passed
-									? 'text-success'
-									: 'text-error dark:text-dark_error'
-							}`}
-							>{testsInfo[selectedTestIndex]
-								? testsInfo[selectedTestIndex].passed
-									? 'Passed'
-									: 'Failed'
-								: ''}</span
-						>
-					</div>
-					<div>
-						<span>Expected Output: </span><span class="font-semibold"
-							>{content['tests'][selectedTestIndex].output}</span
-						>
+					<div class="flex flex-col h-full gap-1 overflow-y-auto">
+						{#if testsConsoleLogs[selectedTestIndex]}
+							{#each testsConsoleLogs[selectedTestIndex] as log}
+								<span class="text-xs">{log}</span>
+							{/each}
+						{/if}
 					</div>
 				</div>
 			</div>
