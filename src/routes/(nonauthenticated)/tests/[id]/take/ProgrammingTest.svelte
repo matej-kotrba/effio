@@ -50,6 +50,7 @@
 
 	let selectedTestIndex: number = 0;
 	let testsConsoleLogs: string[][] = [];
+	let testsInfo: { result: string; passed: boolean }[] = [];
 
 	function compileCode() {
 		const code = codeEditor.getValue();
@@ -57,6 +58,7 @@
 		const originalConsoleLog = console.log;
 		for (const i in content.tests) {
 			const item = content.tests[i];
+			testsConsoleLogs[i] = [];
 			console.log = (...args: any[]) => {
 				args.forEach((arg) => {
 					if (typeof arg === 'object' || typeof arg === 'function') {
@@ -70,14 +72,20 @@
 				const exec = sandbox.compile(code);
 				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
 				const output = JSON.parse(item.output);
-				console.log(scriptResult, output);
 				if (scriptResult === output) {
-					console.log('success');
+					testsInfo[i] = {
+						result: 'Passed',
+						passed: true
+					};
 				} else {
-					console.log('fail');
+					testsInfo[i] = {
+						result: JSON.stringify(scriptResult),
+						passed: false
+					};
 				}
 			} catch (e) {}
 		}
+		console.log = originalConsoleLog;
 	}
 
 	onMount(async () => {
@@ -155,7 +163,29 @@
 						>
 					</div>
 					<div>
-						<span>Output: </span><span class="font-semibold"
+						<span>Output: </span><span class={`font-semibold`}
+							>{testsInfo[selectedTestIndex]
+								? testsInfo[selectedTestIndex].result
+								: ''}</span
+						>
+					</div>
+					<div>
+						<span>Result: </span><span
+							class={`font-semibold ${
+								testsInfo[selectedTestIndex] &&
+								testsInfo[selectedTestIndex].passed
+									? 'text-success'
+									: 'text-error dark:text-dark_error'
+							}`}
+							>{testsInfo[selectedTestIndex]
+								? testsInfo[selectedTestIndex].passed
+									? 'Passed'
+									: 'Failed'
+								: ''}</span
+						>
+					</div>
+					<div>
+						<span>Expected Output: </span><span class="font-semibold"
 							>{content['tests'][selectedTestIndex].output}</span
 						>
 					</div>
