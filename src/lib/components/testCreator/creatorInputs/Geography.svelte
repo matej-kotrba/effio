@@ -6,7 +6,6 @@
 </script>
 
 <script lang="ts">
-	import toast, { Toaster } from 'svelte-french-toast';
 	import { testObject } from '~stores/testObject';
 	import { applicationStates } from '~stores/applicationStates';
 	import 'leaflet/dist/leaflet.css';
@@ -29,7 +28,6 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
-	import { map } from '@trpc/server/observable';
 
 	export let indexParent: number;
 
@@ -114,9 +112,9 @@
 	}
 
 	$: {
-		if (typeof content.tolerence === 'string') {
+		if (typeof content.tolerence === 'string' && content.tolerence !== '') {
 			content.tolerence =
-				Number(content.tolerence) || GEOGRAPHY_TOLERANCE_DEFAULT;
+				Number(content.tolerence) ?? GEOGRAPHY_TOLERANCE_DEFAULT;
 		}
 	}
 

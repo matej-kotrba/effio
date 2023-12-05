@@ -17,6 +17,8 @@
 	export let resultFormat: QuestionServerCheckResponse<GeographyQuestion> | null =
 		null;
 
+	$: console.log();
+
 	$: content = $testObject.questions[questionIndex]
 		.content as GeographyQuestion;
 
@@ -33,11 +35,51 @@
 		)
 	};
 
+	let leaflet: typeof import('leaflet');
+
 	let answerMarker: Marker;
 	let map: L.Map;
+	let toleranceCircle: L.Circle;
+
+	$: {
+		if (resultFormat) {
+			answerMarker?.dragging?.disable();
+			if (toleranceCircle) {
+				toleranceCircle.remove();
+			}
+		} else {
+			answerMarker?.dragging?.enable();
+			if (toleranceCircle) {
+				toleranceCircle.addTo(map);
+			}
+		}
+	}
+
+	let resultMarker: Marker;
+	let resultToleranceCircle: L.Circle;
+	$: {
+		if (resultFormat) {
+			resultMarker = leaflet
+				.marker(resultFormat.correctAnswer.answerPoint.location)
+				.addTo(map);
+
+			resultToleranceCircle = leaflet
+				.circle(resultFormat.correctAnswer.answerPoint.location, {
+					radius: resultFormat.correctAnswer.tolerence * 1000,
+					color: resultFormat.isCorrect ? '#1ac725' : '#f03737',
+					fillColor: resultFormat.isCorrect ? '#1ac72535' : '#f0373735',
+					fillOpacity: 0.5
+				})
+				.bindTooltip('Correct answer position')
+				.addTo(map);
+		} else {
+			resultMarker?.remove();
+			resultToleranceCircle?.remove();
+		}
+	}
 
 	onMount(async () => {
-		const leaflet = await import('leaflet');
+		leaflet = await import('leaflet');
 
 		let DefaultIcon = leaflet.icon({
 			iconUrl: '/imgs/icons/marker/marker-icon.png',
@@ -76,6 +118,15 @@
 			.addTo(map)
 			.bindTooltip('Answer position');
 
+		toleranceCircle = leaflet
+			.circle(content.initial.location, {
+				radius: content.tolerence * 1000,
+				color: '#6433f0',
+				fillColor: '#6433f035',
+				fillOpacity: 0.5
+			})
+			.addTo(map);
+
 		answerMarker.on('dragend', (e) => {
 			const location = e.target.getLatLng() as {
 				lat: number;
@@ -106,6 +157,7 @@
 		}
 		try {
 			answerMarker.setLatLng(content.answerPoint.location);
+			toleranceCircle.setLatLng(content.answerPoint.location);
 		} catch (e) {}
 	}
 </script>
