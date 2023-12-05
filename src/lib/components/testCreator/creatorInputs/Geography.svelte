@@ -11,7 +11,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import 'leaflet/dist/leaflet.css';
 	import { onDestroy, onMount } from 'svelte';
-	import type { Marker } from 'leaflet';
+	import type { Circle, Marker } from 'leaflet';
 	import {
 		LATITUDE_MIN,
 		LATITUDE_MAX,
@@ -44,6 +44,7 @@
 
 	let initialMarker: Marker;
 	let answerMarker: Marker;
+	let answerMarkerToleranceCircle: Circle;
 
 	let answerLocation: MiddlewareLocation = {
 		lat: String(
@@ -108,6 +109,7 @@
 		}
 		try {
 			answerMarker.setLatLng(content.answerPoint.location);
+			answerMarkerToleranceCircle.setLatLng(content.answerPoint.location);
 		} catch (e) {}
 	}
 
@@ -117,6 +119,8 @@
 				Number(content.tolerence) || GEOGRAPHY_TOLERANCE_DEFAULT;
 		}
 	}
+
+	$: answerMarkerToleranceCircle?.setRadius(content.tolerence * 1000);
 
 	let leafletMap: L.Map;
 
@@ -167,6 +171,15 @@
 			})
 			.addTo(leafletMap)
 			.bindTooltip('Marking answer position');
+
+		answerMarkerToleranceCircle = leaflet
+			.circle(content.answerPoint.location, {
+				color: '#6433f0',
+				fillColor: '#6433f035',
+				fillOpacity: 0.5,
+				radius: content.tolerence * 1000
+			})
+			.addTo(leafletMap);
 
 		initialMarker.on('dragend', (e) => {
 			const location = e.target.getLatLng() as {

@@ -9,6 +9,7 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Sandbox from '@nyariv/sandboxjs';
+	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -124,7 +125,7 @@
 			};
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
-			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd"); return\n}\n\nreturn solution(data)`,
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123); return\n}\n\nreturn solution(data)`,
 			language: 'javascript',
 			theme: 'vs-dark'
 		});
@@ -133,8 +134,11 @@
 	});
 </script>
 
-<div class="grid grid-cols-2 gap-2">
-	<div>
+<div
+	class="relative grid grid-cols-2 gap-2"
+	style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
+>
+	<div class="max-h-full">
 		<h2 class="font-semibold text-h3">{data.testContent.title}</h2>
 		<p class="text-body1">{data.testContent.description}</p>
 		<div class="p-4 mt-2 rounded-md bg-light_grey">
@@ -148,7 +152,7 @@
 			<Hints hints={content.hints} />
 		</div>
 	</div>
-	<div>
+	<div class="max-h-full">
 		<div
 			bind:this={codeEditorContainer}
 			class="w-full min-h-[400px] rounded-md overflow-hidden"
@@ -164,9 +168,9 @@
 		<div class="mt-4">
 			<span class="font-semibold text-h6">Tests</span>
 			<Separator w={'100%'} h="1px" />
-			<div class="grid grid-cols-6 mt-2">
+			<div class="grid grid-cols-6 mt-2 @container">
 				<div
-					class="max-h-[300px] flex flex-col col-span-1 gap-1 overflow-y-auto"
+					class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
 				>
 					{#each content['tests'] as { input, output }, index}
 						<button
@@ -174,12 +178,12 @@
 							class="w-full btn"
 							on:click={() => (selectedTestIndex = index)}
 						>
-							{index + 1}. Input: {input}
+							{index + 1}. {input}
 						</button>
 					{/each}
 				</div>
-				<div class="flex justify-between col-span-5 gap-2 pl-2">
-					<div>
+				<div class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2">
+					<div class="col-span-3">
 						<span class="font-semibold">{selectedTestIndex + 1}.</span>
 						<div>
 							<span>Input: </span><span class="font-semibold"
@@ -214,7 +218,11 @@
 							>
 						</div>
 					</div>
-					<div class="flex flex-col h-full gap-1 overflow-y-auto">
+					<div
+						class="flex flex-col max-h-full col-span-2 gap-1 overflow-y-auto"
+					>
+						<span>Logs</span>
+						<Separator w="100%" h="1px" />
 						{#if testsConsoleLogs[selectedTestIndex]}
 							{#each testsConsoleLogs[selectedTestIndex] as log}
 								<span class="text-xs">{log}</span>

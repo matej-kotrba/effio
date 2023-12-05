@@ -42,8 +42,6 @@
 
 	export let data;
 
-	$: console.log(data);
-
 	const SECTION_TRANSITION_DURATION = 400;
 
 	initializeNewTestToTestStore({
@@ -54,7 +52,7 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: true,
+		templateDone: false,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -72,7 +70,9 @@
 
 	let templatesActive: number | undefined = 0;
 
-	let testType: 'questions' | 'programming' = 'programming';
+	let testType: 'questions' | 'programming' = 'questions';
+
+	$: ($testObject.questions = []), testType;
 
 	let finishModal: HTMLDialogElement;
 	let testImageFile: File | undefined = undefined;

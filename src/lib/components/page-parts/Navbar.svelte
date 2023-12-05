@@ -1,3 +1,7 @@
+<script lang="ts" context="module">
+	export const NONAUTHENTICATED_NAV_HEIGHT = 70;
+</script>
+
 <script lang="ts">
 	import { signOut } from '@auth/sveltekit/client';
 
@@ -45,7 +49,8 @@
 </div>
 
 <nav
-	class={`bg-transparent h-[70px] z-[105] relative backdrop-blur-xl ${
+	style={`height: ${NONAUTHENTICATED_NAV_HEIGHT}px;`}
+	class={`bg-transparent z-[105] relative backdrop-blur-xl ${
 		includeSeparator ? 'border-b-2 border-light_text_black_20' : ''
 	} `}
 >
