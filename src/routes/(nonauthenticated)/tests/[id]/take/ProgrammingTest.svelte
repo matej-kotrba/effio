@@ -125,7 +125,7 @@
 			};
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
-			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123); return\n}\n\nreturn solution(data)`,
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123); return\n}\n\nreturn solution(data)`,
 			language: 'javascript',
 			theme: 'vs-dark'
 		});
@@ -136,9 +136,11 @@
 
 <div
 	class="relative grid grid-cols-2 gap-2"
-	style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
+	style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
 >
-	<div class="max-h-full">
+	<div
+		style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
+	>
 		<h2 class="font-semibold text-h3">{data.testContent.title}</h2>
 		<p class="text-body1">{data.testContent.description}</p>
 		<div class="p-4 mt-2 rounded-md bg-light_grey">
@@ -152,20 +154,26 @@
 			<Hints hints={content.hints} />
 		</div>
 	</div>
-	<div class="max-h-full">
-		<div
-			bind:this={codeEditorContainer}
-			class="w-full min-h-[400px] rounded-md overflow-hidden"
-		/>
-		<div class="flex gap-2 mt-4">
-			<BasicButton title="Run" onClick={compileCode}>
-				<iconify-icon icon="raphael:run" class="text-2xl" />
-			</BasicButton>
-			<BasicButton title="Submit" buttonAttributes={{ disabled: true }}>
-				<iconify-icon icon="raphael:run" class="text-2xl" />
-			</BasicButton>
+	<div
+		style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
+		class="grid gap-4"
+	>
+		<div>
+			<div
+				bind:this={codeEditorContainer}
+				class="w-full min-h-[400px] rounded-md overflow-hidden"
+			/>
+			<div class="flex gap-2 mt-4">
+				<BasicButton title="Run" onClick={compileCode}>
+					<iconify-icon icon="raphael:run" class="text-2xl" />
+				</BasicButton>
+				<BasicButton title="Submit" buttonAttributes={{ disabled: true }}>
+					<iconify-icon icon="raphael:run" class="text-2xl" />
+				</BasicButton>
+			</div>
 		</div>
-		<div class="mt-4">
+
+		<div class="h-full max-h-full">
 			<span class="font-semibold text-h6">Tests</span>
 			<Separator w={'100%'} h="1px" />
 			<div class="grid grid-cols-6 mt-2 @container">
