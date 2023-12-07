@@ -173,10 +173,10 @@
 			</div>
 		</div>
 
-		<div class="h-full max-h-full">
+		<div class="relative h-full max-h-full">
 			<span class="font-semibold text-h6">Tests</span>
 			<Separator w={'100%'} h="1px" />
-			<div class="grid grid-cols-6 mt-2 @container">
+			<div class="grid grid-cols-6 mt-2 @container h-full max-h-full">
 				<div
 					class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
 				>
@@ -190,7 +190,9 @@
 						</button>
 					{/each}
 				</div>
-				<div class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2">
+				<div
+					class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
+				>
 					<div class="col-span-3">
 						<span class="font-semibold">{selectedTestIndex + 1}.</span>
 						<div>
@@ -227,7 +229,7 @@
 						</div>
 					</div>
 					<div
-						class="flex flex-col max-h-full col-span-2 gap-1 overflow-y-auto"
+						class="flex flex-col h-full max-h-full col-span-2 gap-1 overflow-y-auto"
 					>
 						<span>Logs</span>
 						<Separator w="100%" h="1px" />
