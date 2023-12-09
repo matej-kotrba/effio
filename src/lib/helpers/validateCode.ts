@@ -6,28 +6,36 @@ export function validateCode(code: string, tests: ProgrammingQuestion["tests"]) 
   const wholeConsoleLogs: string[][] = []
   let codeConsoleLogs: string[] = [];
 
-  console.log = (...args: any[]) => {
-    args.forEach((arg) => {
-      if (typeof arg === 'object' || typeof arg === 'function') {
-        codeConsoleLogs.push(JSON.stringify(arg));
-      } else {
-        codeConsoleLogs.push(arg);
-      }
-    });
-  };
+  // console.log = (...args: any[]) => {
+  //   args.forEach((arg) => {
+  //     if (typeof arg === 'object' || typeof arg === 'function') {
+  //       codeConsoleLogs.push(JSON.stringify(arg));
+  //     } else {
+  //       codeConsoleLogs.push(arg);
+  //     }
+  //   });
+  // };
 
   const sandbox = new Sandbox();
-  const exec = sandbox.compile(code);
+
+  // The 0 case does not work
 
   const result: boolean[] = tests.map((test, index) => {
-    exec({ input: test.input }).run()
-    wholeConsoleLogs[index] = codeConsoleLogs
-    codeConsoleLogs = []
-    return isEquel(result, test.output)
+    try {
+      const exec = sandbox.compile(code);
+      const compileResult = exec({ data: test.input }).run()
+      wholeConsoleLogs[index] = codeConsoleLogs
+      codeConsoleLogs = []
+      console.log(compileResult, JSON.parse(test.output), isEquel(compileResult, JSON.parse(test.output)))
+      return isEquel(compileResult, JSON.parse(test.output))
+    }
+    catch (e) {
+      return false
+    }
   })
 
 
-  console.log = originalConsoleLog;
+  // console.log = originalConsoleLog;
 
   return {
     testPasses: result,

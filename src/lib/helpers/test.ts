@@ -497,6 +497,8 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: ProgrammingQuestion, original: ProgrammingQuestion) => {
       const data = validateCode(answer.code, original.tests)
+      console.log(data)
+      if (!data) return false
       const isAllRight = data.testPasses.find(item => item === false) === undefined
       if (isAllRight) return true
       const isAnyRight = data.testPasses.find(item => item === true) !== undefined
@@ -860,7 +862,7 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
   })
 
   const responseData = await res.json() as CheckTestResponse
-  console.log(responseData)
+  // console.log(responseData)
 
   if (responseData.success === undefined) throw new Error("Server error")
 
