@@ -27,6 +27,9 @@
 			};
 		}>;
 	};
+
+	export let questionIndex: number;
+
 	export let submitError: string;
 	export let isSubmitting: boolean;
 	export let openDialog: () => void;
@@ -46,19 +49,25 @@
 
 	let testsConsoleLogs: string[][] = [];
 
-	const oldConsoleLog = console.log;
-	console.log = (...args: any[]) => {
-		args.forEach((arg) => {
-			console.log(arg);
-			if (typeof arg === 'object' || typeof arg === 'function') {
-				testsConsoleLogs[testsConsoleLogs.length - 1].push(JSON.stringify(arg));
-			} else {
-				testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
-			}
-		});
-	};
-	const sandbox = new Sandbox();
-	console.log = oldConsoleLog;
+	let sandbox: Sandbox | undefined = undefined;
+	$: {
+		if (Sandbox) {
+			const oldConsoleLog = console.log;
+			console.log = (...args: any[]) => {
+				args.forEach((arg) => {
+					if (typeof arg === 'object' || typeof arg === 'function') {
+						testsConsoleLogs[testsConsoleLogs.length - 1].push(
+							JSON.stringify(arg)
+						);
+					} else {
+						testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
+					}
+				});
+			};
+			sandbox = new Sandbox();
+			console.log = oldConsoleLog;
+		}
+	}
 
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
@@ -67,6 +76,7 @@
 	let testsInfo: { result: string; passed: boolean }[] = [];
 
 	async function compileCode() {
+		if (!sandbox) return;
 		const code = codeEditor.getValue();
 
 		testsConsoleLogs = [];
@@ -105,11 +115,31 @@
 			} catch (e) {
 				console.log(e);
 			}
-
-			console.log(testsConsoleLogs);
 		}
+	}
 
-		console.log(testsConsoleLogs);
+	// 	function solution(data) {
+	// 	if (data === 0) return null;
+	// 	if (data % 2 === 0) {
+	// 		return "even"
+	// 	}
+	// 	return "odd"
+	// }
+
+	// return solution(data)
+
+	async function submitTest() {
+		const doTestsPass =
+			testsInfo.length === 0
+				? false
+				: !testsInfo.some((test) => test.passed === false);
+		if (!doTestsPass) return;
+		if (!$testObject.questions[questionIndex]) return;
+
+		const code = codeEditor.getValue();
+		($testObject.questions[questionIndex].content as ProgrammingQuestion).code =
+			code;
+		openDialog();
 	}
 
 	onMount(async () => {
@@ -158,16 +188,36 @@
 		style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
 		class="grid gap-4"
 	>
-		<div>
-			<div
-				bind:this={codeEditorContainer}
-				class="w-full min-h-[400px] rounded-md overflow-hidden"
-			/>
+		<div class="relative">
+			<!-- Placeholder for loading editor -->
+			<div class="relative min-h-[400px]">
+				{#if !codeEditor}
+					<div
+						class="absolute flex flex-col items-center -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+					>
+						<span class="font-semibold">Loading the editor ...</span>
+						<span class="loading loading-bars loading-lg" />
+					</div>
+				{/if}
+				<div
+					bind:this={codeEditorContainer}
+					class="w-full min-h-[400px] overflow-hidden rounded-md"
+				/>
+			</div>
 			<div class="flex gap-2 mt-4">
 				<BasicButton title="Run" onClick={compileCode}>
 					<iconify-icon icon="raphael:run" class="text-2xl" />
 				</BasicButton>
-				<BasicButton title="Submit" buttonAttributes={{ disabled: true }}>
+				<BasicButton
+					title="Submit"
+					onClick={submitTest}
+					buttonAttributes={{
+						disabled:
+							testsInfo.length === 0
+								? true
+								: testsInfo.some((test) => test.passed === false)
+					}}
+				>
 					<iconify-icon icon="raphael:run" class="text-2xl" />
 				</BasicButton>
 			</div>
@@ -229,15 +279,21 @@
 						</div>
 					</div>
 					<div
-						class="flex flex-col h-full max-h-full col-span-2 gap-1 overflow-y-auto"
+						class="relative grid col-span-2 gap-1"
+						style="grid-template-rows: auto 1fr;"
 					>
-						<span>Logs</span>
-						<Separator w="100%" h="1px" />
-						{#if testsConsoleLogs[selectedTestIndex]}
-							{#each testsConsoleLogs[selectedTestIndex] as log}
-								<span class="text-xs">{log}</span>
-							{/each}
-						{/if}
+						<div>
+							<span>Logs</span>
+							<Separator w="100%" h="1px" />
+						</div>
+						<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
+						<div class="flex flex-col h-[200px] overflow-y-auto">
+							{#if testsConsoleLogs[selectedTestIndex]}
+								{#each testsConsoleLogs[selectedTestIndex] as log}
+									<span class="text-xs">{log}</span>
+								{/each}
+							{/if}
+						</div>
 					</div>
 				</div>
 			</div>

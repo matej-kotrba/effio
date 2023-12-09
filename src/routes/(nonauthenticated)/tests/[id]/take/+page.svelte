@@ -95,6 +95,7 @@
 	{:else if data.testContent.type === 'PROGRAMMING'}
 		<div class="mx-auto max-w-[1400px]">
 			<ProgrammingTest
+				questionIndex={0}
 				{data}
 				{isSubmitting}
 				{submitError}
