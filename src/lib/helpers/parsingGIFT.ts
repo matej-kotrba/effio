@@ -5,15 +5,17 @@ const allowedTypes: GIFTQuestion["type"][] = ["MC", "Matching", "Short"]
 
 export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questionTemplates: QuestionTemplate[]) {
   const result = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
+    console.log(question)
     try {
 
       if (question.type === "MC") {
 
         const hasMoreCorrectAnswers = question.choices.reduce((acc, item,) => {
-          if (item.isCorrect || item.weight !== undefined) return acc + 1
+          if (item.isCorrect || item.weight) return acc + 1
           return acc
         }, 0)
 
+        console.log(hasMoreCorrectAnswers)
         // Has more correct asnwers -> True/False
         if (hasMoreCorrectAnswers === 0 || hasMoreCorrectAnswers >= 2) {
           const template = questionTemplates.find(item => item.slug === "true/false")
@@ -36,11 +38,11 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
                   resultText = resultText.replaceAll(/<[^>]+>/g, '')
                 }
 
-                else if (item.text.format !== "plain") throw new Error("Unsupported txt format")
+                else if (item.text.format !== "plain" && item.text.format !== "moodle") throw new Error("Unsupported txt format")
 
                 return {
                   answer: resultText,
-                  isTrue: item.isCorrect || item.weight !== undefined
+                  isTrue: item.isCorrect || !!item.weight
                 }
               })
             }
