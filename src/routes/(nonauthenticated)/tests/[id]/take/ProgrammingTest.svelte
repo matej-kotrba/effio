@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Prisma, TestRecord } from '@prisma/client';
 	import type { editor } from 'monaco-editor';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { testObject } from '~stores/testObject';
 	import { handwrite } from '~use/handwrite';
 	import Hints from './Hints.svelte';
@@ -10,6 +10,9 @@
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Sandbox from '@nyariv/sandboxjs';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
+	import { browser } from '$app/environment';
+	import { Confetti } from 'svelte-confetti';
+	import toast from 'svelte-french-toast';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -45,6 +48,16 @@
 
 	$: content = $testObject.questions[0].content as ProgrammingQuestion;
 
+	$: {
+		if (codeEditor) {
+			if (result) {
+				codeEditor.updateOptions({
+					readOnly: true
+				});
+			}
+		}
+	}
+
 	let monaco: typeof import('monaco-editor');
 
 	let testsConsoleLogs: string[][] = [];
@@ -75,7 +88,10 @@
 	let selectedTestIndex: number = 0;
 	let testsInfo: { result: string; passed: boolean }[] = [];
 
+	let activateConfetti: boolean = false;
+
 	async function compileCode() {
+		if (!!result) return;
 		if (!sandbox) return;
 		const code = codeEditor.getValue();
 
@@ -116,19 +132,17 @@
 				console.log(e);
 			}
 		}
+
+		if (testsInfo.every((test) => test.passed)) {
+			activateConfetti = false;
+			toast.success('You got it!\nAll tests are passing.');
+			await tick();
+			activateConfetti = true;
+		}
 	}
 
-	// 	function solution(data) {
-	// 	if (data === 0) return null;
-	// 	if (data % 2 === 0) {
-	// 		return "even"
-	// 	}
-	// 	return "odd"
-	// }
-
-	// return solution(data)
-
 	async function submitTest() {
+		if (!!result) return;
 		const doTestsPass =
 			testsInfo.length === 0
 				? false
@@ -157,142 +171,190 @@
 		codeEditor = monaco.editor.create(codeEditorContainer, {
 			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123); return\n}\n\nreturn solution(data)`,
 			language: 'javascript',
-			theme: 'vs-dark'
+			theme: 'vs-dark',
+			contextmenu: false
 		});
 
-		window.addEventListener('resize', () => codeEditor.layout());
+		window.addEventListener('resize', () => {
+			console.log(codeEditor);
+			codeEditor.layout();
+		});
+	});
+
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('resize', () => codeEditor.layout());
+		}
 	});
 </script>
 
-<div
-	class="relative grid grid-cols-2 gap-2"
-	style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
->
+{#if browser}
+	{#if activateConfetti}
+		<div
+			style="position: fixed; top: -50px; left: 0; height: 100vh; width: 100vw; display: flex; justify-content: center; overflow: hidden;"
+		>
+			{#each Array(2) as _, index}
+				<Confetti
+					x={[-5, 5]}
+					y={[0, 0.1]}
+					delay={[100 + index * 2000, 2000 + index * 2000]}
+					duration={3000}
+					amount={300}
+					fallDistance="100vh"
+				/>
+			{/each}
+		</div>
+	{/if}
+{/if}
+
+<div class="@container">
 	<div
+		class="relative flex flex-col grid-cols-2 gap-2 @4xl:grid !max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
 		style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
 	>
-		<h2 class="font-semibold text-h3">{data.testContent.title}</h2>
-		<p class="text-body1">{data.testContent.description}</p>
-		<div class="p-4 mt-2 rounded-md bg-light_grey">
-			<h3 class="font-semibold text-h4" use:handwrite>
-				{data.testContent.testVersions[0].questions[0].title}
-			</h3>
-			<p use:handwrite>{content.description}</p>
-			<Space gap={10} />
-			<Separator w={'100%'} h="1px" />
-			<Space gap={10} />
-			<Hints hints={content.hints} />
-		</div>
-	</div>
-	<div
-		style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
-		class="grid gap-4"
-	>
-		<div class="relative">
-			<!-- Placeholder for loading editor -->
-			<div class="relative min-h-[400px]">
-				{#if !codeEditor}
-					<div
-						class="absolute flex flex-col items-center -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+		<div
+			class="!max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
+			style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px);`}
+		>
+			<h2 class="font-semibold text-h3">{data.testContent.title}</h2>
+			<p class="text-body1">{data.testContent.description}</p>
+			<div class="p-4 mt-2 rounded-md bg-light_grey">
+				<h3 class="font-semibold text-h4" use:handwrite>
+					{data.testContent.testVersions[0].questions[0].title}
+				</h3>
+				<p use:handwrite>{content.description}</p>
+				<Space gap={10} />
+				<Separator w={'100%'} h="1px" />
+				<Space gap={10} />
+				<Hints hints={content.hints} />
+			</div>
+			{#if result}
+				<Space gap={20} />
+				<div>
+					<span class="text-body1"
+						>You have made it using <b>{content.code.length}</b> characters</span
 					>
-						<span class="font-semibold">Loading the editor ...</span>
-						<span class="loading loading-bars loading-lg" />
-					</div>
-				{/if}
-				<div
-					bind:this={codeEditorContainer}
-					class="w-full min-h-[400px] overflow-hidden rounded-md"
-				/>
-			</div>
-			<div class="flex gap-2 mt-4">
-				<BasicButton title="Run" onClick={compileCode}>
-					<iconify-icon icon="raphael:run" class="text-2xl" />
-				</BasicButton>
-				<BasicButton
-					title="Submit"
-					onClick={submitTest}
-					buttonAttributes={{
-						disabled:
-							testsInfo.length === 0
-								? true
-								: testsInfo.some((test) => test.passed === false)
-					}}
-				>
-					<iconify-icon icon="raphael:run" class="text-2xl" />
-				</BasicButton>
-			</div>
-		</div>
-
-		<div class="relative h-full max-h-full">
-			<span class="font-semibold text-h6">Tests</span>
-			<Separator w={'100%'} h="1px" />
-			<div class="grid grid-cols-6 mt-2 @container h-full max-h-full">
-				<div
-					class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
-				>
-					{#each content['tests'] as { input, output }, index}
-						<button
-							type="button"
-							class="w-full btn"
-							on:click={() => (selectedTestIndex = index)}
-						>
-							{index + 1}. {input}
-						</button>
-					{/each}
 				</div>
-				<div
-					class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
-				>
-					<div class="col-span-3">
-						<span class="font-semibold">{selectedTestIndex + 1}.</span>
-						<div>
-							<span>Input: </span><span class="font-semibold"
-								>{content['tests'][selectedTestIndex].input}</span
-							>
+				<div class="flex gap-1">
+					<a href="/dashboard" class="btn btn-outline">To dashboard</a>
+					<a href="/community" class="btn btn-outline">To community</a>
+				</div>
+			{/if}
+		</div>
+		<div
+			style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
+			class="relative grid gap-4 !max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
+		>
+			<div class="relative w-full max-w-full overflow-hidden h-fit">
+				<!-- Placeholder for loading editor -->
+				<div class="relative min-h-[400px] h-fit max-w-full w-full">
+					{#if !codeEditor}
+						<div
+							class="absolute flex flex-col items-center -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+						>
+							<span class="font-semibold">Loading the editor ...</span>
+							<span class="loading loading-bars loading-lg" />
 						</div>
-						<div>
-							<span>Output: </span><span class={`font-semibold`}
-								>{testsInfo[selectedTestIndex]
-									? testsInfo[selectedTestIndex].result
-									: ''}</span
+					{/if}
+					<div
+						bind:this={codeEditorContainer}
+						class="max-w-full min-h-[400px] overflow-hidden rounded-md"
+					/>
+				</div>
+				<div class="flex gap-2 mt-4">
+					<BasicButton
+						title="Run"
+						onClick={compileCode}
+						buttonAttributes={{ disabled: !!result }}
+					>
+						<iconify-icon icon="raphael:run" class="text-2xl" />
+					</BasicButton>
+					<BasicButton
+						title="Submit"
+						onClick={submitTest}
+						buttonAttributes={{
+							disabled:
+								!!result || testsInfo.length === 0
+									? true
+									: testsInfo.some((test) => test.passed === false)
+						}}
+					>
+						<iconify-icon icon="raphael:run" class="text-2xl" />
+					</BasicButton>
+				</div>
+			</div>
+
+			<div class="relative h-full max-h-full">
+				<span class="font-semibold text-h6">Tests</span>
+				<Separator w={'100%'} h="1px" />
+				<div class="grid grid-cols-6 mt-2 @container h-full max-h-full">
+					<div
+						class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
+					>
+						{#each content['tests'] as { input, output }, index}
+							<button
+								type="button"
+								class="w-full btn"
+								on:click={() => (selectedTestIndex = index)}
 							>
-						</div>
-						<div>
-							<span>Result: </span><span
-								class={`font-semibold ${
-									testsInfo[selectedTestIndex] &&
-									testsInfo[selectedTestIndex].passed
-										? 'text-success'
-										: 'text-error dark:text-dark_error'
-								}`}
-								>{testsInfo[selectedTestIndex]
-									? testsInfo[selectedTestIndex].passed
-										? 'Passed'
-										: 'Failed'
-									: ''}</span
-							>
-						</div>
-						<div>
-							<span>Expected Output: </span><span class="font-semibold"
-								>{content['tests'][selectedTestIndex].output}</span
-							>
-						</div>
+								{index + 1}. {input}
+							</button>
+						{/each}
 					</div>
 					<div
-						class="relative grid col-span-2 gap-1"
-						style="grid-template-rows: auto 1fr;"
+						class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
 					>
-						<div>
-							<span>Logs</span>
-							<Separator w="100%" h="1px" />
+						<div class="col-span-3">
+							<span class="font-semibold">{selectedTestIndex + 1}.</span>
+							<div>
+								<span>Input: </span><span class="font-semibold"
+									>{content['tests'][selectedTestIndex].input}</span
+								>
+							</div>
+							<div>
+								<span>Output: </span><span class={`font-semibold`}
+									>{testsInfo[selectedTestIndex]
+										? testsInfo[selectedTestIndex].result
+										: ''}</span
+								>
+							</div>
+							<div>
+								<span>Result: </span><span
+									class={`font-semibold ${
+										testsInfo[selectedTestIndex] &&
+										testsInfo[selectedTestIndex].passed
+											? 'text-success'
+											: 'text-error dark:text-dark_error'
+									}`}
+									>{testsInfo[selectedTestIndex]
+										? testsInfo[selectedTestIndex].passed
+											? 'Passed'
+											: 'Failed'
+										: ''}</span
+								>
+							</div>
+							<div>
+								<span>Expected Output: </span><span class="font-semibold"
+									>{content['tests'][selectedTestIndex].output}</span
+								>
+							</div>
 						</div>
-						<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
-						<div class="flex flex-col h-[200px] overflow-y-auto">
-							{#if testsConsoleLogs[selectedTestIndex]}
-								{#each testsConsoleLogs[selectedTestIndex] as log}
-									<span class="text-xs">{log}</span>
-								{/each}
-							{/if}
+						<div
+							class="relative grid col-span-2 gap-1"
+							style="grid-template-rows: auto 1fr;"
+						>
+							<div>
+								<span>Logs</span>
+								<Separator w="100%" h="1px" />
+							</div>
+							<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
+							<div class="flex flex-col h-[200px] overflow-y-auto">
+								{#if testsConsoleLogs[selectedTestIndex]}
+									{#each testsConsoleLogs[selectedTestIndex] as log}
+										<span class="text-xs">{log}</span>
+									{/each}
+								{/if}
+							</div>
 						</div>
 					</div>
 				</div>

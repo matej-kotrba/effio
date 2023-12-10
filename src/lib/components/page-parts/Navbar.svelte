@@ -50,7 +50,7 @@
 
 <nav
 	style={`height: ${NONAUTHENTICATED_NAV_HEIGHT}px;`}
-	class={`bg-transparent z-[105] relative backdrop-blur-xl ${
+	class={`bg-transparent z-[105] relative backdrop-blur-xl flex items-center ${
 		includeSeparator ? 'border-b-2 border-light_text_black_20' : ''
 	} `}
 >

@@ -6,27 +6,24 @@ export function validateCode(code: string, tests: ProgrammingQuestion["tests"]) 
   const wholeConsoleLogs: string[][] = []
   let codeConsoleLogs: string[] = [];
 
-  // console.log = (...args: any[]) => {
-  //   args.forEach((arg) => {
-  //     if (typeof arg === 'object' || typeof arg === 'function') {
-  //       codeConsoleLogs.push(JSON.stringify(arg));
-  //     } else {
-  //       codeConsoleLogs.push(arg);
-  //     }
-  //   });
-  // };
+  console.log = (...args: any[]) => {
+    args.forEach((arg) => {
+      if (typeof arg === 'object' || typeof arg === 'function') {
+        codeConsoleLogs.push(JSON.stringify(arg));
+      } else {
+        codeConsoleLogs.push(arg);
+      }
+    });
+  };
 
   const sandbox = new Sandbox();
-
-  // The 0 case does not work
 
   const result: boolean[] = tests.map((test, index) => {
     try {
       const exec = sandbox.compile(code);
-      const compileResult = exec({ data: test.input }).run()
+      const compileResult = exec({ data: JSON.parse(test.input) }).run()
       wholeConsoleLogs[index] = codeConsoleLogs
       codeConsoleLogs = []
-      console.log(compileResult, JSON.parse(test.output), isEquel(compileResult, JSON.parse(test.output)))
       return isEquel(compileResult, JSON.parse(test.output))
     }
     catch (e) {
@@ -35,7 +32,7 @@ export function validateCode(code: string, tests: ProgrammingQuestion["tests"]) 
   })
 
 
-  // console.log = originalConsoleLog;
+  console.log = originalConsoleLog;
 
   return {
     testPasses: result,

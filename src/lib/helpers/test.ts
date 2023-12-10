@@ -497,7 +497,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkAnswerCorrectness": (answer: ProgrammingQuestion, original: ProgrammingQuestion) => {
       const data = validateCode(answer.code, original.tests)
-      console.log(data)
       if (!data) return false
       const isAllRight = data.testPasses.find(item => item === false) === undefined
       if (isAllRight) return true

@@ -38,8 +38,8 @@
 
 <Dialog bind:open={openDialog}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
-		You are about to submit the test, after that you want be able to change your
-		answers, do you want to proceed?
+		You are about to submit the test, after that you <b>WONT</b> be able to change
+		your answers, do you want to proceed?
 	</p>
 	<Space />
 	<div class="flex justify-center gap-3">
@@ -55,6 +55,7 @@
 
 				// Check test on the client first for all inputs filled and so on...
 				let clientCheck = checkTestClient($testObject);
+				console.log(clientCheck);
 				if (!clientCheck['success']) {
 					$testObject = clientCheck['store'];
 					return;
