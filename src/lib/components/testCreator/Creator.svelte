@@ -187,13 +187,15 @@
 					/>
 				</div>
 			{:else if $testObject.questions.length > 0 && !(isInputSidebarOpen === true || windowWidth >= XL)}
-				<button
-					type="button"
-					on:click={() => newInputModal?.showModal()}
-					class="sticky left-0 grid w-full h-full p-2 duration-150 rounded-md shadow-md sm:w-12 top-2 bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark sm:aspect-square"
-				>
-					<iconify-icon icon="tabler:dots" class="text-3xl" />
-				</button>
+				<div class="sticky top-0 left-0 grid h-screen place-content-center">
+					<button
+						type="button"
+						on:click={() => newInputModal?.showModal()}
+						class="grid w-full h-[90vh] p-2 duration-150 rounded-md shadow-md shadow-light_text_black_40 sm:w-12 bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark sm:aspect-square"
+					>
+						<iconify-icon icon="tabler:dots" class="text-3xl" />
+					</button>
+				</div>
 			{/if}
 		</div>
 		<div class="px-1 sm:px-2 md:px-4">
