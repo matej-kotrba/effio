@@ -104,7 +104,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             matchedAnswers: matchedPairs,
             answers: question.matchPairs.map(item => {
               return {
-                answer: item.subquestion.text,
+                answer: item.subquestion.format === "html" ? item.subquestion.text.replaceAll(/<[^>]+>/g, '') : item.subquestion.text,
                 matchedAnswerIndex: Object.entries(matchedPairs).find((entry) => {
                   return entry[1].answer === item.subanswer
                 })?.[0]

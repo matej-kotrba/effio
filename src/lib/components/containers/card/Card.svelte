@@ -3,6 +3,7 @@
 	import Space from '~components/separators/Space.svelte';
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import { onImageLoad } from '~use/onImageLoad';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let redirectLink: string = '#';
 	export let imageLink: string = ''; //'/imgs/content_imgs/liska.avif';
@@ -18,7 +19,7 @@
 	}[] = [];
 	export let createdAt: Date | undefined = undefined;
 
-	let isIconFallback = false;
+	let isImageFallback = false;
 </script>
 
 <div
@@ -30,11 +31,15 @@
 				{#if imageLink}
 					<img
 						class="rounded-lg w-[100%] aspect-[3/2] object-cover group-hover:blur-md overflow-hidden duration-200"
-						src={imageLink || '/imgs/effio/text.png'}
+						src={isImageFallback
+							? $applicationStates['darkMode']['isDarkMode']
+								? '/imgs/content_imgs/poly_dark.png'
+								: '/imgs/content_imgs/poly.png'
+							: imageLink || '/imgs/effio/text.png'}
 						alt={imageAlt}
 						use:onImageLoad
 						on:imageerror={(e) => {
-							isIconFallback = true;
+							isImageFallback = true;
 							// e.target.src = '/imgs/svgs/user-circle.svg';
 						}}
 					/>

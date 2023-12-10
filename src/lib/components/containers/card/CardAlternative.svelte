@@ -21,6 +21,7 @@
 	import { onImageLoad } from '~use/onImageLoad';
 
 	let isIconFallback = false;
+	let isImageFallback = false;
 
 	export let data: CardAlternativeProps;
 	export let navigationLink: string | null = null;
@@ -31,7 +32,7 @@
 		class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
 	>
 		<div
-			class=" relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
+			class="relative w-full aspect-video before:content-[''] before:w-full before:h-1 before:bg-light_secondary before:left-0 before:bottom-0 before:translate-y-1/2 before:absolute before:z-[2]
 					"
 		>
 			<div>
@@ -81,11 +82,19 @@
 				/>
 				<a href={navigationLink || '#'} class="w-full">
 					<img
-						src={data.img
+						use:onImageLoad
+						src={isImageFallback
+							? $applicationStates['darkMode']['isDarkMode']
+								? '/imgs/content_imgs/poly_dark.png'
+								: '/imgs/content_imgs/poly.png'
+							: data.img
 							? data.img
 							: $applicationStates['darkMode']['isDarkMode']
 							? '/imgs/content_imgs/poly_dark.png'
 							: '/imgs/content_imgs/poly.png'}
+						on:imageerror={(e) => {
+							isImageFallback = true;
+						}}
 						alt={data.title}
 						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md"
 					/>
