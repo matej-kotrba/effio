@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount, tick } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client.js';
 	import { transformDate } from '~/lib/utils/date';
@@ -14,8 +14,12 @@
 	import Drawer from '~components/collapsibles/Drawer.svelte';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
 	import { applicationStates } from '~stores/applicationStates';
+	import Pusher from 'pusher-js';
+	import { PUBLIC_PUSHER_KEY, PUBLIC_PUSHER_CLUSTER } from '$env/static/public';
 
 	export let data;
+
+	let pusher: (typeof Pusher)['prototype'];
 
 	let observer: IntersectionObserver;
 
@@ -188,6 +192,22 @@
 			scrollToBottom();
 			isFetchingNew = false;
 		}, 0);
+
+		pusher = new Pusher(PUBLIC_PUSHER_KEY, {
+			cluster: PUBLIC_PUSHER_CLUSTER
+		});
+
+		const channel = pusher.subscribe(`group-${data.group.id}`);
+
+		channel.bind('new-message', (data: any) => {
+			console.log(data);
+		});
+	});
+
+	onDestroy(() => {
+		observer?.disconnect();
+		pusher?.unsubscribe(`group-${data.group.id}`);
+		pusher?.disconnect();
 	});
 </script>
 
