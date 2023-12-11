@@ -199,8 +199,14 @@
 
 		const channel = pusher.subscribe(`group-${data.group.id}`);
 
-		channel.bind('new-message', (data: any) => {
-			console.log(data);
+		channel.bind('new-message', async (data: any) => {
+			try {
+				data.createdAt = new Date(data.createdAt);
+				data.updatedAt = new Date(data.createdAt);
+				messages = [...messages, data];
+				await tick();
+				scrollToBottom(false);
+			} catch {}
 		});
 	});
 
