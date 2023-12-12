@@ -176,7 +176,6 @@
 		});
 
 		window.addEventListener('resize', () => {
-			console.log(codeEditor);
 			codeEditor.layout();
 		});
 	});
@@ -185,6 +184,7 @@
 		if (browser) {
 			window.removeEventListener('resize', () => codeEditor.layout());
 		}
+		codeEditor.dispose();
 	});
 </script>
 

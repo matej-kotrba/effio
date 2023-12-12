@@ -210,11 +210,10 @@
 		monaco = await import('monaco-editor');
 
 		await Promise.all([
-			import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-			import('monaco-editor/esm/vs/editor/editor.worker?worker')
-		]).then(([jsonWorker, editorWorker]) => {
+			import('monaco-editor/esm/vs/language/json/json.worker?worker')
+		]).then(([jsonWorker]) => {
 			self.MonacoEnvironment = {
-				getWorker(_, label) {
+				getWorker(_) {
 					return new jsonWorker.default();
 				}
 			};
@@ -222,12 +221,14 @@
 		inputEditor = monaco.editor.create(inputEditorContainer, {
 			value: '58',
 			language: 'json',
-			theme: 'vs-dark'
+			theme: 'vs-dark',
+			contextmenu: false
 		});
 		outputEditor = monaco.editor.create(outputEditorContainer, {
 			value: '',
 			language: 'json',
-			theme: 'vs-dark'
+			theme: 'vs-dark',
+			contextmenu: false
 		});
 
 		window.addEventListener('resize', () => inputEditor.layout());
@@ -312,12 +313,12 @@
 			<div class="relative w-full group test">
 				<button
 					type="button"
-					class="flex justify-between w-full gap-2 btn flex-nowrap"
+					class="flex justify-between w-full gap-2 btn flex-nowrap dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white"
 					on:click={() => openDropdown(index)}
 				>
 					<span class="font-semibold text-h6">{index + 1}.</span>
 					<div
-						class="w-full overflow-x-hidden text-left text-ellipsis whitespace-nowrap"
+						class="w-full overflow-hidden text-left text-ellipsis whitespace-nowrap"
 					>
 						<span>I: </span>
 						<span
@@ -331,13 +332,13 @@
 						>
 					</div>
 				</button>
-				<button
+				<!-- <button
 					type="button"
 					on:click={() => deleteTest(index)}
-					class="absolute grid p-1 duration-100 -translate-y-1/2 rounded-md opacity-0 right-2 top-1/2 place-content-center group-hover:opacity-100 hover:bg-light_grey_dark"
+					class="absolute grid p-1 duration-100 -translate-y-1/2 rounded-md opacity-0 right-2 top-1/2 place-content-center group-hover:opacity-100 hover:bg-light_grey_dark dark:hover:bg-dark_grey"
 				>
 					<iconify-icon icon="fluent:delete-28-filled" class="text-2xl" />
-				</button>
+				</button> -->
 			</div>
 		{/each}
 	</div>
