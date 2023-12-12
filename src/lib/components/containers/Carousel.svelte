@@ -102,7 +102,7 @@
 	$: onResize(), scrollerDiv;
 </script>
 
-<section class="w-full">
+<section class="grid w-full h-full grid__layout">
 	<div class="flex gap-2">
 		<IconButton
 			icon="ic:round-arrow-left"
@@ -117,14 +117,14 @@
 			onClick={scrollRight}
 		/>
 	</div>
-	<div class="w-full overflow-hidden">
+	<div class="w-full h-full overflow-hidden">
 		{#await data}
 			<div class="flex w-full py-1 scroller flex-nowrap">
 				{#each Array(countOfItems).fill('') as _}
 					<div
-						class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
+						class="min-w-[calc(100%/var(--items-count))] h-full relative aspect-[4/5]"
 					>
-						<div class="px-1 w-full max-w-[300px] aspect-[4/5]">
+						<div class="px-1 w-full max-w-[300px] h-full aspect-[4/5]">
 							<div
 								class="h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
 							>
@@ -142,10 +142,10 @@
 				<span class="loading loading-infinity loading-lg" />
 			</div>
 		{:then awaitedData}
-			<div class="@container">
+			<div class="@container h-full">
 				<div
 					bind:this={scrollerDiv}
-					class="flex w-full py-1 scroller flex-nowrap"
+					class="flex w-full h-full py-1 scroller flex-nowrap"
 					style="--translate-x: 0%;"
 				>
 					{#each awaitedData as item}
@@ -167,6 +167,9 @@
 </section>
 
 <style>
+	.grid__layout {
+		grid-template-rows: auto 1fr;
+	}
 	.scroller {
 		--items-count: 6;
 		transform: translateX(var(--translate-x));
@@ -193,12 +196,12 @@
 			--items-count: 3;
 		}
 	}
-	@container (min-width: 16rem) and (width < 30rem) {
+	@container (min-width: 22rem) and (width < 30rem) {
 		.scroller {
 			--items-count: 2;
 		}
 	}
-	@container (width < 16rem) {
+	@container (width < 22rem) {
 		.scroller {
 			--items-count: 1;
 		}

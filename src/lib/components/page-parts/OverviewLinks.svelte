@@ -1,11 +1,14 @@
 <div class="container">
 	<div class="card-container">
+		<img src="./imgs/svgs/empty.svg" alt="" class="bottom-0 main-image" />
 		<div class="logo-container">
 			<img src="./imgs/effio/text.png" alt="" class="logo" />
-			<h3 class="text-white">Create a new test</h3>
+			<h3 class="font-semibold text-white">Create a new test</h3>
 		</div>
-		<img src="./imgs/svgs/empty.svg" alt="" class="main-image" />
-		<img src="./imgs/overview/bg2.svg" alt="" class="bg-image" />
+		<div class="p-2 bg-image bg-light_whiter dark:bg-dark_primary_light">
+			<img src="/imgs/svgs/overview/create.svg" alt="" class="drop-shadow-md" />
+		</div>
+		<!-- <img src="./imgs/overview/bg2.svg" alt="" class="bg-image" /> -->
 	</div>
 </div>
 
@@ -84,10 +87,10 @@
 	}
 
 	.logo-container {
-		z-index: 1000;
 		filter: brightness(1000) drop-shadow(rgba(0, 0, 0, 0.671) 0 0 1px);
 		width: 65%;
 		margin-inline: auto;
+		z-index: 100;
 		inset: auto 0 2rem;
 		transform: translateY(0rem) translateZ(20px);
 		transition: var(--timing);
@@ -97,21 +100,21 @@
 	}
 
 	.card-container:hover .logo-container {
-		transform: translateY(-1.5rem) translateZ(20px);
+		transform: translateY(-1.5rem) translateZ(30px);
 		rotate: x calc(var(--rotation) * -1);
 	}
 
 	.main-image {
-		scale: 1.125;
+		scale: 1;
 		transform-origin: bottom;
 		opacity: 0;
-		z-index: 100;
+		z-index: 10;
 		transition: var(--timing);
 	}
 
 	.card-container:hover .main-image {
 		opacity: 1;
-		transform: translateY(-2rem) translateZ(-10px);
+		transform: translateY(-4rem) translateZ(-30px);
 		rotate: x calc(var(--rotation) * -1);
 	}
 </style>
