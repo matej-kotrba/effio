@@ -54,10 +54,11 @@
 		if (oldValue.indexOf('%') === -1) return;
 		try {
 			let oldValueNumberPercent = +oldValue.replace('%', '');
+			//TODO: Changed here last countOfItems from countOfItems + 1, if it wont work, change it back
 			if (
 				oldValueNumberPercent <=
 				-(100 / countOfItems) * resolvedData.length +
-					(100 / countOfItems) * (countOfItems + 1)
+					(100 / countOfItems) * countOfItems
 			)
 				return;
 			oldValueNumberPercent = oldValueNumberPercent - 100 / countOfItems;
@@ -153,6 +154,7 @@
 							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
 						>
 							<CardAlternative
+								class="mx-auto"
 								navigationLink={'/tests/' + item.id}
 								data={{
 									...item

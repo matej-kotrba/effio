@@ -126,7 +126,7 @@
 				{/if}
 			</ul>
 		</div>
-		<div class="flex justify-between w-full md:hidden">
+		<div class="flex justify-between w-full px-2 md:hidden">
 			<button type="button" on:click={() => (isShown = !isShown)}>
 				<iconify-icon icon="charm:menu-hamburger" class="text-3xl" />
 			</button>

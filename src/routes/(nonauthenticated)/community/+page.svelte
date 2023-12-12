@@ -246,7 +246,7 @@
 	</div>
 </div>
 
-<div>
+<div class="@container">
 	<div
 		class="flex flex-col justify-center mb-4 border-b-2 border-light_text_black"
 	>
@@ -292,7 +292,7 @@
 	</div>
 	<div
 		bind:this={allTestsRef}
-		class={`relative grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 min-h-[24rem] ${
+		class={`relative gap-y-1 xs:gap-y-2 grid grid-cols-1 @xs:grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6 min-h-[24rem] ${
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
 	>
@@ -317,6 +317,7 @@
 						<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
 							<CardAlternative
 								navigationLink={`/tests/${test.id}`}
+								class="mx-auto"
 								data={{
 									title: test.title,
 									description: test.description,
@@ -331,6 +332,7 @@
 					{:else}
 						<CardAlternative
 							navigationLink={`/tests/${test.id}`}
+							class="mx-auto"
 							data={{
 								title: test.title,
 								description: test.description,

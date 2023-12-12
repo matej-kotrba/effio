@@ -14,6 +14,7 @@
 </script>
 
 <script lang="ts">
+	import { twMerge } from 'tailwind-merge';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Star from '~components/globals/Star.svelte';
@@ -25,9 +26,14 @@
 
 	export let data: CardAlternativeProps;
 	export let navigationLink: string | null = null;
+
+	let classes = '';
+	export { classes as class };
 </script>
 
-<div class="px-1 w-full max-w-[300px] aspect-[4/5]">
+<div
+	class={twMerge('px-1 w-full max-w-[260px] aspect-[4/5] @container', classes)}
+>
 	<div
 		class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
 	>
@@ -105,20 +111,20 @@
 			<div class="p-2 mt-3">
 				<abbr title={data.title} class="no-underline">
 					<h3
-						class="w-full overflow-hidden font-semibold text-center text-h6 overflow-ellipsis whitespace-nowrap"
+						class="w-full overflow-hidden font-semibold text-center text-body1 @[14rem]:text-h6 overflow-ellipsis whitespace-nowrap"
 					>
 						{data.title}
 					</h3>
 				</abbr>
 				{#if data.createdAt}
 					<span
-						class="block text-center text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
+						class="block text-center text-body3 @[14rem]:text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
 						>{transformDate(data.createdAt, { time: true })}</span
 					>
 				{/if}
 				{#if data.description}
 					<div
-						class="mt-2 text-center break-all line-clamp-3 text-body2 text-over"
+						class="mt-1 text-center break-all line-clamp-2 @[14rem]:line-clamp-3 text-body2 text-over"
 					>
 						{data.description}
 					</div>
