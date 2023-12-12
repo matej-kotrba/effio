@@ -4,7 +4,7 @@ import prisma from "~/lib/prisma"
 
 export const GET: RequestHandler = async ({ url, locals }) => {
   const session = await locals.getSession() as UpdatedSession
-  if (session.user?.id !== "cllo43xes0000mo083eunwncf") {
+  if (session.user?.id !== "cllo43xes0000mo083eunwncf" && session.user?.id !== "cllpeoksw0000l9084sm98h4g") {
     return json({
       error: "You are not authorized to access this page"
     })
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
       return {
         title: "Example test " + i,
         description: "This is an example test",
-        ownerId: "cllo43xes0000mo083eunwncf",
+        ownerId: session.user!.id!,
       }
     })
   })

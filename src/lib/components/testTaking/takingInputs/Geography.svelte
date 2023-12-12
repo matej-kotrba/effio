@@ -17,8 +17,6 @@
 	export let resultFormat: QuestionServerCheckResponse<GeographyQuestion> | null =
 		null;
 
-	$: console.log();
-
 	$: content = $testObject.questions[questionIndex]
 		.content as GeographyQuestion;
 
@@ -58,7 +56,7 @@
 	let resultMarker: Marker;
 	let resultToleranceCircle: L.Circle;
 	$: {
-		if (resultFormat) {
+		if (resultFormat && leaflet) {
 			resultMarker = leaflet
 				.marker(resultFormat.correctAnswer.answerPoint.location)
 				.addTo(map);

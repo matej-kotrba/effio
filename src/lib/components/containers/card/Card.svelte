@@ -135,20 +135,23 @@
 	}
 
 	.title-placeholder-container {
-		background-image: url('/imgs/svgs/blob.svg');
+		background-image: url('/imgs/content_imgs/poly.png');
 		background-size: cover;
 		background-position: center;
 		box-shadow: 0 0 10px 0px black;
 	}
 
-	.title-placeholder {
-		/* -webkit-text-stroke: 1px black; */
+	:global(.dark) .title-placeholder-container {
+		background-image: url('/imgs/content_imgs/poly_dark.png');
+	}
+
+	/* .title-placeholder {
 		color: white;
 		text-shadow: 0 0 10px var(--light-text-black-40);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		position: relative;
-	}
+	} */
 
 	/* .title-placeholder::before {
 		content: attr(data-text);

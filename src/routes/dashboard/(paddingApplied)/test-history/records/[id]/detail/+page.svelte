@@ -37,6 +37,8 @@
 			ownerId: data.record.userId,
 			published: data.record.test.testGroup.published,
 			isPublic: data.record.test.testGroup.isPublic,
+			imageUrl: data.record.test.testGroup.imageUrl,
+			type: data.record.test.testGroup.type,
 			testVersions: [
 				{
 					...data.record.test,
