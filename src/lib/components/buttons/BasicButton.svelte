@@ -22,7 +22,7 @@
 			 before:origin-top before:duration-150 before:absolute before:inset-1 before:bg-white dark:before:bg-dark_grey
 			  before:rounded-md before:z-[-99] ${
 					buttonAttributes.disabled === true
-						? 'text-slate-500 bg-slate-500'
+						? 'text-slate-500 bg-slate-500 dark:text-slate-500 dark:bg-slate-500'
 						: ''
 				}}`,
 		classes

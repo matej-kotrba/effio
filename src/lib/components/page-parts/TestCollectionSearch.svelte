@@ -178,6 +178,7 @@
 		>
 			{#each tests as test, index}
 				<CardAlternative
+					navigationLink={`/tests/${test.id}`}
 					data={{
 						title: test.title,
 						stars: test.stars,

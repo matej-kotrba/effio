@@ -3,6 +3,8 @@
 </script>
 
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	import { signOut } from '@auth/sveltekit/client';
 
 	export let user: UpdatedSession | undefined;
@@ -155,7 +157,7 @@
 						</li>
 						<li>
 							<button
-								on:click={() => {
+								on:click={async () => {
 									signOut();
 								}}
 								class="dark:hover:bg-dark_text_white_20 dark:hover:text-white"

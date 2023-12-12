@@ -184,7 +184,7 @@
 		if (browser) {
 			window.removeEventListener('resize', () => codeEditor.layout());
 		}
-		codeEditor.dispose();
+		codeEditor?.dispose();
 	});
 </script>
 
@@ -218,7 +218,7 @@
 		>
 			<h2 class="font-semibold text-h3">{data.testContent.title}</h2>
 			<p class="text-body1">{data.testContent.description}</p>
-			<div class="p-4 mt-2 rounded-md bg-light_grey">
+			<div class="p-4 mt-2 rounded-md bg-light_grey dark:bg-dark_grey">
 				<h3 class="font-semibold text-h4" use:handwrite>
 					{data.testContent.testVersions[0].questions[0].title}
 				</h3>
@@ -294,7 +294,7 @@
 						{#each content['tests'] as { input, output }, index}
 							<button
 								type="button"
-								class="w-full btn"
+								class="w-full btn dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white"
 								on:click={() => (selectedTestIndex = index)}
 							>
 								{index + 1}. {input}
