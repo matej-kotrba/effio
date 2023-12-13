@@ -8,41 +8,42 @@ export function validateCode(code: string, tests: ProgrammingQuestion["tests"], 
       return validateCode(code, tests, recursionCalls + 1)
     }, 100)
   }
+  else {
+    const originalConsoleLog = console.log;
+    const wholeConsoleLogs: string[][] = []
+    let codeConsoleLogs: string[] = [];
 
-  const originalConsoleLog = console.log;
-  const wholeConsoleLogs: string[][] = []
-  let codeConsoleLogs: string[] = [];
+    console.log = (...args: any[]) => {
+      args.forEach((arg) => {
+        if (typeof arg === 'object' || typeof arg === 'function') {
+          codeConsoleLogs.push(JSON.stringify(arg));
+        } else {
+          codeConsoleLogs.push(arg);
+        }
+      });
+    };
 
-  console.log = (...args: any[]) => {
-    args.forEach((arg) => {
-      if (typeof arg === 'object' || typeof arg === 'function') {
-        codeConsoleLogs.push(JSON.stringify(arg));
-      } else {
-        codeConsoleLogs.push(arg);
+    const sandbox = new Sandbox();
+
+    const result: boolean[] = tests.map((test, index) => {
+      try {
+        const exec = sandbox.compile(code);
+        const compileResult = exec({ data: JSON.parse(test.input) }).run()
+        wholeConsoleLogs[index] = codeConsoleLogs
+        codeConsoleLogs = []
+        return isEquel(compileResult, JSON.parse(test.output))
       }
-    });
-  };
+      catch (e) {
+        return false
+      }
+    })
 
-  const sandbox = new Sandbox();
 
-  const result: boolean[] = tests.map((test, index) => {
-    try {
-      const exec = sandbox.compile(code);
-      const compileResult = exec({ data: JSON.parse(test.input) }).run()
-      wholeConsoleLogs[index] = codeConsoleLogs
-      codeConsoleLogs = []
-      return isEquel(compileResult, JSON.parse(test.output))
+    console.log = originalConsoleLog;
+
+    return {
+      testPasses: result,
+      consoleLogs: wholeConsoleLogs
     }
-    catch (e) {
-      return false
-    }
-  })
-
-
-  console.log = originalConsoleLog;
-
-  return {
-    testPasses: result,
-    consoleLogs: wholeConsoleLogs
   }
 }
