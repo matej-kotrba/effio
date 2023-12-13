@@ -64,7 +64,7 @@
 
 	let sandbox: Sandbox | undefined = undefined;
 	$: {
-		if (Sandbox) {
+		if (Sandbox?.prototype) {
 			const oldConsoleLog = console.log;
 			console.log = (...args: any[]) => {
 				args.forEach((arg) => {
