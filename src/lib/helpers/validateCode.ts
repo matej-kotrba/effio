@@ -1,7 +1,14 @@
 import Sandbox from "@nyariv/sandboxjs"
 import isEquel from "lodash/isEqual"
 
-export function validateCode(code: string, tests: ProgrammingQuestion["tests"]) {
+export function validateCode(code: string, tests: ProgrammingQuestion["tests"], recursionCalls = 0) {
+  if (recursionCalls > 10) return { testPasses: [], consoleLogs: [] }
+  if (!Sandbox.prototype) {
+    setTimeout(() => {
+      return validateCode(code, tests, recursionCalls + 1)
+    }, 100)
+  }
+
   const originalConsoleLog = console.log;
   const wholeConsoleLogs: string[][] = []
   let codeConsoleLogs: string[] = [];
