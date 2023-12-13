@@ -3,7 +3,7 @@ import isEquel from "lodash/isEqual"
 
 export function validateCode(code: string, tests: ProgrammingQuestion["tests"], recursionCalls = 0) {
   if (recursionCalls > 10) return { testPasses: [], consoleLogs: [] }
-  if (!Sandbox.prototype) {
+  if (!Sandbox?.prototype) {
     setTimeout(() => {
       return validateCode(code, tests, recursionCalls + 1)
     }, 100)
