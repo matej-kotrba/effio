@@ -173,9 +173,8 @@
 			>
 		</div>
 	{:else}
-		<div
-			class="grid gap-2 @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
-		>
+		<!-- @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 -->
+		<div class="grid gap-2 gap-y-4 grid__layout">
 			{#each tests as test, index}
 				<CardAlternative
 					navigationLink={`/tests/${test.id}`}
@@ -269,3 +268,9 @@
 	{/if}
 </div>
 <Space />
+
+<style>
+	.grid__layout {
+		grid-template-columns: repeat(auto-fill, 250px);
+	}
+</style>

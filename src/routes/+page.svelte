@@ -1,16 +1,13 @@
 <script script lang="ts">
 	import Icon from '@iconify/svelte';
-	import Button from '~components/buttons/BasicButton.svelte';
 	import Space from '../lib/components/separators/Space.svelte';
 	import GridLayout from '../lib/components/layouts/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import toast, { Toaster } from 'svelte-french-toast';
 	import { applicationStates } from '~stores/applicationStates';
-	import ScrollIndicator from '~components/informatic/ScrollIndicator.svelte';
-	import { draw, fly } from 'svelte/transition';
-	import { cubicIn, cubicOut } from 'svelte/easing';
+	import { draw } from 'svelte/transition';
+	import { cubicIn } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
 	import Counter from '~components/informatic/Counter.svelte';
 	import Separator from '~components/separators/Separator.svelte';
@@ -163,7 +160,7 @@
 								h={'2px'}
 							/> -->
 							<a
-								href={data.session?.user ? '/dashboard' : '/login'}
+								href={'/community'}
 								class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
 							>
 								Visit community place
@@ -255,22 +252,67 @@
 		</div>
 	</section> -->
 </header>
-<img
+<!-- <img
 	src={$applicationStates.darkMode.isDarkMode
 		? '/imgs/layer_dark4.svg'
 		: '/imgs/layer3.svg'}
 	alt="Layer"
 	class="w-full min-h-[120px] object-cover sm:object-contain"
 />
+<img
+	src={$applicationStates.darkMode.isDarkMode
+		? '/imgs/layer_dark3.svg'
+		: '/imgs/layer2.svg'}
+	alt="Layer"
+	class="w-full min-h-[120px] object-cover sm:object-contain -translate-y-[1px]"
+/> -->
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
-	<img
-		src={$applicationStates.darkMode.isDarkMode
-			? '/imgs/layer_dark3.svg'
-			: '/imgs/layer2.svg'}
-		alt="Layer"
-		class="w-full min-h-[120px] object-cover sm:object-contain -translate-y-[1px]"
-	/>
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
+		<!-- About us section -->
+		<section class="grid-layout__about-us">
+			<div class="p-4 image">
+				<img
+					src="/imgs/svgs/homepage/monitor.png"
+					alt=""
+					class="object-contain h-full mx-auto md:mr-auto"
+				/>
+			</div>
+			<div class="background rounded-4xl" />
+			<div class="flex flex-col justify-center gap-4 p-2 md:p-4 content">
+				<div class="mx-auto w-fit md:mr-auto">
+					<h1
+						class="text-white w-fit text-body1 lg:text-h4 xl:text-h3 2xl:text-h2"
+					>
+						Want to know more about Effio?
+					</h1>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="40"
+						height="24"
+						viewBox="0 0 681 24"
+						fill="none"
+						class="w-full px-2"
+					>
+						<path
+							d="M0 12C4.96629 12 218.23 5.33333 324.242 2H680L144.213 22H465.112"
+							stroke="#343540"
+							stroke-width="3"
+						/>
+					</svg>
+				</div>
+				<div class="flex flex-col items-center gap-2">
+					<p class="text-dark_text_white text-body2 md:text-body1 xl:text-h6">
+						Section about motivation, technologies, making Effio and more ...
+					</p>
+					<a
+						href={'/about'}
+						class="px-8 py-2 rounded-lg h-fit whitespace-nowrap text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
+					>
+						About us
+					</a>
+				</div>
+			</div>
+		</section>
 		<LineConnectorWithTitle title="Community place">
 			<h2
 				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
@@ -431,5 +473,37 @@
 
 	.hero__section_dark {
 		background: linear-gradient(180deg, #1c065c 0%, #0092ca 100%);
+	}
+
+	/* About us section */
+	.grid-layout__about-us {
+		display: grid;
+		max-height: 300px;
+		isolation: isolate;
+		grid-template-columns: [image-start background-start] 2fr [image-end content-start] 3fr [content-end background-start background-end];
+		grid-template-rows: [image-start] 3rem [content-start background-start] auto [content-end image-end background-end];
+	}
+
+	@media (max-width: 768px) {
+		.grid-layout__about-us {
+			max-height: 800px;
+			grid-template-columns: [image-start background-start content-end background-end] 1fr [content-end background-start background-end image-end];
+			grid-template-rows: [image-start] 3rem [background-start] auto [image-end content-start] auto [content-end background-end];
+		}
+	}
+
+	.grid-layout__about-us > .background {
+		grid-area: background;
+		z-index: -1;
+		background-image: url('/imgs/svgs/homepage/about_bg.svg');
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	.grid-layout__about-us > .image {
+		grid-area: image;
+		max-height: 300px;
+	}
+	.grid-layout__about-us > .content {
+		grid-area: content;
 	}
 </style>
