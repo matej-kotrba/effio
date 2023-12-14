@@ -6,7 +6,7 @@
 	import Chart from 'chart.js/auto';
 	import type { ChartData, ChartConfiguration } from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
-	import OverviewLinks from '~components/page-parts/OverviewLinks.svelte';
+	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
 
 	export let data;
 
@@ -172,7 +172,21 @@
 	});
 </script>
 
-<OverviewLinks />
+<div class="flex gap-4">
+	<OverviewLink
+		icon="gridicons:create"
+		title="Create a new test"
+		link="/dashboard/test-creator"
+		bgImage="/imgs/svgs/overview/test.png"
+	/>
+	<OverviewLink
+		icon="fluent:people-community-20-filled"
+		title="Visit community"
+		link="/community"
+		bgImage="/imgs/svgs/overview/community.png"
+	/>
+</div>
+
 <div
 	class="mx-auto max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 place-items-center"
 >

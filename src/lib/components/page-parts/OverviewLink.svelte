@@ -1,24 +1,27 @@
 <script lang="ts">
-	export let link: string;
 	export let title: string;
-	export let imageLink: string;
+	export let link: string;
+	export let icon: string;
+	export let bgImage: string;
 </script>
 
-<a class="container cursor-pointer" href={link}>
-	<div class="card-container">
-		<img
-			src="/imgs/svgs/overview/create.svg"
-			alt=""
-			class="bottom-0 main-image"
-		/>
-		<div class="logo-container">
-			<img src="./imgs/effio/text.png" alt="" class="logo" />
-			<h3 class="font-semibold text-white">{title}</h3>
+<a href={link}>
+	<div class="container">
+		<div class="card-container">
+			<iconify-icon
+				{icon}
+				class="text-light_primary drop-shadow-sm left-1/2 text-8xl main-image"
+			/>
+			<!-- <img src="./imgs/svgs/empty.svg" alt="" class="bottom-0 main-image" /> -->
+			<div class="logo-container">
+				<img src="./imgs/effio/text.png" alt="" class="logo" />
+				<h3 class="font-semibold text-white">{title}</h3>
+			</div>
+			<div class="p-2 bg-image bg-light_terciary dark:bg-dark_primary_light">
+				<img src={bgImage} alt="" class="drop-shadow-md" />
+			</div>
+			<!-- <img src="./imgs/overview/bg2.svg" alt="" class="bg-image" /> -->
 		</div>
-		<div class="p-2 bg-image bg-light_terciary dark:bg-dark_primary_light">
-			<!-- <img src="/imgs/svgs/overview/create.svg" alt="" class="drop-shadow-md" /> -->
-		</div>
-		<!-- <img src="./imgs/overview/bg2.svg" alt="" class="bg-image" /> -->
 	</div>
 </a>
 
@@ -36,7 +39,7 @@
 
 	.card-container {
 		width: 250px;
-		aspect-ratio: 3 / 4;
+		aspect-ratio: 2 / 3;
 		position: relative;
 		transform-style: preserve-3d;
 		transition: rotate var(--timing) ease;
@@ -117,16 +120,15 @@
 	.main-image {
 		scale: 1;
 		transform-origin: bottom;
-		opacity: 1;
+		opacity: 0;
 		z-index: 10;
-		transform: translateY(-0rem) translateZ(10px);
 		transition: var(--timing);
-		top: 1rem;
+		transform: translateX(-50%) translateY(0rem) translateZ(0px);
 	}
 
 	.card-container:hover .main-image {
 		opacity: 1;
-		transform: translateY(-4rem) translateZ(-30px);
+		transform: translateX(-50%) translateY(-4rem) translateZ(60px);
 		rotate: x calc(var(--rotation) * -1);
 	}
 </style>
