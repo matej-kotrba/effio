@@ -186,7 +186,8 @@
 						icon: test.owner.image,
 						img: test.imageUrl,
 						tags: getTestTags(index),
-						views: test.views
+						views: test.views,
+						options: TypesafeTabs(test)
 					}}
 				/>
 				<!-- <div

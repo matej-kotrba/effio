@@ -10,6 +10,11 @@
 		stars?: number;
 		views?: number;
 		tags?: Tag[];
+		options?: {
+			iconClass?: string;
+			text: string;
+			action: (e: MouseEvent) => void;
+		}[];
 	};
 </script>
 
@@ -17,6 +22,7 @@
 	import { twMerge } from 'tailwind-merge';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import Star from '~components/globals/Star.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 	import { onImageLoad } from '~use/onImageLoad';
@@ -42,6 +48,21 @@
 					"
 		>
 			<div>
+				{#if data.options !== undefined && data.options.length > 0}
+					<div
+						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg left-1 top-1 bg-light_white dark:bg-dark_grey"
+					>
+						<DropdownSelect dropdownTabs={data.options}>
+							<iconify-icon
+								icon="fluent:settings-24-filled"
+								class={twMerge(
+									'text-2xl duration-100 text-light_text_black',
+									classes
+								)}
+							/>
+						</DropdownSelect>
+					</div>
+				{/if}
 				{#if data.stars !== undefined}
 					<div
 						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey"
