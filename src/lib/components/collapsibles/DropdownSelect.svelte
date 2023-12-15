@@ -6,12 +6,12 @@
 	}[];
 </script>
 
-<div class="dropdown dropdown-hover dropdown-top">
+<div class="dropdown dropdown-hover dropdown-top z-[102]">
 	<button type="button" class="flex items-center">
 		<slot />
 	</button>
 	<ul
-		class="dropdown-content z-[102] menu p-2 shadow-surrounding shadow-light_text_black_20 rounded-box w-40 -translate-x-1/2 left-1/2 bg-white text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
+		class="w-40 p-2 -translate-x-1/2 bg-white dropdown-content menu shadow-surrounding shadow-light_text_black_20 rounded-box left-1/2 text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
 	>
 		{#each dropdownTabs as item}
 			<li class="group">

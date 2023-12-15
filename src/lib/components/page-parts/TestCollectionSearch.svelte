@@ -137,8 +137,6 @@
 		// When odering changes refetch, also fetches initial data
 		onOrderByChange();
 	}
-
-	$: console.log(orderRef?.value);
 </script>
 
 <div class="flex items-center justify-center gap-2 px-12">

@@ -302,7 +302,7 @@
 				</div>
 				<div class="flex flex-col items-center gap-2">
 					<p class="text-dark_text_white text-body2 md:text-body1 xl:text-h6">
-						Section about motivation, technologies, making Effio and more ...
+						Section about motivation, technologies, making Effio and more...
 					</p>
 					<a
 						href={'/about'}

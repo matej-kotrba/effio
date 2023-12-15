@@ -50,7 +50,7 @@
 			<div>
 				{#if data.options !== undefined && data.options.length > 0}
 					<div
-						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg left-1 top-1 bg-light_white dark:bg-dark_grey"
+						class="absolute flex items-center z-[200] gap-1 px-2 py-1 rounded-lg left-1 top-1 bg-light_white dark:bg-dark_grey"
 					>
 						<DropdownSelect dropdownTabs={data.options}>
 							<iconify-icon
