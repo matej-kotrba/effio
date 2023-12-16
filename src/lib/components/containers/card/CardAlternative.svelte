@@ -158,7 +158,7 @@
 					>
 						{#each data.tags as tag}
 							<span
-								class="px-2 py-1 text-xs text-center rounded-sm shadow-sm bg-light_grey text-light_text_black_60"
+								class="px-2 py-1 text-xs text-center rounded-sm shadow-sm bg-light_grey text-light_text_black_60 dark:bg-dark_grey dark:text-dark_text_white"
 								>{tag.name}</span
 							>
 						{/each}
