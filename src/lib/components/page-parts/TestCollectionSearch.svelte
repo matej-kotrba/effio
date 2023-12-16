@@ -22,6 +22,8 @@
 
 	let searchQuery: string = '';
 	let isFetchingNewTests: boolean = false;
+	let isRegettingAllTests: boolean = false;
+
 	let tests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
 	> = [];
@@ -38,23 +40,22 @@
 		if (tests === undefined) return;
 
 		isFetchingNewTests = true;
-
-		// Cleanup before so the last place is empty
-		if (shouldReset) {
-			tests = [];
-		}
+		if (shouldReset) isRegettingAllTests = true;
 
 		const data = await trpc($page).getUserTestsById.query({
 			// @ts-ignore
 			id: $page.data.session?.user?.id,
 			limit: 4,
-			cursor: tests[tests.length - 1] ? tests[tests.length - 1].id : undefined,
+			cursor: shouldReset ? undefined : tests[tests.length - 1].id,
 			searchQuery: searchQuery,
 			order: orderBy
 		});
 
-		// Cleanup in case if some other request was made and finished before this one
+		isFetchingNewTests = false;
+
+		// Cleanup
 		if (shouldReset) {
+			isRegettingAllTests = false;
 			tests = [];
 		}
 
@@ -80,19 +81,20 @@
 		getTests(true, orderBy);
 	}
 
-	let searchRequests: Array<Promise<string> | string> = [];
+	// let searchRequests: Array<Promise<string> | string> = [];
 
 	async function searchForResults(value: string) {
-		const searchQueryPromise = delayResults(500, value);
-		searchRequests.unshift(searchQueryPromise);
-		const searchQueryResult = await searchQueryPromise;
+		// const searchQueryPromise = delayResults(500, value);
+		// searchRequests.unshift(searchQueryPromise);
+		// const searchQueryResult = await searchQueryPromise;
 
-		if (searchRequests.length === 1) {
-			searchQuery = searchQueryResult;
-			const orderBy = getOrderType(orderRef?.value);
-			getTests(true, orderBy);
-		}
-		searchRequests.pop();
+		// if (searchRequests.length === 1) {
+		// searchQuery = searchQueryResult;
+		searchQuery = value;
+		const orderBy = getOrderType(orderRef?.value);
+		getTests(true, orderBy);
+		// }
+		// searchRequests.pop();
 	}
 
 	function getTestTags(indexOfTest: number) {
@@ -185,6 +187,7 @@
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
 					<CardAlternative
+						class={`${isRegettingAllTests ? 'opacity-50' : ''}`}
 						navigationLink={`/tests/${test.id}`}
 						data={{
 							title: test.title,

@@ -219,7 +219,16 @@
 	}
 </script>
 
-<SearchBar searchFunction={searchForResults} initialValue={searchQuery} />
+<div class="sticky top-0 z-10 w-full py-2 isolate">
+	<div
+		class="absolute -left-[calc(50vw-50%)] top-0 w-screen h-full backdrop-blur-xl -z-10"
+	/>
+	<SearchBar
+		searchFunction={searchForResults}
+		initialValue={searchQuery}
+		class="z-10"
+	/>
+</div>
 <Space gap={10} />
 <div class="relative">
 	<div

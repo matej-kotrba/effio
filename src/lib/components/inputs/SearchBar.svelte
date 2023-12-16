@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { twMerge } from 'tailwind-merge';
 	import Separator from '~components/separators/Separator.svelte';
 
 	let inputRef: HTMLInputElement;
@@ -9,6 +10,9 @@
 	export let onInputSearch: boolean = false;
 
 	export let inputValue: string = '';
+
+	let classes = '';
+	export { classes as class };
 
 	function onSubmit(e: SubmitEvent) {
 		e.preventDefault();
@@ -44,7 +48,7 @@
 	}
 </script>
 
-<form method="POST" on:submit={onSubmit} class="">
+<form method="POST" on:submit={onSubmit} class={twMerge('', classes)}>
 	<div
 		class="outline-2 focus-within:outline-light_primary dark:focus-within:outline-dark_primary outline-transparent outline flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-lg duration-100"
 	>
