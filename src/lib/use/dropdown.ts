@@ -1,3 +1,4 @@
+import type { InteractionOptions } from "chart.js"
 import type { Action } from "svelte/action"
 
 export const dropdown: Action<HTMLElement, any> = (node, text: string | undefined) => {
@@ -45,6 +46,28 @@ export const dropdown: Action<HTMLElement, any> = (node, text: string | undefine
       node.removeEventListener("mousemove", onHover)
       node.removeEventListener("mouseenter", appear)
       node.removeEventListener("mouseleave", disappear)
+    }
+  }
+}
+
+export const intersection = (el: HTMLElement, { onEnter, onLeave, options }: { onEnter: () => void, onLeave: () => void; options?: IntersectionObserverInit }) => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        onEnter()
+      }
+      else {
+        onLeave()
+      }
+    })
+  }, options)
+
+  observer.observe(el)
+
+  return {
+    destroy() {
+      observer.unobserve(el)
+      observer.disconnect()
     }
   }
 }

@@ -6,7 +6,7 @@
 	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import type { Tag } from '@prisma/client';
 	import type { TestFullType } from '~/Prisma.js';
 	import {
@@ -21,6 +21,7 @@
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
+	import { intersection } from '~use/dropdown.js';
 
 	const [send, receive] = crossfade({
 		duration: 150
@@ -29,6 +30,9 @@
 	export let data;
 
 	const REQUEST_AMOUNT = 12;
+
+	let shouldBackdropNavbar = false;
+	let areTestsInView = false;
 
 	let isFetchingNewTests = true;
 	let isResetting = false;
@@ -54,7 +58,10 @@
 		}
 
 		const params = new URLSearchParams(paramsObj);
-		goto(`?${params.toString()}`);
+		goto(`?${params.toString()}`, {
+			noScroll: true,
+			keepFocus: true
+		});
 	}
 
 	async function getPopularTests() {
@@ -198,12 +205,6 @@
 
 	// Search for results on inpput change, wait 500ms befor sending request for optimization
 	async function searchForResults(value: string) {
-		if (allTestsRef) {
-			window.scrollTo({
-				top: allTestsRef.getBoundingClientRect().top + window.scrollY - 100,
-				behavior: 'smooth'
-			});
-		}
 		if (value === searchQuery) return;
 		searchQuery = value;
 		updateUrl(value);
@@ -212,6 +213,13 @@
 			value,
 			usedTags.map((tag) => tag.name)
 		);
+		if (allTestsRef) {
+			await tick();
+			window.scrollTo({
+				top: allTestsRef.getBoundingClientRect().top - 250 + window.scrollY,
+				behavior: 'smooth'
+			});
+		}
 	}
 
 	function getTypesafeTags(tags: TestFullType['tags']) {
@@ -219,9 +227,22 @@
 	}
 </script>
 
-<div class="sticky top-0 z-10 w-full py-2 isolate">
+<div
+	class="sticky top-[-1px] z-10 w-full py-2 isolate"
+	use:intersection={{
+		onEnter: () => {
+			shouldBackdropNavbar = false;
+		},
+		onLeave: () => {
+			shouldBackdropNavbar = true;
+		},
+		options: { threshold: 1 }
+	}}
+>
 	<div
-		class="absolute -left-[calc(50vw-50%)] top-0 w-screen h-full backdrop-blur-xl -z-10"
+		class={`absolute -left-[calc(50vw-50%)] top-0 w-screen h-full -z-10 duration-75 ${
+			shouldBackdropNavbar ? 'backdrop-blur-xl' : ''
+		}`}
 	/>
 	<SearchBar
 		searchFunction={searchForResults}
@@ -299,8 +320,16 @@
 		</div>
 		<Space gap={10} />
 	</div>
+	<div bind:this={allTestsRef} />
 	<div
-		bind:this={allTestsRef}
+		use:intersection={{
+			onEnter: () => {
+				areTestsInView = true;
+			},
+			onLeave: () => {
+				areTestsInView = false;
+			}
+		}}
 		class={`relative gap-y-1 xs:gap-y-2 grid grid-cols-1 @xs:grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6 min-h-[24rem] ${
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
@@ -356,13 +385,14 @@
 				{/each}
 			{/if}
 		{/if}
-		{#if isFetchingNewTests}
+		<!-- {#if isFetchingNewTests}
 			{#each Array(REQUEST_AMOUNT) as _}
 				<CardMinimalizedSkeleton />
 			{/each}
-		{/if}
+		{/if} -->
 	</div>
 </div>
+<div class="h-[1000px]" />
 
 <style>
 	.underline-effect::after {
