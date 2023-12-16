@@ -44,7 +44,7 @@
 	}
 </script>
 
-<form method="POST" on:submit={onSubmit} class="sticky top-2 z-[100]">
+<form method="POST" on:submit={onSubmit} class="">
 	<div
 		class="outline-2 focus-within:outline-light_primary dark:focus-within:outline-dark_primary outline-transparent outline flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-lg duration-100"
 	>

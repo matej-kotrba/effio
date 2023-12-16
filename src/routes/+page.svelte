@@ -101,7 +101,7 @@
 					src="/imgs/svgs/homepage/mobile.png"
 					role="presentation"
 					alt=""
-					class="absolute w-3/5 top-[5%] sm:top-auto sm:-bottom-[10%] z-[2]"
+					class="absolute w-3/5 max-h-[115%] top-[5%] sm:top-auto sm:-bottom-[10%] z-[2] object-contain"
 				/>
 				<img
 					src="/imgs/svgs/rounded-container.png"

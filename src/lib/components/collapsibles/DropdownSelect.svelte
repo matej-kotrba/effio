@@ -17,7 +17,7 @@
 			<li class="group">
 				<button
 					type="button"
-					class="flex items-center justify-start group-hover:text-light_text_black dark:text-dark_text_white dark:hover:bg-dark_text_white_20 dark:hover:text-white"
+					class="flex items-center justify-start active:!bg-light_grey active:!text-light_text_black_80 dark:active:!text-dark_text_white dark:active:!bg-dark_light_grey text-light_text_black group-hover:text-light_text_black dark:group-hover:text-dark_text_white dark:!text-dark_text_white dark:hover:bg-dark_text_white_20 dark:hover:text-white"
 					on:click={(e) => item.action(e)}
 				>
 					{#if item['iconClass']}

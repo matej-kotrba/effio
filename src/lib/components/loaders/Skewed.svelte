@@ -9,6 +9,9 @@
 		height: 48px;
 		color: #fff;
 	}
+	:global(.dark) .loader::after {
+		color: var(--dark-primary);
+	}
 	.loader:before,
 	.loader:after {
 		content: '';
@@ -23,7 +26,7 @@
 		animation: 1s spin linear infinite;
 	}
 	.loader:after {
-		color: #ff3d00;
+		color: var(--light-primary);
 		transform: rotateY(70deg);
 		animation-delay: 0.4s;
 	}

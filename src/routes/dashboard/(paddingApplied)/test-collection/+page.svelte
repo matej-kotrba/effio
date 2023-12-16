@@ -13,6 +13,7 @@
 	import TestCollectionSearch from '~components/page-parts/TestCollectionSearch.svelte';
 	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
 	import { modalStore } from './modalStore';
+	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 
 	export let data;
 
@@ -20,6 +21,10 @@
 		data: [],
 		isLoading: true
 	};
+
+	let isDeletingTest = false;
+
+	let filterTestsFilter: (ids: string[]) => void;
 
 	const modalTabsGenerator = (test: TestFullType) => [
 		{
@@ -76,7 +81,7 @@
 		$modalStore.openModal();
 	}
 
-	onMount(async () => {
+	async function getRecentTests() {
 		if (!data.session?.user?.id) return;
 		const res = await trpc($page).getUserTestsById.query({
 			limit: 3,
@@ -84,9 +89,16 @@
 		});
 		recentTests.data = res;
 		recentTests.isLoading = false;
+	}
+
+	onMount(async () => {
+		getRecentTests();
 	});
 </script>
 
+{#if isDeletingTest}
+	<ScreenCover />
+{/if}
 <Dialog bind:open={$modalStore.openModal}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		Are you sure you want to delete test<br /><span class="font-semibold"
@@ -100,9 +112,11 @@
 			class="text-white btn btn-error hover:bg-red-600"
 			on:click={async () => {
 				if ($modalStore.modalDeleteInfo?.id === undefined) return;
+				isDeletingTest = true;
 				const response = await trpc($page).protected.deleteTest.mutate({
 					testGroupId: $modalStore.modalDeleteInfo.id
 				});
+				isDeletingTest = false;
 				console.log(response);
 				if (!response['success']) {
 					if (response['message']) {
@@ -110,9 +124,12 @@
 					}
 				}
 				if (response['success']) {
-					recentTests.data = recentTests.data.filter(
-						(item) => item.id !== $modalStore.modalDeleteInfo.id
-					);
+					getRecentTests();
+					//TODO: Intentionally not refetching test collection, becuase if working properly it should not need to refetch
+					if (response['test']) filterTestsFilter([response['test']['id']]);
+					// recentTests.data = recentTests.data.filter(
+					// 	(item) => item.id !== $modalStore.modalDeleteInfo.id
+					// );
 				}
 			}}>Delete</button
 		>
@@ -175,7 +192,7 @@
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<TestCollectionSearch />
+<TestCollectionSearch bind:filterTests={filterTestsFilter} />
 
 <style>
 	.grid__container {

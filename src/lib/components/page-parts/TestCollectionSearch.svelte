@@ -10,11 +10,15 @@
 	import { getContext } from 'svelte';
 	import type { TestFullType } from '~/Prisma';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import {
+		createObserver,
+		type CreateObserverReturn
+	} from '~/lib/utils/observers';
 	import type { Tag } from '@prisma/client';
 
 	const modalTabsGenerator = getContext('modalTabsGenerator');
 
-	let observer: IntersectionObserver;
+	let addIntersection: CreateObserverReturn['addIntersection'];
 
 	let searchQuery: string = '';
 	let isFetchingNewTests: boolean = false;
@@ -22,6 +26,10 @@
 		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
 	> = [];
 	let orderRef: HTMLSelectElement | null = null;
+
+	export function filterTests(ids: string[]) {
+		tests = tests.filter((test) => !ids.includes(test.id));
+	}
 
 	async function getTests(
 		shouldReset: boolean = false,
@@ -51,16 +59,6 @@
 		}
 
 		tests = [...tests, ...data];
-	}
-
-	function addIntersection(element: HTMLElement) {
-		observer.observe(element);
-
-		return {
-			destroy() {
-				observer.unobserve(element);
-			}
-		};
 	}
 
 	function getOrderType(value: string | undefined) {
@@ -113,20 +111,31 @@
 
 	onMount(async () => {
 		// Observing last element to fetch more tests, then unobserving it
-		observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach(async (entry) => {
-					if (entry.isIntersecting) {
-						getTests(false, getOrderType(orderRef?.value));
+		// observer = new IntersectionObserver(
+		// 	(entries) => {
+		// 		entries.forEach(async (entry) => {
+		// 			if (entry.isIntersecting) {
+		// 				getTests(false, getOrderType(orderRef?.value));
 
-						observer.unobserve(entry.target);
-					}
-				});
-			},
-			{
-				threshold: 0.5
+		// 				observer.unobserve(entry.target);
+		// 			}
+		// 		});
+		// 	},
+		// 	{
+		// 		threshold: 0.5
+		// 	}
+		// );
+		const { addIntersection: addIntersectionTemp, observer } = createObserver({
+			callback: (entry) => {
+				if (entry.isIntersecting) {
+					getTests(false, getOrderType(orderRef?.value));
+
+					observer.unobserve(entry.target);
+				}
 			}
-		);
+		});
+
+		addIntersection = addIntersectionTemp;
 	});
 
 	const TypesafeTabs = (test: TestFullType) => {
@@ -174,20 +183,22 @@
 		<!-- @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 -->
 		<div class="grid gap-2 gap-y-4 grid__layout">
 			{#each tests as test, index}
-				<CardAlternative
-					navigationLink={`/tests/${test.id}`}
-					data={{
-						title: test.title,
-						stars: test.stars,
-						createdAt: test.createdAt,
-						description: test.description,
-						icon: test.owner.image,
-						img: test.imageUrl,
-						tags: getTestTags(index),
-						views: test.views,
-						options: TypesafeTabs(test)
-					}}
-				/>
+				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
+					<CardAlternative
+						navigationLink={`/tests/${test.id}`}
+						data={{
+							title: test.title,
+							stars: test.stars,
+							createdAt: test.createdAt,
+							description: test.description,
+							icon: test.owner.image,
+							img: test.imageUrl,
+							tags: getTestTags(index),
+							views: test.views,
+							options: TypesafeTabs(test)
+						}}
+					/>
+				</div>
 				<!-- <div
 					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter hover:bg-light_quaternary dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
 				>
