@@ -365,6 +365,7 @@
 									stars: test.stars,
 									tags: getTypesafeTags(test.tags)
 								}}
+								type={test.type}
 							/>
 						</div>
 					{:else}
@@ -380,6 +381,7 @@
 								stars: test.stars,
 								tags: getTypesafeTags(test.tags)
 							}}
+							type={test.type}
 						/>
 					{/if}
 				{/each}
@@ -392,7 +394,6 @@
 		{/if} -->
 	</div>
 </div>
-<div class="h-[1000px]" />
 
 <style>
 	.underline-effect::after {

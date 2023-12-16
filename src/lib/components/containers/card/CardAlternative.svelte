@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import type { Tag } from '@prisma/client';
+	import type { Tag, TestType } from '@prisma/client';
 
 	export type CardAlternativeProps = {
 		title: string;
@@ -31,6 +31,7 @@
 	let isImageFallback = false;
 
 	export let data: CardAlternativeProps;
+	export let type: TestType = 'REGULAR';
 	export let navigationLink: string | null = null;
 
 	let classes = '';
@@ -99,7 +100,21 @@
 					{/if}
 				</div>
 			</div>
-			<div class="relative w-full overflow-hidden group effect">
+			{#if type === 'PROGRAMMING'}
+				<div
+					data-tip="Programming test"
+					class="absolute bottom-0 left-0 z-10 grid pt-4 pb-2 pl-2 pr-4 bg-blue-500 place-content-center special-border-radius tooltip"
+				>
+					<iconify-icon icon="fa-solid:tools" />
+				</div>
+			{/if}
+			<div
+				class={`relative w-full overflow-hidden group effect ${
+					type === 'PROGRAMMING'
+						? 'border-2 border-solid border-blue-500 rounded-t-md'
+						: ''
+				}`}
+			>
 				<IconButton
 					icon="ic:round-arrow-right"
 					containerClasses="absolute -translate-x-1/2 translate-y-1/2 left-1/2 
@@ -107,7 +122,7 @@
 					backdrop-blur-sm hover:backdrop-blur-xl hover:bg-transparent 
 					pointer-events-none opacity-0 group-hover:opacity-100 duration-150"
 				/>
-				<a href={navigationLink || '#'} class="w-full">
+				<a href={navigationLink || '#'} class={`w-full h-full relative`}>
 					<img
 						use:onImageLoad
 						src={isImageFallback
@@ -170,6 +185,10 @@
 </div>
 
 <style>
+	.special-border-radius {
+		border-radius: 0% 100% 61% 39% / 100% 100% 0% 0%;
+	}
+
 	.scroll-snap {
 		scroll-snap-type: y mandatory;
 	}

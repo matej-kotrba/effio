@@ -236,8 +236,16 @@
 					>
 				</div>
 				<div class="flex gap-1">
-					<a href="/dashboard" class="btn btn-outline">To dashboard</a>
-					<a href="/community" class="btn btn-outline">To community</a>
+					<a
+						href="/dashboard"
+						class="btn btn-outline dark:outline-dark_text_white dark:text-dark_text_white dark:hover:bg-dark_text_white_10 dark:hover:border-dark_text_white"
+						>To dashboard</a
+					>
+					<a
+						href="/community"
+						class="btn btn-outline dark:outline-dark_text_white dark:text-dark_text_white dark:hover:bg-dark_text_white_10 dark:hover:border-dark_text_white"
+						>To community</a
+					>
 				</div>
 			{/if}
 		</div>
