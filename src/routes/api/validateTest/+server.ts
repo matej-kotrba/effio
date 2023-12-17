@@ -1,16 +1,17 @@
 import { json, error } from "@sveltejs/kit"
 import type { RequestEvent } from "../../dashboard/$types"
-import { isTestValidAndSetErrorsToTestObject } from "~helpers/test"
+import { isTestValidAndSetErrorsToTestObject, type IsTestValidProps } from "~helpers/test"
 
 export async function POST(event: RequestEvent) {
   if (!(await event.locals.getSession())?.user?.name) throw error(401, "Unauthorized")
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = await event.request.json() as { [key: string]: any }
 
-  const props = {
+  const props: IsTestValidProps = {
     title: data.title || undefined,
     description: data.description || undefined,
-    questions: data.questions || undefined
+    questions: data.questions || undefined,
+    markSystem: data.markSystem || undefined,
   }
 
   console.log(props)

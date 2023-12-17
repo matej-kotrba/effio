@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
-import type { Prisma, TestType } from "@prisma/client"
+import type { Prisma, TagOnTests, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 
 export const protectedRouter = router({
@@ -17,7 +17,8 @@ export const protectedRouter = router({
     isPublished: z.boolean(),
     testType: z.enum(["REGULAR", "PROGRAMMING"]).default("REGULAR"),
     imageUrl: z.string().optional(),
-    includedInGroups: z.array(z.string()).optional()
+    includedInGroups: z.array(z.string()).optional(),
+    tagIds: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
     console.log("INPUT", input)
     let questions;
@@ -89,6 +90,17 @@ export const protectedRouter = router({
       }
     })
 
+    if (input.tagIds && input.tagIds?.length !== 0) {
+      await ctx.prisma.tagOnTests.createMany({
+        data: input.tagIds.map((tagId) => {
+          return {
+            tagId: tagId,
+            testId: testGroupData.id,
+          } satisfies PartialPick<TagOnTests, "id">
+        })
+      })
+    }
+
     await ctx.prisma.$transaction([
       ctx.prisma.groupSubcategoryOnTests.createMany({
         data: includedInGroups.map((subcategoryId) => {
@@ -132,6 +144,7 @@ export const protectedRouter = router({
         limit: z.number()
       })),
     }).optional(),
+    tagIds: z.array(z.string()).optional(),
     includedInGroups: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
 
@@ -139,12 +152,19 @@ export const protectedRouter = router({
       where: {
         id: input.testGroupId,
         ownerId: ctx.userId
+      },
+      include: {
+        tags: true
       }
     })
 
     if (!test) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
     }
+
+    // Tags
+    const tagsToDelete = test.tags.filter(item => !input.tagIds?.includes(item.tagId))
+    const tagsToCreate = input.tagIds?.filter(item => !test.tags.map(item => item.tagId).includes(item))
 
     try {
 
@@ -165,6 +185,7 @@ export const protectedRouter = router({
         }
       })
 
+      // Groups
       const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.subcategoryId))
       const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item))
 
@@ -187,6 +208,7 @@ export const protectedRouter = router({
         throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test in group you are not part of" })
       }
 
+      // Creating and deleting messages, adding and removing test from groups
       await ctx.prisma.$transaction([
         ...linkedGroupsToDelete.map(({ id }) => {
           return ctx.prisma.groupSubcategoryOnTests.delete({
@@ -226,6 +248,25 @@ export const protectedRouter = router({
             }
           })
         })
+      ])
+
+      // Updating tags
+      await ctx.prisma.$transaction([
+        ...tagsToDelete.map(({ id }) => {
+          return ctx.prisma.tagOnTests.delete({
+            where: {
+              id
+            }
+          })
+        }),
+        ...linkedGroupsToCreate.map((item) => {
+          return ctx.prisma.tagOnTests.create({
+            data: {
+              tagId: item,
+              testId: input.testGroupId
+            }
+          })
+        }),
       ])
 
       const test = await ctx.prisma.test.update({

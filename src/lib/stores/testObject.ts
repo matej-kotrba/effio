@@ -8,6 +8,7 @@ export type TestObject = {
   published?: boolean;
   questions: QuestionClient[];
   markSystem: MarkSystemJSON;
+  tagIds: TagIds;
   includedInGroups?: IncludedInGroups;
   errors: ClientTest["errors"]
 };

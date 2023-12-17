@@ -63,7 +63,8 @@ export const validateTestAndRecordIt = async (props: Props) => {
     title: props.data.title,
     description: props.data.description,
     questions: props.data.questions,
-    markSystem: props.data.markSystem
+    markSystem: props.data.markSystem,
+    tagIds: props.data.tagIds,
   });
 
   console.log(result)
@@ -82,7 +83,8 @@ export const validateTestAndRecordIt = async (props: Props) => {
     title: props.data.title,
     description: props.data.description,
     questions: props.data.questions,
-    markSystem: props.data.markSystem
+    markSystem: props.data.markSystem,
+    tagIds: props.data.tagIds,
   });
 
   if (serverResponse.isError === true) {
@@ -125,6 +127,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
         isPublished: props.data.isPublished,
         imageUrl: data || undefined,
         testType: props.data.testType,
+        tagIds: props.data.tagIds,
         markSystem: props.data.markSystem?.marks
           ? {
             marks: currentStore.markSystem.marks.map((item) => {
@@ -152,6 +155,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
         questionContent: JSON.stringify(props.data.questions),
         isPublished: props.data.isPublished,
         imageUrl: data || undefined,
+        tagIds: props.data.tagIds,
         markSystem: props.data.markSystem?.marks
           ? {
             marks: currentStore.markSystem.marks.map((item) => {

@@ -184,11 +184,11 @@ model QuestionRecord {
 }
 
 model TagOnTests {
-  id     Int     @id @default(autoincrement())
-  testId String?
-  tagId  String?
-  test   Test?   @relation(fields: [testId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  tag    Tag?    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id     Int    @id @default(autoincrement())
+  testId String
+  tagId  String
+  test   Test   @relation(fields: [testId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([testId])
   @@index([tagId])

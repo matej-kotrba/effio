@@ -56,7 +56,8 @@
 				markSystem: testType === 'PROGRAMMING' ? {} : $testObject.markSystem,
 				isPublished: isPublished,
 				testType: testType,
-				image: testImageFile || undefined
+				image: testImageFile || undefined,
+				tagIds: $testObject.tagIds
 			},
 			callbacks: {
 				onSaveToDB(response) {

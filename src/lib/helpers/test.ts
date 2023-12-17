@@ -577,13 +577,14 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
     description: testData.description,
     questions: testData.questions,
     errors: testData.errors,
-    markSystem: {}
+    markSystem: {},
+    tagIds: [],
   })
 }
 
 // TODO: FIX THE TYPES
 
-export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "tags" | "stars" | "views">) {
+export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "stars" | "views">) {
   const markSystem = checkMarkSystem(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
@@ -595,6 +596,7 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
       marks: markSystem
     } : {},
     errors: {},
+    tagIds: testData.tags.map(item => item.tagId),
     questions: testData.testVersions[0].questions.map((question) => {
       const type = question.type.slug as keyof QuestionTypeMap
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -615,10 +617,11 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
 }
 
 export type IsTestValidProps = {
-  title?: string,
-  description?: string,
+  title?: string
+  description?: string
   questions?: QuestionClient[]
   markSystem?: MarkSystemJSON
+  tagIds?: string[]
 }
 
 export type IsTestValidResponse = {
@@ -627,6 +630,7 @@ export type IsTestValidResponse = {
       title?: string,
       description?: string;
       markSystem?: ClientTest["errors"]["markSystem"]
+      tagIds?: ClientTest["errors"]["tagIds"]
     };
     inputsToValidateUpdatedParts: Pick<IsTestValidProps, "questions">
   };
@@ -667,6 +671,9 @@ export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestVali
       currentTestObject.errors.markSystem.marks = data.store.errors.markSystem.marks
       currentTestObject.errors.markSystem.message = data.store.errors.markSystem.message
     }
+    if (data.store.errors.tagIds !== undefined) {
+      currentTestObject.errors.tagIds = data.store.errors.tagIds
+    }
     testObject.set(
       currentTestObject
     )
@@ -688,12 +695,8 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
   // TODO: Maybe return whole inputsToValidate because now errors are set here in question specific functions but on server it would not work,
   // so we could return all data which then got returned in the isValidInputServer function and set it there to testObject
   const result: {
-    errors: {
-      title?: string,
-      description?: string;
-      markSystem?: ClientTest["errors"]["markSystem"]
-    };
-    inputsToValidateUpdatedParts: Pick<IsTestValidProps, "questions">
+    errors: IsTestValidResponse["store"]["errors"];
+    inputsToValidateUpdatedParts: IsTestValidResponse["store"]["inputsToValidateUpdatedParts"];
     // questions_errors: QuestionClient["errors"][];
   } = {
     errors: {},
@@ -791,6 +794,19 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
           result.errors.markSystem.marks[i] = {}
         }
         result.errors.markSystem.marks[i]["limit"] = parsedLimit.error.errors[0].message
+      }
+    }
+  }
+
+  if (inputsToValidate.tagIds !== undefined) {
+    for (const i in inputsToValidate.tagIds) {
+      const parsedTagId = z.string().safeParse(inputsToValidate.tagIds[i])
+      if (parsedTagId.success === false) {
+        isError = true
+        if (result.errors.tagIds === undefined) {
+          result.errors.tagIds = []
+        }
+        result.errors.tagIds[i] = parsedTagId.error.errors[0].message
       }
     }
   }
