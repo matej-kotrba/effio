@@ -53,6 +53,10 @@ export const validateTestAndRecordIt = async (props: Props) => {
   if (props.callbacks.onSaveToDB === undefined) props.callbacks.onSaveToDB = defaultCallbacks.onSaveToDB
   if (props.callbacks.onErrorSaveToDB === undefined) props.callbacks.onErrorSaveToDB = defaultCallbacks.onErrorSaveToDB
 
+  // General checks for the test
+  // Setting mark system of programming test to empty object hence it is not needed
+  if (props.type === "create" && props.data.testType === "PROGRAMMING") props.data.markSystem = {}
+
   const currentStore = get(testObject);
 
   const result = isTestValidAndSetErrorsToTestObject({

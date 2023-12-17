@@ -23,12 +23,38 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 
 	export let programmingTemplate: QuestionTemplate;
-	export let createNewQuestion: boolean = true;
+	export let createNewQuestion: boolean = false;
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
 
 	if (createNewQuestion) {
+		$testObject.questions.push({
+			content: questionContentFunctions['programming']['createNew'](),
+			title: '',
+			id: crypto.randomUUID(),
+			points: 2,
+			questionType: 'programming',
+			displayType: 'Programming',
+			questionTypeId: programmingTemplate.id,
+			errors: {}
+		});
+	}
+
+	// Default creation behaviour
+	if ($testObject.questions.length === 0) {
+		$testObject.questions.push({
+			content: questionContentFunctions['programming']['createNew'](),
+			title: '',
+			id: crypto.randomUUID(),
+			points: 2,
+			questionType: 'programming',
+			displayType: 'Programming',
+			questionTypeId: programmingTemplate.id,
+			errors: {}
+		});
+	} else if ($testObject.questions.length > 1) {
+		$testObject.questions = [];
 		$testObject.questions.push({
 			content: questionContentFunctions['programming']['createNew'](),
 			title: '',

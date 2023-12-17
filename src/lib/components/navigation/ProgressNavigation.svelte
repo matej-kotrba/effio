@@ -15,7 +15,9 @@
 	let sectionElement: HTMLElement;
 
 	export let activeIndex: number = 0;
+	export let defaultActiveIndex: number = 0;
 
+	activeCount = defaultActiveIndex + 1;
 	$: activeIndex = activeCount - 1;
 
 	// Sets the active button and position of underline div and calls setPosition
@@ -37,7 +39,7 @@
 	}
 
 	onMount(() => {
-		setPosition(sectionElement.children[0] as HTMLElement);
+		setPosition(sectionElement.children[defaultActiveIndex] as HTMLElement);
 	});
 </script>
 

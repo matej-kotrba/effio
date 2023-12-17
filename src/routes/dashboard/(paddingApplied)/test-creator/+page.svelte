@@ -119,6 +119,7 @@
 	}
 
 	function onTestTypeChangeClick(type: TestType) {
+		if (testType === type) return;
 		testCreationProgress.templateDone = false;
 		testCreationProgress.constructingDone = false;
 		testCreationProgress.detailsDone = false;
@@ -128,6 +129,11 @@
 
 	$: canUserContinue = () => {
 		if (!Number.isInteger(templatesActive)) return false;
+		if (
+			testCreationProgress.constructingDone === false &&
+			$testObject.questions.length === 0
+		)
+			return false;
 		return true;
 	};
 
@@ -187,7 +193,8 @@
 			on:click={onNavigationButtonClick}
 			disabled={!canUserContinue()}
 			class={`group grid place-content-center p-1 duration-150 border-2 border-solid rounded-lg md:p-3 bg-light_terciary text-light_whiter
-	  disabled:bg-gray-300 disabled:text-light_whiter dark:disabled:bg-dark_terciary border-light_terciary dark:border-dark_primary hover:bg-light_whiter hover:text-light_terciary`}
+	  disabled:bg-gray-300 disabled:text-light_whiter dark:disabled:bg-dark_terciary border-light_primary dark:border-dark_primary hover:bg-light_whiter hover:text-light_terciary
+		disabled:dark:text-dark_text_white_40 dark:bg-dark_quaternary dark:hover:bg-dark_secondary dark:hover:text-dark_text_white`}
 		>
 			<!-- <div
 			class="w-[150%] aspect-square rounded-lg bg-light_grey scale-0 group-disabled:scale-0 group-hover:scale-100 duration-150 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
@@ -267,6 +274,11 @@
 		>
 			<div>
 				<ProgressNavigation
+					defaultActiveIndex={testType === 'REGULAR'
+						? 0
+						: testType === 'PROGRAMMING'
+						? 1
+						: -1}
 					parts={[
 						{
 							title: 'Basic test',

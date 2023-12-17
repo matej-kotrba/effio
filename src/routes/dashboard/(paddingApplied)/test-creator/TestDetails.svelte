@@ -132,7 +132,9 @@
 		<div class="flex justify-end">
 			<GroupSelection />
 		</div>
-		<MarkSystem />
+		{#if testType !== 'PROGRAMMING'}
+			<MarkSystem />
+		{/if}
 		<div class="flex justify-center gap-6 my-4">
 			<BasicButton
 				onClick={() => {}}

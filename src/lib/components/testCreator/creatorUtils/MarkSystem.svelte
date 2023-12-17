@@ -2,12 +2,9 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import { testObject } from '~stores/testObject';
 	import {
-		MARK_LIMIT_MAX,
-		MARK_LIMIT_MIN,
 		MARK_MAX,
 		MARK_MIN,
 		LIMIT_OPTIONS,
-		markLimitSchema,
 		markSchema,
 		MARK_LIMIT_MAX_MARK_COUNT
 	} from '~schemas/textInput';
