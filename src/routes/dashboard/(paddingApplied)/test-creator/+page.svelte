@@ -4,24 +4,11 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import Skewed from '~components/loaders/Skewed.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
-	import TextInput from '~components/inputs/TextInputSimple.svelte';
-	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
-	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import FileImport from '~components/inputs/FileImport.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { testObject } from '~stores/testObject';
-	import {
-		DESCRIPTION_MAX,
-		DESCRIPTION_MIN,
-		TITLE_MAX,
-		TITLE_MIN,
-		descriptionSchema,
-		titleSchema
-	} from '~schemas/textInput';
 	import {
 		initializeNewTestToTestStore,
 		isTestValidAndSetErrorsToTestObject
@@ -29,16 +16,11 @@
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';
-	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
-	import { applicationStates } from '~stores/applicationStates';
-	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
-	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
-	import { TRPCClientError } from '@trpc/client';
-	import { validateTestAndRecordIt } from '~helpers/testGroupCalls.js';
-	import ImageImport from '~components/inputs/ImageImport.svelte';
-	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+
 	import ProgressNavigation from '~components/navigation/ProgressNavigation.svelte';
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
+	import TestDetails from './TestDetails.svelte';
+	import type { TestType } from '@prisma/client';
 
 	export let data;
 
@@ -70,109 +52,9 @@
 
 	let templatesActive: number | undefined = 0;
 
-	let testType: 'questions' | 'programming' = 'questions';
+	let testType: TestType = 'REGULAR';
 
 	$: ($testObject.questions = []), testType;
-
-	let finishModal: HTMLDialogElement;
-	let testImageFile: File | undefined = undefined;
-
-	let isSubmitting = false;
-	let isSuccess = false;
-
-	async function checkTestOnClientAndServerAndPostTestToDB(
-		isPublished: boolean
-	) {
-		if (isSubmitting) return;
-		isSubmitting = true;
-
-		await validateTestAndRecordIt({
-			type: 'create',
-			data: {
-				title: $testObject.title,
-				description: $testObject.description,
-				questions: $testObject.questions,
-				markSystem: $testObject.markSystem,
-				isPublished: isPublished,
-				testType: testType === 'programming' ? 'PROGRAMMING' : 'REGULAR',
-				image: testImageFile || undefined
-			},
-			callbacks: {
-				onSaveToDB(response) {
-					isSuccess = response.success;
-					isSubmitting = false;
-
-					if (isSuccess) {
-						goto('/dashboard/test-collection');
-					}
-				},
-				onErrorSaveToDB(e) {
-					if (e instanceof TRPCClientError) {
-						createTRPCErrorNotification(e);
-					}
-					isSubmitting = false;
-				}
-			}
-		});
-
-		// const result = isTestValidAndSetErrorsToTestObject({
-		// 	title: $testObject.title,
-		// 	description: $testObject.description,
-		// 	questions: $testObject.questions,
-		// 	markSystem: $testObject.markSystem
-		// });
-
-		// if (result['isError']) {
-		// 	$testObject.errors = result['store']['errors'];
-		// 	return;
-		// }
-
-		// const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
-		// 	title: $testObject.title,
-		// 	description: $testObject.description,
-		// 	questions: $testObject.questions,
-		// 	markSystem: $testObject.markSystem
-		// });
-
-		// if (serverResponse.isError === true) {
-		// 	$testObject.errors = result['store']['errors'];
-		// 	return;
-		// }
-
-		// try {
-		// 	const response = await trpc($page).protected.saveTest.mutate({
-		// 		title: $testObject.title,
-		// 		description: $testObject.description,
-		// 		questionContent: JSON.stringify($testObject.questions),
-		// 		isPublished: isPublished,
-		// 		markSystem: $testObject.markSystem?.marks
-		// 			? {
-		// 					marks: $testObject.markSystem.marks.map((item) => {
-		// 						return {
-		// 							name: item.name,
-		// 							// Checked in the isTestValidAndSetErrorsToTestObject
-		// 							limit: item.limit as number
-		// 						};
-		// 					})
-		// 			  }
-		// 			: undefined,
-		// 		includedInGroups: $testObject.includedInGroups
-		// 	});
-		// 	// console.log('RESPONSE', response);
-		// 	isSuccess = response.success;
-		// 	isSubmitting = false;
-
-		// 	if (isSuccess) {
-		// 		goto('/dashboard/test-collection');
-		// 	} else {
-		// 	}
-		// } catch (e) {
-		// 	if (e instanceof TRPCClientError) {
-		// 		createTRPCErrorNotification(e);
-		// 	}
-		// 	isSubmitting = false;
-		// }
-	}
 
 	function handleParsedData(e: CustomEvent) {
 		console.log(e.detail);
@@ -236,7 +118,7 @@
 		}
 	}
 
-	function onTestTypeChangeClick(type: 'questions' | 'programming') {
+	function onTestTypeChangeClick(type: TestType) {
 		testCreationProgress.templateDone = false;
 		testCreationProgress.constructingDone = false;
 		testCreationProgress.detailsDone = false;
@@ -389,13 +271,13 @@
 						{
 							title: 'Basic test',
 							onClick: () => {
-								onTestTypeChangeClick('questions');
+								onTestTypeChangeClick('REGULAR');
 							}
 						},
 						{
 							title: 'Programming test',
 							onClick: () => {
-								onTestTypeChangeClick('programming');
+								onTestTypeChangeClick('PROGRAMMING');
 							}
 						}
 					]}
@@ -403,7 +285,7 @@
 			</div>
 			<Space gap={15} />
 			<div class="items-center justify-center xs:justify-start templates-grid">
-				{#if testType === 'questions'}
+				{#if testType === 'REGULAR'}
 					{#each templates as template, index}
 						<TemplateCard
 							title={template.title}
@@ -418,7 +300,7 @@
 						on:parsedFile={handleParsedData}
 						additionalText={'In GIFT format'}
 					/>
-				{:else if testType === 'programming'}
+				{:else if testType === 'PROGRAMMING'}
 					{#each programmingTemplates as template, index}
 						<TemplateCard
 							title={template.title}
@@ -456,9 +338,9 @@
 				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
 			}}
 		>
-			{#if testType === 'questions'}
+			{#if testType === 'REGULAR'}
 				<Creator inputTemplates={data.questionTemplates} bind:scrollToInput />
-			{:else if testType === 'programming'}
+			{:else if testType === 'PROGRAMMING'}
 				<ProgrammingCreator programmingTemplate={data.programmingTemplate} />
 			{/if}
 			<Space />
@@ -491,155 +373,10 @@
 			{/if} -->
 		</div>
 	{:else}
-		<div
-			in:fly={{
-				x: 300,
-				duration: SECTION_TRANSITION_DURATION,
-				delay: SECTION_TRANSITION_DURATION
-			}}
-			out:fly={{
-				x: -300,
-				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
-			}}
-		>
-			<div class="flex flex-col gap-4">
-				<ErrorEnhance error={$testObject.errors.title}>
-					<TextInput
-						displayOutside={true}
-						title="What will be the name of your test?"
-						titleName="name"
-						inputValue={$testObject['title']}
-						validationSchema={titleSchema}
-						max={TITLE_MAX}
-						min={TITLE_MIN}
-						on:inputChange={(data) => {
-							$testObject['title'] = data.detail;
-						}}
-						on:error={(data) => {
-							$testObject.errors.title = data.detail;
-						}}
-					/>
-				</ErrorEnhance>
-
-				<div class="flex gap-4">
-					<div class="w-full">
-						<ErrorEnhance error={$testObject.errors.description}>
-							<TextAreaInput
-								title="Describe what will your test be about."
-								titleName="name"
-								inputValue={$testObject['description']}
-								validationSchema={descriptionSchema}
-								min={DESCRIPTION_MIN}
-								max={DESCRIPTION_MAX}
-								on:inputChange={(data) => {
-									$testObject['description'] = data.detail;
-								}}
-								on:error={(data) => {
-									$testObject.errors.description = data.detail;
-								}}
-							/>
-						</ErrorEnhance>
-					</div>
-					<ImageImport title="Test photo" bind:exportedFile={testImageFile} />
-				</div>
-				<div class="flex justify-end">
-					<GroupSelection />
-				</div>
-				<MarkSystem />
-				<div class="flex justify-center gap-6 my-4">
-					<BasicButton
-						onClick={() => {}}
-						title={'Preview'}
-						class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
-					/>
-					<BasicButton
-						onClick={() => {
-							const result = isTestValidAndSetErrorsToTestObject({
-								title: $testObject.title,
-								description: $testObject.description,
-								questions: $testObject.questions,
-								markSystem: $testObject.markSystem
-							});
-
-							if (result['isError']) {
-								$testObject.errors = result['store']['errors'];
-								return;
-							}
-							finishModal?.showModal();
-						}}
-						title={'Finish'}
-					/>
-				</div>
-				<dialog bind:this={finishModal} class="modal">
-					<form
-						method="dialog"
-						class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
-					>
-						<SuccessKeyframe
-							successMessage="Success!"
-							visible={isSuccess}
-							class="absolute top-0 left-0 w-full h-full bg-white dark:bg-dark_grey"
-						/>
-						<div
-							class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting
-								? 'opacity-100 pointer-events-auto'
-								: 'opacity-0 pointer-events-none'}"
-						>
-							<Skewed />
-						</div>
-						<div class="modal-action">
-							<button type="button" on:click={() => finishModal.close()}
-								><Icon
-									icon="ic:round-close"
-									class="absolute text-2xl top-4 right-4"
-								/></button
-							>
-						</div>
-						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
-						<Separator
-							w={'80%'}
-							h={'1px'}
-							color={$applicationStates['darkMode']
-								? 'var(--dark-text-white-20)'
-								: 'var(--light-text-black-20)'}
-						/>
-						<p class="py-4 text-center text-body1">
-							Your test named <span class="block font-semibold"
-								>{$testObject['title']}</span
-							><Space gap={20} /> with a description:
-							<span class="block font-semibold"
-								>{$testObject['description']}</span
-							><br />
-							<Separator
-								w={'50%'}
-								h={'1px'}
-								color={$applicationStates['darkMode']
-									? 'var(--dark-text-white-20)'
-									: 'var(--light-text-black-20)'}
-							/>
-							should be
-						</p>
-						<div class="flex justify-center gap-3">
-							<button
-								type="button"
-								disabled={isSubmitting}
-								class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
-								on:click={() =>
-									checkTestOnClientAndServerAndPostTestToDB(false)}
-								>Saved as draft</button
-							>
-							<button
-								type="button"
-								disabled={isSubmitting}
-								class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
-								on:click={() => checkTestOnClientAndServerAndPostTestToDB(true)}
-								>Published</button
-							>
-						</div>
-					</form>
-				</dialog>
-			</div>
-		</div>
+		<TestDetails
+			sectionTransitionDuration={SECTION_TRANSITION_DURATION}
+			{testType}
+		/>
 	{/if}
 </div>
 
