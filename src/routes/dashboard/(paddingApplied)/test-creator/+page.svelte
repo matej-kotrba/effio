@@ -4,7 +4,9 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import Creator from '~components/testCreator/Creator.svelte';
+	import Creator, {
+		createNewInput
+	} from '~components/testCreator/Creator.svelte';
 	import FileImport from '~components/inputs/FileImport.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
@@ -21,6 +23,7 @@
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 	import TestDetails from './TestDetails.svelte';
 	import type { TestType } from '@prisma/client';
+	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -34,7 +37,7 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
+		templateDone: true,
 		constructingDone: false,
 		detailsDone: false
 	};
@@ -139,6 +142,19 @@
 
 	// Function to scroll on error to specific input
 	let scrollToInput: ((index: number) => void) | undefined = undefined;
+
+	onMount(() => {
+		$testObject.questions[0] = createNewInput({
+			name: 'Pick One',
+			slug: 'pickOne',
+			id: 'apsdjas',
+			createdAt: new Date(),
+			properties: {
+				inputType: '',
+				question: ['']
+			}
+		});
+	});
 </script>
 
 <!-- <BasicButton
