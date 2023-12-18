@@ -158,7 +158,6 @@
 			displayedActivatorId = -1;
 		}
 		if (displayedActivatorId !== -1) {
-			console.log(event.detail.input);
 			const input = createNewInput(event.detail.input);
 			if (input) {
 				addNewQuestion(input, displayedActivatorId);

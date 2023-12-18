@@ -169,7 +169,7 @@
 			};
 		});
 		codeEditor = monaco.editor.create(codeEditorContainer, {
-			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\tconsole.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123, "asd", "a", "iu");console.log("asd", "asdwdasd", "isuhd akshd askdh", "aoisdha hxch yxck", 123); return\n}\n\nreturn solution(data)`,
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\treturn;\n}\n\nreturn solution(data)`,
 			language: 'javascript',
 			theme: 'vs-dark',
 			contextmenu: false

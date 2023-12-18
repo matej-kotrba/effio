@@ -41,7 +41,6 @@
 	$: inputValue = inputRef?.value ?? '';
 
 	$: {
-		console.log(initialValue);
 		if (inputRef?.defaultValue) {
 			inputRef.defaultValue = initialValue;
 		}

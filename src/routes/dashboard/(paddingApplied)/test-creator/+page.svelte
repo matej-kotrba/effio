@@ -34,8 +34,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: true,
-		constructingDone: true,
+		templateDone: false,
+		constructingDone: false,
 		detailsDone: false
 	};
 

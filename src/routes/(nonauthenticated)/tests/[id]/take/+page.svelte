@@ -55,7 +55,6 @@
 
 				// Check test on the client first for all inputs filled and so on...
 				let clientCheck = checkTestClient($testObject);
-				console.log(clientCheck);
 				if (!clientCheck['success']) {
 					$testObject = clientCheck['store'];
 					return;

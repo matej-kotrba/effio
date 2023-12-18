@@ -51,7 +51,6 @@
 	}
 
 	function onSelect(index: number, value: number) {
-		console.log(value);
 		for (let i = index + 1; i < marks.length - 1; i++) {
 			if (marks[i]?.limitInPercent === undefined) continue;
 

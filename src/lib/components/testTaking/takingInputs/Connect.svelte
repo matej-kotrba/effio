@@ -93,7 +93,6 @@
 		}
 
 		if (!draggingPoint || draggingIndex === undefined) return;
-		// console.log(draggingPoint);
 
 		// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
 		for (let k in attachPoints) {

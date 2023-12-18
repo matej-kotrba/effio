@@ -67,8 +67,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
     tagIds: props.data.tagIds,
   });
 
-  console.log(result)
-
   if (result['isError']) {
     currentStore.errors = result['store']['errors'];
     testObject.set(currentStore)

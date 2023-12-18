@@ -47,7 +47,6 @@
 					newCategories[id] = item.subcategoryId;
 				}
 			});
-			console.log(newCategories);
 			checkboxGroup = ['public', ...newCategories];
 		}
 
@@ -91,7 +90,7 @@
 			{#each groups as group, index}
 				{#if group['groupsSubcategories'].length > 0}
 					<Collapsible
-					title={group.name}
+						title={group.name}
 						shouldWrap={false}
 						class="w-full mb-1 bg-gray-100"
 						buttonClasses={checkboxGroup[index + 1]

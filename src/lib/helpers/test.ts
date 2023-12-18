@@ -134,7 +134,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "separateAnswer": (question: TrueFalseQuestion): { [Key in keyof TrueFalseQuestion as Key extends "answers" ? never : Key]: TrueFalseQuestion[Key];
-    } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "error">[] } => {
+    } & { answers: PartialPick<TrueFalseQuestion["answers"][number], "error" | "response">[] } => {
       return {
         ...question,
         answers: question.answers.map((item) => {

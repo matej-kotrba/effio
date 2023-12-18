@@ -139,7 +139,11 @@ export const appRouter = router({
       include: {
         subcategories: input.includeGroupSubcategories || false,
         owner: true,
-        tags: true,
+        tags: {
+          include: {
+            tag: true
+          }
+        },
         testVersions: {
           include: {
             questions: {
@@ -241,8 +245,6 @@ export const appRouter = router({
         }
       }
     })
-
-    console.log(tests)
 
     if (!tests) return {
       success: false,

@@ -79,7 +79,8 @@
 					img: item.imageUrl,
 					icon: item.owner.image,
 					createdAt: item.createdAt,
-					stars: item.stars
+					stars: item.stars,
+					tags: item.tags.map((tag) => tag.tag)
 				} satisfies IdCardAlternativeProps;
 			});
 		} else {

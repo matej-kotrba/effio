@@ -92,6 +92,7 @@ type ProgrammingQuestion = {
 
 type Answer<T = string> = {
   answer: T;
+  response?: string;
   error?: string;
 }
 

@@ -35,6 +35,7 @@
 	import { browser } from '$app/environment';
 	import TagContainer from './Tag.svelte';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import { onMount } from 'svelte';
 
 	export let sectionTransitionDuration: number;
 	export let testType: TestType;
@@ -114,8 +115,6 @@
 	if (browser) {
 		getTags();
 	}
-
-	$: console.log($testObject.tagIds);
 </script>
 
 <div

@@ -70,7 +70,7 @@
 
 <style>
 	:global(.dark) .radio {
-		--b1: 30 0% 20%;
+		--b1: 25% 0 11;
 	}
 	.grid__container {
 		display: grid;

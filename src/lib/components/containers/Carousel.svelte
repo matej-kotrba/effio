@@ -58,7 +58,7 @@
 			if (
 				oldValueNumberPercent <=
 				-(100 / countOfItems) * resolvedData.length +
-					(100 / countOfItems) * countOfItems
+					(100 / countOfItems) * countOfItems // <--- This is the last item
 			)
 				return;
 			oldValueNumberPercent = oldValueNumberPercent - 100 / countOfItems;
@@ -89,6 +89,7 @@
 				(100 / cssItemsCount) * (oldValueNumberPercent / (100 / countOfItems))
 			}%`
 		);
+		console.log(cssItemsCount);
 		countOfItems = cssItemsCount;
 	}
 
@@ -120,27 +121,29 @@
 	</div>
 	<div class="w-full h-full overflow-hidden">
 		{#await data}
-			<div class="flex w-full py-1 scroller flex-nowrap">
-				{#each Array(countOfItems).fill('') as _}
-					<div
-						class="min-w-[calc(100%/var(--items-count))] h-full relative aspect-[4/5]"
-					>
-						<div class="px-1 w-full max-w-[300px] h-full aspect-[4/5]">
-							<div
-								class="h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
-							>
-								<div class="relative w-full aspect-video">
-									<SkeletonLine class="w-full h-full aspect-video" />
+			<div class="@container h-full">
+				<div class="flex w-full py-1 scroller flex-nowrap">
+					{#each Array(countOfItems).fill('') as _}
+						<div
+							class="min-w-[calc(100%/var(--items-count))] h-full relative aspect-[4/5]"
+						>
+							<div class="px-1 w-full max-w-[300px] h-full aspect-[4/5]">
+								<div
+									class="h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
+								>
+									<div class="relative w-full aspect-video">
+										<SkeletonLine class="w-full h-full aspect-video" />
+									</div>
+									<SkeletonLine class="w-[80%] mt-2" />
+									<SkeletonLine class="w-[50%] mt-4 h-4" />
+									<SkeletonLine class="w-[50%] mt-1 h-4" />
+									<SkeletonLine class="w-[50%] mt-1 h-4" />
 								</div>
-								<SkeletonLine class="w-[80%] mt-2" />
-								<SkeletonLine class="w-[50%] mt-4 h-4" />
-								<SkeletonLine class="w-[50%] mt-1 h-4" />
-								<SkeletonLine class="w-[50%] mt-1 h-4" />
 							</div>
 						</div>
-					</div>
-				{/each}
-				<span class="loading loading-infinity loading-lg" />
+					{/each}
+					<span class="loading loading-infinity loading-lg" />
+				</div>
 			</div>
 		{:then awaitedData}
 			<div class="@container h-full">

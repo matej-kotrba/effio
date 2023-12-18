@@ -20,7 +20,6 @@ export const protectedRouter = router({
     includedInGroups: z.array(z.string()).optional(),
     tagIds: z.array(z.string()).optional()
   })).mutation(async ({ ctx, input }) => {
-    console.log("INPUT", input)
     let questions;
     try {
       questions = JSON.parse(input.questionContent) as QuestionClient[]
