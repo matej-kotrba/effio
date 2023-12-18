@@ -7,7 +7,12 @@
 
 	export let title: string = '';
 	export let titleClasses: string = '';
-	export const open = () => modal.showModal();
+
+	let classes = '';
+	export { classes as class };
+	export let formClasses: string = '';
+
+	export const open = () => modal?.showModal();
 	export const close = () => {
 		modal.animate([{ opacity: 1 }, { opacity: 0 }], {
 			duration: 150,
@@ -22,11 +27,14 @@
 
 <dialog
 	bind:this={modal}
-	class={`w-full bg-transparent animate-fade duration-150`}
+	class={twMerge(`w-full bg-transparent animate-fade duration-150`, classes)}
 >
 	<form
 		method="dialog"
-		class="relative mx-auto p-4 max-w-[500px] shadow-md rounded-lg w-full min-w-[200px] bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
+		class={twMerge(
+			`overscroll-contain relative mx-auto p-4 max-w-[500px] shadow-md rounded-lg w-full min-w-[200px] bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white`,
+			formClasses
+		)}
 		on:submit={() => {
 			modal.animate([{ opacity: 1 }, { opacity: 0 }], {
 				duration: 150,

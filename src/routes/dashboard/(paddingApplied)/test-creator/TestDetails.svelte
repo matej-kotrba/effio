@@ -27,7 +27,14 @@
 	import { createTRPCErrorNotification } from '~/lib/utils/notification.js';
 	import { TRPCClientError } from '@trpc/client';
 	import { goto } from '$app/navigation';
-	import type { TestType } from '@prisma/client';
+	import type { Tag, TestType } from '@prisma/client';
+	import Dialog from '~components/portals/Dialog.svelte';
+	import SearchBar from '~components/inputs/SearchBar.svelte';
+	import { trpc } from '~/lib/trpc/client';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
+	import TagContainer from './Tag.svelte';
+	import IconButton from '~components/buttons/IconButton.svelte';
 
 	export let sectionTransitionDuration: number;
 	export let testType: TestType;
@@ -35,6 +42,11 @@
 	let testImageFile: File | undefined = undefined;
 
 	let finishModal: HTMLDialogElement;
+	let openTagModal: () => void;
+
+	let tags: Tag[] = [];
+	let visibleTags = tags;
+	let gotTags = false;
 
 	let isSubmitting = false;
 	let isSuccess = false;
@@ -77,6 +89,33 @@
 			}
 		});
 	}
+
+	async function getTags() {
+		if (gotTags === true) return;
+		const tagsResponse = await trpc($page).getTags.query();
+		if (tagsResponse.success && tagsResponse.tags) {
+			tags = tagsResponse.tags;
+			visibleTags = tags;
+			gotTags = true;
+		}
+	}
+
+	function onTagSearch(value: string) {
+		visibleTags = tags.filter((tag) =>
+			tag.name.toLowerCase().includes(value.toLowerCase())
+		);
+	}
+
+	function clearAllFilters() {
+		$testObject.tagIds = [];
+	}
+
+	//TODO: Maybe move that when the modal is opened
+	if (browser) {
+		getTags();
+	}
+
+	$: console.log($testObject.tagIds);
 </script>
 
 <div
@@ -131,6 +170,66 @@
 			<ImageImport title="Test photo" bind:exportedFile={testImageFile} />
 		</div>
 		<div class="flex justify-end">
+			<Dialog
+				bind:open={openTagModal}
+				title="Tag Selection"
+				formClasses="max-w-[750px]"
+			>
+				<div class="grid grid-cols-5">
+					<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
+						<!-- <span class="text-body1">Recently Used</span> -->
+						<div class="flex items-center justify-center col-span-5">
+							<!-- <span>All tags</span> -->
+							<SearchBar
+								searchFunction={onTagSearch}
+								class="flex-1 px-4 max-w-[350px]"
+							/>
+							<IconButton
+								icon="fluent:delete-28-filled"
+								tootlip="Clear all filters"
+								onClick={clearAllFilters}
+								containerClasses="dropdown-top"
+								tooltipClasses="mb-2"
+							/>
+						</div>
+					</div>
+					<div class="flex flex-col col-span-1 gap-1" />
+					<div
+						class="grid grid-cols-5 col-span-5 gap-2 max-h-[200px] h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
+					>
+						{#if visibleTags.length === 0}
+							<div class="col-span-5">
+								<h6 class="text-center">No tag like that exists.</h6>
+								<iconify-icon
+									icon="solar:mask-sad-linear"
+									class="grid place-content-center text-8xl text-light_text_black_20 dark:text-dark_text_white_20"
+								/>
+							</div>
+						{/if}
+						{#each visibleTags as tag}
+							<TagContainer
+								{tag}
+								isSelected={$testObject.tagIds.includes(tag.id)}
+								onSelect={(tag) => {
+									if ($testObject.tagIds.includes(tag.id)) {
+										$testObject.tagIds = $testObject.tagIds.filter(
+											(id) => id !== tag.id
+										);
+									} else {
+										$testObject.tagIds = [...$testObject.tagIds, tag.id];
+									}
+								}}
+							/>
+						{/each}
+					</div>
+				</div>
+			</Dialog>
+			<button
+				on:click={openTagModal}
+				class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
+			>
+				Tag Selection
+			</button>
 			<GroupSelection />
 		</div>
 		{#if testType !== 'PROGRAMMING'}

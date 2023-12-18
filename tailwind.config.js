@@ -24,7 +24,7 @@ export default {
 
 				dark_primary: '#0092CA',
 				dark_primary_light: '#393E46',
-				dark_secondary: '#0e3979',
+				dark_secondary: '#395182',
 				dark_terciary: '#393E46',
 				dark_quaternary: '#222831',
 				dark_text_white: '#F3F3F3',
