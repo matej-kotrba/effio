@@ -4,6 +4,8 @@
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import { onImageLoad } from '~use/onImageLoad';
 	import { applicationStates } from '~stores/applicationStates';
+	import type { Tag } from '@prisma/client';
+	import TagContainer from '~components/buttons/Tag.svelte';
 
 	export let redirectLink: string = '#';
 	export let imageLink: string = ''; //'/imgs/content_imgs/liska.avif';
@@ -11,7 +13,7 @@
 	export let title: string;
 	export let description: string;
 	export let stars: number | undefined = undefined;
-	export let tags: string[] = [];
+	export let tags: Tag[] = [];
 	export let dropdownTabs: {
 		iconClass?: string;
 		text: string;
@@ -88,11 +90,9 @@
 			{description}
 		</p>
 	</div>
-	<div class="flex gap-2">
+	<div class="flex gap-2 py-1 overflow-x-auto">
 		{#each tags as tag}
-			<div class="px-2 py-1 text-white rounded-full bg-success text-body2">
-				{tag}
-			</div>
+			<TagContainer {tag} />
 		{/each}
 	</div>
 	<div class="flex items-center justify-between">

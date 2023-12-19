@@ -80,7 +80,7 @@
 					icon: item.owner.image,
 					createdAt: item.createdAt,
 					stars: item.stars,
-					tags: item.tags.map((tag) => tag.tag)
+					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag)
 				} satisfies IdCardAlternativeProps;
 			});
 		} else {

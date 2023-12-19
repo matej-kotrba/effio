@@ -22,6 +22,7 @@
 	import { twMerge } from 'tailwind-merge';
 	import { transformDate } from '~/lib/utils/date';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import TagContainer from '~components/buttons/Tag.svelte';
 	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import Star from '~components/globals/Star.svelte';
 	import { applicationStates } from '~stores/applicationStates';
@@ -172,10 +173,7 @@
 						class="flex flex-wrap justify-center gap-1 p-1 overflow-x-auto max-h-10 scroll-snap"
 					>
 						{#each data.tags as tag}
-							<span
-								class="px-2 py-1 text-xs text-center rounded-sm shadow-sm bg-light_grey text-light_text_black_60 dark:bg-dark_grey dark:text-dark_text_white"
-								>{tag.name}</span
-							>
+							<TagContainer {tag} />
 						{/each}
 					</div>
 				{/if}

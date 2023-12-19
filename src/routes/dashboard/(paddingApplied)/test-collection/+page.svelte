@@ -169,7 +169,7 @@
 				description={test.description}
 				createdAt={new Date(test.createdAt)}
 				stars={test.stars}
-				tags={test.tags.map((tag) => tag.tag?.name || '')}
+				tags={test.tags.map((tag) => tag.tag)}
 				dropdownTabs={modalTabsGenerator(test)}
 			/>
 		{/each}
