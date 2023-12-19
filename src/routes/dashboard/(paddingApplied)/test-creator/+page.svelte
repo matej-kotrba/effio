@@ -142,19 +142,6 @@
 
 	// Function to scroll on error to specific input
 	let scrollToInput: ((index: number) => void) | undefined = undefined;
-
-	onMount(() => {
-		$testObject.questions[0] = createNewInput({
-			name: 'Pick One',
-			slug: 'pickOne',
-			id: 'apsdjas',
-			createdAt: new Date(),
-			properties: {
-				inputType: '',
-				question: ['']
-			}
-		});
-	});
 </script>
 
 <!-- <BasicButton

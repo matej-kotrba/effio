@@ -10,6 +10,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import { dropdown } from '~use/dropdown';
+	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
 
@@ -75,15 +76,17 @@
 						deleteQuestion={() => deleteQuestion(index)}
 						questionLength={content.answers.length}
 					/>
-					<div class="relative grow-[1]">
-						<TextInput
-							title="Option {index + 1}"
-							titleName="Option {index + 1}"
-							validationSchema={answerSchema}
-							on:error={(event) =>
-								(content.answers[index].error = event.detail)}
-							bind:inputValue={content.answers[index].answer}
-						/>
+					<div class="grow-[1]">
+						<CommentEnhance asnwerPath={q} displayType="up">
+							<TextInput
+								title="Option {index + 1}"
+								titleName="Option {index + 1}"
+								validationSchema={answerSchema}
+								on:error={(event) =>
+									(content.answers[index].error = event.detail)}
+								bind:inputValue={content.answers[index].answer}
+							/>
+						</CommentEnhance>
 					</div>
 					<!-- data-tip="Mark this as a correct answer" -->
 					<button

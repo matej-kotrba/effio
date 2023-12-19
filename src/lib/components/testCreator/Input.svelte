@@ -189,14 +189,18 @@ will be used in the test creator -->
 	.collapsible {
 		display: grid;
 		grid-template-rows: 1fr;
-		transition: 200ms grid-template-rows ease;
+		/* transition: 200ms grid-template-rows ease; */
 	}
 
-	.collapsible > div {
+	/* .collapsible > div {
+		overflow: hidden;
+	} */
+	.collapsed > div {
 		overflow: hidden;
 	}
 
 	.collapsed {
 		grid-template-rows: 0fr;
+		overflow: hidden;
 	}
 </style>

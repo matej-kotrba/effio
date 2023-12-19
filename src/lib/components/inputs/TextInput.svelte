@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZodSchema } from 'zod';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, getContext } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
@@ -14,14 +14,19 @@
 	export let inputValue: HTMLInputElement['value'] = '';
 	let inputRef: HTMLInputElement;
 
+	let setError = getContext('setError');
+
 	const dispatch = createEventDispatcher();
 
 	function validateInput() {
 		const result = validationSchema?.safeParse(inputValue);
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);
+			if (typeof setError === 'function')
+				setError(result?.error.errors[0].message);
 		} else {
 			dispatch('error', null);
+			if (typeof setError === 'function') setError('');
 		}
 	}
 </script>

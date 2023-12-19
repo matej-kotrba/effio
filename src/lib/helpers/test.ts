@@ -584,7 +584,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
 
 // TODO: FIX THE TYPES
 
-export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "stars" | "views">) {
+export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "views">) {
   const markSystem = checkMarkSystem(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
