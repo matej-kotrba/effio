@@ -360,5 +360,31 @@ export const protectedRouter = router({
         success: false,
       }
     }
+  }),
+  starTest: loggedInProcedure.input(z.object({
+    testGroupId: z.string(),
+    decrement: z.boolean().optional()
+  })).query(async ({ ctx, input }) => {
+    let response;
+
+    if (!input.decrement) {
+
+      response = await ctx.prisma.testStar.create({
+        data: {
+          userId: ctx.userId,
+          testId: input.testGroupId
+        }
+      })
+    }
+    else {
+      response = await ctx.prisma.testStar.delete({
+        where: {
+          userId: ctx.userId,
+          testId: input.testGroupId
+        }
+      })
+    }
+
+    return response
   })
 })

@@ -51,6 +51,7 @@ model User {
   markSystems              MarkSystem[]
   groups                   GroupOnUsers[]
   groupsOwned              Group[]
+  staredTests              TestStar[]
   GroupSubcategoreyMessage GroupSubcategoryMessage[]
 
   @@index([name, id])
@@ -88,7 +89,6 @@ model Test {
   published               Boolean                   @default(false)
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
-  stars                   Int                       @default(0)
   views                   Int                       @default(0)
   ownerId                 String
   isPublic                Boolean                   @default(false)
@@ -96,6 +96,7 @@ model Test {
   type                    TestType                  @default(REGULAR)
   testVersions            TestVersion[]
   tags                    TagOnTests[]
+  stars                   TestStar[]
   owner                   User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   subcategories           GroupSubcategoryOnTests[]
   groupSubcategoryMessage GroupSubcategoryMessage[]
@@ -288,6 +289,18 @@ model GroupSubcategoryMessage {
   @@index([groupSubcategoryId])
   @@index([testId])
   @@map("GroupSubcategoreyMessage")
+}
+
+model TestStar {
+  id        String   @id @default(uuid())
+  testId    String
+  userId    String
+  createdAt DateTime @default(now())
+  test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+  @@index([userId])
 }
 
 enum MessageTypes {

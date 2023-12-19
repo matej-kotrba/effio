@@ -74,7 +74,9 @@ export const appRouter = router({
   })).query(async ({ ctx, input }) => {
     const ordering = input.order === "stars" ? [
       {
-        stars: "desc"
+        stars: {
+          _count: "desc"
+        }
       },
       {
         createdAt: "desc"
@@ -84,8 +86,10 @@ export const appRouter = router({
         createdAt: "desc"
       },
       {
-        stars: "desc"
-      }
+        stars: {
+          _count: "desc"
+        }
+      },
     ] as const
 
     const groupTests = await ctx.prisma.test.findMany({
@@ -97,12 +101,18 @@ export const appRouter = router({
         }
       },
       include: {
+        _count: {
+          select: {
+            stars: true
+          }
+        },
         testVersions: {
           take: 1,
           orderBy: {
             version: "desc"
           },
           include: {
+
             questions: {
               include: {
                 type: true
@@ -210,19 +220,26 @@ export const appRouter = router({
       } : undefined,
       orderBy: [
         {
-          stars: "desc"
+          stars: {
+            _count: "desc"
+          }
         },
         {
           updatedAt: "desc"
         }
       ],
       include: {
+        _count: {
+          select: {
+            stars: true
+          }
+        },
         testVersions: {
           take: 1
         },
         tags: {
           include: {
-            tag: true
+            tag: true,
           }
         },
         owner: true,

@@ -190,8 +190,9 @@
 						class={`${isRegettingAllTests ? 'opacity-50' : ''}`}
 						navigationLink={`/tests/${test.id}`}
 						data={{
+							id: test.id,
 							title: test.title,
-							stars: test.stars,
+							stars: test._count.stars,
 							createdAt: test.createdAt,
 							description: test.description,
 							icon: test.owner.image,

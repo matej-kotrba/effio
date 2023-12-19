@@ -2,6 +2,7 @@
 	import type { Tag, TestType } from '@prisma/client';
 
 	export type CardAlternativeProps = {
+		id: string;
 		title: string;
 		description?: string;
 		img?: string | null;
@@ -27,16 +28,52 @@
 	import Star from '~components/globals/Star.svelte';
 	import { applicationStates } from '~stores/applicationStates';
 	import { onImageLoad } from '~use/onImageLoad';
+	import { page } from '$app/stores';
+	import { trpc } from '~/lib/trpc/client';
 
 	let isIconFallback = false;
 	let isImageFallback = false;
 
 	export let data: CardAlternativeProps;
 	export let type: TestType = 'REGULAR';
+	export let canStarTest: boolean = false;
+	export let isStarred: boolean = false;
 	export let navigationLink: string | null = null;
 
 	let classes = '';
 	export { classes as class };
+
+	let isSubmittingStar = false;
+
+	async function starTest() {
+		if (canStarTest === false || data.stars === undefined) return;
+		if (isStarred === false) {
+			try {
+				isSubmittingStar = true;
+				data.stars += 1;
+				await trpc($page).protected.starTest.query({
+					testGroupId: data.id,
+					decrement: true
+				});
+			} catch {
+				data.stars -= 1;
+			} finally {
+				isSubmittingStar = false;
+			}
+		} else if (isStarred === true) {
+			try {
+				isSubmittingStar = true;
+				data.stars -= 1;
+				await trpc($page).protected.starTest.query({
+					testGroupId: data.id
+				});
+			} catch {
+				data.stars += 1;
+			} finally {
+				isSubmittingStar = false;
+			}
+		}
+	}
 </script>
 
 <div
@@ -66,7 +103,7 @@
 					</div>
 				{/if}
 				{#if data.stars !== undefined}
-					<div
+					<button
 						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey"
 					>
 						<span
@@ -75,7 +112,7 @@
 							{data.stars}
 						</span>
 						<Star />
-					</div>
+					</button>
 				{/if}
 				<div
 					class="absolute w-12 text-white -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 bg-light_secondary border-light_secondary z-[2]"

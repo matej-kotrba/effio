@@ -17,7 +17,12 @@
 
 	export let data;
 
-	let recentTests: { data: TestFullType[]; isLoading: boolean } = {
+	let recentTests: {
+		data: Awaited<
+			ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
+		>;
+		isLoading: boolean;
+	} = {
 		data: [],
 		isLoading: true
 	};
@@ -168,7 +173,7 @@
 				title={test.title}
 				description={test.description}
 				createdAt={new Date(test.createdAt)}
-				stars={test.stars}
+				stars={test._count.stars}
 				tags={test.tags.map((tag) => tag.tag)}
 				dropdownTabs={modalTabsGenerator(test)}
 			/>

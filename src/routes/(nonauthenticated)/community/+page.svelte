@@ -79,7 +79,7 @@
 					img: item.imageUrl,
 					icon: item.owner.image,
 					createdAt: item.createdAt,
-					stars: item.stars,
+					stars: item._count.stars,
 					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag)
 				} satisfies IdCardAlternativeProps;
 			});
@@ -358,12 +358,12 @@
 								navigationLink={`/tests/${test.id}`}
 								class="mx-auto"
 								data={{
+									id: test.id,
 									title: test.title,
 									description: test.description,
 									img: test['imageUrl'],
 									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
-									stars: test.stars,
 									tags: getTypesafeTags(test.tags)
 								}}
 								type={test.type}
@@ -374,12 +374,13 @@
 							navigationLink={`/tests/${test.id}`}
 							class="mx-auto"
 							data={{
+								id: test.id,
 								title: test.title,
 								description: test.description,
 								img: test['imageUrl'],
 								icon: test?.owner?.image || 'error',
 								createdAt: test.createdAt,
-								stars: test.stars,
+								stars: test._count.stars,
 								tags: getTypesafeTags(test.tags)
 							}}
 							type={test.type}
