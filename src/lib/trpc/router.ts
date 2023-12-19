@@ -243,6 +243,15 @@ export const appRouter = router({
           }
         },
         owner: true,
+        stars: ctx.user?.id ? {
+          select: {
+            userId: true,
+            testId: true
+          },
+          where: {
+            userId: ctx.user?.id
+          }
+        } : undefined
       },
       where: {
         createdAt: dateRange ? {

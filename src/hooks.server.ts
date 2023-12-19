@@ -73,7 +73,7 @@ const handleAuth: Handle = SvelteKitAuth({
         newSession.user!.id = user.id as string;
       }
 
-      return newSession;
+      return newSession as UpdatedSession;
     },
     signIn: async ({ account }) => {
       return Promise.resolve(true)

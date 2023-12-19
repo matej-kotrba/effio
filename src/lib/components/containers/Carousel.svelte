@@ -89,7 +89,6 @@
 				(100 / cssItemsCount) * (oldValueNumberPercent / (100 / countOfItems))
 			}%`
 		);
-		console.log(cssItemsCount);
 		countOfItems = cssItemsCount;
 	}
 

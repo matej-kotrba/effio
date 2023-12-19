@@ -355,6 +355,11 @@
 					{#if index === requestedTests.length - 1}
 						<div use:addIntersectionUse={{ shouldActive: true }} class="w-full">
 							<CardAlternative
+								isStarredDefault={test.stars !== undefined &&
+									test.stars.length > 0}
+								canStarTest={test.stars !== undefined &&
+									!!$page.data.session?.user?.id &&
+									$page.data.session.user.id !== test.ownerId}
 								navigationLink={`/tests/${test.id}`}
 								class="mx-auto"
 								data={{
@@ -371,6 +376,11 @@
 						</div>
 					{:else}
 						<CardAlternative
+							isStarredDefault={test.stars !== undefined &&
+								test.stars.length > 0}
+							canStarTest={test.stars !== undefined &&
+								!!$page.data.session?.user?.id &&
+								$page.data.session.user.id !== test.ownerId}
 							navigationLink={`/tests/${test.id}`}
 							class="mx-auto"
 							data={{

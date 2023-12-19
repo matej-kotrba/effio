@@ -2,17 +2,25 @@ import type { Session } from "@auth/core/types";
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
+	type UpdatedSession = Session & {
+		user?: {
+			id?: string | null
+		};
+	}
+
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
 		// interface Platform {}
-	}
 
-	type UpdatedSession = Session & {
-		user?: {
-			id?: string | null
-		};
+		interface Locals {
+			getSession(): Promise<UpdatedSession | null>;
+		}
+
+		interface PageData {
+			session: UpdatedSession | null;
+		}
 	}
 
 	declare namespace svelteHTML {

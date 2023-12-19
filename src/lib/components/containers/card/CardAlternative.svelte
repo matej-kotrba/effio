@@ -37,8 +37,10 @@
 	export let data: CardAlternativeProps;
 	export let type: TestType = 'REGULAR';
 	export let canStarTest: boolean = false;
-	export let isStarred: boolean = false;
+	export let isStarredDefault: boolean = false;
 	export let navigationLink: string | null = null;
+
+	let isStarred = isStarredDefault;
 
 	let classes = '';
 	export { classes as class };
@@ -46,29 +48,38 @@
 	let isSubmittingStar = false;
 
 	async function starTest() {
-		if (canStarTest === false || data.stars === undefined) return;
+		if (
+			canStarTest === false ||
+			data.stars === undefined ||
+			isSubmittingStar === true
+		)
+			return;
 		if (isStarred === false) {
 			try {
 				isSubmittingStar = true;
+				isStarred = true;
 				data.stars += 1;
 				await trpc($page).protected.starTest.query({
-					testGroupId: data.id,
-					decrement: true
+					testGroupId: data.id
 				});
 			} catch {
 				data.stars -= 1;
+				isStarred = false;
 			} finally {
 				isSubmittingStar = false;
 			}
 		} else if (isStarred === true) {
 			try {
 				isSubmittingStar = true;
+				isStarred = false;
 				data.stars -= 1;
 				await trpc($page).protected.starTest.query({
-					testGroupId: data.id
+					testGroupId: data.id,
+					decrement: true
 				});
 			} catch {
 				data.stars += 1;
+				isStarred = true;
 			} finally {
 				isSubmittingStar = false;
 			}
@@ -95,8 +106,7 @@
 							<iconify-icon
 								icon="fluent:settings-24-filled"
 								class={twMerge(
-									'text-2xl duration-100 text-light_text_black dark:text-dark_text_white',
-									classes
+									'text-2xl duration-100 text-light_text_black dark:text-dark_text_white'
 								)}
 							/>
 						</DropdownSelect>
@@ -104,11 +114,16 @@
 				{/if}
 				{#if data.stars !== undefined}
 					<button
-						class="absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey"
+						type="button"
+						on:click={starTest}
+						disabled={canStarTest === false || isSubmittingStar === true}
+						class={`absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey shadow-md duration-100 ${
+							isStarred ? 'bg-yellow-100 dark:bg-yellow-700' : ''
+						} hover:bg-light_secondary dark:hover:bg-dark_secondary disabled:bg-light_grey_dark dark:disabled:bg-slate-600
+						text-light_text_black dark:text-dark_text_white hover:text-light_whiter disabled:hover:text-light_text_black
+						dark:disabled:hover:text-dark_text_white`}
 					>
-						<span
-							class="text-light_text_black dark:text-dark_text_white text-body2"
-						>
+						<span class="text-body2">
 							{data.stars}
 						</span>
 						<Star />
@@ -143,7 +158,7 @@
 					data-tip="Programming test"
 					class="absolute bottom-0 left-0 z-10 grid pt-4 pb-2 pl-2 pr-4 bg-blue-500 place-content-center special-border-radius tooltip"
 				>
-					<iconify-icon icon="fa-solid:tools" />
+					<iconify-icon icon="fa-solid:tools" class="text-white" />
 				</div>
 			{/if}
 			<div

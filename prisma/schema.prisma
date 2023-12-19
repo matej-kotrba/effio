@@ -299,6 +299,7 @@ model TestStar {
   test      Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([testId, userId])
   @@index([testId])
   @@index([userId])
 }

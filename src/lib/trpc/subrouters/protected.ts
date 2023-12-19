@@ -365,20 +365,38 @@ export const protectedRouter = router({
     testGroupId: z.string(),
     decrement: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
+    const test = await ctx.prisma.test.findUnique({
+      where: {
+        id: input.testGroupId
+      },
+      select: {
+        id: true,
+        ownerId: true
+      }
+    })
+
+    if (test === null) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+    }
+
+    if (test.ownerId === ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to star your own test" })
+    }
+
     let response;
 
-    if (!input.decrement) {
-
-      response = await ctx.prisma.testStar.create({
-        data: {
+    if (input.decrement === true) {
+      console.log("adasd")
+      response = await ctx.prisma.testStar.deleteMany({
+        where: {
           userId: ctx.userId,
           testId: input.testGroupId
         }
       })
     }
     else {
-      response = await ctx.prisma.testStar.delete({
-        where: {
+      response = await ctx.prisma.testStar.create({
+        data: {
           userId: ctx.userId,
           testId: input.testGroupId
         }
