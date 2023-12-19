@@ -35,6 +35,11 @@ export const load: ServerLoad = async ({ params }) => {
         }
       },
       include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        },
         testVersions: {
           include: {
             questions: {

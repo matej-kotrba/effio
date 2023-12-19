@@ -80,7 +80,13 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
       return {
         ...question,
-        correctAnswerIndex: undefined
+        correctAnswerIndex: undefined,
+        answers: question.answers.map((item) => {
+          return {
+            ...item,
+            response: ""
+          }
+        })
       }
     },
     "checkAnswerPresence": (question: PickOneQuestion): boolean => {

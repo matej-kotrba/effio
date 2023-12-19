@@ -17,6 +17,11 @@
 
 	export let testContent: Prisma.TestGetPayload<{
 		include: {
+			tags: {
+				include: {
+					tag: true;
+				};
+			};
 			testVersions: {
 				include: {
 					questions: {

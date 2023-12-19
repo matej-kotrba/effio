@@ -65,6 +65,16 @@
 				/>
 			</div>
 		</button>
+		{#if resultFormat && resultFormat.userAnswer['correctAnswerIndex'] === index && resultFormat.correctAnswer.answers[index].response}
+			<p
+				class="p-2 rounded-sm text-light_text_black dark:text-dark_text_white_60 bg-light_grey dark:bg-dark_light_grey"
+				class:correct={resultFormat.correctAnswer.correctAnswerIndex === index}
+				class:incorrect={resultFormat.correctAnswer.correctAnswerIndex !==
+					index}
+			>
+				{resultFormat.correctAnswer.answers[index].response}
+			</p>
+		{/if}
 	{/each}
 </div>
 
