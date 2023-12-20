@@ -182,10 +182,7 @@
 <div
 	class="relative bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div
-		class="relative grid__container"
-		class:empty={$testObject.questions.length === 0}
-	>
+	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
 		<!-- <div
 			style={`position: ${
 				$testObject.questions.length > 0 &&
@@ -195,7 +192,7 @@
 			};`}
 		> -->
 		{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
-			<div transition:fly={{ x: -300 }} class="h-full">
+			<div transition:fly={{ x: -300 }} class="h-full max-w-[340px]">
 				<CreatorInputSidebar
 					inputs={inputTemplates}
 					class="self-start"
@@ -214,9 +211,11 @@
 					</button>
 				</div>
 			</div>
+		{:else}
+			<div />
 		{/if}
 		<!-- </div> -->
-		<div class="px-1 sm:px-2 md:px-4">
+		<div>
 			<!-- The dropdown for new input -->
 			<Dialog bind:open={newInputOpen} bind:close={newInputClose}>
 				<form
@@ -258,14 +257,14 @@
 			</Dialog>
 			<div
 				role="group"
-				class="relative flex flex-col items-center gap-2 px-0 xl:items-start sm:px-2"
+				class="relative flex flex-col items-center gap-2 xl:items-start"
 				on:dragleave|self={() => {
 					displayedActivatorId = -1;
 				}}
 			>
 				<!-- Displaying the initial create button -->
 				{#if $testObject.questions.length === 0}
-					<div class="flex flex-col items-center gap-3">
+					<div class="flex flex-col items-center gap-3 mx-auto">
 						<h4
 							class="font-semibold text-body2 sm:text-body1 md:text-h6 text-light_text_black dark:text-dark_text_white"
 						>
