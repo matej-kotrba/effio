@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applicationStates } from '~stores/applicationStates';
 	import { testObject } from '~stores/testObject';
+	import Comment from '../Comment.svelte';
 
 	const wrongAnswerHiglightColors = [
 		'#4169e130',
@@ -271,6 +272,11 @@
 				</div>
 				<span>{text.answer}</span>
 			</button>
+			{#if resultFormat && resultFormat.correctAnswer.answers[index].response}
+				<Comment
+					response={resultFormat.correctAnswer.answers[index].response}
+				/>
+			{/if}
 		{/each}
 	</div>
 </div>

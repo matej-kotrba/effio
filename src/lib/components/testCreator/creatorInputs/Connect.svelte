@@ -7,6 +7,7 @@
 	import { testObject } from '~stores/testObject';
 	import { answerSchema } from '~schemas/textInput';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
+	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
 
@@ -82,27 +83,30 @@
 						questionLength={content.answers.length}
 					/>
 					<div class="relative grow-[1] grid grid-cols-2 gap-1">
-						<TextInput
-							title="Option {index + 1}"
-							titleName="Option {index + 1}"
-							validationSchema={answerSchema}
-							on:error={(event) =>
-								(content.answers[index].error = event.detail)}
-							bind:inputValue={content.answers[index].answer}
-						/>
-						<!-- customStyles={'rounded-t-none rounded-b-md'}
-							customContainerStyles={'border-t-[0.125rem] border-b-0 before:top-[-0.125rem]'} -->
-						<TextInput
-							title="Option matched {index + 1}"
-							titleName="Matched option {index + 1}"
-							validationSchema={answerSchema}
-							on:error={(event) => {
-								content.matchedAnswers[
-									Object.keys(content.matchedAnswers)[index]
-								].error = event.detail;
-							}}
-							bind:inputValue={content.matchedAnswers[answerKeys[index]].answer}
-						/>
+						<CommentEnhance asnwerPath={content.answers[index]}>
+							<TextInput
+								title="Option {index + 1}"
+								titleName="Option {index + 1}"
+								validationSchema={answerSchema}
+								on:error={(event) =>
+									(content.answers[index].error = event.detail)}
+								bind:inputValue={content.answers[index].answer}
+							/>
+							<!-- customStyles={'rounded-t-none rounded-b-md'}
+								customContainerStyles={'border-t-[0.125rem] border-b-0 before:top-[-0.125rem]'} -->
+							<TextInput
+								title="Option matched {index + 1}"
+								titleName="Matched option {index + 1}"
+								validationSchema={answerSchema}
+								on:error={(event) => {
+									content.matchedAnswers[
+										Object.keys(content.matchedAnswers)[index]
+									].error = event.detail;
+								}}
+								bind:inputValue={content.matchedAnswers[answerKeys[index]]
+									.answer}
+							/>
+						</CommentEnhance>
 					</div>
 				</div>
 				<p

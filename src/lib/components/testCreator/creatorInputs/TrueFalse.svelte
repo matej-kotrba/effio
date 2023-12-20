@@ -9,6 +9,7 @@
 	import { answerSchema } from '~schemas/textInput';
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
+	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
 
@@ -64,13 +65,16 @@
 					questionLength={content.answers.length}
 				/>
 				<div class="relative grow-[1]">
-					<TextInput
-						title="Option {index + 1}"
-						titleName="Option {index + 1}"
-						validationSchema={answerSchema}
-						on:error={(event) => (content.answers[index].error = event.detail)}
-						bind:inputValue={q.answer}
-					/>
+					<CommentEnhance asnwerPath={content.answers[index]} displayType="up">
+						<TextInput
+							title="Option {index + 1}"
+							titleName="Option {index + 1}"
+							validationSchema={answerSchema}
+							on:error={(event) =>
+								(content.answers[index].error = event.detail)}
+							bind:inputValue={q.answer}
+						/>
+					</CommentEnhance>
 				</div>
 				<button
 					type="button"

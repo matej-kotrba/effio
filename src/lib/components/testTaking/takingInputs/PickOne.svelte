@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { testObject } from '~stores/testObject';
+	import Comment from '../Comment.svelte';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
@@ -66,14 +67,12 @@
 			</div>
 		</button>
 		{#if resultFormat && resultFormat.userAnswer['correctAnswerIndex'] === index && resultFormat.correctAnswer.answers[index].response}
-			<p
+			<Comment response={resultFormat.correctAnswer.answers[index].response} />
+			<!-- <p
 				class="p-2 rounded-sm text-light_text_black dark:text-dark_text_white_60 bg-light_grey dark:bg-dark_light_grey"
-				class:correct={resultFormat.correctAnswer.correctAnswerIndex === index}
-				class:incorrect={resultFormat.correctAnswer.correctAnswerIndex !==
-					index}
 			>
 				{resultFormat.correctAnswer.answers[index].response}
-			</p>
+			</p> -->
 		{/if}
 	{/each}
 </div>

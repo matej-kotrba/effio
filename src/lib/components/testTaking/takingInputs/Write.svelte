@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import { testObject } from '~stores/testObject';
+	import Comment from '../Comment.svelte';
 
 	export let questionIndex: number;
 
@@ -17,6 +18,9 @@
 		titleName="{$testObject.questions[questionIndex]['title']}{questionIndex}"
 		bind:inputValue={content['answers'][0]['answer']}
 	/>
+	{#if resultFormat && resultFormat['correctAnswer']['answers'][0].response}
+		<Comment response={resultFormat['correctAnswer']['answers'][0].response} />
+	{/if}
 	{#if resultFormat && resultFormat['isCorrect'] === false}
 		<p class="p-2 rounded-md">
 			Correct answer(s): <span class="font-semibold"

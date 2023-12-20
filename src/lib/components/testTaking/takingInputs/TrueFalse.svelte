@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { testObject } from '~stores/testObject';
+	import Comment from '../Comment.svelte';
 
 	export let questionIndex: number;
 
@@ -72,6 +73,9 @@
 				/>
 			</div>
 		</button>
+		{#if resultFormat && resultFormat.correctAnswer.answers[index].response}
+			<Comment response={resultFormat.correctAnswer.answers[index].response} />
+		{/if}
 	{/each}
 </div>
 

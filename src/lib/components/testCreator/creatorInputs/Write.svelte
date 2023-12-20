@@ -12,6 +12,7 @@
 
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
+	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
 
@@ -63,10 +64,11 @@
 		</div>
 	</div>
 	<!-- Display the input fields with control -->
+	<!-- <CommentEnhance asnwerPath={content.answers[0]} displayType="up"> -->
 	{#each content?.answers || [] as q, index (q)}
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
-				<div class="flex gap-1">
+				<div class="flex w-full gap-1">
 					<RemoveButton
 						questionLimit={1}
 						deleteQuestion={() => deleteQuestion(index)}
@@ -83,7 +85,7 @@
 						inputProperties={{
 							placeholder: 'Your answer option ...'
 						}}
-						class="rounded-sm"
+						class="flex-1 w-full rounded-sm"
 						on:error={(e) => {
 							content.answers[index].error = e.detail;
 						}}
@@ -100,6 +102,7 @@
 			</div>
 		</div>
 	{/each}
+	<!-- </CommentEnhance> -->
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>
