@@ -40,10 +40,8 @@
 <script lang="ts">
 	import Back from '~components/navigation/Back.svelte';
 	import Space from '~components/separators/Space.svelte';
-	import {
-		getMarkBasedOnPoints,
-		questionContentFunctions
-	} from '~helpers/test';
+	import { getMarkBasedOnPoints } from '~helpers/test/test.js';
+	import { questionContentFunctions } from '~helpers/test/questionFunctions';
 	import { page } from '$app/stores';
 	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 

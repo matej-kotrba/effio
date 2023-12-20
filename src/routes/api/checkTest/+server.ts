@@ -1,4 +1,4 @@
-import { questionContentFunctions } from "~helpers/test"
+import { questionContentFunctions } from "~helpers/test/questionFunctions"
 import { json } from '@sveltejs/kit'
 import type { TestObject } from "~stores/testObject.js"
 import prisma from "~/lib/prisma.js"

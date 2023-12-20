@@ -1,4 +1,4 @@
-import { isTestValidAndSetErrorsToTestObject, isValidInputServerAndSetErrorsToTestObject, type IsTestValidProps } from "./test"
+import { isTestValidAndSetErrorsToTestObject, isValidInputServerAndSetErrorsToTestObject, type IsTestValidProps } from "./test/test"
 import { testObject } from "~stores/testObject";
 import { get } from "svelte/store"
 import { TRPCClientError } from "@trpc/client";

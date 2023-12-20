@@ -17,7 +17,7 @@
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import { isTestValidAndSetErrorsToTestObject } from '~helpers/test';
+	import { isTestValidAndSetErrorsToTestObject } from '~helpers/test/test';
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
 	import Separator from '~components/separators/Separator.svelte';

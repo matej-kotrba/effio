@@ -18,7 +18,7 @@
 		initializeTestToTestStore,
 		isTestValidAndSetErrorsToTestObject,
 		isValidInputServerAndSetErrorsToTestObject
-	} from '~/lib/helpers/test';
+	} from '~helpers/test/test.js';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { trpc } from '~/lib/trpc/client.js';
@@ -64,7 +64,8 @@
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
 				isPublished: $testObject.published,
-				image: testImageFile || undefined
+				image: testImageFile || undefined,
+				tagIds: $testObject.tagIds
 			},
 			callbacks: {
 				onSaveToDB(response) {

@@ -1,6 +1,6 @@
 import { json, error } from "@sveltejs/kit"
 import type { RequestEvent } from "../../dashboard/$types"
-import { isTestValidAndSetErrorsToTestObject, type IsTestValidProps } from "~helpers/test"
+import { isTestValidAndSetErrorsToTestObject, type IsTestValidProps } from "~helpers/test/test"
 
 export async function POST(event: RequestEvent) {
   if (!(await event.locals.getSession())?.user?.name) throw error(401, "Unauthorized")

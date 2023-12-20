@@ -6,7 +6,7 @@
 		checkTestServerAndRecordIt,
 		getMarkBasedOnPoints,
 		initializeTestToTestStore
-	} from '~helpers/test';
+	} from '~helpers/test/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';

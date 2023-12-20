@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { questionContentFunctions } from '~helpers/test';
+	import { questionContentFunctions } from '~helpers/test/questionFunctions';
 
 	export function createNewInput(
 		input: QuestionTemplate
@@ -34,7 +34,10 @@
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
 	import CreatorInputDropdownActivator from '~components/testCreator/CreatorInputDropdownActivator.svelte';
 	import toast from 'svelte-french-toast';
-	import { QUESTION_LIMIT, questionMethods } from '~helpers/test';
+	import {
+		QUESTION_LIMIT,
+		questionMethods
+	} from '~helpers/test/questionFunctions';
 	import { fly } from 'svelte/transition';
 	import { XL } from '~/utils/responsive';
 	import { browser } from '$app/environment';

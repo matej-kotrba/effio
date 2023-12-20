@@ -3,7 +3,7 @@
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import Space from '~components/separators/Space.svelte';
-	import { questionContentFunctions } from '~helpers/test';
+	import { questionContentFunctions } from '~helpers/test/questionFunctions';
 	import {
 		PROGRAMMING_DESCRIPTION_MAX,
 		PROGRAMMING_DESCRIPTION_MIN,

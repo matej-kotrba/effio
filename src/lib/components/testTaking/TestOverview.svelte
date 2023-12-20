@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initializeTestToTestStore } from '~helpers/test';
+	import { initializeTestToTestStore } from '~helpers/test/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import { goto } from '$app/navigation';

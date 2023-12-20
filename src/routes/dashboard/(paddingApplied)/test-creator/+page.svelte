@@ -14,7 +14,7 @@
 	import {
 		initializeNewTestToTestStore,
 		isTestValidAndSetErrorsToTestObject
-	} from '~/lib/helpers/test';
+	} from '~helpers/test/test';
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';

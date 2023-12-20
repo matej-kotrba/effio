@@ -136,7 +136,15 @@ export const recordsRouter = router({
                 type: true
               }
             },
-            testGroup: true
+            testGroup: {
+              include: {
+                tags: {
+                  include: {
+                    tag: true
+                  }
+                }
+              }
+            }
           }
         },
         questionRecords: {

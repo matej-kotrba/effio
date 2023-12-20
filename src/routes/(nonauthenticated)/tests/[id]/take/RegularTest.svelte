@@ -6,7 +6,7 @@
 	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
-	import { getMarkBasedOnPoints } from '~helpers/test';
+	import { getMarkBasedOnPoints } from '~helpers/test/test';
 	import { testObject } from '~stores/testObject';
 
 	export let data: {

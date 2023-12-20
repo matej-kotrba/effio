@@ -2,9 +2,9 @@
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import {
 		getMarkBasedOnPoints,
-		initializeTestToTestStore,
-		questionContentFunctions
-	} from '~helpers/test.js';
+		initializeTestToTestStore
+	} from '~helpers/test/test.js';
+	import { questionContentFunctions } from '~helpers/test/questionFunctions';
 	import { testObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
@@ -39,6 +39,7 @@
 			isPublic: data.record.test.testGroup.isPublic,
 			imageUrl: data.record.test.testGroup.imageUrl,
 			type: data.record.test.testGroup.type,
+			tags: data.record.test.testGroup.tags,
 			testVersions: [
 				{
 					...data.record.test,

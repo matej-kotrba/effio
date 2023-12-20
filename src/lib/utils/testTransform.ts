@@ -1,5 +1,5 @@
 import type { TestWithQuestionsAndVersions } from "~/Prisma"
-import { questionContentFunctions } from "~helpers/test"
+import { questionContentFunctions } from "~helpers/test/questionFunctions"
 
 export function transformTestToTakeFormat(test: TestWithQuestionsAndVersions) {
   const questionTypeOptions = Object.keys(questionContentFunctions)
