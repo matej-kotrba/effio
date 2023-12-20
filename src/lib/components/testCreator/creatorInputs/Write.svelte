@@ -64,45 +64,50 @@
 		</div>
 	</div>
 	<!-- Display the input fields with control -->
-	<!-- <CommentEnhance asnwerPath={content.answers[0]} displayType="up"> -->
-	{#each content?.answers || [] as q, index (q)}
-		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
-			<div>
-				<div class="flex w-full gap-1">
-					<RemoveButton
-						questionLimit={1}
-						deleteQuestion={() => deleteQuestion(index)}
-						questionLength={answersLength}
-						class="rounded-sm"
-					/>
-					<TextInputSimple
-						title="Answer option {index + 1}"
-						titleName="titleAnswer{indexParent}"
-						max={WRITE_AMSWER_MAX}
-						min={WRITE_ANSWER_MIN}
-						validationSchema={writeAnswerSchema}
-						doesLimit={true}
-						inputProperties={{
-							placeholder: 'Your answer option ...'
-						}}
-						class="flex-1 w-full rounded-sm"
-						on:error={(e) => {
-							content.answers[index].error = e.detail;
-						}}
-						bind:inputValue={content.answers[index].answer}
-					/>
+	<CommentEnhance
+		asnwerPath={content.answers[0]}
+		displayType="up"
+		staticDisplay={true}
+	>
+		{#each content?.answers || [] as q, index (q)}
+			<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
+				<div>
+					<div class="flex w-full gap-1">
+						<RemoveButton
+							questionLimit={1}
+							deleteQuestion={() => deleteQuestion(index)}
+							questionLength={answersLength}
+							class="rounded-sm"
+						/>
+						<TextInputSimple
+							title="Answer option {index + 1}"
+							titleName="titleAnswer{indexParent}"
+							max={WRITE_AMSWER_MAX}
+							min={WRITE_ANSWER_MIN}
+							validationSchema={writeAnswerSchema}
+							containerClasses={'w-full'}
+							doesLimit={true}
+							inputProperties={{
+								placeholder: 'Your answer option...'
+							}}
+							class="w-full rounded-sm"
+							on:error={(e) => {
+								content.answers[index].error = e.detail;
+							}}
+							bind:inputValue={content.answers[index].answer}
+						/>
+					</div>
+					<p
+						class={`text-body2 text-error dark:text-dark_error ${
+							!content.answers[index].error ? 'opacity-0' : ''
+						}`}
+					>
+						{content.answers[index].error || 'Placeholder error'}
+					</p>
 				</div>
-				<p
-					class={`text-body2 text-error dark:text-dark_error ${
-						!content.answers[index].error ? 'opacity-0' : ''
-					}`}
-				>
-					{content.answers[index].error || 'Placeholder error'}
-				</p>
 			</div>
-		</div>
-	{/each}
-	<!-- </CommentEnhance> -->
+		{/each}
+	</CommentEnhance>
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>

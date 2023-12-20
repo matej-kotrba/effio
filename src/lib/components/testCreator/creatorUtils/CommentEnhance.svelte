@@ -3,7 +3,6 @@
 	import { twMerge } from 'tailwind-merge';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
-	import TextInput from '~components/inputs/TextInput.svelte';
 	import {
 		RESPONSE_MAX,
 		RESPONSE_MIN,
@@ -14,6 +13,7 @@
 	export let asnwerPath: Answer<unknown>;
 	export let displayType: 'up' | 'side' = 'side';
 	export let displayOnHover: boolean = true;
+	export let staticDisplay: boolean = false;
 
 	let classes = '';
 	export { classes as class };
@@ -22,7 +22,7 @@
 </script>
 
 <div
-	class={twMerge('relative cursor-default group', classes)}
+	class={twMerge('relative cursor-default group/comment', classes)}
 	use:clickOutside
 	on:clickoutside={() => (toggled = false)}
 >
@@ -63,15 +63,31 @@
 			</ErrorEnhance>
 		</div>
 	{/if}
-	<button
-		type="button"
-		on:click={() => {
-			toggled = true;
-		}}
-		class={`absolute duration-150
+	{#if staticDisplay === true}
+		<div class="flex justify-end">
+			<button
+				type="button"
+				on:click={() => {
+					toggled = true;
+				}}
+				class={`duration-150 z-10 p-2 border-2 border-solid rounded-md bg-light_whiter border-light_text_black_80`}
+			>
+				<iconify-icon
+					icon="solar:clipboard-linear"
+					class="grid text-xl place-content-center"
+				/>
+			</button>
+		</div>
+	{:else}
+		<button
+			type="button"
+			on:click={() => {
+				toggled = true;
+			}}
+			class={`absolute duration-150
 		${
 			displayOnHover
-				? 'group-hover:opacity-100 sm:opacity-0 opacity-100'
+				? 'group-hover/comment:opacity-100 sm:opacity-0 opacity-100'
 				: 'opacity-100'
 		}
 		${
@@ -81,11 +97,12 @@
 				? 'top-0 right-0 translate-x-1/2'
 				: ''
 		} z-10 p-1 border-2 border-solid rounded-full bg-light_whiter border-light_text_black_80`}
-	>
-		<iconify-icon
-			icon="solar:clipboard-linear"
-			class="grid text-xl place-content-center"
-		/>
-	</button>
+		>
+			<iconify-icon
+				icon="solar:clipboard-linear"
+				class="grid text-xl place-content-center"
+			/>
+		</button>
+	{/if}
 	<slot />
 </div>

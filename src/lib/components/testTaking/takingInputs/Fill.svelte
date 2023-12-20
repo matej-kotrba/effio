@@ -19,6 +19,12 @@
 			bind:inputValue={question['answer']['options'][index]}
 		/> -->
 		<div class="dropdown dropdown-hover">
+			<ul
+				class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+			>
+				<li><a>Item 1</a></li>
+				<li><a>Item 2</a></li>
+			</ul>
 			<button tabindex="0">
 				<input
 					bind:value={question['answer']['options'][0]}

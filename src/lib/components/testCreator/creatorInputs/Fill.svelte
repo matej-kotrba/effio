@@ -14,6 +14,7 @@
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
 
@@ -122,102 +123,113 @@
 				/>
 				<p>Part {index + 1}</p>
 				<Separator w="100%" h="2px" color="var(--dark-text-white-20)" />
-				<div class="flex flex-col items-start gap-1">
-					<TextInputSimple
-						title="Precedent"
-						titleName="precedentAnswer{indexParent}"
-						max={WRITE_AMSWER_MAX}
-						min={WRITE_ANSWER_MIN}
-						validationSchema={writeAnswerSchema}
-						doesLimit={true}
-						inputProperties={{
-							placeholder: 'Your precedent ...'
-						}}
-						on:error={(e) => {
-							content.answers[index].answer['errors']['precedent'] = e.detail;
-						}}
-						bind:inputValue={content.answers[index].answer.precedent}
-					/>
-					<p
-						class={`text-body2 text-error dark:text-dark_error ${
-							!content.answers[index].answer.errors['precedent']
-								? 'opacity-0'
-								: ''
-						}`}
-					>
-						{content.answers[index].answer.errors['precedent'] ||
-							'Placeholder error'}
-					</p>
-					<Space gap={10} />
-					<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
-					{#each content['answers'][index]['answer']['options'] as option, idx}
-						<div class="flex items-start w-full gap-2">
-							<TextInputSimple
-								title="Answer option {idx + 1}"
-								titleName="fillAnswer{crypto.randomUUID()}"
-								max={WRITE_AMSWER_MAX}
-								min={WRITE_ANSWER_MIN}
-								validationSchema={writeAnswerSchema}
-								doesLimit={true}
-								inputProperties={{
-									placeholder: 'Your answer option ...'
-								}}
-								customContainerStyles="grow"
-								on:error={(e) => {
-									content.answers[index].answer['errors']['options'][idx] =
-										e.detail;
-								}}
-								bind:inputValue={content.answers[index].answer['options'][idx]}
-							/>
-							<RemoveButton
-								questionLimit={1}
-								deleteQuestion={() => deleteSubQuestion(index, idx)}
-								questionLength={content.answers[index].answer.options.length}
-								class="w-10 rounded-md aspect-square"
-							/>
-						</div>
+				<CommentEnhance
+					asnwerPath={content.answers[index]}
+					class="w-full"
+					staticDisplay={true}
+				>
+					<div class="flex flex-col items-start w-full gap-1">
+						<TextInputSimple
+							title="Precedent"
+							titleName="precedentAnswer{indexParent}"
+							max={WRITE_AMSWER_MAX}
+							min={WRITE_ANSWER_MIN}
+							validationSchema={writeAnswerSchema}
+							doesLimit={true}
+							containerClasses="w-full"
+							inputProperties={{
+								placeholder: 'Your precedent ...'
+							}}
+							on:error={(e) => {
+								content.answers[index].answer['errors']['precedent'] = e.detail;
+							}}
+							bind:inputValue={content.answers[index].answer.precedent}
+						/>
 						<p
 							class={`text-body2 text-error dark:text-dark_error ${
-								!content.answers[index].answer.errors.options[idx]
+								!content.answers[index].answer.errors['precedent']
 									? 'opacity-0'
 									: ''
 							}`}
 						>
-							{content.answers[index].answer.errors.options[idx] ||
+							{content.answers[index].answer.errors['precedent'] ||
 								'Placeholder error'}
 						</p>
-					{/each}
-					<div class="mx-auto">
-						<AddNew onClick={() => onAddNewOption(index)} />
+						<Space gap={10} />
+						<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
+						{#each content['answers'][index]['answer']['options'] as option, idx}
+							<div class="flex items-start w-full gap-2">
+								<TextInputSimple
+									title="Answer option {idx + 1}"
+									titleName="fillAnswer{crypto.randomUUID()}"
+									max={WRITE_AMSWER_MAX}
+									min={WRITE_ANSWER_MIN}
+									validationSchema={writeAnswerSchema}
+									containerClasses="w-full"
+									doesLimit={true}
+									inputProperties={{
+										placeholder: 'Your answer option ...'
+									}}
+									customContainerStyles="grow"
+									on:error={(e) => {
+										content.answers[index].answer['errors']['options'][idx] =
+											e.detail;
+									}}
+									bind:inputValue={content.answers[index].answer['options'][
+										idx
+									]}
+								/>
+								<RemoveButton
+									questionLimit={1}
+									deleteQuestion={() => deleteSubQuestion(index, idx)}
+									questionLength={content.answers[index].answer.options.length}
+									class="w-10 rounded-md aspect-square"
+								/>
+							</div>
+							<p
+								class={`text-body2 text-error dark:text-dark_error ${
+									!content.answers[index].answer.errors.options[idx]
+										? 'opacity-0'
+										: ''
+								}`}
+							>
+								{content.answers[index].answer.errors.options[idx] ||
+									'Placeholder error'}
+							</p>
+						{/each}
+						<div class="mx-auto">
+							<AddNew onClick={() => onAddNewOption(index)} />
+						</div>
+						<Space gap={10} />
+						<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
+						<TextInputSimple
+							title="Sequent"
+							titleName="sequentAnswer{indexParent}"
+							max={WRITE_AMSWER_MAX}
+							min={WRITE_ANSWER_MIN}
+							containerClasses="w-full"
+							validationSchema={writeAnswerSchema}
+							doesLimit={true}
+							inputProperties={{
+								placeholder: 'Your sequence ...'
+							}}
+							on:error={(e) => {
+								content.answers[index].answer['errors']['sequent'] = e.detail;
+							}}
+							bind:inputValue={content.answers[index].answer.sequent}
+						/>
+						<p
+							class={`text-body2 text-error dark:text-dark_error ${
+								!content.answers[index].answer.errors['sequent']
+									? 'opacity-0'
+									: ''
+							}`}
+						>
+							{content.answers[index].answer.errors['sequent'] ||
+								'Placeholder error'}
+						</p>
 					</div>
-					<Space gap={10} />
-					<Separator w={'30%'} h={'2px'} color="var(--dark-text-white-20)" />
-					<TextInputSimple
-						title="Sequent"
-						titleName="sequentAnswer{indexParent}"
-						max={WRITE_AMSWER_MAX}
-						min={WRITE_ANSWER_MIN}
-						validationSchema={writeAnswerSchema}
-						doesLimit={true}
-						inputProperties={{
-							placeholder: 'Your sequence ...'
-						}}
-						on:error={(e) => {
-							content.answers[index].answer['errors']['sequent'] = e.detail;
-						}}
-						bind:inputValue={content.answers[index].answer.sequent}
-					/>
-					<p
-						class={`text-body2 text-error dark:text-dark_error ${
-							!content.answers[index].answer.errors['sequent']
-								? 'opacity-0'
-								: ''
-						}`}
-					>
-						{content.answers[index].answer.errors['sequent'] ||
-							'Placeholder error'}
-					</p>
-				</div>
+				</CommentEnhance>
 				<!-- <p
 					class={`text-body2 text-error dark:text-dark_error ${
 						!content.answers[index].answer ? 'opacity-0' : ''

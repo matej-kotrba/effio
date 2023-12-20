@@ -21,6 +21,8 @@
 	let classes = '';
 	export { classes as class };
 
+	export let containerClasses: string = '';
+
 	export let inputValue: HTMLInputAttributes['value'] = '';
 
 	let setError = getContext('setError');
@@ -76,7 +78,7 @@
 	// }
 </script>
 
-<div>
+<div class={twMerge('', containerClasses)}>
 	{#if displayOutside === true && displayTitle === true}
 		<div class="flex items-center justify-between px-1">
 			<label
