@@ -1,4 +1,53 @@
 # Effio
+![Lines of Code](https://aschey.tech/tokei/github/matej-kotrba/effio?labelColor=ffffff&color=f73c00&iconColor=ffffff&style=for-the-badge&label=Lines&logo=https://simpleicons.org/icons/svelte.svg)
+
+> “25 000+ lines of code is a big project” - @ThePrimeagen
+
+<a><img src="logo.png" align="middle" height="256" width="256" ></a>
+## Table of Contents
+
+- [About](#about)
+- [Features](#features)
+- [Building from source](#building-from-source)
+
+## About
+
+Effio is an online tool for creating tests and quizes. Apart from only creating, Effio is designed to work as whole platform for taking tests, sharing them in groups and being able to export and import them to different formats with addition of few unique Effio question types
+
+## Features
+
+Tabulka s tím co funguje atd.
+
+### Hello world
+
+```Ruda
+import "#io"
+
+fun main() {
+    io.println("Hello world")
+}
+```
+
+## Building from source
+
+If you are one of those crazy people and want to modify the source code or have any other reasons to, you are more than welcome to!
+
+First you need to have:
+ 1. Python - https://www.python.org/downloads/
+ 2. Rust - https://www.rust-lang.org/tools/install
+
+Just clone the repository and run `py ruda_build.py`. This should create a  `build/` directory with the whole application. You can move it anywhere you want.
+
+Add `build/bin` to your enviroment path variable and create a new variable `RUDA_PATH` with the path to `build` directory. If this is unclear, look up _How to Change the PATH Environment Variable on Windows_ (or any other platform).
+
+Open new terminal and try `rudavm .\test.rdbin -- Hello, World!`.
+
+## Other
+
+To learn more about the Ruda components see their respective directories. (good luck reading compiler source code)
+
+
+# Effio
 
 ## Goals
 - Develop web application for creating, exporting and importing online tests in GIFT format
