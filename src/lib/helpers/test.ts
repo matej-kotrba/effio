@@ -883,7 +883,6 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
   })
 
   const responseData = await res.json() as CheckTestResponse
-  // console.log(responseData)
 
   if (responseData.success === undefined) throw new Error("Server error")
 

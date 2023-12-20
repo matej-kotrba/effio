@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { loggedInProcedure, router } from "../setup"
+import { loggedInProcedure, procedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 
 export const recordsRouter = router({
-  createTestRecord: loggedInProcedure.input(z.object({
+  createTestRecord: procedure.input(z.object({
     testId: z.string(),
     title: z.string(),
     description: z.string(),
@@ -25,14 +25,14 @@ export const recordsRouter = router({
 
     let subcategoryOwnerId: string | undefined = undefined;
 
-    if (input.subcategoryId) {
+    if (input.subcategoryId && ctx.user?.id) {
       const subcategory = await ctx.prisma.groupSubcategory.findUnique({
         where: {
           id: input.subcategoryId,
           group: {
             users: {
               some: {
-                userId: ctx.userId
+                userId: ctx.user.id
               }
             },
           }
@@ -51,12 +51,12 @@ export const recordsRouter = router({
 
     const createdTest = await ctx.prisma.testRecord.create({
       data: {
-        userId: ctx.userId,
+        userId: ctx.user?.id,
         testId: input.testId,
         title: input.title,
         description: input.description,
         subacategoryId: input.subcategoryId,
-        shouldCountToStatistics: !!(input.subcategoryId && ctx.userId !== subcategoryOwnerId),
+        shouldCountToStatistics: !!(input.subcategoryId && ctx.user?.id && ctx.user?.id !== subcategoryOwnerId),
         userPoints: input.answerContent.reduce((acc, curr) => acc + curr.points, 0),
         questionRecords: {
           createMany: {

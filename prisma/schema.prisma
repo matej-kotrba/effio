@@ -157,13 +157,13 @@ model TestRecord {
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
   testId                  String
-  userId                  String
+  userId                  String?
   subacategoryId          String?
   userPoints              Float             @default(0)
   shouldCountToStatistics Boolean           @default(true)
   test                    TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
   questionRecords         QuestionRecord[]
-  user                    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                    User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   subcategory             GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)
 
   @@index([testId])
