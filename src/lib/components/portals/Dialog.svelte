@@ -32,10 +32,11 @@
 	<form
 		method="dialog"
 		class={twMerge(
-			`overscroll-contain relative mx-auto p-4 max-w-[500px] shadow-md rounded-lg w-full min-w-[200px] bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white`,
+			`overscroll-contains relative mx-auto p-4 max-w-[500px] shadow-md rounded-lg w-full min-w-[200px] bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white`,
 			formClasses
 		)}
 		on:submit={() => {
+			console.log('asd');
 			modal.animate([{ opacity: 1 }, { opacity: 0 }], {
 				duration: 150,
 				easing: 'ease-in-out'

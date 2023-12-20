@@ -29,7 +29,7 @@
 				<button
 					type="button"
 					on:click={() => (showedAnswerIndex = index)}
-					class="absolute p-1 translate-y-1/2 bg-white rounded-full shadow-md right-2 bottom-[90%]"
+					class="absolute p-1 translate-y-1/2 bg-white dark:bg-dark_quaternary rounded-full shadow-md right-2 bottom-[90%]"
 				>
 					<iconify-icon
 						icon="material-symbols:question-mark"
@@ -41,7 +41,7 @@
 						use:clickOutside
 						on:clickoutside={() => (showedAnswerIndex = undefined)}
 						transition:fade={{ duration: 100 }}
-						class="absolute w-full max-w-[60rem] break-words hyphens-auto bottom-[110%] left-1/2 -translate-x-1/2 text-body2 bg-light_grey p-1 rounded-md"
+						class="absolute w-full max-w-[60rem] break-words hyphens-auto bottom-[110%] left-1/2 -translate-x-1/2 text-body2 bg-light_grey dark:bg-dark_quaternary p-1 rounded-md"
 					>
 						<span class="font-semibold">Correct answers</span>
 						<p>
@@ -55,7 +55,7 @@
 			<input
 				bind:value={question['answer']['options'][0]}
 				class={`border-2 border-solid w-40 px-1 py-1 my-1
-		 overflow-hidden duration-150 bg-white rounded-md shadow-lg dark:bg-dark_light_grey
+		 overflow-hidden duration-150 bg-white  rounded-md shadow-lg dark:bg-dark_light_grey
 		 overflow-ellipsis text-light_text_black dark:text-dark_text_white outline-1 outline-transparent outline
 		 focus-within:outline-primary dark:focus-within:outline-dark_primary
 		 ${
@@ -74,7 +74,7 @@
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div
 					tabindex="0"
-					class="dropdown-content px-2 py-1 z-[1] menu p-2 shadow-dark_text_white_20 shadow-md bg-light_grey dark:bg-dark_quaternary rounded-md w-full max-w-[72rem]"
+					class="dropdown-content px-2 py-1 z-[1] menu p-2 shadow-md bg-light_grey dark:bg-dark_quaternary rounded-md w-full max-w-[72rem]"
 				>
 					<span>Comment</span>
 					<Separator w={'100%'} h={'1px'} class="mb-1" />

@@ -29,7 +29,7 @@
 	{#if toggled}
 		<div
 			transition:fade={{ duration: 100 }}
-			class="absolute left-0 w-full bg-light_grey_dark shadow-md rounded-sm bottom-4 z-[20] p-2 md:p-4"
+			class="absolute left-0 w-full bg-light_grey_dark dark:bg-dark_terciary shadow-md rounded-sm bottom-4 z-[20] p-2 md:p-4"
 		>
 			<div class="flex justify-between items-centers text-body1">
 				<span>Response for the answer</span>
@@ -70,7 +70,7 @@
 				on:click={() => {
 					toggled = true;
 				}}
-				class={`duration-150 z-10 p-2 border-2 border-solid rounded-md bg-light_whiter border-light_text_black_80`}
+				class={`duration-150 z-10 p-2 border-2 border-solid rounded-md bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
 			>
 				<iconify-icon
 					icon="solar:clipboard-linear"
@@ -96,7 +96,7 @@
 				: displayType === 'side'
 				? 'top-0 right-0 translate-x-1/2'
 				: ''
-		} z-10 p-1 border-2 border-solid rounded-full bg-light_whiter border-light_text_black_80`}
+		} z-10 p-1 border-2 border-solid rounded-full bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
 		>
 			<iconify-icon
 				icon="solar:clipboard-linear"

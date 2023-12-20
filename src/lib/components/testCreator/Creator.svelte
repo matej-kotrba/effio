@@ -42,17 +42,21 @@
 	import { XL } from '~/utils/responsive';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
 
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 
 	// Dropdown state
 	let isDropdownOpen = false;
-	let newInputModal: HTMLDialogElement;
 
 	// Mobile version sidebar
 	let isInputSidebarOpen = false;
 	let windowWidth = browser && window ? window.innerWidth : 1920;
+
+	// Dialog controls
+	let newInputOpen: () => void;
+	let newInputClose: () => void;
 
 	let inputs: HTMLDivElement[] = [];
 
@@ -96,7 +100,7 @@
 	function onNewInputClick(input: QuestionTemplate) {
 		const newQuestionData = createNewInput(input);
 
-		newInputModal.close();
+		newInputClose();
 		addNewQuestion(
 			newQuestionData as QuestionClient,
 			$testObject.questions.length
@@ -178,34 +182,46 @@
 <div
 	class="relative bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
-		<div class="relative">
-			{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
-				<div transition:fly={{ x: -300 }} class="h-full">
-					<CreatorInputSidebar
-						inputs={inputTemplates}
-						class="self-start"
-						on:drop={onInputDrop}
-					/>
-				</div>
-			{:else if $testObject.questions.length > 0 && !(isInputSidebarOpen === true || windowWidth >= XL)}
-				<div class="sticky top-0 left-0 grid h-screen place-content-center">
+	<div
+		class="relative grid__container"
+		class:empty={$testObject.questions.length === 0}
+	>
+		<!-- <div
+			style={`position: ${
+				$testObject.questions.length > 0 &&
+				(isInputSidebarOpen === true || windowWidth >= XL)
+					? 'relative'
+					: 'static'
+			};`}
+		> -->
+		{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
+			<div transition:fly={{ x: -300 }} class="h-full">
+				<CreatorInputSidebar
+					inputs={inputTemplates}
+					class="self-start"
+					on:drop={onInputDrop}
+				/>
+			</div>
+		{:else if $testObject.questions.length > 0 && !(isInputSidebarOpen === true || windowWidth >= XL)}
+			<div class="sticky top-0 z-10 flex justify-center w-full">
+				<div class="w-full h-12 max-w-[600px]">
 					<button
 						type="button"
-						on:click={() => newInputModal?.showModal()}
-						class="grid w-full h-[90vh] p-2 duration-150 rounded-md shadow-md shadow-light_text_black_40 sm:w-12 bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark sm:aspect-square"
+						on:click={() => newInputOpen()}
+						class="grid w-full h-full p-2 duration-150 rounded-md shadow-md shadow-light_text_black_40 bg-light_grey dark:bg-dark_light_grey place-content-center hover:bg-light_grey_dark dark:hover:bg-dark_terciary"
 					>
 						<iconify-icon icon="tabler:dots" class="text-3xl" />
 					</button>
 				</div>
-			{/if}
-		</div>
+			</div>
+		{/if}
+		<!-- </div> -->
 		<div class="px-1 sm:px-2 md:px-4">
 			<!-- The dropdown for new input -->
-			<dialog class="modal" bind:this={newInputModal}>
+			<Dialog bind:open={newInputOpen} bind:close={newInputClose}>
 				<form
 					method="dialog"
-					class="modal-box max-w-[1000px] bg-light_whiter dark:bg-dark_grey"
+					class="w-full max-w-[1000px] bg-light_whiter dark:bg-dark_grey"
 				>
 					<h3
 						class="text-lg font-bold text-light_text_black dark:text-dark_text_white"
@@ -239,10 +255,10 @@
 				<form method="dialog" class="modal-backdrop">
 					<button class="cursor-default">close</button>
 				</form>
-			</dialog>
+			</Dialog>
 			<div
 				role="group"
-				class="relative flex flex-col gap-2 px-0 sm:px-2"
+				class="relative flex flex-col items-center gap-2 px-0 xl:items-start sm:px-2"
 				on:dragleave|self={() => {
 					displayedActivatorId = -1;
 				}}
@@ -264,7 +280,7 @@
 							/>
 							<div class="grid col-start-2 row-start-2 place-content-center">
 								<BasicButton
-									onClick={() => newInputModal?.showModal()}
+									onClick={() => newInputOpen()}
 									title="Add question"
 								/>
 							</div>
@@ -354,16 +370,16 @@
 
 	@media (max-width: 1280px) {
 		.grid__container {
-			grid-template-columns: 40px 1fr;
+			grid-template-columns: 1fr;
 		}
 	}
 
-	@media (max-width: 640px) {
+	/* @media (max-width: 640px) {
 		.grid__container {
 			grid-template-columns: 1fr;
 			grid-template-rows: 40px 1fr;
 		}
-	}
+	} */
 
 	.empty > *:nth-child(1) {
 		grid-column-start: 1;
