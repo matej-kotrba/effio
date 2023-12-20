@@ -31,6 +31,15 @@ export const questionMethods: QuestionMethods = {
   }
 }
 
+type FillAdditionalMethods = {
+  "checkOptionCorrectness": (option: FillQuestion["answers"][number]["answer"]["options"][number], correctOptions: FillQuestion["answers"][number]["answer"]["options"]) => boolean
+}
+
+type AdditionalMethods = {
+  "fill": FillAdditionalMethods,
+  [key: string]: Record<string, unknown>
+}
+
 type QuestionContentTransformation = {
   [Key in keyof QuestionTypeMap]: {
     // Creates new blank question of the specific type
@@ -45,8 +54,7 @@ type QuestionContentTransformation = {
     "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => QuestionServerCheckResponse<any>["isCorrect"],
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] },
     "calculatePoints": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key], maxPoints: number) => number,
-    [key: string]: any
-  }
+  } & (Key extends string ? AdditionalMethods[Key] : object)
 }
 
 export const QUESTION_LIMIT = 25;

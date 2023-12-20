@@ -4,6 +4,7 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import { questionContentFunctions } from '~helpers/test/questionFunctions';
 	import { testObject } from '~stores/testObject';
+	import { clickOutside } from '~use/clickOutside';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<FillQuestion> | null =
@@ -24,10 +25,11 @@
 			bind:inputValue={question['answer']['options'][index]}
 		/> -->
 		<div class="dropdown dropdown-hover">
-			{#if resultFormat && questionContentFunctions}
+			{#if resultFormat && !questionContentFunctions['fill']['checkOptionCorrectness'](resultFormat.userAnswer.answers[index].answer.options[0], resultFormat.correctAnswer.answers[index].answer.options)}
 				<button
 					type="button"
-					class="absolute p-1 translate-y-1/2 bg-white rounded-full shadow-md right-2 bottom-full"
+					on:click={() => (showedAnswerIndex = index)}
+					class="absolute p-1 translate-y-1/2 bg-white rounded-full shadow-md right-2 bottom-[90%]"
 				>
 					<iconify-icon
 						icon="material-symbols:question-mark"
@@ -36,10 +38,12 @@
 				</button>
 				{#if showedAnswerIndex === index}
 					<div
-						transition:fade
-						class="absolute w-fit max-w-[20rem] break-words hyphens-auto bottom-[110%] left-1/2 -translate-x-1/2"
+						use:clickOutside
+						on:clickoutside={() => (showedAnswerIndex = undefined)}
+						transition:fade={{ duration: 100 }}
+						class="absolute w-full max-w-[60rem] break-words hyphens-auto bottom-[110%] left-1/2 -translate-x-1/2 text-body2 bg-light_grey p-1 rounded-md"
 					>
-						<span>Correct answers</span>
+						<span class="font-semibold">Correct answers</span>
 						<p>
 							{resultFormat['correctAnswer']['answers'][index]['answer'][
 								'options'
@@ -50,24 +54,27 @@
 			{/if}
 			<input
 				bind:value={question['answer']['options'][0]}
-				class={`border-2 border-solid border-transparent w-40 px-1 py-1 my-1
+				class={`border-2 border-solid w-40 px-1 py-1 my-1
 		 overflow-hidden duration-150 bg-white rounded-md shadow-lg dark:bg-dark_light_grey
 		 overflow-ellipsis text-light_text_black dark:text-dark_text_white outline-1 outline-transparent outline
 		 focus-within:outline-primary dark:focus-within:outline-dark_primary
 		 ${
 				resultFormat
-					? resultFormat['isCorrect']
+					? questionContentFunctions['fill']['checkOptionCorrectness'](
+							resultFormat.userAnswer.answers[index].answer.options[0],
+							resultFormat.correctAnswer.answers[index].answer.options
+					  )
 						? 'border-success'
 						: 'border-error dark:border-dark_error'
 					: 'border-transparent'
 			}`}
 				disabled={!!resultFormat}
 			/>
-			{#if resultFormat && resultFormat.correctAnswer.answers[index].response}
+			{#if resultFormat && resultFormat.correctAnswer.answers[index].response && (showedAnswerIndex === undefined || showedAnswerIndex === index)}
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div
 					tabindex="0"
-					class="dropdown-content px-2 py-1 z-[1] menu p-2 shadow-dark_text_white_20 shadow-md bg-light_grey dark:bg-dark_quaternary rounded-md w-max max-w-[72rem]"
+					class="dropdown-content px-2 py-1 z-[1] menu p-2 shadow-dark_text_white_20 shadow-md bg-light_grey dark:bg-dark_quaternary rounded-md w-full max-w-[72rem]"
 				>
 					<span>Comment</span>
 					<Separator w={'100%'} h={'1px'} class="mb-1" />
