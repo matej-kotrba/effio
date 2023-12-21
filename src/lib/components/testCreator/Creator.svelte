@@ -43,7 +43,6 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
-
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
 

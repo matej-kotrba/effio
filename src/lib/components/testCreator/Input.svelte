@@ -40,7 +40,10 @@ will be used in the test creator -->
 	}
 
 	$: {
-		if ($testObject.questions[index].points === undefined) {
+		if (
+			$testObject.questions[index].points &&
+			$testObject.questions[index].points === undefined
+		) {
 			$testObject.questions[index].points = 2;
 		}
 	}

@@ -74,127 +74,115 @@
 	}
 </script>
 
-<div
-	in:fly={{
-		x: 300,
-		duration: sectionTransitionDuration,
-		delay: sectionTransitionDuration
-	}}
-	out:fly={{
-		x: -300,
-		duration: $navigating === null ? sectionTransitionDuration : 0
-	}}
->
-	<div class="flex flex-col gap-4">
-		<ErrorEnhance error={$testObject.errors.title}>
-			<TextInput
-				displayOutside={true}
-				title="What will be the name of your test?"
-				titleName="name"
-				inputValue={$testObject['title']}
-				validationSchema={titleSchema}
-				max={TITLE_MAX}
-				min={TITLE_MIN}
-				on:inputChange={(data) => {
-					$testObject['title'] = data.detail;
-				}}
-				on:error={(data) => {
-					$testObject.errors.title = data.detail;
-				}}
-			/>
-		</ErrorEnhance>
+<div class="flex flex-col w-full gap-4">
+	<ErrorEnhance error={$testObject.errors.title}>
+		<TextInput
+			displayOutside={true}
+			title="What will be the name of your test?"
+			titleName="name"
+			inputValue={$testObject['title']}
+			validationSchema={titleSchema}
+			max={TITLE_MAX}
+			min={TITLE_MIN}
+			on:inputChange={(data) => {
+				$testObject['title'] = data.detail;
+			}}
+			on:error={(data) => {
+				$testObject.errors.title = data.detail;
+			}}
+		/>
+	</ErrorEnhance>
 
-		<div class="flex gap-4">
-			<div class="w-full">
-				<ErrorEnhance error={$testObject.errors.description}>
-					<TextAreaInput
-						title="Describe what will your test be about."
-						titleName="name"
-						inputValue={$testObject['description']}
-						validationSchema={descriptionSchema}
-						min={DESCRIPTION_MIN}
-						max={DESCRIPTION_MAX}
-						on:inputChange={(data) => {
-							$testObject['description'] = data.detail;
-						}}
-						on:error={(data) => {
-							$testObject.errors.description = data.detail;
-						}}
-					/>
-				</ErrorEnhance>
-			</div>
-			<ImageImport
-				title="Test photo"
-				bind:exportedFile={testImageFile}
-				defualtImage={testData?.imageUrl}
-			/>
+	<div class="flex gap-4">
+		<div class="w-full">
+			<ErrorEnhance error={$testObject.errors.description}>
+				<TextAreaInput
+					title="Describe what will your test be about."
+					titleName="name"
+					inputValue={$testObject['description']}
+					validationSchema={descriptionSchema}
+					min={DESCRIPTION_MIN}
+					max={DESCRIPTION_MAX}
+					on:inputChange={(data) => {
+						$testObject['description'] = data.detail;
+					}}
+					on:error={(data) => {
+						$testObject.errors.description = data.detail;
+					}}
+				/>
+			</ErrorEnhance>
 		</div>
-		<div class="flex justify-end">
-			<Dialog
-				bind:open={openTagModal}
-				title="Tag Selection"
-				formClasses="max-w-[750px]"
-			>
-				<div class="grid grid-cols-5">
-					<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
-						<!-- <span class="text-body1">Recently Used</span> -->
-						<div class="flex items-center justify-center col-span-5">
-							<!-- <span>All tags</span> -->
-							<SearchBar
-								searchFunction={onTagSearch}
-								class="flex-1 px-4 max-w-[350px]"
-							/>
-							<IconButton
-								icon="fluent:delete-28-filled"
-								tootlip="Clear all filters"
-								onClick={clearAllFilters}
-								containerClasses="dropdown-top"
-								tooltipClasses="mb-2"
-							/>
-						</div>
-					</div>
-					<div class="flex flex-col col-span-1 gap-1" />
-					<div
-						class="grid grid-cols-5 col-span-5 gap-2 max-h-[200px] h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
-					>
-						{#if visibleTags.length === 0}
-							<div class="col-span-5">
-								<h6 class="text-center">No tag like that exists.</h6>
-								<iconify-icon
-									icon="solar:mask-sad-linear"
-									class="grid place-content-center text-8xl text-light_text_black_20 dark:text-dark_text_white_20"
-								/>
-							</div>
-						{/if}
-						{#each visibleTags as tag}
-							<TagContainer
-								{tag}
-								isSelected={$testObject.tagIds.includes(tag.id)}
-								onSelect={(tag) => {
-									if ($testObject.tagIds.includes(tag.id)) {
-										$testObject.tagIds = $testObject.tagIds.filter(
-											(id) => id !== tag.id
-										);
-									} else {
-										$testObject.tagIds = [...$testObject.tagIds, tag.id];
-									}
-								}}
-							/>
-						{/each}
+		<ImageImport
+			title="Test photo"
+			bind:exportedFile={testImageFile}
+			defualtImage={testData?.imageUrl}
+		/>
+	</div>
+	<div class="flex justify-end">
+		<Dialog
+			bind:open={openTagModal}
+			title="Tag Selection"
+			formClasses="max-w-[750px]"
+		>
+			<div class="grid grid-cols-5">
+				<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
+					<!-- <span class="text-body1">Recently Used</span> -->
+					<div class="flex items-center justify-center col-span-5">
+						<!-- <span>All tags</span> -->
+						<SearchBar
+							searchFunction={onTagSearch}
+							class="flex-1 px-4 max-w-[350px]"
+						/>
+						<IconButton
+							icon="fluent:delete-28-filled"
+							tootlip="Clear all filters"
+							onClick={clearAllFilters}
+							containerClasses="dropdown-top"
+							tooltipClasses="mb-2"
+						/>
 					</div>
 				</div>
-			</Dialog>
-			<button
-				on:click={openTagModal}
-				class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
-			>
-				Tag Selection
-			</button>
-			<GroupSelection testId={testData?.id} />
-		</div>
-		{#if testType !== 'PROGRAMMING'}
-			<MarkSystem />
-		{/if}
-		<slot {testImageFile} />
+				<div class="flex flex-col col-span-1 gap-1" />
+				<div
+					class="grid grid-cols-5 col-span-5 gap-2 max-h-[200px] h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
+				>
+					{#if visibleTags.length === 0}
+						<div class="col-span-5">
+							<h6 class="text-center">No tag like that exists.</h6>
+							<iconify-icon
+								icon="solar:mask-sad-linear"
+								class="grid place-content-center text-8xl text-light_text_black_20 dark:text-dark_text_white_20"
+							/>
+						</div>
+					{/if}
+					{#each visibleTags as tag}
+						<TagContainer
+							{tag}
+							isSelected={$testObject.tagIds.includes(tag.id)}
+							onSelect={(tag) => {
+								if ($testObject.tagIds.includes(tag.id)) {
+									$testObject.tagIds = $testObject.tagIds.filter(
+										(id) => id !== tag.id
+									);
+								} else {
+									$testObject.tagIds = [...$testObject.tagIds, tag.id];
+								}
+							}}
+						/>
+					{/each}
+				</div>
+			</div>
+		</Dialog>
+		<button
+			on:click={openTagModal}
+			class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
+		>
+			Tag Selection
+		</button>
+		<GroupSelection testId={testData?.id} />
 	</div>
+	{#if testType !== 'PROGRAMMING'}
+		<MarkSystem />
+	{/if}
+	<slot {testImageFile} />
 </div>
