@@ -24,10 +24,19 @@
 	import TestDetails from './TestDetails.svelte';
 	import type { TestType } from '@prisma/client';
 	import { onMount } from 'svelte';
+	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
+	import { validateTestAndRecordIt } from '~helpers/testGroupCalls';
+	import { goto } from '$app/navigation';
+	import { createTRPCErrorNotification } from '~/lib/utils/notification';
+	import { TRPCClientError } from '@trpc/client';
+	import Skewed from '~components/loaders/Skewed.svelte';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data;
 
 	const SECTION_TRANSITION_DURATION = 400;
+
+	let finishModal: HTMLDialogElement;
 
 	initializeNewTestToTestStore({
 		title: '',
@@ -59,6 +68,49 @@
 
 	$: ($testObject.questions = []), testType;
 
+	let isSubmitting = false;
+	let isSuccess = false;
+
+	async function checkTestOnClientAndServerAndPostTestToDB(
+		isPublished: boolean,
+		testImageFile?: File
+	) {
+		if (isSubmitting) return;
+		isSubmitting = true;
+
+		// Programming tests should not have marking system
+
+		await validateTestAndRecordIt({
+			type: 'create',
+			data: {
+				title: $testObject.title,
+				description: $testObject.description,
+				questions: $testObject.questions,
+				markSystem: testType === 'PROGRAMMING' ? {} : $testObject.markSystem,
+				isPublished: isPublished,
+				testType: testType,
+				image: testImageFile || undefined,
+				tagIds: $testObject.tagIds
+			},
+			callbacks: {
+				onSaveToDB(response) {
+					isSuccess = response.success;
+					isSubmitting = false;
+
+					if (isSuccess) {
+						goto('/dashboard/test-collection');
+					}
+				},
+				onErrorSaveToDB(e) {
+					if (e instanceof TRPCClientError) {
+						createTRPCErrorNotification(e);
+					}
+					isSubmitting = false;
+				}
+			}
+		});
+	}
+
 	function handleParsedData(e: CustomEvent) {
 		console.log(e.detail);
 		try {
@@ -89,28 +141,9 @@
 				questions: $testObject.questions
 			});
 			console.log(result);
-			// if (result['store']['questions_errors']) {
-			// 	result.store.questions_errors.forEach((item, index) => {
-			// 		$testObject.questions[index].errors = item;
-			// 	});
-			// }
 
 			$testObject = $testObject;
 			if (result['isError']) {
-				// console.log(result.store);
-				// if (result.store?.questions_errors) {
-				// 	const firstErrorIndex = result['store']['questions_errors'].findIndex(
-				// 		(item) => {
-				// 			return (
-				// 				Object.entries(item).reduce((acc, [_, value]) => {
-				// 					if (value) return acc + 1;
-				// 					return acc;
-				// 				}, 0) > 0
-				// 			);
-				// 		}
-				// 	);
-				// 	console.log(firstErrorIndex);
-				// }
 				toast.error(
 					result['message'] ||
 						'Something with validating your test went wrong 😕'
@@ -144,39 +177,6 @@
 	let scrollToInput: ((index: number) => void) | undefined = undefined;
 </script>
 
-<!-- <BasicButton
-				title="Continue"
-				onClick={() => {
-					testCreationProgress.templateDone = true;
-				}}
-				buttonAttributes={{ disabled: !Number.isInteger(templatesActive) }}
-			>
-				<Icon icon="bxs:right-arrow" class="text-md" />
-			</BasicButton>
-			<BasicButton
-					title="Continue"
-					onClick={async () => {
-						// const result = await isValidatInputServer($testObject);
-						// $testObject['questions'] = result['obj']['questions'];
-						// if (!result['success']) return;
-						// testCreationProgress.constructingDone = true;
-
-						const result = isTestValidAndSetErrorsToTestObject({
-							questions: $testObject.questions
-						});
-
-						if (result['store']['questions']) {
-							$testObject['questions'] = result['store']['questions'];
-						}
-
-						$testObject = $testObject;
-						if (result['isError']) return;
-						testCreationProgress.constructingDone = true;
-					}}
-					buttonAttributes={{ disabled: false }}
-				>
-					<Icon icon="bxs:right-arrow" class="text-md" />
-				</BasicButton> -->
 <DashboardTitle
 	title="Create your new test"
 	subtitle="Choose a template and make a new test using many prebuilt inputs."
@@ -359,39 +359,106 @@
 				<ProgrammingCreator programmingTemplate={data.programmingTemplate} />
 			{/if}
 			<Space />
-
-			<!-- {#if $testObject.questions.length > 0}
-				<BasicButton
-					title="Continue"
-					onClick={async () => {
-						// const result = await isValidatInputServer($testObject);
-						// $testObject['questions'] = result['obj']['questions'];
-						// if (!result['success']) return;
-						// testCreationProgress.constructingDone = true;
-
-						const result = isTestValidAndSetErrorsToTestObject({
-							questions: $testObject.questions
-						});
-
-						if (result['store']['questions']) {
-							$testObject['questions'] = result['store']['questions'];
-						}
-
-						$testObject = $testObject;
-						if (result['isError']) return;
-						testCreationProgress.constructingDone = true;
-					}}
-					buttonAttributes={{ disabled: false }}
-				>
-					<Icon icon="bxs:right-arrow" class="text-md" />
-				</BasicButton>
-			{/if} -->
 		</div>
 	{:else}
 		<TestDetails
 			sectionTransitionDuration={SECTION_TRANSITION_DURATION}
 			{testType}
-		/>
+			let:testImageFile
+		>
+			<div class="flex justify-center gap-6 my-4">
+				<BasicButton
+					onClick={() => {}}
+					title={'Preview'}
+					class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
+				/>
+				<BasicButton
+					onClick={() => {
+						const result = isTestValidAndSetErrorsToTestObject({
+							title: $testObject.title,
+							description: $testObject.description,
+							questions: $testObject.questions,
+							markSystem: $testObject.markSystem
+						});
+
+						if (result['isError']) {
+							$testObject.errors = result['store']['errors'];
+							return;
+						}
+						finishModal?.showModal();
+					}}
+					title={'Finish'}
+				/>
+			</div>
+			<dialog bind:this={finishModal} class="modal">
+				<form
+					method="dialog"
+					class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
+				>
+					<SuccessKeyframe
+						successMessage="Success!"
+						visible={isSuccess}
+						class="absolute top-0 left-0 w-full h-full bg-white dark:bg-dark_grey"
+					/>
+					<div
+						class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting
+							? 'opacity-100 pointer-events-auto'
+							: 'opacity-0 pointer-events-none'}"
+					>
+						<Skewed />
+					</div>
+					<div class="modal-action">
+						<button type="button" on:click={() => finishModal.close()}>
+							<iconify-icon
+								icon="ic:round-close"
+								class="absolute text-2xl top-4 right-4"
+							/></button
+						>
+					</div>
+					<h3 class="text-lg font-bold text-center">Finishing your test</h3>
+					<Separator
+						w={'80%'}
+						h={'1px'}
+						color={$applicationStates['darkMode']
+							? 'var(--dark-text-white-20)'
+							: 'var(--light-text-black-20)'}
+					/>
+					<p class="py-4 text-center text-body1">
+						Your test named <span class="block font-semibold"
+							>{$testObject['title']}</span
+						><Space gap={20} /> with a description:
+						<span class="block font-semibold">{$testObject['description']}</span
+						><br />
+						<Separator
+							w={'50%'}
+							h={'1px'}
+							color={$applicationStates['darkMode']
+								? 'var(--dark-text-white-20)'
+								: 'var(--light-text-black-20)'}
+						/>
+						should be
+					</p>
+					<div class="flex justify-center gap-3">
+						<button
+							type="button"
+							disabled={isSubmitting}
+							class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
+							on:click={() =>
+								checkTestOnClientAndServerAndPostTestToDB(false, testImageFile)}
+							>Saved as draft</button
+						>
+						<button
+							type="button"
+							disabled={isSubmitting}
+							class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
+							on:click={() =>
+								checkTestOnClientAndServerAndPostTestToDB(true, testImageFile)}
+							>Published</button
+						>
+					</div>
+				</form>
+			</dialog></TestDetails
+		>
 	{/if}
 </div>
 
