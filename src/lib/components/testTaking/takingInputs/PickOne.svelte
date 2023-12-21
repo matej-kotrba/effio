@@ -8,19 +8,28 @@
 
 	$: content = $testObject.questions[questionIndex].content as PickOneQuestion;
 
-	let selectedInput: number = (
-		$testObject.questions[questionIndex]['content'] as PickOneQuestion
-	)['correctAnswerId'];
+	let selectedInput: number | undefined = undefined;
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
 		'correctAnswerId'
-	] = selectedInput;
+	] =
+		selectedInput !== undefined
+			? ($testObject.questions[questionIndex]['content'] as PickOneQuestion)
+					.answers[selectedInput].id
+			: undefined;
+
+	console.log(resultFormat);
 
 	// Update the selectedInput based on the resultFormat
 	$: {
 		if (resultFormat) {
-			selectedInput = resultFormat.userAnswer.correctAnswerId;
+			selectedInput = resultFormat.userAnswer.answers.findIndex(
+				(item) =>
+					item.id ===
+					(resultFormat as NonNullable<typeof resultFormat>).userAnswer
+						.correctAnswerId
+			);
 		}
 	}
 </script>
