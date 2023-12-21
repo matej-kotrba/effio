@@ -67,8 +67,8 @@
 					isProcessing = true;
 				}}
 				class="flex items-center gap-3 px-6 py-2 text-orange-400 duration-100 border-2 border-orange-400 border-solid rounded-md active:scale-90 hover:scale-105"
-				><Icon icon="devicon:google" /><span class="font-semibold text-body2"
-					>Google</span
+				><iconify-icon icon="devicon:google" /><span
+					class="font-semibold text-body2">Google</span
 				></button
 			>
 			<span class="text-light_text_black dark:text-dark_text_white_40">or</span>
@@ -79,8 +79,8 @@
 					isProcessing = true;
 				}}
 				class="flex items-center gap-3 px-6 py-2 text-black duration-100 border-2 border-black border-solid rounded-md dark:border-white dark:text-white active:scale-90 hover:scale-105"
-				><Icon icon="mdi:github" /><span class="font-semibold text-body2"
-					>GitHub</span
+				><iconify-icon icon="mdi:github" /><span
+					class="font-semibold text-body2">GitHub</span
 				></button
 			>
 		</div>

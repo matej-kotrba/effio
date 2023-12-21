@@ -33,7 +33,7 @@
 				style="box-shadow: 0 0 30px 25px {lineColor};"
 			/>
 			<div class="relative z-10">
-				<Icon
+				<iconify-icon
 					{icon}
 					class="text-2xl sm:text-4xl text-light_text_black dark:text-dark_text_white"
 				/>

@@ -337,7 +337,7 @@
 				}}
 				buttonAttributes={{ disabled: !Number.isInteger(templatesActive) }}
 			>
-				<Icon icon="bxs:right-arrow" class="text-md" />
+				<iconify-icon icon="bxs:right-arrow" class="text-md" />
 			</BasicButton>
 		</div>
 		<!-- Else if  -->
