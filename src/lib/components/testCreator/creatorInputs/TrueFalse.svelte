@@ -95,7 +95,7 @@
 						(content['answers'][index]['isTrue'] =
 							!content['answers'][index]['isTrue'])}
 				>
-					<Icon icon="charm:tick" class="text-3xl" />
+					<iconify-icon icon="charm:tick" class="text-3xl" />
 				</button>
 			</div>
 			<p

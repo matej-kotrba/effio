@@ -346,7 +346,7 @@
 						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
-							<Icon icon="material-symbols:arrow-right-alt-rounded" />
+							<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
 						</CallToAction>
 					</div>
 				</div>
@@ -406,7 +406,7 @@
 						/>
 						<Space gap={36} />
 						<CallToAction text={'Visit'} center="right">
-							<Icon icon="material-symbols:arrow-right-alt-rounded" />
+							<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
 						</CallToAction>
 					</div>
 				</div>

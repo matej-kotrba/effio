@@ -26,7 +26,7 @@
 					target="_blank"
 					referrerpolicy="no-referrer"
 				>
-					<Icon
+					<iconify-icon
 						icon="mdi:github"
 						class="mx-auto text-[3rem] text-light_text_black dark:text-dark_text_white"
 					/>

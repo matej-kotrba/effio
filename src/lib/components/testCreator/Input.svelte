@@ -61,7 +61,7 @@ will be used in the test creator -->
 			on:mousedown={dispatchDragEvent}
 			on:touchstart={dispatchDragEvent}
 		>
-			<Icon
+			<iconify-icon
 				icon="akar-icons:drag-horizontal"
 				class="text-3xl text-light_text_black dark:text-dark_text_white_80"
 			/>
@@ -85,7 +85,7 @@ will be used in the test creator -->
 				}}
 				class=" group"
 			>
-				<Icon
+				<iconify-icon
 					icon="material-symbols:close-rounded"
 					class="text-3xl group-hover:rotate-90 text-light_text_black group-hover:text-error dark:text-dark_error"
 					style="transition: 200ms transform;"

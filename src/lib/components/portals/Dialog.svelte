@@ -58,7 +58,7 @@
 		<div class="flex items-start justify-between m-0 modal-action">
 			<h4 class={twMerge('font-semibold text-h6', titleClasses)}>{title}</h4>
 			<button type="button" on:click={() => close()}
-				><Icon icon="ic:round-close" class="text-2xl" /></button
+				><iconify-icon icon="ic:round-close" class="text-2xl" /></button
 			>
 		</div>
 		<slot />
