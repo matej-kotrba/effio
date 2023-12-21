@@ -3,12 +3,15 @@
 
 > “25 000+ lines of code is a big project” - @ThePrimeagen
 
-<a><img src="logo.png" align="middle" height="256" width="256" ></a>
+<a><img src="./static/imgs/effio/text.png" align="middle" width="256" ></a>
 ## Table of Contents
 
 - [About](#about)
 - [Features](#features)
-- [Building from source](#building-from-source)
+- [Goals](#goals)
+- [Author](#author)
+- [Consultants](#consultants)
+- [Techstack](#techstack)
 
 ## About
 
@@ -16,43 +19,24 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 
 ## Features
 
-Tabulka s tím co funguje atd.
-
-### Hello world
-
-```Ruda
-import "#io"
-
-fun main() {
-    io.println("Hello world")
-}
-```
-
-## Building from source
-
-If you are one of those crazy people and want to modify the source code or have any other reasons to, you are more than welcome to!
-
-First you need to have:
- 1. Python - https://www.python.org/downloads/
- 2. Rust - https://www.rust-lang.org/tools/install
-
-Just clone the repository and run `py ruda_build.py`. This should create a  `build/` directory with the whole application. You can move it anywhere you want.
-
-Add `build/bin` to your enviroment path variable and create a new variable `RUDA_PATH` with the path to `build` directory. If this is unclear, look up _How to Change the PATH Environment Variable on Windows_ (or any other platform).
-
-Open new terminal and try `rudavm .\test.rdbin -- Hello, World!`.
-
-## Other
-
-To learn more about the Ruda components see their respective directories. (good luck reading compiler source code)
-
-
-# Effio
+- [ ] Test creator
+    - [x] Question Types - Pick One, True/False, Connect, Write, Fill, Geography
+    - [x] Grades - custom marking
+    - [x] Comments - question responses
+    - [x] Import and export of GIFT format
+    - [x] Programming test
+    - [ ] Test templates 
+- [x] Community place
+    - [x] Showing tests
+        - [x] Infinite scrolling functionality
+        - [x] Depending on release date and rating
+        - [x] Showing relevant tests which were released recently
+        - [ ] Showing user specific relevant tests    
 
 ## Goals
 - Develop web application for creating, exporting and importing online tests in GIFT format
 - Create community place where you can publish your own tests and browse tests of others
-- Make fully scalable, typesafe and tested application
+- Make fully scalable, typesafe and performant application
 
 
 ## Author
@@ -65,7 +49,9 @@ To learn more about the Ruda components see their respective directories. (good 
 
 ## Techstack
 #### About techstack
-- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create serverless web application using modern technologies with typesafety and for the most part without the need of own server
+- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create typesafe serverless application using cloud based providers without need of own server
+
+> “The name is Sveltegen” - @ThePrimeagen
 
 ### Used technologies:
 - SvelteKit
@@ -83,9 +69,6 @@ To learn more about the Ruda components see their respective directories. (good 
 - Prisma
 - Auth
   - Auth.js (Oauth - Google, Github)
-- Testing
-  - Vitest (Jest)
-  - Cypress
 - Bundler
   - Vite
 - Package manager
@@ -98,11 +81,12 @@ To learn more about the Ruda components see their respective directories. (good 
 
 
 ## Timeline
-#### January -> April - Learning stack and testing it separatly
-#### April -> May - Building frontend for Effio
-#### May -> June - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
-#### June -> July - Displaying tests, taking them and being able to visit previously taken ones, implemented drag and drop input creation in test creator
-#### August -> Now - Creating more input types, darkmode
+- January -> April - Learning stack and testing it separatly
+- April -> May - Building frontend for Effio
+- May -> June - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
+- June -> July - Displaying tests, taking them and being able to visit previously taken ones, implemented drag and drop input creation in test creator
+- August -> October - Creating more input types, darkmode, refactoring and leveling up quality of life in app
+- November -> December - Programming test, many bug fixes, refactoring, comments and making useful features
 
 ## Sources
 - Youtube
