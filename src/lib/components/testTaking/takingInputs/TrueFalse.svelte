@@ -18,7 +18,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	{#each content['answers'] as { answer }, index}
+	{#each content['answers'] as { answer, id }, index}
 		<button
 			type="button"
 			disabled={!!resultFormat}
@@ -48,7 +48,7 @@
 			</div>
 			<div class="flex items-center gap-2">
 				{#if resultFormat?.isCorrect === false || resultFormat?.isCorrect === 'partial'}
-					{#if resultFormat.correctAnswer.answers[index].isTrue}
+					{#if resultFormat.correctAnswer.answers.find((item) => item.id === id)?.isTrue}
 						<div class="lg:tooltip" data-tip="Correct answer is true">
 							<iconify-icon
 								icon="charm:tick"

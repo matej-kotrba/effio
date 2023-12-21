@@ -20,6 +20,14 @@
 
 	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
 
+	$: {
+		if (content) {
+			for (const answer of content.answers) {
+				answer.id = content.answers.indexOf(answer);
+			}
+		}
+	}
+
 	function newQuestionConditionCheck() {
 		return !(content.answers.length >= QUESTION_LIMIT);
 	}
@@ -30,7 +38,10 @@
 			return;
 		}
 		($testObject.questions[indexParent].content as TrueFalseQuestion).answers =
-			[...content.answers, { answer: '', isTrue: false }];
+			[
+				...content.answers,
+				{ answer: '', isTrue: false, id: content.answers.length }
+			];
 	}
 
 	function deleteQuestion(index: number) {

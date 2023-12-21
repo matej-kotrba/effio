@@ -54,6 +54,7 @@ type QuestionContentTransformation = {
     "checkAnswerCorrectness": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key]) => QuestionServerCheckResponse<any>["isCorrect"],
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] },
     "calculatePoints": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key], maxPoints: number) => number,
+    "shuffleAnswers": (question: QuestionTypeMap[Key]) => QuestionTypeMap[Key]
   } & (Key extends string ? AdditionalMethods[Key] : object)
 }
 
@@ -122,6 +123,20 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "calculatePoints": (q1: PickOneQuestion, q2: PickOneQuestion, maxPoints: number) => {
       return q1.correctAnswerId === q2.correctAnswerId ? maxPoints : 0
+    },
+    "shuffleAnswers": (question: PickOneQuestion): PickOneQuestion => {
+      console.log({
+        answers: question.answers.map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+      })
+
+      return {
+        ...question,
+        answers: question.answers.map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+      }
     }
   },
   "true/false": {
@@ -199,6 +214,14 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
       // const correctAnswersCount = q1.answers.reduce((count, item, index) => item.isTrue === q2.answers[index].isTrue ? count + 1 : count, 0)
       return +(total / q1.answers.length * maxPoints).toFixed(2)
+    },
+    "shuffleAnswers": (question: TrueFalseQuestion): TrueFalseQuestion => {
+      return {
+        ...question,
+        answers: question.answers.map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+      }
     }
   },
   "connect": {
@@ -290,6 +313,17 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "calculatePoints": (q1: ConnectQuestion, q2: ConnectQuestion, maxPoints: number) => {
       const correctAnswersCount = q1.answers.reduce((count, item, index) => item.matchedAnswerIndex === q2.answers[index].matchedAnswerIndex ? count + 1 : count, 0)
       return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
+    },
+    "shuffleAnswers": (question: ConnectQuestion): ConnectQuestion => {
+      return {
+        ...question,
+        answers: question.answers.map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value),
+        matchedAnswers: Object.fromEntries(Object.entries(question.matchedAnswers).map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value))
+      }
     }
   },
   "write": {
@@ -335,6 +369,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "calculatePoints": (q1: WriteQuestion, q2: WriteQuestion, maxPoints: number) => {
       return q1.answers.map(item => item.answer.toLowerCase().replace(/\s/g, "")).includes(q2.answers[0].answer.toLowerCase().replace(/\s/g, "")) ? maxPoints : 0
+    },
+    "shuffleAnswers": (question: WriteQuestion): WriteQuestion => {
+      return question
     }
   },
   "fill": {
@@ -422,10 +459,13 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "checkOptionCorrectness": (option: FillQuestion["answers"][number]["answer"]["options"][number], correctOptions: FillQuestion["answers"][number]["answer"]["options"]): boolean => {
       return (correctOptions.map(ans => ans.toLowerCase().replace(/\s/g, "")).includes(option.toLowerCase().replace(/\s/g, "")))
+    },
+    "shuffleAnswers": (question: FillQuestion): FillQuestion => {
+      return question
     }
   },
   "geography": {
-    createNew: () => {
+    "createNew": () => {
       return {
         type: "geography",
         initial: {
@@ -438,7 +478,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         }
       }
     },
-    separateAnswer: (question: GeographyQuestion): GeographyQuestion => {
+    "separateAnswer": (question: GeographyQuestion): GeographyQuestion => {
       return {
         ...question,
         answerPoint: {
@@ -446,10 +486,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         }
       }
     },
-    checkAnswerPresence: (question: GeographyQuestion): boolean => {
+    "checkAnswerPresence": (question: GeographyQuestion): boolean => {
       return typeof question.answerPoint.location[0] === "number" && typeof question.answerPoint.location[1] === "number"
     },
-    checkAnswerCorrectness: (answer: GeographyQuestion, original: GeographyQuestion) => {
+    "checkAnswerCorrectness": (answer: GeographyQuestion, original: GeographyQuestion) => {
       if (!answer.answerPoint.location || !original.answerPoint.location) return false
       const lat1 = answer.answerPoint.location[0]
       const lon1 = answer.answerPoint.location[1]
@@ -467,7 +507,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       return distance <= original.tolerence
     },
-    checkCreatorCorrectFormat: (content: GeographyQuestion) => {
+    "checkCreatorCorrectFormat": (content: GeographyQuestion) => {
       let isError = false
       let message = ""
 
@@ -498,8 +538,11 @@ export const questionContentFunctions: QuestionContentTransformation = {
         store: content
       }
     },
-    calculatePoints: (q1: GeographyQuestion, q2: GeographyQuestion, maxPoints: number) => {
+    "calculatePoints": (q1: GeographyQuestion, q2: GeographyQuestion, maxPoints: number) => {
       return questionContentFunctions["geography"].checkAnswerCorrectness(q1, q2) ? maxPoints : 0
+    },
+    "shuffleAnswers": (question: GeographyQuestion): GeographyQuestion => {
+      return question
     }
   },
   "programming": {
@@ -601,6 +644,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "calculatePoints": (q1: ProgrammingQuestion, q2: ProgrammingQuestion, maxPoints: number) => {
       return questionContentFunctions["programming"]["checkAnswerCorrectness"](q1, q2) ? maxPoints : 0
+    },
+    "shuffleAnswers": (question: ProgrammingQuestion): ProgrammingQuestion => {
+      return question
     }
   }
 }

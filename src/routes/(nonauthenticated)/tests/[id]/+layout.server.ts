@@ -2,6 +2,7 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import { appRouter } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
+import prisma from "~/lib/prisma";
 
 // TODO: Can be client, no .server needed
 export const load: ServerLoad = async (request) => {

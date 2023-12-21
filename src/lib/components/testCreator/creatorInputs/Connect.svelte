@@ -22,6 +22,7 @@
 		$testObject.questions[indexParent].content as ConnectQuestion
 	).answers.forEach((answer, index) => {
 		answer.matchedAnswerIndex = answerKeys[index];
+		answer.id = index;
 	}),
 		answersLength;
 
@@ -43,7 +44,14 @@
 				answer: ''
 			};
 			($testObject.questions[indexParent].content as ConnectQuestion).answers =
-				[...content.answers, { answer: '', matchedAnswerIndex: undefined }];
+				[
+					...content.answers,
+					{
+						answer: '',
+						matchedAnswerIndex: undefined,
+						id: content.answers.length
+					}
+				];
 		}
 	}
 

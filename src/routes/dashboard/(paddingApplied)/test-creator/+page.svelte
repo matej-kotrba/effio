@@ -38,13 +38,11 @@
 
 	let finishModal: HTMLDialogElement;
 
-	onMount(() => {
-		initializeNewTestToTestStore({
-			title: '',
-			description: '',
-			errors: {},
-			questions: []
-		});
+	initializeNewTestToTestStore({
+		title: '',
+		description: '',
+		errors: {},
+		questions: []
 	});
 
 	let testCreationProgress = {

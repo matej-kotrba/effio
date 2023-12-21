@@ -30,7 +30,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             displayType: template.name,
             content: {
               type: "true/false",
-              answers: question.choices.map(item => {
+              answers: question.choices.map((item, index) => {
 
                 let resultText = item.text.text
 
@@ -41,11 +41,12 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
                 else if (item.text.format !== "plain" && item.text.format !== "moodle") throw new Error("Unsupported txt format")
 
                 return {
+                  id: index,
                   answer: resultText,
                   isTrue: item.isCorrect || !!item.weight
                 }
               })
-            }
+            } satisfies TrueFalseQuestion
           }
         }
 
@@ -103,15 +104,16 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
           content: {
             type: "connect",
             matchedAnswers: matchedPairs,
-            answers: question.matchPairs.map(item => {
+            answers: question.matchPairs.map((item, index) => {
               return {
+                id: index,
                 answer: item.subquestion.format === "html" ? item.subquestion.text.replaceAll(/<[^>]+>/g, '') : item.subquestion.text,
                 matchedAnswerIndex: Object.entries(matchedPairs).find((entry) => {
                   return entry[1].answer === item.subanswer
                 })?.[0]
               }
             })
-          }
+          } satisfies ConnectQuestion
         } as QuestionClient
       }
 
