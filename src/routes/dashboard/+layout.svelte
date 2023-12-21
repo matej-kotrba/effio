@@ -61,13 +61,11 @@
 	<div>
 		<!-- Main sidebar -->
 		<aside
-			class="bg-light_white dark:bg-dark_black sm:bg-none xs:min-w-[210px] md:max-w-[210px]
+			class="bg-light_white dark:bg-dark_black sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
 			 lg:max-w-[260px] md:block fixed md:sticky top-0 duration-150 {isSidebarShown
 				? 'left-0'
-				: 'left-[-210px]'} md:left-0 z-[100] min-h-screen max-h-screen
-			  border-r-2 border-solid border-light_text_black_20 {isSidebarShown
-				? 'min-w-[100vw]'
-				: ''}"
+				: 'left-[-100vw] xs:left-[-210px]'} md:left-0 z-[100] min-h-screen max-h-screen
+			  border-r-2 border-solid border-light_text_black_20"
 		>
 			<!-- Closes sidebar (for low width screens) -->
 			<div class="flex justify-end md:hidden">
@@ -155,7 +153,7 @@
 					</a>
 				</div>
 				<!-- Lower part of the sidebar (darkmode, account for low width screens) -->
-				{#if false}
+				<div class="block xs:hidden">
 					<div
 						class="absolute left-0 flex justify-between w-full gap-1 px-2 bottom-2"
 					>
@@ -237,7 +235,7 @@
 							{/if}
 						</button>
 					</div>
-				{/if}
+				</div>
 			</div>
 		</aside>
 	</div>
@@ -292,7 +290,7 @@
 			</div>
 
 			<!-- Dark mode and account for large screens -->
-			{#if true}
+			<div class="items-center hidden gap-4 xs:flex">
 				<button
 					class="relative grid h-10 place-content-center"
 					type="button"
@@ -368,7 +366,7 @@
 						</button>
 					</ul>
 				</div>
-			{/if}
+			</div>
 		</nav>
 		<!-- px-4 pt-6 md:px-8 xl:px-16 -->
 		<div class="relative flex-1 px-2 md:px-0">
