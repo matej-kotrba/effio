@@ -10,23 +10,23 @@
 
 	let selectedInput: number = (
 		$testObject.questions[questionIndex]['content'] as PickOneQuestion
-	)['correctAnswerIndex'];
+	)['correctAnswerId'];
 
 	// Update the store based on the selection
 	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
-		'correctAnswerIndex'
+		'correctAnswerId'
 	] = selectedInput;
 
 	// Update the selectedInput based on the resultFormat
 	$: {
 		if (resultFormat) {
-			selectedInput = resultFormat.userAnswer.correctAnswerIndex;
+			selectedInput = resultFormat.userAnswer.correctAnswerId;
 		}
 	}
 </script>
 
 <div class="flex flex-col gap-2">
-	{#each content['answers'] as { answer }, index}
+	{#each content['answers'] as { answer, id }, index}
 		<button
 			type="button"
 			disabled={!!resultFormat}
@@ -44,7 +44,7 @@
 			</div>
 			<div class="flex items-center gap-2">
 				{#if resultFormat?.isCorrect === false || resultFormat?.isCorrect === 'partial'}
-					{#if resultFormat.correctAnswer.correctAnswerIndex === index}
+					{#if resultFormat.correctAnswer.correctAnswerId === id}
 						<iconify-icon
 							icon="charm:tick"
 							class="text-2xl text-correct dark:text-dark_correct"
@@ -66,7 +66,7 @@
 				/>
 			</div>
 		</button>
-		{#if resultFormat && resultFormat.userAnswer['correctAnswerIndex'] === index && resultFormat.correctAnswer.answers[index].response}
+		{#if resultFormat && resultFormat.userAnswer['correctAnswerId'] === id && resultFormat.correctAnswer.answers[index].response}
 			<Comment response={resultFormat.correctAnswer.answers[index].response} />
 			<!-- <p
 				class="p-2 rounded-sm text-light_text_black dark:text-dark_text_white_60 bg-light_grey dark:bg-dark_light_grey"

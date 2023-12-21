@@ -11,7 +11,7 @@ type TrueFalseQuestion = {
 type PickOneQuestion = {
   type: 'pickOne';
   answers: Answer[];
-  correctAnswerIndex: number;
+  correctAnswerId: number;
 };
 
 type ConnectQuestion = {
@@ -92,6 +92,7 @@ type ProgrammingQuestion = {
 
 type Answer<T = string> = {
   answer: T;
+  id: number;
   response?: string;
   error?: string;
 }

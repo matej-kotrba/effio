@@ -13,10 +13,10 @@ export function createExportedFileAndMakeItDownloadable(test: TestFullType) {
           questionType = 'SC' as const;
 
           const questionContent = question['content'] as PickOneQuestion;
-          content = questionContent.answers.map((answer, index) => {
+          content = questionContent.answers.map((answer) => {
             return {
               text: answer.answer,
-              isCorrect: index === questionContent.correctAnswerIndex
+              isCorrect: answer.id === questionContent.correctAnswerId
             };
           });
           break;

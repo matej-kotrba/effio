@@ -65,21 +65,23 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "createNew": () => {
       return {
         type: 'pickOne',
-        correctAnswerIndex: 0,
+        correctAnswerId: 0,
         answers: [
           {
+            id: 0,
             answer: ''
           },
           {
+            id: 1,
             answer: ''
           }
         ]
       }
     },
-    "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerIndex"> => {
+    "separateAnswer": (question: PickOneQuestion): PartialPick<PickOneQuestion, "correctAnswerId"> => {
       return {
         ...question,
-        correctAnswerIndex: undefined,
+        correctAnswerId: undefined,
         answers: question.answers.map((item) => {
           return {
             ...item,
@@ -89,16 +91,16 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "checkAnswerPresence": (question: PickOneQuestion): boolean => {
-      return !(question.correctAnswerIndex === undefined)
+      return !(question.correctAnswerId === undefined)
     },
     "checkAnswerCorrectness": (answer: PickOneQuestion, original: PickOneQuestion) => {
-      return answer.correctAnswerIndex === original.correctAnswerIndex
+      return answer.correctAnswerId === original.correctAnswerId
     },
     "checkCreatorCorrectFormat": (content: PickOneQuestion) => {
       let isError = false
       let message = ""
 
-      if (content.correctAnswerIndex === undefined || content.correctAnswerIndex > content.answers.length - 1 || content.correctAnswerIndex < 0) {
+      if (content.correctAnswerId === undefined || content.correctAnswerId > content.answers.length - 1 || content.correctAnswerId < 0) {
         isError = true
         message = "Please select the correct answer."
 
@@ -119,7 +121,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "calculatePoints": (q1: PickOneQuestion, q2: PickOneQuestion, maxPoints: number) => {
-      return q1.correctAnswerIndex === q2.correctAnswerIndex ? maxPoints : 0
+      return q1.correctAnswerId === q2.correctAnswerId ? maxPoints : 0
     }
   },
   "true/false": {
@@ -128,10 +130,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
         type: 'true/false',
         answers: [
           {
+            id: 0,
             answer: '',
-            isTrue: false
+            isTrue: false,
           },
           {
+            id: 1,
             answer: '',
             isTrue: false
           }
@@ -144,6 +148,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         ...question,
         answers: question.answers.map((item) => {
           return {
+            id: item.id,
             answer: item.answer,
             isTrue: false,
           }
@@ -154,10 +159,19 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question.answers.every((item) => item.isTrue !== undefined)
     },
     "checkAnswerCorrectness": (answer: TrueFalseQuestion, original: TrueFalseQuestion) => {
-      const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count + 1 : count, 0)
-      if (correctAnswersCount === answer.answers.length) return true
-      if (correctAnswersCount === 0) return false
+      let total = 0
+      for (const item of answer.answers) {
+        const originalAnswer = original.answers.find((ans) => ans.id === item.id)
+        if (!originalAnswer) return false
+        if (originalAnswer.isTrue === item.isTrue) total++
+      }
+      if (total === answer.answers.length) return true
+      if (total === 0) return false
       return "partial"
+      // const correctAnswersCount = answer.answers.reduce((count, item, index) => item.isTrue === original.answers[index].isTrue ? count + 1 : count, 0)
+      // if (correctAnswersCount === answer.answers.length) return true
+      // if (correctAnswersCount === 0) return false
+      // return "partial"
     },
     "checkCreatorCorrectFormat": (content: TrueFalseQuestion) => {
       let isError = false
@@ -177,8 +191,14 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "calculatePoints": (q1: TrueFalseQuestion, q2: TrueFalseQuestion, maxPoints: number) => {
-      const correctAnswersCount = q1.answers.reduce((count, item, index) => item.isTrue === q2.answers[index].isTrue ? count + 1 : count, 0)
-      return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
+      let total = 0
+      for (const item of q1.answers) {
+        const originalAnswer = q2.answers.find((ans) => ans.id === item.id)
+        if (!originalAnswer) return 0
+        if (originalAnswer.isTrue === item.isTrue) total++
+      }
+      // const correctAnswersCount = q1.answers.reduce((count, item, index) => item.isTrue === q2.answers[index].isTrue ? count + 1 : count, 0)
+      return +(total / q1.answers.length * maxPoints).toFixed(2)
     }
   },
   "connect": {
@@ -187,10 +207,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
         type: 'connect',
         answers: [
           {
+            id: 0,
             answer: '',
             matchedAnswerIndex: undefined,
           },
           {
+            id: 1,
             answer: '',
             matchedAnswerIndex: undefined,
           }
@@ -210,6 +232,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         ...question,
         answers: question.answers.map((item) => {
           return {
+            id: item.id,
             answer: item.answer,
             matchedAnswerIndex: undefined
           }
@@ -275,6 +298,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         type: 'write',
         answers: [
           {
+            id: 0,
             answer: ''
           }
         ]
@@ -283,7 +307,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "separateAnswer": (question: WriteQuestion): WriteQuestion => {
       return {
         ...question,
-        answers: [{ answer: "" }]
+        answers: [{ id: 0, answer: "" }]
       }
     },
     "checkAnswerPresence": (question: WriteQuestion): boolean => {
@@ -319,6 +343,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         type: 'fill',
         answers: [
           {
+            id: 0,
             answer: {
               options: [""],
               precedent: "",
@@ -336,6 +361,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         ...question,
         answers: question.answers.map(item => {
           return {
+            id: item.id,
             answer: {
               options: [""],
               precedent: item.answer.precedent,

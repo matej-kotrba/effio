@@ -63,7 +63,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             displayType: template.name,
             content: {
               type: "pickOne",
-              answers: question.choices.map(item => {
+              answers: question.choices.map((item, index) => {
 
                 let resultText = item.text.text
 
@@ -72,12 +72,13 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
                 }
 
                 return {
+                  id: index,
                   answer: resultText,
-                  isTrue: item.isCorrect || item.weight !== undefined
+                  // isTrue: item.isCorrect || item.weight !== undefined
                 }
               }),
-              correctAnswerIndex: question.choices.findIndex(item => item.isCorrect || item.weight !== undefined)
-            }
+              correctAnswerId: question.choices.findIndex(item => item.isCorrect || item.weight !== undefined)
+            } satisfies PickOneQuestion
           }
         }
       }

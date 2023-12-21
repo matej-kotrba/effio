@@ -20,6 +20,16 @@
 
 	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
 
+	$: {
+		if (content) {
+			for (const answer of content.answers) {
+				answer.id = content.answers.indexOf(answer);
+			}
+		}
+	}
+
+	$: console.log(content.answers);
+
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
@@ -35,17 +45,17 @@
 			($testObject.questions[indexParent].content as PickOneQuestion).answers
 		) {
 			($testObject.questions[indexParent].content as PickOneQuestion).answers =
-				[...content.answers, { answer: '' }];
+				[...content.answers, { answer: '', id: content.answers.length }];
 		}
 	}
 
 	function deleteQuestion(index: number) {
 		($testObject.questions[indexParent].content as PickOneQuestion).answers =
 			content.answers.filter((_, i) => i !== index);
-		if (content['correctAnswerIndex'] === index)
+		if (content['correctAnswerId'] === index)
 			(
 				$testObject.questions[indexParent].content as PickOneQuestion
-			).correctAnswerIndex = 0;
+			).correctAnswerId = 0;
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>
@@ -94,7 +104,7 @@
 						use:dropdown={'Mark this as a correct answer'}
 						class={`px-2 grid tooltip place-content-center rounded-r-md`}
 						style={`${
-							index === content.correctAnswerIndex
+							q.id === content.correctAnswerId
 								? `background-color: var(--success); color: var(${
 										isDarkMode ? '--dark_black' : '--light-white'
 								  });`
@@ -104,7 +114,7 @@
 										isDarkMode ? '--dark-text-white' : '--success'
 								  });`
 						}}`}
-						on:click={() => (content['correctAnswerIndex'] = index)}
+						on:click={() => (content['correctAnswerId'] = q.id)}
 					>
 						<Icon icon="charm:tick" class="text-3xl" />
 					</button>
