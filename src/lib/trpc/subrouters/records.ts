@@ -60,12 +60,13 @@ export const recordsRouter = router({
         userPoints: input.answerContent.reduce((acc, curr) => acc + curr.points, 0),
         questionRecords: {
           createMany: {
-            data: input.answerContent.map(item => {
+            data: input.answerContent.map((item, index) => {
               return {
                 id: item.questionRecordId,
                 questionId: item.questionId,
                 content: item.userContent,
                 userPoints: item.points,
+                order: index
               }
             })
           }
@@ -148,6 +149,9 @@ export const recordsRouter = router({
           }
         },
         questionRecords: {
+          orderBy: {
+            order: "asc"
+          },
           include: {
             question: {
               include: {

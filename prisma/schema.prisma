@@ -180,6 +180,7 @@ model QuestionRecord {
   userPoints   Float      @default(0)
   testRecord   TestRecord @relation(fields: [testRecordId], references: [id], onDelete: Cascade)
   question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  order        Int        @default(0)
 
   @@index([testRecordId])
   @@index([questionId])

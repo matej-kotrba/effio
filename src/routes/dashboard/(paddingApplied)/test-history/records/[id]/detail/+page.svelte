@@ -34,12 +34,13 @@
 			description: data.record.description,
 			createdAt: data.record.createdAt,
 			updatedAt: data.record.updatedAt,
-			ownerId: data.record.userId,
+			ownerId: data.record.userId!,
 			published: data.record.test.testGroup.published,
 			isPublic: data.record.test.testGroup.isPublic,
 			imageUrl: data.record.test.testGroup.imageUrl,
 			type: data.record.test.testGroup.type,
 			tags: data.record.test.testGroup.tags,
+			randomQuestionOrder: data.record.test.testGroup.randomQuestionOrder,
 			testVersions: [
 				{
 					...data.record.test,
