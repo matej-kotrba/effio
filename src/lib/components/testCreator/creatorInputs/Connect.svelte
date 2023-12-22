@@ -86,12 +86,15 @@
 		<div class="flex flex-col gap-2" animate:flip={{ duration: 200 }}>
 			<div>
 				<div class="flex">
-					<RemoveButton
-						deleteQuestion={() => deleteQuestion(index)}
-						questionLength={content.answers.length}
-					/>
-					<div class="relative grow-[1] grid grid-cols-2 gap-1">
-						<CommentEnhance asnwerPath={content.answers[index]}>
+					<div class="w-12">
+						<RemoveButton
+							class="w-full h-full"
+							deleteQuestion={() => deleteQuestion(index)}
+							questionLength={content.answers.length}
+						/>
+					</div>
+					<CommentEnhance asnwerPath={content.answers[index]} class="w-full">
+						<div class="relative grow-[1] grid grid-cols-2 gap-1">
 							<TextInput
 								title="Option {index + 1}"
 								titleName="Option {index + 1}"
@@ -114,8 +117,8 @@
 								bind:inputValue={content.matchedAnswers[answerKeys[index]]
 									.answer}
 							/>
-						</CommentEnhance>
-					</div>
+						</div>
+					</CommentEnhance>
 				</div>
 				<p
 					class={`text-body2 text-error dark:text-dark_error ${

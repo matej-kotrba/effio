@@ -246,6 +246,13 @@
 	</div>
 	<div class="flex flex-col gap-2">
 		{#each Object.values(content['matchedAnswers']) as text, index}
+			{@const matchedId = resultFormat
+				? resultFormat['correctAnswer']['answers'].find(
+						(item) =>
+							item.matchedAnswerIndex ===
+							Object.keys(content['matchedAnswers'])[index]
+				  )?.id
+				: undefined}
 			<button
 				type="button"
 				disabled={!!resultFormat}
@@ -256,12 +263,16 @@
 			"
 				style="background-color: {resultFormat &&
 					resultFormat.isCorrect !== true &&
+					matchedId !== undefined &&
 					wrongAnswerHiglightColors[
-						resultFormat['correctAnswer']['answers'].findIndex(
-							(item) =>
-								item.matchedAnswerIndex ===
-								Object.keys(content['matchedAnswers'])[index]
+						resultFormat['userAnswer']['answers'].findIndex(
+							(item) => item.id === matchedId
 						)
+						// resultFormat['correctAnswer']['answers'].findIndex(
+						// 	(item) =>
+						// 		item.matchedAnswerIndex ===
+						// 		Object.keys(content['matchedAnswers'])[index]
+						// )
 					]};"
 			>
 				<div class="relative grid">
