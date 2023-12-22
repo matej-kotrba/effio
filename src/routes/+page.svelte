@@ -1,11 +1,9 @@
-<script script lang="ts">
-	import Icon from '@iconify/svelte';
+<script lang="ts">
 	import Space from '../lib/components/separators/Space.svelte';
 	import GridLayout from '../lib/components/layouts/GridLayout.svelte';
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import { applicationStates } from '~stores/applicationStates';
 	import { draw } from 'svelte/transition';
 	import { cubicIn } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
@@ -13,15 +11,66 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Navbar from '~components/page-parts/Navbar.svelte';
 	import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
+	import gsap from 'gsap/dist/gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+	import { onMount } from 'svelte';
 
 	export let data;
 
 	let displayUnderline = false;
+
+	function animateBar(
+		triggerElement: string,
+		onEnterWidth: string,
+		onLeaveBackWidth: string,
+		onEnterOther: { [key: string]: any } = {},
+		onLeaveOther: { [key: string]: any } = {}
+	) {
+		gsap.to('.bar', {
+			scrollTrigger: {
+				trigger: triggerElement,
+				start: 'top center',
+				end: 'bottom bottom',
+				scrub: true,
+				onEnter: () => {
+					gsap.to('.bar', {
+						width: onEnterWidth,
+						duration: 0.2,
+						ease: 'none',
+						...onEnterOther
+					});
+				},
+				onLeaveBack: () => {
+					gsap.to('.bar', {
+						width: onLeaveBackWidth,
+						duration: 0.2,
+						ease: 'none',
+						...onLeaveOther
+					});
+				}
+			}
+		});
+	}
+
+	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+		animateBar('#section1', '400px', '0px');
+		animateBar(
+			'#section2',
+			'400px',
+			'400px',
+			{ right: 'calc(100vw - 400px)' },
+			{ right: 0 }
+		);
+	});
 </script>
 
 <!-- <Toaster /> -->
 <ScrollToTop />
-<header>
+
+<div class="absolute top-0 right-0 w-0 h-full bg-black bar" />
+
+<header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
 		class="container relative px-2 mx-auto xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
 	>
@@ -171,101 +220,8 @@
 			</div>
 		</div>
 	</section>
-	<!-- <section
-		class={`px-2 py-20 xl:px-8 ${
-			$applicationStates.darkMode.isDarkMode
-				? 'hero__section_dark'
-				: 'hero__section'
-		}`}
-	>
-		<div
-			class="container flex flex-col w-full gap-10 py-10 mx-auto lg:flex-row h-fit lg:gap-0"
-		>
-			<div
-				class="rounded-3xl bg-light_transparent_blue dark:bg-dark_quaternary lg:w-[60%] container mx-auto p-8 flex flex-col justify-between"
-			>
-				<div>
-					<h1 class="font-bold text-h3 md:text-h2 xl:text-h1 text-light_white">
-						Effio
-					</h1>
-					<p
-						class="text-light_white w-[80%] text-body2 md:text-body1 xl:text-h6"
-					>
-						Boost yout productivity, create tests for yourself and others and
-						learn all in a modern user friendly enviroment. Introducing <b
-							>Effio</b
-						> - online test creation tool which will help you achieve all of that.
-					</p>
-					<Space gap={80} />
-				</div>
-				<div>
-					<p class="text-light_white text-body3 md:text-body1">
-						All you need is Github or Google account!
-					</p>
-					<Space gap={10} />
-					<div class="flex flex-col gap-4 xs:items-center xs:flex-row">
-						<a
-							href={data.session?.user ? '/dashboard' : '/login'}
-							class="btn bg-light_primary dark:bg-dark_primary text-light_white dark:text-dark_text_white hover:bg-light_primary dark:hover:bg-dark_primary hover:brightness-125"
-						>
-							{data.session?.user ? 'Go to Dashboard' : 'Log In'}
-						</a>
-						<button
-							on:click={() => {}}
-							class="btn bg-light_white dark:bg-dark_secondary text-light_primary dark:text-dark_text_white hover:bg-light_white hover:brightness-125"
-							type="button">Read More</button
-						>
-					</div>
-				</div>
-			</div>
-			<div class="lg:translate-x-[-13%] lg:translate-y-[15%] relative">
-				<img
-					src="/imgs/test.svg"
-					alt="Test"
-					class="relative z-10 mx-auto w-[100%] sm:w-[80%] lg:w-[1000px]"
-				/>
-				<div
-					class="hidden lg:block absolute p-8 bg-light_transparent_blue dark:bg-dark_quaternary text-body1 md:text-h6 xl:text-h5 text-light_white bottom-[100%] right-0 rounded-4xl pb-40 lg:translate-y-[60%]"
-				>
-					<p>Learn everything at one place</p>
-				</div>
-				<div
-					class="hidden lg:block absolute p-8 bg-light_transparent_blue dark:bg-dark_quaternary text-body1 md:text-h6 xl:text-h5 text-light_white
-				bottom-[100%] right-0 rounded-4xl pt-20 pr-40 lg:translate-y-[220%] xl:translate-y-[240%] xl:translate-x-[-10%] 2xl:translate-y-[260%] 2xl:translate-x-[-20%]"
-				>
-					<p>Create, share, explore</p>
-				</div>
-				<Space />
-				<div class="flex flex-col gap-4 sm:flex-row lg:hidden">
-					<div
-						class="w-full p-4 text-center bg-white rounded-md dark:bg-dark_secondary"
-					>
-						<p>Learn everything at one place</p>
-					</div>
-					<div
-						class="w-full p-4 text-center bg-white rounded-md dark:bg-dark_secondary"
-					>
-						<p>Create, share, explore</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section> -->
 </header>
-<!-- <img
-	src={$applicationStates.darkMode.isDarkMode
-		? '/imgs/layer_dark4.svg'
-		: '/imgs/layer3.svg'}
-	alt="Layer"
-	class="w-full min-h-[120px] object-cover sm:object-contain"
-/>
-<img
-	src={$applicationStates.darkMode.isDarkMode
-		? '/imgs/layer_dark3.svg'
-		: '/imgs/layer2.svg'}
-	alt="Layer"
-	class="w-full min-h-[120px] object-cover sm:object-contain -translate-y-[1px]"
-/> -->
+
 <main class="bg-light_quaternary dark:bg-dark_quaternary">
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<!-- About us section -->
@@ -313,128 +269,132 @@
 				</div>
 			</div>
 		</section>
-		<LineConnectorWithTitle title="Community place">
-			<h2
-				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
-			>
-				CREATE<span class="text-light_text_black dark:text-dark_text_white"
-					>,</span
+		<section id="section1">
+			<LineConnectorWithTitle title="Community place">
+				<h2
+					class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
 				>
-				SHARE
-				<span
-					class="text-sm font-normal text-light_text_black dark:text-dark_text_white"
-					>and</span
-				> EXPLORE
-			</h2>
-			<p
-				class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
-			>
-				Browse and share your own created tests for all other users here
-			</p>
-		</LineConnectorWithTitle>
-		<GridLayout>
-			<slot slot="a">
-				<div class="flex flex-col justify-between h-full">
-					<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
-						Explore what have community created!
-					</h3>
-					<div>
-						<img
-							src="/imgs/community_place.svg"
-							alt="Community place"
-							class="max-w-[300px] mx-auto w-full xs:w-auto"
-						/>
-						<Space gap={36} />
-						<CallToAction text={'Visit'} center="right">
-							<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
-						</CallToAction>
-					</div>
-				</div>
-			</slot>
-			<slot slot="b">
-				<h3
-					class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+					CREATE<span class="text-light_text_black dark:text-dark_text_white"
+						>,</span
+					>
+					SHARE
+					<span
+						class="text-sm font-normal text-light_text_black dark:text-dark_text_white"
+						>and</span
+					> EXPLORE
+				</h2>
+				<p
+					class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 				>
-					Read more about the community place and all its features.
-				</h3>
-			</slot>
-			<slot slot="c">
-				<div class="flex flex-col justify-between h-full">
-					<h3 class="text-light_white text-body1 md:text-h5">
-						Want to create tests of you own?<br />All you need is to Log In
-						using one of these providers: GitHub, Google
-					</h3>
-					<div class="max-h-full mt-auto ml-auto w-fit">
-						<button
-							on:click={() => {}}
-							class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
-							type="button">Log In</button
-						>
+					Browse and share your own created tests for all other users here
+				</p>
+			</LineConnectorWithTitle>
+			<GridLayout>
+				<slot slot="a">
+					<div class="flex flex-col justify-between h-full">
+						<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
+							Explore what have community created!
+						</h3>
+						<div>
+							<img
+								src="/imgs/community_place.svg"
+								alt="Community place"
+								class="max-w-[300px] mx-auto w-full xs:w-auto"
+							/>
+							<Space gap={36} />
+							<CallToAction text={'Visit'} center="right">
+								<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
+							</CallToAction>
+						</div>
 					</div>
-				</div>
-			</slot>
-		</GridLayout>
-		<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
-			<h2
-				class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
-			>
-				<span
-					class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
-					>The</span
+				</slot>
+				<slot slot="b">
+					<h3
+						class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+					>
+						Read more about the community place and all its features.
+					</h3>
+				</slot>
+				<slot slot="c">
+					<div class="flex flex-col justify-between h-full">
+						<h3 class="text-light_white text-body1 md:text-h5">
+							Want to create tests of you own?<br />All you need is to Log In
+							using one of these providers: GitHub, Google
+						</h3>
+						<div class="max-h-full mt-auto ml-auto w-fit">
+							<button
+								on:click={() => {}}
+								class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+								type="button">Log In</button
+							>
+						</div>
+					</div>
+				</slot>
+			</GridLayout>
+		</section>
+		<section id="section2">
+			<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
+				<h2
+					class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
 				>
-				Ultimate Generator
-			</h2>
-			<p
-				class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
-			>
-				Create tests using simple and user friendly enviroment with plenty of
-				options
-			</p>
-		</LineConnectorWithTitle>
-		<GridLayout>
-			<slot slot="a">
-				<div class="flex flex-col justify-between h-full">
-					<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
-						Create your own tests using simple enviroment!
-					</h3>
-					<Space gap={10} />
-					<div>
-						<img
-							src="/imgs/online_test.svg"
-							alt="Community place"
-							class="max-w-[300px] mx-auto w-full xs:w-auto"
-						/>
-						<Space gap={36} />
-						<CallToAction text={'Visit'} center="right">
-							<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
-						</CallToAction>
-					</div>
-				</div>
-			</slot>
-			<slot slot="b">
-				<h3
-					class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+					<span
+						class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
+						>The</span
+					>
+					Ultimate Generator
+				</h2>
+				<p
+					class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 				>
-					Import and export in GIFT format compatible with other popular
-					platforms like Moodle.
-				</h3>
-			</slot>
-			<slot slot="c">
-				<div class="flex flex-col justify-between h-full">
-					<h3 class="text-light_white text-body1 md:text-h5">
-						Want to create tests of you own?<br />All you need is to Log In
-						using one of these providers: GitHub, Google
-					</h3>
-					<div class="max-h-full mt-auto ml-auto w-fit">
-						<button
-							on:click={() => {}}
-							class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
-							type="button">Log In</button
-						>
+					Create tests using simple and user friendly enviroment with plenty of
+					options
+				</p>
+			</LineConnectorWithTitle>
+			<GridLayout>
+				<slot slot="a">
+					<div class="flex flex-col justify-between h-full">
+						<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
+							Create your own tests using simple enviroment!
+						</h3>
+						<Space gap={10} />
+						<div>
+							<img
+								src="/imgs/online_test.svg"
+								alt="Community place"
+								class="max-w-[300px] mx-auto w-full xs:w-auto"
+							/>
+							<Space gap={36} />
+							<CallToAction text={'Visit'} center="right">
+								<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
+							</CallToAction>
+						</div>
 					</div>
-				</div>
-			</slot>
-		</GridLayout>
+				</slot>
+				<slot slot="b">
+					<h3
+						class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+					>
+						Import and export in GIFT format compatible with other popular
+						platforms like Moodle.
+					</h3>
+				</slot>
+				<slot slot="c">
+					<div class="flex flex-col justify-between h-full">
+						<h3 class="text-light_white text-body1 md:text-h5">
+							Want to create tests of you own?<br />All you need is to Log In
+							using one of these providers: GitHub, Google
+						</h3>
+						<div class="max-h-full mt-auto ml-auto w-fit">
+							<button
+								on:click={() => {}}
+								class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+								type="button">Log In</button
+							>
+						</div>
+					</div>
+				</slot>
+			</GridLayout>
+		</section>
 	</div>
 	<Space gap={50} />
 	<Footer />

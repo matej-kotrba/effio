@@ -64,7 +64,7 @@ html {
 }
 
 body {
-	@apply min-h-screen font-normal font-primary text-body2 sm:text-body1 text-light_text_black dark:text-dark_text_white bg-light_white dark:bg-dark_black;
+	@apply relative min-h-screen font-normal font-primary text-body2 sm:text-body1 text-light_text_black dark:text-dark_text_white bg-light_white dark:bg-dark_black;
 	box-sizing: border-box;
 	/* overflow-x: hidden; */
 }
