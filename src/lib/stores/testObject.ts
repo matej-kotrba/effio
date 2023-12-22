@@ -9,6 +9,7 @@ export type TestObject = {
   questions: QuestionClient[];
   markSystem: MarkSystemJSON;
   tagIds: TagIds;
+  randomizeQuestionOrder?: boolean;
   includedInGroups?: IncludedInGroups;
   errors: ClientTest["errors"]
 };

@@ -6,7 +6,7 @@
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { goto } from '$app/navigation';
-	import { getContext, onDestroy } from 'svelte';
+	import { getContext } from 'svelte';
 	import type { toast as Toast } from 'svelte-french-toast';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import { TRPCClientError } from '@trpc/client';
@@ -46,7 +46,8 @@
 				markSystem: $testObject.markSystem,
 				isPublished: $testObject.published,
 				image: testImageFile || undefined,
-				tagIds: $testObject.tagIds
+				tagIds: $testObject.tagIds,
+				isRandomized: !!$testObject.randomizeQuestionOrder
 			},
 			callbacks: {
 				onSaveToDB(response) {

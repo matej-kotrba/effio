@@ -18,7 +18,8 @@ export const protectedRouter = router({
     testType: z.enum(["REGULAR", "PROGRAMMING"]).default("REGULAR"),
     imageUrl: z.string().optional(),
     includedInGroups: z.array(z.string()).optional(),
-    tagIds: z.array(z.string()).optional()
+    tagIds: z.array(z.string()).optional(),
+    isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
     let questions;
     try {
@@ -60,6 +61,7 @@ export const protectedRouter = router({
         isPublic: isPublic,
         imageUrl: input.imageUrl,
         type: input.testType,
+        randomQuestionOrder: !!input.isRandomized,
         testVersions: {
           create: {
             version: 1,
@@ -144,7 +146,8 @@ export const protectedRouter = router({
       })),
     }).optional(),
     tagIds: z.array(z.string()).optional(),
-    includedInGroups: z.array(z.string()).optional()
+    includedInGroups: z.array(z.string()).optional(),
+    isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
 
     const test = await ctx.prisma.test.findUnique({
@@ -277,6 +280,7 @@ export const protectedRouter = router({
           description: input.description,
           isPublic,
           imageUrl: input.imageUrl,
+          randomQuestionOrder: !!input.isRandomized,
         }
       })
 

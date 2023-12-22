@@ -125,12 +125,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return q1.correctAnswerId === q2.correctAnswerId ? maxPoints : 0
     },
     "shuffleAnswers": (question: PickOneQuestion): PickOneQuestion => {
-      console.log({
-        answers: question.answers.map(value => ({ value, sort: Math.random() }))
-          .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value)
-      })
-
       return {
         ...question,
         answers: question.answers.map(value => ({ value, sort: Math.random() }))

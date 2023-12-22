@@ -18,6 +18,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
     questions: testData.questions,
     errors: testData.errors,
     markSystem: {},
+    randomizeQuestionOrder: true,
     tagIds: [],
   })
 }
@@ -32,6 +33,7 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
     title: testData.title,
     description: testData.description,
     published: testData.published,
+    randomizeQuestionOrder: testData.randomQuestionOrder,
     markSystem: markSystem ? {
       marks: markSystem
     } : {},

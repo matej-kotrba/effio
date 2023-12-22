@@ -37,13 +37,13 @@ const defaultCallbacks: Callbacks<Awaited<
 
 type Props = {
   type: "create",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, testType: TestType },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, testType: TestType, isRandomized: boolean },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
   >, unknown>
 } | {
   type: "update",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, id: string },
+  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, id: string, isRandomized: boolean },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["updateTest"]['mutate']>
   >, unknown>
@@ -138,9 +138,11 @@ export const validateTestAndRecordIt = async (props: Props) => {
           }
           : undefined,
         includedInGroups: currentStore.includedInGroups,
+        isRandomized: props.data.isRandomized
       });
     }
     else if (props.type === "update") {
+      console.log("RANDOM:", props.data.isRandomized)
       const imageUrlToDeleteTest = await trpc(get(page)).getTestById.query({
         id: props.data.id,
       })
@@ -166,7 +168,8 @@ export const validateTestAndRecordIt = async (props: Props) => {
           }
           : undefined,
         includedInGroups: currentStore.includedInGroups,
-        testGroupId: currentStore.id as string
+        testGroupId: currentStore.id as string,
+        isRandomized: props.data.isRandomized
       });
 
       // if (response.test && imageUrlToDeleteTest.imageUrl !== response.testImage) {

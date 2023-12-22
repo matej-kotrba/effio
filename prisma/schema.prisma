@@ -100,6 +100,7 @@ model Test {
   owner                   User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   subcategories           GroupSubcategoryOnTests[]
   groupSubcategoryMessage GroupSubcategoryMessage[]
+  randomQuestionOrder     Boolean                   @default(true)
 
   @@index([ownerId])
   @@index([title, description])

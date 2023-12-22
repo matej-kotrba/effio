@@ -90,7 +90,8 @@
 				isPublished: isPublished,
 				testType: testType,
 				image: testImageFile || undefined,
-				tagIds: $testObject.tagIds
+				tagIds: $testObject.tagIds,
+				isRandomized: !!$testObject.randomizeQuestionOrder
 			},
 			callbacks: {
 				onSaveToDB(response) {
