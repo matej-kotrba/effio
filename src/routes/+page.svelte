@@ -74,7 +74,6 @@
 	<section
 		class="container relative px-2 mx-auto xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
 	>
-		<!-- <div class="w-full h-[var(--nav-height)] bg-light_quaternary rounded-4xl" /> -->
 		<Navbar includeSeparator={false} user={data.session} />
 		<div
 			class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4 xl:max-h-[800px]"
