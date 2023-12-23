@@ -190,8 +190,6 @@
 	 shadow-md bottom-2 md:bottom-6 right-2 md:right-6 
 		`}
 	>
-		<!-- <span class="font-semibold text-h5"> Continue </span> -->
-		<!-- <iconify-icon icon="iconamoon:arrow-right-6-circle-thin" class="text-4xl" /> -->
 		<button
 			type="button"
 			on:click={onNavigationButtonClick}
@@ -200,9 +198,6 @@
 	  disabled:bg-gray-300 disabled:text-light_whiter dark:disabled:bg-dark_terciary border-light_primary dark:border-dark_primary hover:bg-light_whiter hover:text-light_terciary
 		disabled:dark:text-dark_text_white_40 dark:bg-dark_quaternary dark:hover:bg-dark_secondary dark:hover:text-dark_text_white`}
 		>
-			<!-- <div
-			class="w-[150%] aspect-square rounded-lg bg-light_grey scale-0 group-disabled:scale-0 group-hover:scale-100 duration-150 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
-		/> -->
 			<iconify-icon icon="iconamoon:arrow-right-2-duotone" class="text-5xl" />
 		</button>
 	</div>
