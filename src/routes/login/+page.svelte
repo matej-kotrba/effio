@@ -1,12 +1,19 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import { signIn } from '@auth/sveltekit/client';
 	import SkewedLoader from '~components/loaders/Skewed.svelte';
+	import { onMount } from 'svelte';
 
 	let isProcessing = false;
+
+	onMount(() => {
+		isProcessing = false;
+		return () => {
+			isProcessing = false;
+		};
+	});
 </script>
 
 <div class="py-2 bg">

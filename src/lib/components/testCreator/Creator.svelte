@@ -191,7 +191,11 @@
 			};`}
 		> -->
 		{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
-			<div transition:fly={{ x: -300 }} class="h-full max-w-[340px]">
+			<div
+				in:fly={{ x: -300 }}
+				out:fly={{ x: -300, duration: windowWidth <= XL ? 0 : undefined }}
+				class="h-full max-w-[340px]"
+			>
 				<CreatorInputSidebar
 					inputs={inputTemplates}
 					class="self-start"

@@ -172,7 +172,7 @@
 	});
 </script>
 
-<div class="flex gap-4">
+<div class="flex flex-wrap justify-center gap-4 xs:justify-start">
 	<OverviewLink
 		icon="gridicons:create"
 		title="Create a new test"
@@ -187,9 +187,7 @@
 	/>
 </div>
 
-<div
-	class="mx-auto max-w-[1000px] grid grid-cols-1 lg:grid-cols-2 place-items-center"
->
+<div class="grid grid-cols-1 mx-auto lg:grid-cols-2 place-items-center">
 	<div class="w-full">
 		<canvas bind:this={portfolio} width="400" class="w-full" />
 	</div>

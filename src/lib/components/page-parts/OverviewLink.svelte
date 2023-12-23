@@ -7,18 +7,28 @@
 
 <a href={link}>
 	<div class="container">
-		<div class="card-container">
+		<div
+			class="card-container max-w-[150px] md:max-w-[250px] w-screen aspect-[2/3]"
+		>
 			<iconify-icon
 				{icon}
 				class="text-light_primary drop-shadow-sm left-1/2 text-8xl main-image"
 			/>
 			<!-- <img src="./imgs/svgs/empty.svg" alt="" class="bottom-0 main-image" /> -->
-			<div class="logo-container">
-				<img src="./imgs/effio/text.png" alt="" class="logo" />
-				<h3 class="font-semibold text-white">{title}</h3>
+			<div class="w-full px-1 logo-container">
+				<img src="./imgs/effio/text.png" alt="" class="w-3/4 mx-auto" />
+				<h3
+					class="font-semibold text-center text-white text-body2 md:text-body1"
+				>
+					{title}
+				</h3>
 			</div>
 			<div class="p-2 bg-image bg-light_terciary dark:bg-dark_primary_light">
-				<img src={bgImage} alt="" class="drop-shadow-md" />
+				<img
+					src={bgImage}
+					alt=""
+					class="drop-shadow-md w-[80%] md:w-full mx-auto"
+				/>
 			</div>
 			<!-- <img src="./imgs/overview/bg2.svg" alt="" class="bg-image" /> -->
 		</div>
@@ -38,8 +48,6 @@
 	}
 
 	.card-container {
-		width: 250px;
-		aspect-ratio: 2 / 3;
 		position: relative;
 		transform-style: preserve-3d;
 		transition: rotate var(--timing) ease;
@@ -101,15 +109,11 @@
 
 	.logo-container {
 		filter: brightness(1000) drop-shadow(rgba(0, 0, 0, 0.671) 0 0 1px);
-		width: 65%;
 		margin-inline: auto;
 		z-index: 100;
 		inset: auto 0 2rem;
 		transform: translateY(0rem) translateZ(20px);
 		transition: var(--timing);
-	}
-
-	.logo {
 	}
 
 	.card-container:hover .logo-container {

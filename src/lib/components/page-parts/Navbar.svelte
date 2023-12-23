@@ -89,7 +89,7 @@
 				{#if !user}
 					<a
 						href="/login"
-						class="relative px-4 py-2 font-semibold text-white duration-200 rounded-md hover:bg-light_primary_dark bg-light_primary"
+						class="relative px-4 py-2 font-semibold text-white duration-200 rounded-md marker:hidden hover:bg-light_primary_dark bg-light_primary"
 					>
 						<li>Login</li>
 					</a>
@@ -137,7 +137,7 @@
 					href="/login"
 					class="relative px-4 py-2 font-semibold text-white duration-200 rounded-md hover:bg-light_primary_dark bg-light_primary"
 				>
-					<li>Login</li>
+					<li class="list-none">Login</li>
 				</a>
 			{:else}
 				<!-- <img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" /> -->
