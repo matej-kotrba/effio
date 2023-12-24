@@ -14,10 +14,32 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
+	import { Application } from '@splinetool/runtime';
 
 	export let data;
 
 	let displayUnderline = false;
+
+	const BAR_SECTIONS = {
+		SECTION0: '0px',
+		SECTION1: '400px',
+		SECTION2: '400px'
+	};
+
+	const MOBILE_SECTIONS_WIDTH = {
+		SECTION0: '25%',
+		SECTION1: '25%',
+		SECTION2: '35%'
+	};
+
+	const MOBILE_SECTIONS_LEFT = {
+		SECTION0: '100vw',
+		SECTION1: `calc(100vw - ${MOBILE_SECTIONS_WIDTH['SECTION1']} - ((${BAR_SECTIONS['SECTION1']} - ${MOBILE_SECTIONS_WIDTH['SECTION1']}) / 2))`,
+		SECTION2: '35%'
+	};
+
+	const STARTING_TRANSLATE_X = 2;
+	let mobile3DRef: HTMLCanvasElement;
 
 	function animateBar(
 		triggerElement: string,
@@ -54,21 +76,78 @@
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
-		animateBar('#section1', '400px', '0px');
+		const app = new Application(mobile3DRef);
+		app
+			.load('https://prod.spline.design/h81QulQb8GQq0-Oa/scene.splinecode')
+			.then(() => {
+				const mobile = app.findObjectByName('mobile');
+				if (!mobile) return;
+				gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
+				gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
+				gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
+
+				let rotateMobile = gsap.to(mobile.rotation, {
+					y: mobile.rotation.y,
+					// x: () => {
+
+					// },
+					z: mobile.rotation.z,
+					duration: 2,
+					repeat: -1,
+					ease: 'none'
+				});
+			});
+
+		animateBar('#section1', BAR_SECTIONS['SECTION1'], BAR_SECTIONS['SECTION0']);
 		animateBar(
 			'#section2',
-			'400px',
-			'400px',
-			{ right: 'calc(100vw - 400px)' },
+			BAR_SECTIONS['SECTION2'],
+			BAR_SECTIONS['SECTION1'],
+			{ right: `calc(100vw - ${BAR_SECTIONS['SECTION2']})` },
 			{ right: 0 }
 		);
+
+		gsap.to('#mobile-canvas', {
+			scrollTrigger: {
+				trigger: '#section1',
+				start: 'top center',
+				end: 'bottom bottom',
+				scrub: true,
+				onEnter: () => {
+					console.log(MOBILE_SECTIONS_WIDTH['SECTION1']);
+					gsap.to('#mobile-canvas', {
+						maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
+						left: MOBILE_SECTIONS_LEFT['SECTION1'],
+						duration: 0.2,
+						ease: 'none'
+					});
+				},
+				onLeaveBack: () => {
+					gsap.to('#mobile-canvas', {
+						maxWidth: MOBILE_SECTIONS_WIDTH['SECTION0'],
+						left: MOBILE_SECTIONS_LEFT['SECTION0'],
+						duration: 0.2,
+						ease: 'none'
+					});
+				}
+			}
+		});
 	});
 </script>
 
 <!-- <Toaster /> -->
 <ScrollToTop />
 
-<div class="absolute top-0 right-0 w-0 h-full bg-black bar" />
+<div class="fixed w-screen top-0 left-0 h-[100svh] z-[20]">
+	<div
+		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[25%] aspect-[1/2] w-full"
+		id="mobile-canvas"
+	>
+		<canvas bind:this={mobile3DRef} class="w-full h-full pointer-events-none" />
+	</div>
+</div>
+
+<div class="absolute top-0 right-0 z-[10] h-full bg-black bar" />
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
