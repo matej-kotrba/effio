@@ -27,9 +27,9 @@
 	};
 
 	const MOBILE_SECTIONS_WIDTH = {
-		SECTION0: '25%',
-		SECTION1: '25%',
-		SECTION2: '35%'
+		SECTION0: '300px',
+		SECTION1: '300px',
+		SECTION2: '400px'
 	};
 
 	const MOBILE_SECTIONS_LEFT = {
@@ -39,6 +39,7 @@
 	};
 
 	const STARTING_TRANSLATE_X = 2;
+	let mobileCanvasContainer: HTMLDivElement;
 	let mobile3DRef: HTMLCanvasElement;
 
 	function animateBar(
@@ -87,15 +88,31 @@
 				gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
 
 				let rotateMobile = gsap.to(mobile.rotation, {
-					y: mobile.rotation.y,
-					// x: () => {
-
-					// },
+					x: mobile.rotation.y,
+					y: (Math.PI / 180) * 20,
 					z: mobile.rotation.z,
-					duration: 2,
+					yoyoEase: true,
+
+					duration: 5,
 					repeat: -1,
-					ease: 'none'
+					ease: 'Power1.easeInOut'
 				});
+
+				gsap
+					.timeline({
+						scrollTrigger: {
+							trigger: '#section1',
+							start: 'top center',
+							end: 'bottom bottom',
+							scrub: true,
+							markers: true,
+							onEnter: () => {},
+							onLeaveBack: () => {}
+						}
+					})
+					.to(mobileCanvasContainer, {
+						y: '20%'
+					});
 			});
 
 		animateBar('#section1', BAR_SECTIONS['SECTION1'], BAR_SECTIONS['SECTION0']);
@@ -138,10 +155,11 @@
 <!-- <Toaster /> -->
 <ScrollToTop />
 
-<div class="fixed w-screen top-0 left-0 h-[100svh] z-[20]">
+<div class="fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none">
 	<div
-		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[25%] aspect-[1/2] w-full"
+		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[400px] aspect-[1/2] w-full"
 		id="mobile-canvas"
+		bind:this={mobileCanvasContainer}
 	>
 		<canvas bind:this={mobile3DRef} class="w-full h-full pointer-events-none" />
 	</div>
