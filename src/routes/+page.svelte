@@ -51,7 +51,8 @@
 			.load('https://prod.spline.design/h81QulQb8GQq0-Oa/scene.splinecode')
 			.then(() => {
 				const mobile = app.findObjectByName('mobile');
-				if (!mobile) return;
+				const screen = app.findObjectByName('Screen');
+				if (!mobile || !screen) return;
 				gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
 				gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
 				gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
@@ -102,6 +103,23 @@
 								});
 							}
 						}
+					})
+					.to(mobileCanvasContainer, {
+						duration: 2,
+						scrollTrigger: {
+							trigger: '#section3',
+							start: 'top center',
+							end: 'bottom center',
+							markers: true,
+							scrub: true,
+							toggleClass: 'fullscreen',
+							onEnter: () => {
+								gsap.to('#blob', {
+									width: '100vw',
+									duration: 2
+								});
+							}
+						}
 					});
 
 				gsap.to('#mobile-canvas', {
@@ -147,6 +165,7 @@
 								x: (Math.PI / 180) * -20,
 								duration: 1
 							});
+							screen.scale.x = 0;
 						},
 						onLeaveBack: () => {
 							rotateMobile.resume();
@@ -156,6 +175,7 @@
 								duration: 0.2,
 								ease: 'none'
 							});
+							screen.scale.x = screen.scale.y;
 						}
 					}
 				});
@@ -175,7 +195,6 @@
 					start: 'top center',
 					end: 'bottom bottom',
 					scrub: true,
-					markers: true,
 					onEnter: () => {
 						gsap.to('.bar', {
 							width: onEnterWidth,
@@ -210,13 +229,16 @@
 <!-- <Toaster /> -->
 <ScrollToTop />
 
-<div class="fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none">
+<div
+	class="fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none overflow-clip"
+>
 	<div
 		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[400px] aspect-[1/2] w-full isolate"
 		id="mobile-canvas"
 		bind:this={mobileCanvasContainer}
 	>
 		<div
+			id="blob"
 			class="absolute w-full aspect-square rounded-full top-1/2 -translate-y-1/2 bg-black z-[-100]"
 		/>
 		<canvas bind:this={mobile3DRef} class="w-full h-full pointer-events-none" />
@@ -573,6 +595,12 @@
 				</GridLayout>
 			</div>
 		</section>
+		<section id="section3">
+			<Space gap={400} />
+			<h2 class="relative z-[10000] font-bold text-white text-h1">
+				Want to know more?
+			</h2>
+		</section>
 	</div>
 	<Space gap={50} />
 	<Footer />
@@ -643,5 +671,18 @@
 	}
 	.grid-layout__about-us > .content {
 		grid-area: content;
+	}
+
+	.fullscreen > #blob {
+		animation: blob_scale 6s ease-in-out infinite alternate;
+	}
+
+	@keyframes blob_scale {
+		from {
+			scale: 0.95;
+		}
+		to {
+			scale: 1.05;
+		}
 	}
 </style>
