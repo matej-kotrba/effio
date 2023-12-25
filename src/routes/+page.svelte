@@ -26,6 +26,8 @@
 		SECTION2: '400px'
 	};
 
+	const SECTION1_Y_TRANSLATE = '20%';
+
 	const MOBILE_SECTIONS_WIDTH = {
 		SECTION0: '300px',
 		SECTION1: '300px',
@@ -35,45 +37,12 @@
 	const MOBILE_SECTIONS_LEFT = {
 		SECTION0: '100vw',
 		SECTION1: `calc(100vw - ${MOBILE_SECTIONS_WIDTH['SECTION1']} - ((${BAR_SECTIONS['SECTION1']} - ${MOBILE_SECTIONS_WIDTH['SECTION1']}) / 2))`,
-		SECTION2: '35%'
+		SECTION2: '0%'
 	};
 
 	const STARTING_TRANSLATE_X = 2;
 	let mobileCanvasContainer: HTMLDivElement;
 	let mobile3DRef: HTMLCanvasElement;
-
-	function animateBar(
-		triggerElement: string,
-		onEnterWidth: string,
-		onLeaveBackWidth: string,
-		onEnterOther: { [key: string]: any } = {},
-		onLeaveOther: { [key: string]: any } = {}
-	) {
-		gsap.to('.bar', {
-			scrollTrigger: {
-				trigger: triggerElement,
-				start: 'top center',
-				end: 'bottom bottom',
-				scrub: true,
-				onEnter: () => {
-					gsap.to('.bar', {
-						width: onEnterWidth,
-						duration: 0.2,
-						ease: 'none',
-						...onEnterOther
-					});
-				},
-				onLeaveBack: () => {
-					gsap.to('.bar', {
-						width: onLeaveBackWidth,
-						duration: 0.2,
-						ease: 'none',
-						...onLeaveOther
-					});
-				}
-			}
-		});
-	}
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
@@ -105,15 +74,127 @@
 							start: 'top center',
 							end: 'bottom bottom',
 							scrub: true,
-							markers: true,
 							onEnter: () => {},
 							onLeaveBack: () => {}
 						}
 					})
 					.to(mobileCanvasContainer, {
-						y: '20%'
+						y: SECTION1_Y_TRANSLATE,
+						duration: 1,
+						scrollTrigger: {
+							trigger: '#section1',
+							start: 'top center',
+							end: 'bottom center',
+							scrub: true
+						}
+					})
+					.to(mobileCanvasContainer, {
+						duration: 1,
+						scrollTrigger: {
+							trigger: '#section2',
+							start: 'top center',
+							end: 'bottom center',
+							scrub: true,
+							onEnter: () => {
+								gsap.to(mobileCanvasContainer, {
+									y: 0,
+									duration: 1
+								});
+							}
+						}
 					});
+
+				gsap.to('#mobile-canvas', {
+					scrollTrigger: {
+						trigger: '#section1',
+						start: 'top center',
+						end: 'bottom bottom',
+						scrub: true,
+						onEnter: () => {
+							gsap.to('#mobile-canvas', {
+								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
+								left: MOBILE_SECTIONS_LEFT['SECTION1'],
+								duration: 0.2,
+								ease: 'none'
+							});
+						},
+						onLeaveBack: () => {
+							gsap.to('#mobile-canvas', {
+								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION0'],
+								left: MOBILE_SECTIONS_LEFT['SECTION0'],
+								duration: 0.2,
+								ease: 'none'
+							});
+						}
+					}
+				});
+				gsap.to('#mobile-canvas', {
+					scrollTrigger: {
+						trigger: '#section2',
+						start: 'top center',
+						end: 'bottom bottom',
+						scrub: true,
+						onEnter: () => {
+							gsap.to('#mobile-canvas', {
+								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION2'],
+								left: MOBILE_SECTIONS_LEFT['SECTION2'],
+								duration: 0.2,
+								ease: 'none'
+							});
+							rotateMobile.pause();
+							gsap.to(mobile.rotation, {
+								y: (Math.PI / 180) * 380,
+								x: (Math.PI / 180) * -20,
+								duration: 1
+							});
+						},
+						onLeaveBack: () => {
+							rotateMobile.resume();
+							gsap.to('#mobile-canvas', {
+								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
+								left: MOBILE_SECTIONS_LEFT['SECTION1'],
+								duration: 0.2,
+								ease: 'none'
+							});
+						}
+					}
+				});
 			});
+
+		// Animating bar
+		function animateBar(
+			triggerElement: string,
+			onEnterWidth: string,
+			onLeaveBackWidth: string,
+			onEnterOther: { [key: string]: any } = {},
+			onLeaveOther: { [key: string]: any } = {}
+		) {
+			gsap.to('.bar', {
+				scrollTrigger: {
+					trigger: triggerElement,
+					start: 'top center',
+					end: 'bottom bottom',
+					scrub: true,
+					markers: true,
+					onEnter: () => {
+						gsap.to('.bar', {
+							width: onEnterWidth,
+							duration: 0.2,
+							ease: 'none',
+							...onEnterOther
+						});
+					},
+					onLeaveBack: () => {
+						gsap.to('.bar', {
+							width: onLeaveBackWidth,
+							duration: 0.2,
+							ease: 'none',
+							...onLeaveOther
+						});
+					}
+				}
+			});
+		}
 
 		animateBar('#section1', BAR_SECTIONS['SECTION1'], BAR_SECTIONS['SECTION0']);
 		animateBar(
@@ -123,32 +204,6 @@
 			{ right: `calc(100vw - ${BAR_SECTIONS['SECTION2']})` },
 			{ right: 0 }
 		);
-
-		gsap.to('#mobile-canvas', {
-			scrollTrigger: {
-				trigger: '#section1',
-				start: 'top center',
-				end: 'bottom bottom',
-				scrub: true,
-				onEnter: () => {
-					console.log(MOBILE_SECTIONS_WIDTH['SECTION1']);
-					gsap.to('#mobile-canvas', {
-						maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
-						left: MOBILE_SECTIONS_LEFT['SECTION1'],
-						duration: 0.2,
-						ease: 'none'
-					});
-				},
-				onLeaveBack: () => {
-					gsap.to('#mobile-canvas', {
-						maxWidth: MOBILE_SECTIONS_WIDTH['SECTION0'],
-						left: MOBILE_SECTIONS_LEFT['SECTION0'],
-						duration: 0.2,
-						ease: 'none'
-					});
-				}
-			}
-		});
 	});
 </script>
 
@@ -157,15 +212,18 @@
 
 <div class="fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none">
 	<div
-		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[400px] aspect-[1/2] w-full"
+		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[400px] aspect-[1/2] w-full isolate"
 		id="mobile-canvas"
 		bind:this={mobileCanvasContainer}
 	>
+		<div
+			class="absolute w-full aspect-square rounded-full top-1/2 -translate-y-1/2 bg-black z-[-100]"
+		/>
 		<canvas bind:this={mobile3DRef} class="w-full h-full pointer-events-none" />
 	</div>
 </div>
 
-<div class="absolute top-0 right-0 z-[10] h-full bg-black bar" />
+<div class="absolute top-0 right-0 z-[10] h-full bg-black bar hidden" />
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
@@ -365,131 +423,155 @@
 				</div>
 			</div>
 		</section>
-		<section id="section1">
-			<LineConnectorWithTitle title="Community place">
-				<h2
-					class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
-				>
-					CREATE<span class="text-light_text_black dark:text-dark_text_white"
-						>,</span
+		<section
+			id="section1"
+			class="grid"
+			style={`grid-template-columns: 1fr ${BAR_SECTIONS['SECTION1']};`}
+		>
+			<div>
+				<LineConnectorWithTitle title="Community place">
+					<h2
+						class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-light_primary dark:text-dark_primary"
 					>
-					SHARE
-					<span
-						class="text-sm font-normal text-light_text_black dark:text-dark_text_white"
-						>and</span
-					> EXPLORE
-				</h2>
-				<p
-					class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
-				>
-					Browse and share your own created tests for all other users here
-				</p>
-			</LineConnectorWithTitle>
-			<GridLayout>
-				<slot slot="a">
-					<div class="flex flex-col justify-between h-full">
-						<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
-							Explore what have community created!
-						</h3>
-						<div>
-							<img
-								src="/imgs/community_place.svg"
-								alt="Community place"
-								class="max-w-[300px] mx-auto w-full xs:w-auto"
-							/>
-							<Space gap={36} />
-							<CallToAction text={'Visit'} center="right">
-								<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
-							</CallToAction>
-						</div>
-					</div>
-				</slot>
-				<slot slot="b">
-					<h3
-						class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+						CREATE<span class="text-light_text_black dark:text-dark_text_white"
+							>,</span
+						>
+						SHARE
+						<span
+							class="text-sm font-normal text-light_text_black dark:text-dark_text_white"
+							>and</span
+						> EXPLORE
+					</h2>
+					<p
+						class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 					>
-						Read more about the community place and all its features.
-					</h3>
-				</slot>
-				<slot slot="c">
-					<div class="flex flex-col justify-between h-full">
-						<h3 class="text-light_white text-body1 md:text-h5">
-							Want to create tests of you own?<br />All you need is to Log In
-							using one of these providers: GitHub, Google
-						</h3>
-						<div class="max-h-full mt-auto ml-auto w-fit">
-							<button
-								on:click={() => {}}
-								class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
-								type="button">Log In</button
+						Browse and share your own created tests for all other users here
+					</p>
+				</LineConnectorWithTitle>
+				<GridLayout>
+					<slot slot="a">
+						<div class="flex flex-col justify-between h-full">
+							<h3
+								class="mb-auto font-light text-h6 md:text-h4 text-light_white"
 							>
+								Explore what have community created!
+							</h3>
+							<div>
+								<img
+									src="/imgs/community_place.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+								<Space gap={36} />
+								<CallToAction text={'Visit'} center="right">
+									<iconify-icon
+										icon="material-symbols:arrow-right-alt-rounded"
+									/>
+								</CallToAction>
+							</div>
 						</div>
-					</div>
-				</slot>
-			</GridLayout>
+					</slot>
+					<slot slot="b">
+						<h3
+							class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+						>
+							Read more about the community place and all its features.
+						</h3>
+					</slot>
+					<slot slot="c">
+						<div class="flex flex-col justify-between h-full">
+							<h3 class="text-light_white text-body1 md:text-h5">
+								Want to create tests of you own?<br />All you need is to Log In
+								using one of these providers: GitHub, Google
+							</h3>
+							<div class="max-h-full mt-auto ml-auto w-fit">
+								<button
+									on:click={() => {}}
+									class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+									type="button">Log In</button
+								>
+							</div>
+						</div>
+					</slot>
+				</GridLayout>
+			</div>
 		</section>
-		<section id="section2">
-			<LineConnectorWithTitle title="Test creator" lineColor={'var(--success)'}>
-				<h2
-					class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
+		<section
+			id="section2"
+			class="grid"
+			style={`grid-template-columns: ${BAR_SECTIONS['SECTION2']} 1fr;`}
+		>
+			<div />
+			<div>
+				<LineConnectorWithTitle
+					title="Test creator"
+					lineColor={'var(--success)'}
 				>
-					<span
-						class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
-						>The</span
+					<h2
+						class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
 					>
-					Ultimate Generator
-				</h2>
-				<p
-					class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
-				>
-					Create tests using simple and user friendly enviroment with plenty of
-					options
-				</p>
-			</LineConnectorWithTitle>
-			<GridLayout>
-				<slot slot="a">
-					<div class="flex flex-col justify-between h-full">
-						<h3 class="mb-auto font-light text-h6 md:text-h4 text-light_white">
-							Create your own tests using simple enviroment!
-						</h3>
-						<Space gap={10} />
-						<div>
-							<img
-								src="/imgs/online_test.svg"
-								alt="Community place"
-								class="max-w-[300px] mx-auto w-full xs:w-auto"
-							/>
-							<Space gap={36} />
-							<CallToAction text={'Visit'} center="right">
-								<iconify-icon icon="material-symbols:arrow-right-alt-rounded" />
-							</CallToAction>
-						</div>
-					</div>
-				</slot>
-				<slot slot="b">
-					<h3
-						class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+						<span
+							class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
+							>The</span
+						>
+						Ultimate Generator
+					</h2>
+					<p
+						class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
 					>
-						Import and export in GIFT format compatible with other popular
-						platforms like Moodle.
-					</h3>
-				</slot>
-				<slot slot="c">
-					<div class="flex flex-col justify-between h-full">
-						<h3 class="text-light_white text-body1 md:text-h5">
-							Want to create tests of you own?<br />All you need is to Log In
-							using one of these providers: GitHub, Google
-						</h3>
-						<div class="max-h-full mt-auto ml-auto w-fit">
-							<button
-								on:click={() => {}}
-								class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
-								type="button">Log In</button
+						Create tests using simple and user friendly enviroment with plenty
+						of options
+					</p>
+				</LineConnectorWithTitle>
+				<GridLayout>
+					<slot slot="a">
+						<div class="flex flex-col justify-between h-full">
+							<h3
+								class="mb-auto font-light text-h6 md:text-h4 text-light_white"
 							>
+								Create your own tests using simple enviroment!
+							</h3>
+							<Space gap={10} />
+							<div>
+								<img
+									src="/imgs/online_test.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+								<Space gap={36} />
+								<CallToAction text={'Visit'} center="right">
+									<iconify-icon
+										icon="material-symbols:arrow-right-alt-rounded"
+									/>
+								</CallToAction>
+							</div>
 						</div>
-					</div>
-				</slot>
-			</GridLayout>
+					</slot>
+					<slot slot="b">
+						<h3
+							class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+						>
+							Import and export in GIFT format compatible with other popular
+							platforms like Moodle.
+						</h3>
+					</slot>
+					<slot slot="c">
+						<div class="flex flex-col justify-between h-full">
+							<h3 class="text-light_white text-body1 md:text-h5">
+								Want to create tests of you own?<br />All you need is to Log In
+								using one of these providers: GitHub, Google
+							</h3>
+							<div class="max-h-full mt-auto ml-auto w-fit">
+								<button
+									on:click={() => {}}
+									class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+									type="button">Log In</button
+								>
+							</div>
+						</div>
+					</slot>
+				</GridLayout>
+			</div>
 		</section>
 	</div>
 	<Space gap={50} />

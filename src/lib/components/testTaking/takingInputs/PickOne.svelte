@@ -19,8 +19,6 @@
 					.answers[selectedInput].id
 			: undefined;
 
-	console.log(resultFormat);
-
 	// Update the selectedInput based on the resultFormat
 	$: {
 		if (resultFormat) {

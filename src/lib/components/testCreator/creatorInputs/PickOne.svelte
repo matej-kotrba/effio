@@ -28,8 +28,6 @@
 		}
 	}
 
-	$: console.log(content.answers);
-
 	const QUESTION_LIMIT = 10;
 
 	function newQuestionConditionCheck() {
