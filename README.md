@@ -25,18 +25,33 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
     - [x] Comments - question responses
     - [x] Import and export of GIFT format
     - [x] Programming test
-    - [ ] Test templates 
-- [x] Community place
-    - [x] Showing tests
+    - [ ] Test templates
+- [x] Test taking
+    - [x] Being able to take tests and see results
+    - [x] Randomly ordered answers and questions
+    - [x] Question navigation, showing marks and points earned
+    - [x] Test overview page
+- [] Community place
+    - [] Showing tests
         - [x] Infinite scrolling functionality
         - [x] Depending on release date and rating
         - [x] Showing relevant tests which were released recently
         - [ ] Showing user specific relevant tests    
+- [x] Test History
+- [ ] Groups
+    - [x] Creating of groups
+    - [x] Inviting to groups
+    - [x] Sharing tests in group
+    - [x] Graphs of tests taken by participants of group
+    - [x] Group channel chat
+    - [ ] Editing, deleting groups and its channels
+    - [ ] Showing relevant information and overall better design
 
-## Goals
-- Develop web application for creating, exporting and importing online tests in GIFT format
-- Create community place where you can publish your own tests and browse tests of others
-- Make fully scalable, typesafe and performant application
+## Main goals
+- [x] Develop web application for creating, exporting and importing online tests in GIFT format
+- [x] Eneble users to take tests and view results
+- [x] Create community place where you can publish your own tests and browse tests of others
+- [x] Make fully scalable, typesafe and performant application
 
 
 ## Author
@@ -44,7 +59,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 
 
 ## Consultants
-### [Mgr. Marek Lučný](https://github.com/superucitelka), [Lukáš Sukeník](https://github.com/lukyncze)
+### [Mgr. Marek Lučný](https://github.com/superucitelka)
 
 
 ## Techstack
@@ -67,6 +82,8 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 - Zod
 - Chart.js
 - Prisma
+- Animations
+    - GSAP
 - Auth
   - Auth.js (Oauth - Google, Github)
 - Bundler
@@ -74,19 +91,28 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 - Package manager
   - pnpm
 - Database
-  - Planetscale (MySQL), connection via Prisma
+  - MySQL, connection via Prisma
 - Hosting
-  - Vercel, AWS S3
-
-
+  - Vercel, Planetscale, Cloudinary, Pusher, Splite
+- Cloud services APIs
+    - Cloudinary
+    - Pusher
+    - Splite
+- Other
+    - Iconify.design
+    - SandboxJS
+    - gift-pegjs
+    - Leaflet,
+    - monaco-editor
 
 ## Timeline
 - January -> April - Learning stack and testing it separatly
-- April -> May - Building frontend for Effio
+- April -> May - Designing and building frontend for Effio
 - May -> June - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
 - June -> July - Displaying tests, taking them and being able to visit previously taken ones, implemented drag and drop input creation in test creator
 - August -> October - Creating more input types, darkmode, refactoring and leveling up quality of life in app
-- November -> December - Programming test, many bug fixes, refactoring, comments and making useful features
+- November -> December - Programming test, many bug fixes, refactoring, comments and making quality of live features
+- December -> January - bug fixes, polishing app and writing documentation
 
 ## Sources
 - Youtube
@@ -99,3 +125,4 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
   - [SvelteKit](https://kit.svelte.dev/)
   - [tRPC](https://trpc.io/)
   - [Prisma](https://www.prisma.io/)
+  - [Auth.js](https://authjs.dev/)
