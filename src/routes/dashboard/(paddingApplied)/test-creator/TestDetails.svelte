@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { navigating } from '$app/stores';
-	import { fly } from 'svelte/transition';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import TextInput from '~components/inputs/TextInputSimple.svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
@@ -25,6 +23,8 @@
 	import { browser } from '$app/environment';
 	import TagContainer from './Tag.svelte';
 	import IconButton from '~components/buttons/IconButton.svelte';
+	import Input from '~components/testTaking/Input.svelte';
+	import { get } from 'svelte/store';
 
 	export let sectionTransitionDuration: number;
 	export let testType: TestType;
@@ -47,6 +47,8 @@
 	let tags: Tag[] = [];
 	let visibleTags = tags;
 	let gotTags = false;
+
+	export let openPreview: () => void = () => {};
 
 	async function getTags() {
 		if (gotTags === true) return;
@@ -75,6 +77,23 @@
 </script>
 
 <div class="max-w-[1000px] flex flex-col w-full gap-4">
+	<Dialog
+		title="Test preview"
+		bind:open={openPreview}
+		formClasses="h-[min(800px,95vh)] p-2"
+	>
+		<div class="h-[calc(100%-1em)] overflow-y-auto overscroll-contain">
+			{#if testType === 'REGULAR'}
+				{#each $testObject['questions'] as _, index}
+					<Input
+						questionIndex={index}
+						testObject={get(testObject)}
+						showOrderNumber={false}
+					/>
+				{/each}
+			{/if}
+		</div>
+	</Dialog>
 	<ErrorEnhance error={$testObject.errors.title}>
 		<TextInput
 			displayOutside={true}

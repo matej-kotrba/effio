@@ -141,6 +141,7 @@
 		<div bind:this={questionContainerRef}>
 			{#each testContent.testVersions[0].questions as _, index}
 				<Input
+					testObject={$testObject}
 					questionIndex={index}
 					class={`border-2 border-solid ${
 						$testObject.questions[index].errors.content

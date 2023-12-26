@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import { questionContentFunctions } from '~helpers/test/questionFunctions';
-	import { testObject } from '~stores/testObject';
+	import type { TestObject } from '~stores/testObject';
 	import { clickOutside } from '~use/clickOutside';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<FillQuestion> | null =
 		null;
+	export let testObject: TestObject;
 
 	let showedAnswerIndex: number | undefined = undefined;
 
-	$: content = $testObject.questions[questionIndex].content as FillQuestion;
+	$: content = testObject.questions[questionIndex].content as FillQuestion;
 </script>
 
 <div>
@@ -21,7 +21,7 @@
 		<!-- <TextInputSimple
 			title="Your answer"
 			inputProperties={{ disabled: !!resultFormat }}
-			titleName="{$testObject.questions[questionIndex]['title']}{questionIndex}"
+			titleName="{testObject.questions[questionIndex]['title']}{questionIndex}"
 			bind:inputValue={question['answer']['options'][index]}
 		/> -->
 		<div class="dropdown dropdown-hover">

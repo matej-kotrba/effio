@@ -10,25 +10,25 @@
 		latitudeSchema,
 		longitudeSchema
 	} from '~schemas/textInput';
-	import { testObject } from '~stores/testObject';
+	import type { TestObject } from '~stores/testObject';
 	import 'leaflet/dist/leaflet.css';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<GeographyQuestion> | null =
 		null;
+	export let testObject: TestObject;
 
-	$: content = $testObject.questions[questionIndex]
-		.content as GeographyQuestion;
+	$: content = testObject.questions[questionIndex].content as GeographyQuestion;
 
 	let mapEl: HTMLDivElement;
 
 	let answerLocation: MiddlewareLocation = {
 		lat: String(
-			($testObject.questions[questionIndex].content as GeographyQuestion)
+			(testObject.questions[questionIndex].content as GeographyQuestion)
 				.answerPoint.location[0]
 		),
 		lng: String(
-			($testObject.questions[questionIndex].content as GeographyQuestion)
+			(testObject.questions[questionIndex].content as GeographyQuestion)
 				.answerPoint.location[1]
 		)
 	};

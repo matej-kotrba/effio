@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import type { TestObject } from '~stores/testObject';
 	import Comment from '../Comment.svelte';
 
 	export let questionIndex: number;
+	export let testObject: TestObject;
 
-	$: content = $testObject.questions[questionIndex]
-		.content as TrueFalseQuestion;
+	$: content = testObject.questions[questionIndex].content as TrueFalseQuestion;
 
 	export let resultFormat: QuestionServerCheckResponse<TrueFalseQuestion> | null =
 		null;
 
 	const checkBoxValues = (
-		$testObject.questions[questionIndex]['content'] as TrueFalseQuestion
+		testObject.questions[questionIndex]['content'] as TrueFalseQuestion
 	)['answers'];
 
 	$: content['answers'] = checkBoxValues;
@@ -68,7 +68,7 @@
 					type="checkbox"
 					class="checkbox checkbox-primary radio_button dark:checkbox-accent"
 					disabled={!!resultFormat}
-					name={$testObject.questions[questionIndex].title + '-radio'}
+					name={testObject.questions[questionIndex].title + '-radio'}
 					bind:checked={checkBoxValues[index]['isTrue']}
 				/>
 			</div>

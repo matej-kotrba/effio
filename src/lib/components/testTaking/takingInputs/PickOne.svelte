@@ -1,21 +1,22 @@
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import type { TestObject } from '~stores/testObject';
 	import Comment from '../Comment.svelte';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<PickOneQuestion> | null =
 		null;
+	export let testObject: TestObject;
 
-	$: content = $testObject.questions[questionIndex].content as PickOneQuestion;
+	$: content = testObject.questions[questionIndex].content as PickOneQuestion;
 
 	let selectedInput: number | undefined = undefined;
 
 	// Update the store based on the selection
-	$: ($testObject.questions[questionIndex]['content'] as PickOneQuestion)[
+	$: (testObject.questions[questionIndex]['content'] as PickOneQuestion)[
 		'correctAnswerId'
 	] =
 		selectedInput !== undefined
-			? ($testObject.questions[questionIndex]['content'] as PickOneQuestion)
+			? (testObject.questions[questionIndex]['content'] as PickOneQuestion)
 					.answers[selectedInput].id
 			: undefined;
 
@@ -67,7 +68,7 @@
 					type="radio"
 					class="radio radio-primary dark:border-dark_primary dark:checked:bg-dark_primary radio_button"
 					disabled={!!resultFormat}
-					name={$testObject.questions[questionIndex].title + '-radio'}
+					name={testObject.questions[questionIndex].title + '-radio'}
 					value={index}
 					bind:group={selectedInput}
 				/>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { applicationStates } from '~stores/applicationStates';
-	import { testObject } from '~stores/testObject';
+	import type { TestObject } from '~stores/testObject';
 	import Comment from '../Comment.svelte';
 
 	const wrongAnswerHiglightColors = [
@@ -16,9 +16,10 @@
 		'#8b451330'
 	];
 
+	export let testObject: TestObject;
 	export let questionIndex: number;
 
-	$: content = $testObject.questions[questionIndex][
+	$: content = testObject.questions[questionIndex][
 		'content'
 	] as ConnectQuestion;
 
@@ -37,7 +38,7 @@
 	let svgPositions: {
 		[key: string]: SvgPositions;
 	} = Object.fromEntries(
-		($testObject.questions[questionIndex]['content'] as ConnectQuestion)[
+		(testObject.questions[questionIndex]['content'] as ConnectQuestion)[
 			'answers'
 		].map((_, index) => {
 			return [
@@ -60,7 +61,7 @@
 		};
 	} = Object.fromEntries(
 		Object.keys(
-			($testObject.questions[questionIndex]['content'] as ConnectQuestion)[
+			(testObject.questions[questionIndex]['content'] as ConnectQuestion)[
 				'matchedAnswers'
 			]
 		).map((_, index) => [index, { x: undefined, y: undefined, ref: undefined }])
@@ -99,11 +100,11 @@
 		for (let k in attachPoints) {
 			const svgRef = draggingPoint.ref!.getBoundingClientRect();
 			const keys = Object.keys(
-				($testObject.questions[questionIndex]['content'] as ConnectQuestion)
+				(testObject.questions[questionIndex]['content'] as ConnectQuestion)
 					.matchedAnswers
 			);
 			const usedKeys = (
-				$testObject.questions[questionIndex]['content'] as ConnectQuestion
+				testObject.questions[questionIndex]['content'] as ConnectQuestion
 			).answers.map((item) => item.matchedAnswerIndex);
 
 			if (
@@ -114,20 +115,20 @@
 				draggingPoint.x = attachPoints[k].x! - svgRef.left;
 				draggingPoint.y = attachPoints[k].y! - svgRef.top;
 				const key = Object.keys(
-					($testObject.questions[questionIndex]['content'] as ConnectQuestion)
+					(testObject.questions[questionIndex]['content'] as ConnectQuestion)
 						.matchedAnswers
 				)[+k];
-				// ($testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
+				// (testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
 				(
-					$testObject.questions[questionIndex]['content'] as ConnectQuestion
+					testObject.questions[questionIndex]['content'] as ConnectQuestion
 				).answers[draggingIndex].matchedAnswerIndex = key;
 				return;
 			}
 		}
 
-		(
-			$testObject.questions[questionIndex]['content'] as ConnectQuestion
-		).answers[draggingIndex].matchedAnswerIndex = undefined;
+		(testObject.questions[questionIndex]['content'] as ConnectQuestion).answers[
+			draggingIndex
+		].matchedAnswerIndex = undefined;
 		draggingPoint.x = undefined;
 		draggingPoint.y = undefined;
 	}
@@ -203,7 +204,7 @@
 						type="radio"
 						class="radio radio-primary radio_button"
 						disabled={!!resultFormat}
-						name={$testObject.questions[questionIndex].title + '-radio'}
+						name={testObject.questions[questionIndex].title + '-radio'}
 						value={index}
 						bind:this={inputElements[index]}
 					/> -->

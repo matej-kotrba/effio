@@ -4,9 +4,7 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import TemplateCard from '~components/containers/TemplateCard.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import Creator, {
-		createNewInput
-	} from '~components/testCreator/Creator.svelte';
+	import Creator from '~components/testCreator/Creator.svelte';
 	import FileImport from '~components/inputs/FileImport.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
@@ -23,7 +21,6 @@
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 	import TestDetails from './TestDetails.svelte';
 	import type { TestType } from '@prisma/client';
-	import { onMount } from 'svelte';
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import { validateTestAndRecordIt } from '~helpers/testGroupCalls';
 	import { goto } from '$app/navigation';
@@ -37,6 +34,7 @@
 	const SECTION_TRANSITION_DURATION = 400;
 
 	let finishModal: HTMLDialogElement;
+	let openPreviewModal: () => void;
 
 	initializeNewTestToTestStore({
 		title: '',
@@ -46,8 +44,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -369,13 +367,14 @@
 			}}
 		>
 			<TestDetails
+				bind:openPreview={openPreviewModal}
 				sectionTransitionDuration={SECTION_TRANSITION_DURATION}
 				{testType}
 				let:testImageFile
 			>
 				<div class="flex justify-center gap-6 my-4">
 					<BasicButton
-						onClick={() => {}}
+						onClick={() => openPreviewModal()}
 						title={'Preview'}
 						class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
 					/>

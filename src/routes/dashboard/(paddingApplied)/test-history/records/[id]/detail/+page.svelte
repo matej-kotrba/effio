@@ -112,6 +112,7 @@
 			<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
 				{#each res.record['questionRecords'] as question, index}
 					<Input
+						testObject={$testObject}
 						questionIndex={index}
 						class={`border-2 border-solid ${
 							$testObject.questions[index].errors.content
