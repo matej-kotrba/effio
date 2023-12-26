@@ -187,6 +187,7 @@
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
 					<CardAlternative
+						type={test.type}
 						class={`${isRegettingAllTests ? 'opacity-50' : ''}`}
 						navigationLink={`/tests/${test.id}`}
 						data={{
@@ -199,6 +200,7 @@
 							img: test.imageUrl,
 							tags: getTestTags(index),
 							views: test.views,
+							published: test.published,
 							options: TypesafeTabs(test)
 						}}
 					/>

@@ -1,7 +1,11 @@
 <script lang="ts" context="module">
 	import type { CardAlternativeProps } from '~components/containers/card/CardAlternative.svelte';
+	import type { TestType } from '@prisma/client';
 
-	export type IdCardAlternativeProps = CardAlternativeProps & { id: string };
+	export type IdCardAlternativeProps = CardAlternativeProps & {
+		id: string;
+		type: TestType;
+	};
 
 	export type CarouselItemInput =
 		| IdCardAlternativeProps[]
@@ -158,6 +162,7 @@
 							<CardAlternative
 								class="mx-auto"
 								navigationLink={'/tests/' + item.id}
+								type={item.type}
 								data={{
 									...item
 								}}

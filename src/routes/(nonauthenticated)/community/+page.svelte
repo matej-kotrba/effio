@@ -7,7 +7,7 @@
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
 	import { onMount, tick } from 'svelte';
-	import type { Tag } from '@prisma/client';
+	import type { Tag, TestType } from '@prisma/client';
 	import type { TestFullType } from '~/Prisma.js';
 	import {
 		createObserver,
@@ -80,6 +80,7 @@
 					icon: item.owner.image,
 					createdAt: item.createdAt,
 					stars: item._count.stars,
+					type: item.type,
 					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag)
 				} satisfies IdCardAlternativeProps;
 			});

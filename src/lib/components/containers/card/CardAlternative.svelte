@@ -11,6 +11,7 @@
 		stars?: number;
 		views?: number;
 		tags?: Tag[];
+		published?: boolean;
 		options?: {
 			iconClass?: string;
 			text: string;
@@ -161,19 +162,29 @@
 					<iconify-icon icon="fa-solid:tools" class="text-white" />
 				</div>
 			{/if}
+			{#if data.published === false}
+				<div
+					data-tip="Draft"
+					class="absolute bottom-0 right-0 z-10 grid pt-4 pb-2 pl-4 pr-2 bg-yellow-500 place-content-center special-border-radius_draft tooltip"
+				>
+					<iconify-icon icon="tabler:crane" class="text-white" />
+				</div>
+			{/if}
 			<div
 				class={`relative w-full overflow-hidden group effect ${
-					type === 'PROGRAMMING'
-						? 'border-2 border-solid border-blue-500 rounded-t-md'
+					data.published === false
+						? 'border-4 border-solid border-yellow-500 rounded-t-md'
+						: type === 'PROGRAMMING'
+						? 'border-4 border-solid border-blue-500 rounded-t-md'
 						: ''
 				}`}
 			>
 				<IconButton
 					icon="ic:round-arrow-right"
-					containerClasses="absolute -translate-x-1/2 translate-y-1/2 left-1/2 
-					bottom-1/2 border-2 border-solid border-light_text_black_60 bg-transparent 
+					containerClasses="absolute z-[2] -translate-x-1/2 translate-y-1/2 left-1/2 
+					bottom-1/2 border-2 border-solid border-white bg-transparent 
 					backdrop-blur-sm hover:backdrop-blur-xl hover:bg-transparent 
-					pointer-events-none opacity-0 group-hover:opacity-100 duration-150"
+					pointer-events-none opacity-0 group-hover:opacity-100 duration-150 text-white"
 				/>
 				<a href={navigationLink || '#'} class={`w-full h-full relative`}>
 					<img
@@ -237,6 +248,10 @@
 <style>
 	.special-border-radius {
 		border-radius: 0% 100% 61% 39% / 100% 100% 0% 0%;
+	}
+
+	.special-border-radius_draft {
+		border-radius: 100% 0% 0% 100% / 100% 100% 0% 0%;
 	}
 
 	.scroll-snap {
