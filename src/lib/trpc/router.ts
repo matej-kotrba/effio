@@ -254,6 +254,7 @@ export const appRouter = router({
         } : undefined
       },
       where: {
+        published: true,
         createdAt: dateRange ? {
           gte: dateRange
         } : undefined,

@@ -23,6 +23,28 @@ export const recordsRouter = router({
       }
     }
 
+    const test = await ctx.prisma.testVersion.findUnique({
+      where: {
+        versionId: input.testId
+      },
+      include: {
+        testGroup: {
+          select: {
+            published: true,
+          }
+        }
+      }
+    })
+
+    if (!test) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+    }
+
+    if (test.testGroup.published === false) {
+      // Fore safety reasons
+      throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+    }
+
     let subcategoryOwnerId: string | undefined = undefined;
 
     if (input.subcategoryId && ctx.user?.id) {
