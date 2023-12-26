@@ -87,7 +87,7 @@
 				{#each $testObject['questions'] as _, index}
 					<Input
 						questionIndex={index}
-						testObject={get(testObject)}
+						testObject={structuredClone(get(testObject))}
 						showOrderNumber={false}
 					/>
 				{/each}

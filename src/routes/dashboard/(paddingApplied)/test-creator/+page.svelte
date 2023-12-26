@@ -28,12 +28,13 @@
 	import { TRPCClientError } from '@trpc/client';
 	import Skewed from '~components/loaders/Skewed.svelte';
 	import { applicationStates } from '~stores/applicationStates';
+	import Dialog from '~components/portals/Dialog.svelte';
 
 	export let data;
 
 	const SECTION_TRANSITION_DURATION = 400;
 
-	let finishModal: HTMLDialogElement;
+	let finishModalOpen: () => void;
 	let openPreviewModal: () => void;
 
 	initializeNewTestToTestStore({
@@ -373,11 +374,13 @@
 				let:testImageFile
 			>
 				<div class="flex justify-center gap-6 my-4">
-					<BasicButton
-						onClick={() => openPreviewModal()}
-						title={'Preview'}
-						class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
-					/>
+					{#if testType !== 'PROGRAMMING'}
+						<BasicButton
+							onClick={() => openPreviewModal()}
+							title={'Preview'}
+							class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
+						/>
+					{/if}
 					<BasicButton
 						onClick={() => {
 							const result = isTestValidAndSetErrorsToTestObject({
@@ -391,84 +394,58 @@
 								$testObject.errors = result['store']['errors'];
 								return;
 							}
-							finishModal?.showModal();
+							finishModalOpen();
 						}}
 						title={'Finish'}
 					/>
 				</div>
-				<dialog bind:this={finishModal} class="modal">
-					<form
-						method="dialog"
-						class="relative modal-box bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white"
-					>
-						<SuccessKeyframe
-							successMessage="Success!"
-							visible={isSuccess}
-							class="absolute top-0 left-0 w-full h-full bg-white dark:bg-dark_grey"
-						/>
-						<div
-							class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 {isSubmitting
-								? 'opacity-100 pointer-events-auto'
-								: 'opacity-0 pointer-events-none'}"
-						>
-							<Skewed />
-						</div>
-						<div class="modal-action">
-							<button type="button" on:click={() => finishModal.close()}>
-								<iconify-icon
-									icon="ic:round-close"
-									class="absolute text-2xl top-4 right-4"
-								/></button
-							>
-						</div>
-						<h3 class="text-lg font-bold text-center">Finishing your test</h3>
+				<Dialog
+					bind:open={finishModalOpen}
+					{isSubmitting}
+					isSuccessOpen={isSuccess}
+					title="Finishing your test"
+				>
+					<Separator
+						w={'80%'}
+						h={'1px'}
+						color={$applicationStates['darkMode']
+							? 'var(--dark-text-white-20)'
+							: 'var(--light-text-black-20)'}
+					/>
+					<p class="py-4 text-center text-body1">
+						Your test named <span class="block font-semibold"
+							>{$testObject['title']}</span
+						><Space gap={20} /> with a description:
+						<span class="block font-semibold">{$testObject['description']}</span
+						><br />
 						<Separator
-							w={'80%'}
+							w={'50%'}
 							h={'1px'}
 							color={$applicationStates['darkMode']
 								? 'var(--dark-text-white-20)'
 								: 'var(--light-text-black-20)'}
 						/>
-						<p class="py-4 text-center text-body1">
-							Your test named <span class="block font-semibold"
-								>{$testObject['title']}</span
-							><Space gap={20} /> with a description:
-							<span class="block font-semibold"
-								>{$testObject['description']}</span
-							><br />
-							<Separator
-								w={'50%'}
-								h={'1px'}
-								color={$applicationStates['darkMode']
-									? 'var(--dark-text-white-20)'
-									: 'var(--light-text-black-20)'}
-							/>
-							should be
-						</p>
-						<div class="flex justify-center gap-3">
-							<button
-								type="button"
-								disabled={isSubmitting}
-								class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
-								on:click={() =>
-									checkTestOnClientAndServerAndPostTestToDB(
-										false,
-										testImageFile
-									)}>Saved as draft</button
-							>
-							<button
-								type="button"
-								disabled={isSubmitting}
-								class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
-								on:click={() =>
-									checkTestOnClientAndServerAndPostTestToDB(
-										true,
-										testImageFile
-									)}>Published</button
-							>
-						</div>
-					</form>
-				</dialog></TestDetails
+						should be
+					</p>
+					<div class="flex justify-center gap-3">
+						<button
+							type="button"
+							disabled={isSubmitting}
+							class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
+							on:click={() =>
+								checkTestOnClientAndServerAndPostTestToDB(false, testImageFile)}
+							>Saved as draft</button
+						>
+						<button
+							type="button"
+							disabled={isSubmitting}
+							class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
+							on:click={() =>
+								checkTestOnClientAndServerAndPostTestToDB(true, testImageFile)}
+							>Published</button
+						>
+					</div>
+				</Dialog></TestDetails
 			>
 		</div>
 	{/if}

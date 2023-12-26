@@ -332,13 +332,13 @@
 						>
 					</div>
 				</button>
-				<!-- <button
+				<button
 					type="button"
 					on:click={() => deleteTest(index)}
-					class="absolute grid p-1 duration-100 -translate-y-1/2 rounded-md opacity-0 right-2 top-1/2 place-content-center group-hover:opacity-100 hover:bg-light_grey_dark dark:hover:bg-dark_grey"
+					class="absolute grid p-1 duration-100 -translate-y-1/2 rounded-md opacity-100 md:opacity-0 right-2 top-1/2 place-content-center group-hover:opacity-100 hover:bg-light_grey_dark dark:hover:bg-dark_grey"
 				>
 					<iconify-icon icon="fluent:delete-28-filled" class="text-2xl" />
-				</button> -->
+				</button>
 			</div>
 		{/each}
 	</div>
