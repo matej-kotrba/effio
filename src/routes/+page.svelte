@@ -110,7 +110,7 @@
 							trigger: '#section3',
 							start: 'top center',
 							end: 'bottom center',
-							markers: true,
+							// markers: true,
 							scrub: true,
 							toggleClass: 'fullscreen',
 							onEnter: () => {

@@ -10,9 +10,10 @@
 	let classes = '';
 </script>
 
+<!-- use:dropdown={'Delete answer'} -->
 <button
 	type="button"
-	use:dropdown={'Delete answer'}
+	data-tip="Delete answer"
 	class={twMerge(
 		`tooltip grid px-2 group place-content-center bg-light_white dark:bg-dark_black text-error dark:text-dark_error hover:bg-error hover:text-white rounded-l-md ${
 			!(questionLength > questionLimit)

@@ -123,15 +123,17 @@
 	<div class="@container">
 		<div class="flex flex-col @xl:items-center @xl:flex-row gap-2 @xl:gap-0">
 			<div class="flex items-center gap-2 mr-auto">
-				<label for="random-questions" class="text-body2 @xl:text-body1"
-					>Randomize question order</label
-				>
-				<input
-					type="checkbox"
-					name="random-questions"
-					class="checkbox checkbox-primary dark:checkbox-accent"
-					bind:checked={$testObject.randomizeQuestionOrder}
-				/>
+				{#if testType === 'REGULAR'}
+					<label for="random-questions" class="text-body2 @xl:text-body1"
+						>Randomize question order</label
+					>
+					<input
+						type="checkbox"
+						name="random-questions"
+						class="checkbox checkbox-primary dark:checkbox-accent"
+						bind:checked={$testObject.randomizeQuestionOrder}
+					/>
+				{/if}
 			</div>
 			<div>
 				<Dialog

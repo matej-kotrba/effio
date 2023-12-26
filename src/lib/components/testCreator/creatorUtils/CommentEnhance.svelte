@@ -67,10 +67,11 @@
 		<div class="flex justify-end">
 			<button
 				type="button"
+				data-tip={'Response for the answer'}
 				on:click={() => {
 					toggled = true;
 				}}
-				class={`duration-150 z-10 p-2 border-2 border-solid rounded-md bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
+				class={`duration-150 tooltip z-10 p-2 border-2 border-solid rounded-md bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
 			>
 				<iconify-icon
 					icon="solar:clipboard-linear"
@@ -81,10 +82,11 @@
 	{:else}
 		<button
 			type="button"
+			data-tip={'Response for the answer'}
 			on:click={() => {
 				toggled = true;
 			}}
-			class={`absolute duration-150
+			class={`absolute tooltip duration-150
 		${
 			displayOnHover
 				? 'group-hover/comment:opacity-100 sm:opacity-0 opacity-100'

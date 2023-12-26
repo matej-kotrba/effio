@@ -96,10 +96,10 @@
 							/>
 						</CommentEnhance>
 					</div>
-					<!-- data-tip="Mark this as a correct answer" -->
+					<!-- use:dropdown={'Mark this as a correct answer'} -->
 					<button
 						type="button"
-						use:dropdown={'Mark this as a correct answer'}
+						data-tip="Mark this as a correct answer"
 						class={`px-2 grid tooltip place-content-center rounded-r-md`}
 						style={`${
 							q.id === content.correctAnswerId
