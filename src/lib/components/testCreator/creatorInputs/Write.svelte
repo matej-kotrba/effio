@@ -34,7 +34,7 @@
 		if (($testObject.questions[indexParent].content as WriteQuestion).answers) {
 			($testObject.questions[indexParent].content as WriteQuestion).answers = [
 				...content.answers,
-				{ answer: '' }
+				{ answer: '', id: content.answers.length }
 			];
 		}
 	}

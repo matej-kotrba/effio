@@ -8,6 +8,7 @@
 	export let initialValue: string = '';
 	export let onSubmitSearch: boolean = true;
 	export let onInputSearch: boolean = false;
+	export let hideSearchIcon: boolean = false;
 
 	export let inputValue: string = '';
 
@@ -51,13 +52,15 @@
 	<div
 		class="outline-2 focus-within:outline-light_primary dark:focus-within:outline-dark_primary outline-transparent outline flex w-full overflow-hidden rounded-md bg-light_whiter dark:bg-dark_light_grey max-w-[700px] mx-auto shadow-lg duration-100"
 	>
-		<button
-			type="button"
-			class="relative flex items-center gap-2 px-2 py-1 rounded-md group"
-		>
-			<iconify-icon icon="ic:round-search" class="text-3xl" />
-			<Separator h="80%" w="1px" color="var(--light-text-black-20)" />
-		</button>
+		{#if !hideSearchIcon}
+			<button
+				type="button"
+				class="relative flex items-center gap-2 px-2 py-1 rounded-md group"
+			>
+				<iconify-icon icon="ic:round-search" class="text-3xl" />
+				<Separator h="80%" w="1px" color="var(--light-text-black-20)" />
+			</button>
+		{/if}
 		<input
 			bind:this={inputRef}
 			on:input={onChange}

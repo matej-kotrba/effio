@@ -27,7 +27,10 @@
 
 <dialog
 	bind:this={modal}
-	class={twMerge(`w-full bg-transparent animate-fade duration-150`, classes)}
+	class={twMerge(
+		`w-full bg-transparent animate-fade duration-150 p-0`,
+		classes
+	)}
 >
 	<form
 		method="dialog"

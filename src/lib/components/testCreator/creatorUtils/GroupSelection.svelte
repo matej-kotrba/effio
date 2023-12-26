@@ -61,19 +61,16 @@
 		.filter((item) => !!item);
 </script>
 
-<div class="dropdown dropdown-end dropdown-bottom">
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-	<!-- svelte-ignore a11y-label-has-associated-control -->
-	<label
-		tabindex="0"
+<div class="dropdown dropdown-end dropdown-bottom z-[100]">
+	<button
+		type="button"
 		class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
-		on:click|once={onInitialGroupDisplay}>Group Selection</label
+		on:click|once={onInitialGroupDisplay}>Group Selection</button
 	>
 	<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 	<ul
 		tabindex="0"
-		class="p-2 shadow-md menu dropdown-content z-[100] bg-light_whiter dark:bg-dark_grey dark:bg-lig w-52 min-h-[80px] relative rounded-sm"
+		class="p-2 shadow-md menu dropdown-content z-[1000000] bg-light_whiter dark:bg-dark_grey dark:bg-lig w-52 min-h-[80px] relative rounded-sm"
 	>
 		{#if typeof groups !== 'string'}
 			<div class="mb-1 grid-input__container">

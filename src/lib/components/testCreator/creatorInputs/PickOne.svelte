@@ -100,7 +100,7 @@
 					<button
 						type="button"
 						data-tip="Mark this as a correct answer"
-						class={`px-2 grid tooltip place-content-center rounded-r-md`}
+						class={`px-2 grid tooltip tooltip-left place-content-center rounded-r-md`}
 						style={`${
 							q.id === content.correctAnswerId
 								? `background-color: var(--success); color: var(${

@@ -72,8 +72,6 @@
 	if (browser) {
 		getTags();
 	}
-
-	$: console.log($testObject);
 </script>
 
 <div class="max-w-[1000px] flex flex-col w-full gap-4">
@@ -120,7 +118,7 @@
 			defualtImage={testData?.imageUrl}
 		/>
 	</div>
-	<div class="@container">
+	<div class="z-10">
 		<div class="flex flex-col @xl:items-center @xl:flex-row gap-2 @xl:gap-0">
 			<div class="flex items-center gap-2 mr-auto">
 				{#if testType === 'REGULAR'}
@@ -141,14 +139,16 @@
 					title="Tag Selection"
 					formClasses="max-w-[750px]"
 				>
-					<div class="grid grid-cols-5">
+					<div class="grid grid-cols-5 @container">
 						<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
 							<!-- <span class="text-body1">Recently Used</span> -->
-							<div class="flex items-center justify-center col-span-5">
+							<div
+								class="flex items-center justify-center col-span-5 flex-col @md:flex-row"
+							>
 								<!-- <span>All tags</span> -->
 								<SearchBar
 									searchFunction={onTagSearch}
-									class="flex-1 px-4 max-w-[350px]"
+									class="flex-1 @md:px-4 max-w-[350px]"
 								/>
 								<IconButton
 									icon="fluent:delete-28-filled"
@@ -161,7 +161,7 @@
 						</div>
 						<div class="flex flex-col col-span-1 gap-1" />
 						<div
-							class="grid grid-cols-5 col-span-5 gap-2 max-h-[200px] h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
+							class="grid @xs:grid-cols-2 @sm:grid-cols-3 @md:grid-cols-4 @lg:grid-col-4 @2xl:grid-cols-5 col-span-5 gap-1 max-h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
 						>
 							{#if visibleTags.length === 0}
 								<div class="col-span-5">

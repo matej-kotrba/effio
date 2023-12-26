@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
-	import { dropdown } from '~use/dropdown';
 
 	export let deleteQuestion: Function;
 	export let questionLength: number;
 	export let questionLimit: number = 2;
 	export { classes as class };
+	export let tooltipText: string = '';
 
 	let classes = '';
 </script>
@@ -13,9 +13,9 @@
 <!-- use:dropdown={'Delete answer'} -->
 <button
 	type="button"
-	data-tip="Delete answer"
+	data-tip={tooltipText || 'Delete answer'}
 	class={twMerge(
-		`tooltip grid px-2 group place-content-center bg-light_white dark:bg-dark_black text-error dark:text-dark_error hover:bg-error hover:text-white rounded-l-md ${
+		`tooltip tooltip-left md:tooltip-top grid px-2 group place-content-center bg-light_white dark:bg-dark_black text-error dark:text-dark_error hover:bg-error hover:text-white rounded-l-md ${
 			!(questionLength > questionLimit)
 				? 'text-gray-500 hover:text-gray-500 hover:bg-light_white dark:bg-dark_light_grey dark:text-dark_grey'
 				: ''

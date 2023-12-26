@@ -32,6 +32,7 @@
 		($testObject.questions[indexParent].content as FillQuestion).answers = [
 			...content.answers,
 			{
+				id: content.answers.length,
 				answer: {
 					precedent: '',
 					options: [''],

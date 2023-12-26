@@ -7,6 +7,7 @@
 	const dispatch = createEventDispatcher();
 
 	let fileRef: HTMLInputElement | null = null;
+	let isBeingDraggedOver = false;
 
 	function readFile() {
 		if (!fileRef?.files || !fileRef.files[0]) return;
@@ -31,6 +32,7 @@
 
 <div
 	class="relative w-full p-5 duration-300 rounded-xl shadow-surrounding max-w-xxs aspect-square box"
+	class:dragged={isBeingDraggedOver}
 >
 	<div>
 		<h4
@@ -52,7 +54,8 @@
 	<input
 		bind:this={fileRef}
 		accept=".txt"
-		on:dragover={() => console.log('asdasd')}
+		on:dragover={() => (isBeingDraggedOver = true)}
+		on:dragleave={() => (isBeingDraggedOver = false)}
 		on:input={readFile}
 		type="file"
 		class="absolute w-full h-full opacity-0 input-styled"
@@ -73,5 +76,14 @@
 
 	.input-styled::-webkit-file-upload-button {
 		display: none;
+	}
+
+	.dragged {
+		outline: dashed 2px var(--light-primary);
+		transition: outline 0s;
+	}
+
+	:global(.dark) .dragged {
+		outline: dashed 2px var(--dark-primary);
 	}
 </style>

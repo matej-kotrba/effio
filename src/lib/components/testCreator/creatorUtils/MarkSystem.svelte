@@ -174,6 +174,7 @@
 								(marks = marks.filter((_, idx) => idx !== index))}
 							questionLength={marks.length}
 							questionLimit={2}
+							tooltipText="Delete mark"
 							class="w-12 my-2 ml-1 rounded-md max-h-16 aspect-square"
 						/>
 					{/if}

@@ -36,8 +36,6 @@
 	// Reference to the test object content
 	$: content = $testObject.questions[indexParent].content as GeographyQuestion;
 
-	$: isDarkMode = $applicationStates.darkMode.isDarkMode;
-
 	//TODO: Rerender happens even if updating only tolerance
 
 	let initialMarker: Marker;
@@ -342,16 +340,18 @@
 				/>
 			</ErrorEnhance>
 		</div>
-		<div>
-			<span class="text-body2">Zoom Level</span>
-			<input
-				type="range"
-				min={GEOGRAPHY_ZOOM_MIN}
-				max={GEOGRAPHY_ZOOM_MAX}
-				bind:value={content.initial.zoom}
-				class="range range-sm range-primary dark:range-accent"
-				on:input={onZoomRangeInput}
-			/>
+		<div class="flex">
+			<div>
+				<span class="text-body2">Zoom Level</span>
+				<input
+					type="range"
+					min={GEOGRAPHY_ZOOM_MIN}
+					max={GEOGRAPHY_ZOOM_MAX}
+					bind:value={content.initial.zoom}
+					class="range range-sm range-primary dark:range-accent"
+					on:input={onZoomRangeInput}
+				/>
+			</div>
 		</div>
 	</Collapsible>
 	<!-- Display the map -->
