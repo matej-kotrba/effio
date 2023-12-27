@@ -344,10 +344,10 @@
 						<div class="flex flex-col gap-1">
 							<div class="flex items-center justify-center gap-1">
 								<span class="text-light_whiter text-body2 2xl:text-body1"
-									>Types of inputs available:</span
+									>Available question types:</span
 								>
 								<Counter
-									count={6}
+									count={7}
 									class="bg-transparent shadow-none"
 									numberClasses="text-h1"
 									color="white"
@@ -370,12 +370,12 @@
 						</div>
 					</div>
 					<div
-						class="w-full h-full p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x_reversed"
+						class="flex items-end w-full h-full p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x_reversed"
 						style="background-color: #6433f050; backdrop-filter: blur(14px);"
 					>
-						<div class="flex flex-col justify-between h-full gap-1">
+						<div class="flex flex-col justify-end gap-1 h-fit">
 							<div>
-								<h5 class="font-semibold text-white text-body1">
+								<h5 class="font-semibold text-white text-h6 md:text-h5">
 									Explore what the communnity has created!
 								</h5>
 							</div>

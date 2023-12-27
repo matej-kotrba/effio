@@ -1,21 +1,5 @@
-<script lang="ts">
-	import Input from '~components/testTaking/Input.svelte';
-	import { testObject } from '~stores/testObject';
-	import {
-		checkTestClient,
-		checkTestServerAndRecordIt,
-		getMarkBasedOnPoints,
-		initializeTestToTestStore
-	} from '~helpers/test/test';
-	import Space from '~components/separators/Space.svelte';
-	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import Dialog from '~components/portals/Dialog.svelte';
-	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
-	import type { Prisma, TestRecord } from '@prisma/client';
-	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
-	import type { Session } from '@auth/core/types';
-
-	export let testContent: Prisma.TestGetPayload<{
+<script lang="ts" context="module">
+	export type TestContent = Prisma.TestGetPayload<{
 		include: {
 			tags: {
 				include: {
@@ -34,6 +18,26 @@
 			owner: true;
 		};
 	}>;
+</script>
+
+<script lang="ts">
+	import Input from '~components/testTaking/Input.svelte';
+	import { testObject } from '~stores/testObject';
+	import {
+		checkTestClient,
+		checkTestServerAndRecordIt,
+		getMarkBasedOnPoints,
+		initializeTestToTestStore
+	} from '~helpers/test/test';
+	import Space from '~components/separators/Space.svelte';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
+	import TestTakingNavigation from '~components/page-parts/TestTakingNavigation.svelte';
+	import type { Prisma, TestRecord } from '@prisma/client';
+	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
+	import type { Session } from '@auth/core/types';
+
+	export let testContent: TestContent;
 	export let session: Session | null;
 	export let subcategoryId: string | undefined = undefined;
 
@@ -90,8 +94,8 @@
 {/if}
 <Dialog bind:open={openDialog}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
-		You are about to submit the test, after that you want be able to change your
-		answers, do you want to proceed?
+		You are about to submit the test, after that you <b>WONT</b> be able to change
+		your answers, do you want to proceed?
 	</p>
 	<Space />
 	<div class="flex justify-center gap-3">

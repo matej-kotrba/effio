@@ -181,6 +181,7 @@
 <svelte:window
 	on:mousemove={onDrag}
 	on:mouseup={onMouseUp}
+	on:drag={() => console.log('adasd')}
 	on:resize={calculateBoxCoords}
 	on:scroll={calculateBoxCoords}
 />

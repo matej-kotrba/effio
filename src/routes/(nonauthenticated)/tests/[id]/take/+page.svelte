@@ -78,14 +78,7 @@
 {#if $testObject}
 	{#if data.testContent.type === 'REGULAR'}
 		<div class="mx-auto max-w-[650px]">
-			<RegularTest
-				{data}
-				{isSubmitting}
-				{submitError}
-				{openDialog}
-				{result}
-				{returnedTestRecord}
-			/>
+			<RegularTest data={data.testContent} session={data.session} />
 		</div>
 	{:else if data.testContent.type === 'PROGRAMMING'}
 		<div class="mx-auto max-w-[1400px]">
