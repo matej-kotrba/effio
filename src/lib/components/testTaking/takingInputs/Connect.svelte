@@ -34,6 +34,7 @@
 	};
 
 	let isDragging = false;
+	let selectedPointIndex: number | undefined = undefined;
 
 	let svgPositions: {
 		[key: string]: SvgPositions;
@@ -55,7 +56,7 @@
 
 	let attachPoints: {
 		[key: string]: {
-			ref: HTMLDivElement | undefined;
+			ref: HTMLButtonElement | undefined;
 			x: number | undefined;
 			y: number | undefined;
 		};
@@ -80,57 +81,80 @@
 		}
 	}
 
-	function onMouseUp(event: MouseEvent) {
+	function onMouseUp(event: MouseEvent, index?: number) {
 		if (resultFormat) return;
 		let draggingPoint;
 		let draggingIndex: number | undefined;
 
+		console.log('asd');
+
 		isDragging = false;
-		for (let i in svgPositions) {
-			if (svgPositions[i].isDragging) {
-				draggingPoint = svgPositions[i];
-				draggingIndex = +i;
-				svgPositions[i].isDragging = false;
+
+		if (selectedPointIndex !== undefined) {
+			draggingIndex = selectedPointIndex;
+			draggingPoint = svgPositions[selectedPointIndex];
+			svgPositions[selectedPointIndex].isDragging = false;
+			selectedPointIndex = undefined;
+		} else {
+			for (let i in svgPositions) {
+				if (svgPositions[i].isDragging) {
+					draggingPoint = svgPositions[i];
+					draggingIndex = +i;
+					svgPositions[i].isDragging = false;
+				}
 			}
 		}
 
 		if (!draggingPoint || draggingIndex === undefined) return;
-
-		// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
-		for (let k in attachPoints) {
-			const svgRef = draggingPoint.ref!.getBoundingClientRect();
-			const keys = Object.keys(
+		const svgRef = draggingPoint.ref!.getBoundingClientRect();
+		if (index !== undefined) {
+			draggingPoint.x = attachPoints[index].x! - svgRef.left;
+			draggingPoint.y = attachPoints[index].y! - svgRef.top;
+			const key = Object.keys(
 				(testObject.questions[questionIndex]['content'] as ConnectQuestion)
 					.matchedAnswers
-			);
-			const usedKeys = (
+			)[index];
+			// (testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
+			(
 				testObject.questions[questionIndex]['content'] as ConnectQuestion
-			).answers.map((item) => item.matchedAnswerIndex);
-
-			if (
-				Math.abs(event.clientX - attachPoints[k].x!) < 20 &&
-				Math.abs(event.clientY - attachPoints[k].y!) < 20 &&
-				!usedKeys.includes(keys[+k])
-			) {
-				draggingPoint.x = attachPoints[k].x! - svgRef.left;
-				draggingPoint.y = attachPoints[k].y! - svgRef.top;
-				const key = Object.keys(
+			).answers[draggingIndex].matchedAnswerIndex = key;
+			return;
+		} else {
+			// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
+			for (let k in attachPoints) {
+				const keys = Object.keys(
 					(testObject.questions[questionIndex]['content'] as ConnectQuestion)
 						.matchedAnswers
-				)[+k];
-				// (testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
-				(
+				);
+				const usedKeys = (
 					testObject.questions[questionIndex]['content'] as ConnectQuestion
-				).answers[draggingIndex].matchedAnswerIndex = key;
-				return;
-			}
-		}
+				).answers.map((item) => item.matchedAnswerIndex);
 
-		(testObject.questions[questionIndex]['content'] as ConnectQuestion).answers[
-			draggingIndex
-		].matchedAnswerIndex = undefined;
-		draggingPoint.x = undefined;
-		draggingPoint.y = undefined;
+				if (
+					Math.abs(event.clientX - attachPoints[k].x!) < 20 &&
+					Math.abs(event.clientY - attachPoints[k].y!) < 20 &&
+					!usedKeys.includes(keys[+k])
+				) {
+					draggingPoint.x = attachPoints[k].x! - svgRef.left;
+					draggingPoint.y = attachPoints[k].y! - svgRef.top;
+					const key = Object.keys(
+						(testObject.questions[questionIndex]['content'] as ConnectQuestion)
+							.matchedAnswers
+					)[+k];
+					// (testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
+					(
+						testObject.questions[questionIndex]['content'] as ConnectQuestion
+					).answers[draggingIndex].matchedAnswerIndex = key;
+					return;
+				}
+			}
+
+			(
+				testObject.questions[questionIndex]['content'] as ConnectQuestion
+			).answers[draggingIndex].matchedAnswerIndex = undefined;
+			draggingPoint.x = undefined;
+			draggingPoint.y = undefined;
+		}
 	}
 
 	function calculateBoxCoords() {
@@ -181,7 +205,6 @@
 <svelte:window
 	on:mousemove={onDrag}
 	on:mouseup={onMouseUp}
-	on:drag={() => console.log('adasd')}
 	on:resize={calculateBoxCoords}
 	on:scroll={calculateBoxCoords}
 />
@@ -230,12 +253,22 @@
 								});stroke-width:3`}
 							/>
 							<circle
+								tabindex="0"
+								role="button"
 								cx={svgPositions[index]?.x || 0}
 								cy={svgPositions[index]?.y || 0}
 								r="8"
 								class="pointer-events-auto fill-light_primary dark:fill-dark_primary"
 								class:duration-150={!svgPositions[index].isDragging}
 								on:mousedown={() => {
+									svgPositions[index].isDragging = true;
+									isDragging = true;
+								}}
+								on:touchstart={() => {
+									selectedPointIndex = index;
+									for (const key in svgPositions) {
+										svgPositions[key].isDragging = false;
+									}
 									svgPositions[index].isDragging = true;
 									isDragging = true;
 								}}
@@ -278,8 +311,12 @@
 					]};"
 			>
 				<div class="relative grid">
-					<div
-						class="w-6 bg-transparent border-2 rounded-full pointer-events-none aspect-square border-light_secondary dark:border-dark_secondary"
+					<button
+						type="button"
+						on:touchstart={(e) => {
+							onMouseUp(e, index);
+						}}
+						class="w-6 bg-transparent border-2 rounded-full aspect-square border-light_secondary dark:border-dark_secondary"
 						bind:this={attachPoints[index].ref}
 					/>
 				</div>
