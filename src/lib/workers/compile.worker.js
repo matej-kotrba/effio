@@ -1,4 +1,5 @@
 import Sandbox from '@nyariv/sandboxjs';
+import { toast } from 'svelte-french-toast';
 
 self.addEventListener('message', async (event) => {
 	const code = event.data.code;
@@ -44,8 +45,13 @@ self.addEventListener('message', async (event) => {
 					index: i
 				});
 			}
-		} catch (_) {
-			0;
+		} catch (e) {
+			self.postMessage({
+				passed: false,
+				result: e,
+				logs: [...logs[i], String(e)],
+				index: i
+			});
 		}
 	}
 });

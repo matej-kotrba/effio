@@ -57,6 +57,7 @@
 		}
 	}
 
+	let Worker: typeof import('$lib/workers/compile.worker?worker');
 	let worker: Worker;
 
 	let monaco: typeof import('monaco-editor');
@@ -88,44 +89,56 @@
 
 	let selectedTestIndex: number = 0;
 	let testsInfo: { result: string; passed: boolean }[] = [];
+	let isProccessing: boolean = false;
 
 	let activateConfetti: boolean = false;
 
+	async function onMessage(
+		e: MessageEvent<{
+			passed: boolean;
+			result: string;
+			logs: string[];
+			index: number;
+		}>
+	) {
+		isProccessing = false;
+		testsConsoleLogs[e.data.index] = e.data.logs;
+		testsInfo[e.data.index] = {
+			passed: e.data.passed,
+			result: e.data.result
+		};
+
+		if (testsInfo.every((test) => test.passed)) {
+			activateConfetti = false;
+			toast.success('You got it!\nAll tests are passing.');
+			await tick();
+			activateConfetti = true;
+		}
+	}
+
 	async function compileCode() {
 		if (!!result) return;
+		if (isProccessing) return;
 		// if (!sandbox) return;
 		const code = codeEditor.getValue();
 
-		worker.addEventListener(
-			'message',
-			async (
-				e: MessageEvent<{
-					passed: boolean;
-					result: string;
-					logs: string[];
-					index: number;
-				}>
-			) => {
-				console.log(e);
-				testsConsoleLogs[e.data.index] = e.data.logs;
-				testsInfo[e.data.index] = {
-					passed: e.data.passed,
-					result: e.data.result
-				};
-
-				if (testsInfo.every((test) => test.passed)) {
-					activateConfetti = false;
-					toast.success('You got it!\nAll tests are passing.');
-					await tick();
-					activateConfetti = true;
-				}
-			}
-		);
-
+		isProccessing = true;
 		worker.postMessage({
 			code: code,
 			tests: content.tests
 		});
+		setTimeout(async () => {
+			if (isProccessing === true) {
+				isProccessing = false;
+				toast.error('Your ran into a problem');
+				if (worker && Worker) {
+					console.log('Reinitialized worker');
+					worker.terminate();
+					const tempWorker = await import('$lib/workers/compile.worker?worker');
+					worker = new tempWorker.default();
+				}
+			}
+		}, 1000);
 		// testsConsoleLogs = [];
 		// for (const i in content.tests) {
 		// 	const item = content.tests[i];
@@ -186,20 +199,23 @@
 			contextmenu: false
 		});
 
-		const Worker = await import('$lib/workers/compile.worker?worker');
+		Worker = await import('$lib/workers/compile.worker?worker');
 		worker = new Worker.default();
 
 		window.addEventListener('resize', () => {
 			codeEditor.layout();
 		});
+
+		worker.addEventListener('message', onMessage);
 	});
 
 	onDestroy(() => {
 		if (browser) {
 			window.removeEventListener('resize', () => codeEditor.layout());
+			worker.removeEventListener('message', onMessage);
+			worker.terminate();
 		}
 		codeEditor?.dispose();
-		worker?.terminate();
 	});
 </script>
 
