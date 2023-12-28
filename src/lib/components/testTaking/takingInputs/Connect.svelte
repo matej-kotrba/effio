@@ -81,16 +81,18 @@
 		}
 	}
 
+	// $: console.log(testObject.questions[questionIndex]['content']);
+
 	function onMouseUp(event: MouseEvent, index?: number) {
 		if (resultFormat) return;
 		let draggingPoint;
 		let draggingIndex: number | undefined;
 
-		console.log('asd');
+		console.log(selectedPointIndex, index);
 
 		isDragging = false;
 
-		if (selectedPointIndex !== undefined) {
+		if (selectedPointIndex !== undefined && index) {
 			draggingIndex = selectedPointIndex;
 			draggingPoint = svgPositions[selectedPointIndex];
 			svgPositions[selectedPointIndex].isDragging = false;
@@ -114,10 +116,11 @@
 				(testObject.questions[questionIndex]['content'] as ConnectQuestion)
 					.matchedAnswers
 			)[index];
-			// (testObject.questions[questionIndex]["content"] as ConnectQuestion).matchedAnswers[key] = draggingPoint.
 			(
 				testObject.questions[questionIndex]['content'] as ConnectQuestion
 			).answers[draggingIndex].matchedAnswerIndex = key;
+			console.log(key, draggingIndex, testObject);
+			console.log(testObject);
 			return;
 		} else {
 			// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
