@@ -35,6 +35,7 @@
 
 	let isDragging = false;
 	let selectedPointIndex: number | undefined = undefined;
+	let touchDeviceBlock = false;
 
 	let svgPositions: {
 		[key: string]: SvgPositions;
@@ -81,18 +82,15 @@
 		}
 	}
 
-	// $: console.log(testObject.questions[questionIndex]['content']);
-
 	function onMouseUp(event: MouseEvent, index?: number) {
+		if (touchDeviceBlock) return;
 		if (resultFormat) return;
 		let draggingPoint;
 		let draggingIndex: number | undefined;
 
-		console.log(selectedPointIndex, index);
-
 		isDragging = false;
 
-		if (selectedPointIndex !== undefined && index) {
+		if (selectedPointIndex !== undefined && index !== undefined) {
 			draggingIndex = selectedPointIndex;
 			draggingPoint = svgPositions[selectedPointIndex];
 			svgPositions[selectedPointIndex].isDragging = false;
@@ -108,8 +106,18 @@
 		}
 
 		if (!draggingPoint || draggingIndex === undefined) return;
+
 		const svgRef = draggingPoint.ref!.getBoundingClientRect();
+		const keys = Object.keys(
+			(testObject.questions[questionIndex]['content'] as ConnectQuestion)
+				.matchedAnswers
+		);
+		const usedKeys = (
+			testObject.questions[questionIndex]['content'] as ConnectQuestion
+		).answers.map((item) => item.matchedAnswerIndex);
+
 		if (index !== undefined) {
+			if (usedKeys.includes(keys[index])) return;
 			draggingPoint.x = attachPoints[index].x! - svgRef.left;
 			draggingPoint.y = attachPoints[index].y! - svgRef.top;
 			const key = Object.keys(
@@ -119,20 +127,10 @@
 			(
 				testObject.questions[questionIndex]['content'] as ConnectQuestion
 			).answers[draggingIndex].matchedAnswerIndex = key;
-			console.log(key, draggingIndex, testObject);
-			console.log(testObject);
 			return;
 		} else {
 			// Calculate the distance between the dragging point and the attach points and stick the connection to the closest one
 			for (let k in attachPoints) {
-				const keys = Object.keys(
-					(testObject.questions[questionIndex]['content'] as ConnectQuestion)
-						.matchedAnswers
-				);
-				const usedKeys = (
-					testObject.questions[questionIndex]['content'] as ConnectQuestion
-				).answers.map((item) => item.matchedAnswerIndex);
-
 				if (
 					Math.abs(event.clientX - attachPoints[k].x!) < 20 &&
 					Math.abs(event.clientY - attachPoints[k].y!) < 20 &&
@@ -236,7 +234,12 @@
 						bind:this={inputElements[index]}
 					/> -->
 					<div
-						class="w-6 border-2 rounded-full pointer-events-none bg-light_quaternary dark:bg-dark_quaternary aspect-square border-light_secondary dark:border-dark_secondary"
+						class={`w-6 border-2 rounded-full pointer-events-none bg-light_quaternary dark:bg-dark_quaternary 
+						aspect-square border-light_secondary dark:border-dark_secondary ${
+							selectedPointIndex === index
+								? 'border-2 border-yellow-400 dark:border-yellow-400'
+								: ''
+						}`}
 					>
 						<svg
 							width="200"
@@ -267,7 +270,7 @@
 									svgPositions[index].isDragging = true;
 									isDragging = true;
 								}}
-								on:touchstart={() => {
+								on:touchstart|stopPropagation={() => {
 									selectedPointIndex = index;
 									for (const key in svgPositions) {
 										svgPositions[key].isDragging = false;
@@ -294,6 +297,14 @@
 			<button
 				type="button"
 				disabled={!!resultFormat}
+				on:touchstart={(e) => {
+					//@ts-expect-error In this case it does not matter
+					onMouseUp(e, index);
+					touchDeviceBlock = true;
+					setTimeout(() => {
+						touchDeviceBlock = false;
+					}, 100);
+				}}
 				class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
 					null || resultFormat.isCorrect
 					? 'bg-white dark:bg-dark_light_grey'
@@ -316,10 +327,7 @@
 				<div class="relative grid">
 					<button
 						type="button"
-						on:touchstart={(e) => {
-							onMouseUp(e, index);
-						}}
-						class="w-6 bg-transparent border-2 rounded-full aspect-square border-light_secondary dark:border-dark_secondary"
+						class={`w-6 bg-transparent border-2 rounded-full aspect-square border-light_secondary dark:border-dark_secondary `}
 						bind:this={attachPoints[index].ref}
 					/>
 				</div>
