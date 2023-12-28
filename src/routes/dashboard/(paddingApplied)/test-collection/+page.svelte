@@ -14,6 +14,8 @@
 	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
 	import { modalStore } from './modalStore';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import Carousel from '~components/containers/Carousel.svelte';
 
 	export let data;
 
@@ -44,19 +46,23 @@
 				const element = document.createElement('a');
 
 				let gift;
-				console.log(test);
-				try {
-					gift = createExportedFileAndMakeItDownloadable(test);
-				} catch (e) {
-					console.error(e);
-					toast.error('Unknown question type');
-				}
 
-				if (!gift) return;
+				gift = createExportedFileAndMakeItDownloadable(test);
+
+				if (gift.notUsedQuestionsCount > 0) {
+					toast(
+						`${gift.notUsedQuestionsCount} from your test are not supported by GIFT format and were not exported`,
+						{
+							icon: 'ℹ️'
+						}
+					);
+				}
+				if (!gift.generatedGIFT) return;
 
 				element.setAttribute(
 					'href',
-					'data:text/plain;charset=utf-8,' + encodeURIComponent(gift)
+					'data:text/plain;charset=utf-8,' +
+						encodeURIComponent(gift.generatedGIFT)
 				);
 				element.setAttribute('download', `${test['title']}.txt`);
 				element.style.display = 'none';
@@ -155,40 +161,57 @@
 </h3>
 <Separator w={'100%'} h={'1px'} color={'var(--light-text-black-20)'} />
 <Space />
-<div class="grid__container">
+<div>
 	<!-- <div class="w-full max-w-xs p-5 rounded-md shadow-lg aspect-[5/6] bg-light_white">
 		<div class="p-5 text-white rounded-md bg-light_text_black_40">
 			<Icon icon="ic:round-plus" class="text-6xl" />
 		</div>
 	</div> -->
 	{#if recentTests.isLoading}
-		<CardSkeleton />
-		<CardSkeleton />
-		<CardSkeleton />
+		<div class="grid__container">
+			<CardSkeleton />
+			<CardSkeleton />
+			<CardSkeleton />
+		</div>
 	{:else}
-		{#each recentTests.data as test}
-			<Card
-				redirectLink={`/tests/${test.id}`}
-				imageLink={test.imageUrl}
-				title={test.title}
-				description={test.description}
-				createdAt={new Date(test.createdAt)}
-				stars={test._count.stars}
-				tags={test.tags.map((tag) => tag.tag)}
-				dropdownTabs={modalTabsGenerator(test)}
+		<div class="w-full">
+			<Carousel
+				data={recentTests.data.map((item) => {
+					return {
+						id: item.id,
+						published: item.published,
+						icon: item.owner.image,
+						title: item.title,
+						description: item.description,
+						img: item.imageUrl,
+						createdAt: new Date(item.createdAt),
+						stars: item._count.stars,
+						tags: item.tags.map((tag) => tag.tag),
+						type: item.type,
+						options: modalTabsGenerator(item)
+					};
+				})}
 			/>
-		{/each}
+		</div>
+		<!-- {#each recentTests.data as test}
+			<CardAlternative
+				navigationLink={`/tests/${test.id}`}
+				data={{
+					id: test.id,
+					published: test.published,
+					icon: test.owner.image,
+					title: test.title,
+					description: test.description,
+					img: test.imageUrl,
+					createdAt: new Date(test.createdAt),
+					stars: test._count.stars,
+					tags: test.tags.map((tag) => tag.tag),
+					options: modalTabsGenerator(test)
+				}}
+			/> -->
+
+		<!-- {/each} -->
 	{/if}
-	<!-- <Card
-		redirectLink={'#'}
-		imageLink={'/imgs/content_imgs/liska.avif'}
-		imageAlt={'Liška'}
-		title={'Do you know the nature ?'}
-		description={'Test your knowladge about the nature which surrounds you.'}
-		stars={152}
-		views={84201}
-		tags={['Nature', 'Animals', 'Plants']}
-		/>-->
 </div>
 
 <Space />
@@ -203,7 +226,7 @@
 	.grid__container {
 		display: grid;
 		gap: 12px;
-		grid-template-columns: repeat(auto-fill, minmax(150px, 250px));
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
 		place-content: center;
 	}
 	@media screen and (min-width: 768px) {

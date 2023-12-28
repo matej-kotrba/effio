@@ -108,7 +108,11 @@
 </script>
 
 <section class="grid w-full h-full grid__layout">
-	<div class="flex gap-2">
+	<div
+		class="flex gap-2"
+		class:hidden={resolvedData === undefined ||
+			countOfItems < resolvedData?.length}
+	>
 		<IconButton
 			icon="ic:round-arrow-left"
 			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white dark:bg-dark_grey"
@@ -190,27 +194,27 @@
 			--items-count: 6;
 		}
 	}
-	@container (min-width: 56rem) and (width < 80rem) {
+	@container (min-width: 64rem) and (width < 80rem) {
 		.scroller {
 			--items-count: 5;
 		}
 	}
-	@container (min-width: 44rem) and (width < 56rem) {
+	@container (min-width: 50rem) and (width < 64rem) {
 		.scroller {
 			--items-count: 4;
 		}
 	}
-	@container (min-width: 30rem) and (width < 44rem) {
+	@container (min-width: 38rem) and (width < 50rem) {
 		.scroller {
 			--items-count: 3;
 		}
 	}
-	@container (min-width: 22rem) and (width < 30rem) {
+	@container (min-width: 25rem) and (width < 38rem) {
 		.scroller {
 			--items-count: 2;
 		}
 	}
-	@container (width < 22rem) {
+	@container (width < 25rem) {
 		.scroller {
 			--items-count: 1;
 		}

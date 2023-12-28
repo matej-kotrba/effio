@@ -89,7 +89,10 @@
 </script>
 
 <div
-	class={twMerge('px-1 w-full max-w-[260px] aspect-[4/5] @container', classes)}
+	class={twMerge(
+		'px-1 mx-auto w-full max-w-[260px] aspect-[4/5] @container',
+		classes
+	)}
 >
 	<div
 		class="flex flex-col h-full rounded-md shadow-lg bg-light_whiter dark:bg-dark_light_grey"
@@ -171,7 +174,7 @@
 				</div>
 			{/if}
 			<div
-				class={`relative w-full overflow-hidden group effect ${
+				class={`relative w-full overflow-hidden group effect group/image ${
 					data.published === false
 						? 'border-4 border-solid border-yellow-500 rounded-t-md'
 						: type === 'PROGRAMMING'
@@ -202,45 +205,42 @@
 							isImageFallback = true;
 						}}
 						alt={data.title}
-						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md"
+						loading="lazy"
+						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md group-hover/image:blur-md"
 					/>
 				</a>
 			</div>
 		</div>
-		<div class="flex flex-col justify-between grow-[1]">
-			<div class="p-2 mt-3">
-				<abbr title={data.title} class="no-underline">
-					<h3
-						class="w-full overflow-hidden font-semibold text-center text-body1 @[14rem]:text-h6 overflow-ellipsis whitespace-nowrap"
-					>
-						{data.title}
-					</h3>
-				</abbr>
-				{#if data.createdAt}
-					<span
-						class="block text-center text-body3 @[14rem]:text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
-						>{transformDate(data.createdAt, { time: true })}</span
-					>
-				{/if}
-				{#if data.description}
-					<div
-						class="mt-1 text-center break-all line-clamp-2 @[14rem]:line-clamp-3 text-body2 text-over"
-					>
-						{data.description}
-					</div>
-				{/if}
-			</div>
-			<div>
-				{#if data.tags}
-					<div
-						class="flex flex-wrap justify-center gap-1 p-1 overflow-x-auto max-h-10 scroll-snap"
-					>
-						{#each data.tags as tag}
-							<TagContainer {tag} />
-						{/each}
-					</div>
-				{/if}
-			</div>
+		<div class="flex flex-col h-full p-2 mt-3">
+			<abbr title={data.title} class="no-underline">
+				<h3
+					class="w-full overflow-hidden font-semibold text-center text-base @[13rem]:text-body1 overflow-ellipsis whitespace-nowrap"
+				>
+					{data.title}
+				</h3>
+			</abbr>
+			{#if data.createdAt}
+				<span
+					class="block text-center text-body3 @[14rem]:text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
+					>{transformDate(data.createdAt, { time: true })}</span
+				>
+			{/if}
+			{#if data.description}
+				<div
+					class="@[13rem]:mt-1 text-center line-clamp-2 @[14rem]:line-clamp-3 text-body2 text-over"
+				>
+					{data.description}
+				</div>
+			{/if}
+			{#if data.tags}
+				<div
+					class="flex gap-1 p-1 pb-2 mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
+				>
+					{#each [...data.tags, ...data.tags, ...data.tags, ...data.tags] as tag}
+						<TagContainer {tag} />
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -255,7 +255,7 @@
 	}
 
 	.scroll-snap {
-		scroll-snap-type: y mandatory;
+		scroll-snap-type: x mandatory;
 	}
 
 	.effect::after {

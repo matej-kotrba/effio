@@ -287,6 +287,12 @@
 
 <style>
 	.grid__layout {
-		grid-template-columns: repeat(auto-fill, 250px);
+		grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	}
+
+	@media screen and (min-width: 1650px) {
+		.grid__layout {
+			grid-template-columns: repeat(6, minmax(210px, 1fr));
+		}
 	}
 </style>
