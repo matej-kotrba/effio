@@ -57,7 +57,7 @@
 		}
 	}
 
-	let Worker: typeof import('$lib/workers/compile.worker?worker');
+	// let Worker: typeof import('$lib/workers/compile.worker?worker');
 	let worker: Worker;
 
 	let monaco: typeof import('monaco-editor');
@@ -199,8 +199,13 @@
 			contextmenu: false
 		});
 
-		Worker = await import('$lib/workers/compile.worker?worker');
-		worker = new Worker.default();
+		// Worker = await import(
+		// 	`http://localhost:5173/workers/compile.worker.js?worker`
+		// );
+		// worker = new Worker.default();
+		// worker = new Worker(new URL('./compile.worker.js', import.meta.url), {
+		// 	type: 'module'
+		// });
 
 		window.addEventListener('resize', () => {
 			codeEditor.layout();

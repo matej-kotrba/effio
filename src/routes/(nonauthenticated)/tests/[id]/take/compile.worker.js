@@ -1,5 +1,4 @@
 import Sandbox from '@nyariv/sandboxjs';
-import { toast } from 'svelte-french-toast';
 
 self.addEventListener('message', async (event) => {
 	const code = event.data.code;
