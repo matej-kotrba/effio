@@ -332,7 +332,7 @@
 				areTestsInView = false;
 			}
 		}}
-		class={`relative gap-y-1 xs:gap-y-2 grid grid-cols-1 @xs:grid-cols-2 @md:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5 @7xl:grid-cols-6 min-h-[24rem] ${
+		class={`relative gap-y-1 xs:gap-y-2 grid grid__container min-h-[24rem] ${
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
 	>
@@ -409,6 +409,16 @@
 </div>
 
 <style>
+	.grid__container {
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	}
+
+	@media screen and (min-width: 1650px) {
+		.grid__container {
+			grid-template-columns: repeat(6, minmax(210px, 1fr));
+		}
+	}
+
 	.underline-effect::after {
 		content: '';
 		width: 100%;
