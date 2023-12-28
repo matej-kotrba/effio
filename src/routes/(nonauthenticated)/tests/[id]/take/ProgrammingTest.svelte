@@ -8,6 +8,7 @@
 	import Space from '~components/separators/Space.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Sandbox from '@nyariv/sandboxjs';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 	import { browser } from '$app/environment';
 	import { Confetti } from 'svelte-confetti';
@@ -57,56 +58,80 @@
 		}
 	}
 
-	let Worker: typeof import('$lib/workers/compile.worker?worker');
-	let worker: Worker;
-
 	let monaco: typeof import('monaco-editor');
 
 	let testsConsoleLogs: string[][] = [];
 
-	// let sandbox: Sandbox | undefined = undefined;
-	// $: {
-	// 	if (Sandbox?.prototype) {
-	// 		const oldConsoleLog = console.log;
-	// 		console.log = (...args: any[]) => {
-	// 			args.forEach((arg) => {
-	// 				if (typeof arg === 'object' || typeof arg === 'function') {
-	// 					testsConsoleLogs[testsConsoleLogs.length - 1].push(
-	// 						JSON.stringify(arg)
-	// 					);
-	// 				} else {
-	// 					testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
-	// 				}
-	// 			});
-	// 		};
-	// 		sandbox = new Sandbox();
-	// 		console.log = oldConsoleLog;
-	// 	}
-	// }
+	let sandbox: Sandbox | undefined = undefined;
+	$: {
+		if (Sandbox?.prototype) {
+			const oldConsoleLog = console.log;
+			console.log = (...args: any[]) => {
+				args.forEach((arg) => {
+					if (typeof arg === 'object' || typeof arg === 'function') {
+						testsConsoleLogs[testsConsoleLogs.length - 1].push(
+							JSON.stringify(arg)
+						);
+					} else {
+						testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
+					}
+				});
+			};
+			sandbox = new Sandbox();
+			console.log = oldConsoleLog;
+		}
+	}
 
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
 
 	let selectedTestIndex: number = 0;
 	let testsInfo: { result: string; passed: boolean }[] = [];
-	let isProccessing: boolean = false;
 
 	let activateConfetti: boolean = false;
 
-	async function onMessage(
-		e: MessageEvent<{
-			passed: boolean;
-			result: string;
-			logs: string[];
-			index: number;
-		}>
-	) {
-		isProccessing = false;
-		testsConsoleLogs[e.data.index] = e.data.logs;
-		testsInfo[e.data.index] = {
-			passed: e.data.passed,
-			result: e.data.result
-		};
+	async function compileCode() {
+		if (!!result) return;
+		if (!sandbox) return;
+		const code = codeEditor.getValue();
+
+		testsConsoleLogs = [];
+		for (const i in content.tests) {
+			const item = content.tests[i];
+			testsConsoleLogs[i] = [];
+
+			try {
+				// sandbox.context.options.prototypeReplacements?.set(
+				// 	console.log.prototype,
+				// 	(args: any[]) => {
+				// 		args.forEach((arg) => {
+				// 			if (typeof arg === 'object' || typeof arg === 'function') {
+				// 				testsConsoleLogs[i].push(JSON.stringify(arg));
+				// 			} else {
+				// 				testsConsoleLogs[i].push(arg);
+				// 			}
+				// 		});
+				// 	}
+				// );
+
+				const exec = sandbox.compile(code);
+				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
+				const output = JSON.parse(item.output);
+				if (scriptResult === output) {
+					testsInfo[i] = {
+						result: JSON.stringify(scriptResult),
+						passed: true
+					};
+				} else {
+					testsInfo[i] = {
+						result: JSON.stringify(scriptResult),
+						passed: false
+					};
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		}
 
 		if (testsInfo.every((test) => test.passed)) {
 			activateConfetti = false;
@@ -114,55 +139,6 @@
 			await tick();
 			activateConfetti = true;
 		}
-	}
-
-	async function compileCode() {
-		if (!!result) return;
-		if (isProccessing) return;
-		// if (!sandbox) return;
-		const code = codeEditor.getValue();
-
-		isProccessing = true;
-		worker.postMessage({
-			code: code,
-			tests: content.tests
-		});
-		setTimeout(async () => {
-			if (isProccessing === true) {
-				isProccessing = false;
-				toast.error('Your ran into a problem');
-				if (worker && Worker) {
-					console.log('Reinitialized worker');
-					worker.terminate();
-					const tempWorker = await import('$lib/workers/compile.worker?worker');
-					worker = new tempWorker.default();
-				}
-			}
-		}, 1000);
-		// testsConsoleLogs = [];
-		// for (const i in content.tests) {
-		// 	const item = content.tests[i];
-		// 	testsConsoleLogs[i] = [];
-
-		// 	try {
-		// 		const exec = sandbox.compile(code);
-		// 		const scriptResult = exec({ data: JSON.parse(item.input) }).run();
-		// 		const output = JSON.parse(item.output);
-		// 		if (scriptResult === output) {
-		// 			testsInfo[i] = {
-		// 				result: JSON.stringify(scriptResult),
-		// 				passed: true
-		// 			};
-		// 		} else {
-		// 			testsInfo[i] = {
-		// 				result: JSON.stringify(scriptResult),
-		// 				passed: false
-		// 			};
-		// 		}
-		// 	} catch (e) {
-		// 		console.log(e);
-		// 	}
-		// }
 	}
 
 	async function submitTest() {
@@ -199,21 +175,14 @@
 			contextmenu: false
 		});
 
-		Worker = await import('$lib/workers/compile.worker?worker');
-		worker = new Worker.default();
-
 		window.addEventListener('resize', () => {
 			codeEditor.layout();
 		});
-
-		worker.addEventListener('message', onMessage);
 	});
 
 	onDestroy(() => {
 		if (browser) {
 			window.removeEventListener('resize', () => codeEditor.layout());
-			worker.removeEventListener('message', onMessage);
-			worker.terminate();
 		}
 		codeEditor?.dispose();
 	});
