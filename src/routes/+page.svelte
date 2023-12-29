@@ -52,7 +52,9 @@
 			.then(() => {
 				const mobile = app.findObjectByName('mobile');
 				const screen = app.findObjectByName('Screen');
-				if (!mobile || !screen) return;
+				const screen2 = app.findObjectByName('toggle');
+				console.log(mobile, screen, screen2);
+				if (!mobile || !screen || !screen2) return;
 				gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
 				gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
 				gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
@@ -71,17 +73,11 @@
 				gsap
 					.timeline({
 						scrollTrigger: {
-							trigger: '#section1',
-							start: 'top center',
-							end: 'bottom bottom',
-							scrub: true,
-							onEnter: () => {},
-							onLeaveBack: () => {}
+							scrub: true
 						}
 					})
 					.to(mobileCanvasContainer, {
 						y: SECTION1_Y_TRANSLATE,
-						duration: 1,
 						scrollTrigger: {
 							trigger: '#section1',
 							start: 'top center',
@@ -90,15 +86,20 @@
 						}
 					})
 					.to(mobileCanvasContainer, {
-						duration: 1,
 						scrollTrigger: {
 							trigger: '#section2',
 							start: 'top center',
 							end: 'bottom center',
 							scrub: true,
+							// onLeaveBack: () => {
+							// 	gsap.to(mobileCanvasContainer, {
+							// 		y: '20%',
+							// 		duration: 0.2
+							// 	});
+							// }
 							onEnter: () => {
-								gsap.to(mobileCanvasContainer, {
-									y: 0,
+								gsap.to('#mobile-canvas', {
+									y: '0%',
 									duration: 1
 								});
 							}
@@ -109,18 +110,100 @@
 						scrollTrigger: {
 							trigger: '#section3',
 							start: 'top center',
-							end: 'bottom center',
-							// markers: true,
+							end: '800px center',
 							scrub: true,
+							markers: true,
 							toggleClass: 'fullscreen',
 							onEnter: () => {
 								gsap.to('#blob', {
 									width: '100vw',
-									duration: 2
+									left: '50vw',
+									translateX: '-50%',
+									borderRadius: '0',
+									duration: 0.6
+								});
+							},
+							onLeave: () => {},
+							onLeaveBack: () => {
+								gsap.to('#blob', {
+									width: '100%',
+									left: 'auto',
+									translateX: '0%',
+									borderRadius: '100%',
+									duration: 0.4
+								});
+								gsap.to('#about-text', {
+									opacity: 0,
+									duration: 0.4
 								});
 							}
 						}
 					});
+
+				gsap.to('#about-text', {
+					opacity: 1,
+					duration: 0.4,
+					y: '0px',
+					overwrite: true,
+					scrollTrigger: {
+						trigger: '#section3',
+						start: 'top center',
+						end: 'bottom center',
+						scrub: true,
+						onEnter: () => {
+							gsap.set('#about-text', { opacity: 0 });
+						}
+					}
+				});
+
+				gsap.to(mobile3DRef, {
+					scrollTrigger: {
+						trigger: '#section3',
+						start: '60% center',
+						end: '80% center',
+						scrub: false,
+						onEnter: () => {
+							gsap.to(mobile.rotation, {
+								x: (Math.PI / 180) * 10,
+								y: (Math.PI / 180) * 340,
+								z: (Math.PI / 180) * 2,
+								scale: 0.8,
+								duration: 0.8
+							});
+							screen2.scale.x = 0;
+							gsap.to(mobile3DRef, {
+								duration: 0.4,
+								rotate: '80deg',
+								left: '50vw',
+								translateX: '-50%'
+							});
+						},
+						onLeaveBack: () => {
+							// gsap.set(mobile.rotation, {
+							// 	x: (Math.PI / 180) * 10,
+							// 	y: (Math.PI / 180) * -25,
+							// 	z: (Math.PI / 180) * 2
+							// });
+							gsap.to(mobile.rotation, {
+								// { y: -1 / 5, x: -1 / 6 }
+								// y: (Math.PI / 180) * 20,
+								y: (Math.PI / 180) * 380,
+								x: (Math.PI / 180) * -20,
+								z: 0,
+								scale: 0.8,
+								duration: 1
+							});
+							screen2.scale.x = screen2.scale.y;
+							gsap.to(mobile3DRef, {
+								duration: 0.2,
+								left: 0,
+								scale: 1,
+								rotate: '0deg',
+								translateX: '0px'
+							});
+						}
+					}
+				});
 
 				gsap.to('#mobile-canvas', {
 					scrollTrigger: {
@@ -241,7 +324,10 @@
 			id="blob"
 			class="absolute w-full aspect-square rounded-full top-1/2 -translate-y-1/2 bg-black z-[-100]"
 		/>
-		<canvas bind:this={mobile3DRef} class="w-full h-full pointer-events-none" />
+		<canvas
+			bind:this={mobile3DRef}
+			class="absolute w-full h-full pointer-events-none"
+		/>
 	</div>
 </div>
 
@@ -595,14 +681,25 @@
 				</GridLayout>
 			</div>
 		</section>
-		<section id="section3">
-			<Space gap={400} />
-			<h2 class="relative z-[10000] font-bold text-white text-h1">
+		<section id="section3" class="relative">
+			<Space gap={300} />
+			<Space gap={300} />
+			<h2
+				class="relative z-[1000] font-bold text-white text-h1 text-center opacity-0 translate-y-[-800px]"
+				id="about-text"
+			>
 				Want to know more?
 			</h2>
+			<Space gap={100} />
+			<a
+				href="/about"
+				class="text-white absolute bottom-[0] left-1/2 -translate-x-1/2 z-[100000] outline-2 outline outline-white px-6 py-2"
+				>About Effio</a
+			>
+			<Space gap={400} />
 		</section>
 	</div>
-	<Space gap={50} />
+	<Space gap={450} />
 	<Footer />
 </main>
 
