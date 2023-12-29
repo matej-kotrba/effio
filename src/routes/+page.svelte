@@ -249,11 +249,11 @@
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
-		class="container relative px-2 mx-auto xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
+		class="container relative px-2 mx-auto min-h-[800px] xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
 	>
 		<Navbar includeSeparator={false} user={data.session} />
 		<div
-			class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4 xl:max-h-[800px]"
+			class="relative grid-cols-12 grid-rows-6 xl:grid gap-x-8 gap-y-4 min-h-full xl:max-h-[800px]"
 		>
 			<div class="col-span-5 row-span-2 gradient-bg rounded-2xl">
 				<img
@@ -319,21 +319,21 @@
 					</a>
 				</div>
 			</div>
-			<div
-				class="relative grid w-full h-full col-span-7 row-span-6 place-items-center"
-			>
+			<div class="relative grid col-span-7 row-span-6 place-items-center">
 				<img
 					src="/imgs/svgs/homepage/mobile.png"
 					role="presentation"
 					alt=""
 					class="absolute w-3/5 max-h-[115%] top-[5%] sm:top-auto sm:-bottom-[10%] z-[2] object-contain"
 				/>
-				<img
-					src="/imgs/svgs/rounded-container.png"
-					role="presentation"
-					alt=""
-					class="w-full h-full max-h-[800px]"
-				/>
+				<div class="overflow-hidden h-full max-h-[800px]">
+					<img
+						src="/imgs/svgs/rounded-container.png"
+						role="presentation"
+						alt=""
+						class="object-contain w-full h-full"
+					/>
+				</div>
 				<div
 					class="sm:absolute overflow-hidden bottom-0 p-2 sm:p-6 grid w-full sm:grid-cols-2 gap-6 z-[3]"
 				>
@@ -623,8 +623,9 @@
 
 	.grid__container {
 		gap: var(--gap);
-		grid-template-rows: auto calc(
-				100vh - var(--y-padding) * 2 - var(--nav-height) - var(--gap)
+		grid-template-rows: auto max(
+				calc(100vh - var(--y-padding) * 2 - var(--nav-height) - var(--gap)),
+				1fr
 			);
 	}
 
