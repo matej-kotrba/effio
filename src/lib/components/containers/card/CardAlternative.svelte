@@ -234,9 +234,9 @@
 			{/if}
 			{#if data.tags}
 				<div
-					class="flex gap-1 p-1 pb-2 mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
+					class="flex gap-1 p-1 pb-2 mx-auto mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
 				>
-					{#each [...data.tags, ...data.tags, ...data.tags, ...data.tags] as tag}
+					{#each data.tags as tag}
 						<TagContainer {tag} />
 					{/each}
 				</div>

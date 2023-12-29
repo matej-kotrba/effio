@@ -413,7 +413,7 @@
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	}
 
-	@media screen and (min-width: 1650px) {
+	@media screen and (min-width: 1450px) {
 		.grid__container {
 			grid-template-columns: repeat(6, minmax(210px, 1fr));
 		}

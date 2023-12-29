@@ -14,7 +14,6 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
-	import { Application } from '@splinetool/runtime';
 
 	export let data;
 
@@ -44,9 +43,10 @@
 	let mobileCanvasContainer: HTMLDivElement;
 	let mobile3DRef: HTMLCanvasElement;
 
-	onMount(() => {
+	onMount(async () => {
+		const spline = await import('@splinetool/runtime');
 		gsap.registerPlugin(ScrollTrigger);
-		const app = new Application(mobile3DRef);
+		const app = new spline.Application(mobile3DRef);
 		app
 			.load('https://prod.spline.design/h81QulQb8GQq0-Oa/scene.splinecode')
 			.then(() => {
