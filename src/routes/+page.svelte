@@ -70,7 +70,7 @@
 					ease: 'Power1.easeInOut'
 				});
 
-				gsap
+				const tl = gsap
 					.timeline({
 						scrollTrigger: {
 							scrub: true
@@ -110,9 +110,8 @@
 						scrollTrigger: {
 							trigger: '#section3',
 							start: 'top center',
-							end: '800px center',
+							end: '75% center',
 							scrub: true,
-							markers: true,
 							toggleClass: 'fullscreen',
 							onEnter: () => {
 								gsap.to('#blob', {
@@ -123,7 +122,19 @@
 									duration: 0.6
 								});
 							},
-							onLeave: () => {},
+							onLeave: () => {
+								gsap.to(mobile3DRef, {
+									scrollTrigger: {
+										trigger: '#about-button',
+										markers: true,
+										start: '-210px center',
+										end: '600px center',
+										scrub: 1
+									},
+									duration: 1,
+									translateY: '-100vh'
+								});
+							},
 							onLeaveBack: () => {
 								gsap.to('#blob', {
 									width: '100%',
@@ -692,6 +703,7 @@
 			</h2>
 			<Space gap={100} />
 			<a
+				id="about-button"
 				href="/about"
 				class="text-white absolute bottom-[0] left-1/2 -translate-x-1/2 z-[100000] outline-2 outline outline-white px-6 py-2"
 				>About Effio</a
