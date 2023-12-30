@@ -19,312 +19,268 @@
 
 	let displayUnderline = false;
 
-	const BAR_SECTIONS = {
-		SECTION0: '0px',
-		SECTION1: '400px',
-		SECTION2: '400px'
-	};
+	// const BAR_SECTIONS = {
+	// 	SECTION0: '0px',
+	// 	SECTION1: '400px',
+	// 	SECTION2: '400px'
+	// };
 
-	const SECTION1_Y_TRANSLATE = '20%';
+	// const SECTION1_Y_TRANSLATE = '20%';
 
-	const MOBILE_SECTIONS_WIDTH = {
-		SECTION0: '300px',
-		SECTION1: '300px',
-		SECTION2: '400px'
-	};
+	// const MOBILE_SECTIONS_WIDTH = {
+	// 	SECTION0: '300px',
+	// 	SECTION1: '300px',
+	// 	SECTION2: '400px'
+	// };
 
-	const MOBILE_SECTIONS_LEFT = {
-		SECTION0: '100vw',
-		SECTION1: `calc(100vw - ${MOBILE_SECTIONS_WIDTH['SECTION1']} - ((${BAR_SECTIONS['SECTION1']} - ${MOBILE_SECTIONS_WIDTH['SECTION1']}) / 2))`,
-		SECTION2: '0%'
-	};
+	// const MOBILE_SECTIONS_LEFT = {
+	// 	SECTION0: '100vw',
+	// 	SECTION1: `calc(100vw - ${MOBILE_SECTIONS_WIDTH['SECTION1']} - ((${BAR_SECTIONS['SECTION1']} - ${MOBILE_SECTIONS_WIDTH['SECTION1']}) / 2))`,
+	// 	SECTION2: '0%'
+	// };
 
-	const STARTING_TRANSLATE_X = 2;
-	let mobileCanvasContainer: HTMLDivElement;
-	let mobile3DRef: HTMLCanvasElement;
+	// const STARTING_TRANSLATE_X = 2;
+	// let mobileCanvasContainer: HTMLDivElement;
+	// let mobile3DRef: HTMLCanvasElement;
 
-	onMount(async () => {
-		const spline = await import('@splinetool/runtime');
-		gsap.registerPlugin(ScrollTrigger);
-		const app = new spline.Application(mobile3DRef);
-		app
-			.load('https://prod.spline.design/h81QulQb8GQq0-Oa/scene.splinecode')
-			.then(() => {
-				const mobile = app.findObjectByName('mobile');
-				const screen = app.findObjectByName('Screen');
-				const screen2 = app.findObjectByName('toggle');
-				console.log(mobile, screen, screen2);
-				if (!mobile || !screen || !screen2) return;
-				gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
-				gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
-				gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
-
-				let rotateMobile = gsap.to(mobile.rotation, {
-					x: mobile.rotation.y,
-					y: (Math.PI / 180) * 20,
-					z: mobile.rotation.z,
-					yoyoEase: true,
-
-					duration: 5,
-					repeat: -1,
-					ease: 'Power1.easeInOut'
-				});
-
-				const tl = gsap
-					.timeline({
-						scrollTrigger: {
-							scrub: true
-						}
-					})
-					.to(mobileCanvasContainer, {
-						y: SECTION1_Y_TRANSLATE,
-						scrollTrigger: {
-							trigger: '#section1',
-							start: 'top center',
-							end: 'bottom center',
-							scrub: true
-						}
-					})
-					.to(mobileCanvasContainer, {
-						scrollTrigger: {
-							trigger: '#section2',
-							start: 'top center',
-							end: 'bottom center',
-							scrub: true,
-							// onLeaveBack: () => {
-							// 	gsap.to(mobileCanvasContainer, {
-							// 		y: '20%',
-							// 		duration: 0.2
-							// 	});
-							// }
-							onEnter: () => {
-								gsap.to('#mobile-canvas', {
-									y: '0%',
-									duration: 1
-								});
-							}
-						}
-					})
-					.to(mobileCanvasContainer, {
-						duration: 2,
-						scrollTrigger: {
-							trigger: '#section3',
-							start: 'top center',
-							end: '75% center',
-							scrub: true,
-							toggleClass: 'fullscreen',
-							onEnter: () => {
-								gsap.to('#blob', {
-									width: '100vw',
-									left: '50vw',
-									translateX: '-50%',
-									borderRadius: '0',
-									duration: 0.6
-								});
-							},
-							onLeave: () => {
-								gsap.to(mobile3DRef, {
-									scrollTrigger: {
-										trigger: '#about-button',
-										markers: true,
-										start: '-210px center',
-										end: '600px center',
-										scrub: 1
-									},
-									duration: 1,
-									translateY: '-100vh'
-								});
-							},
-							onLeaveBack: () => {
-								gsap.to('#blob', {
-									width: '100%',
-									left: 'auto',
-									translateX: '0%',
-									borderRadius: '100%',
-									duration: 0.4
-								});
-								gsap.to('#about-text', {
-									opacity: 0,
-									duration: 0.4
-								});
-							}
-						}
-					});
-
-				gsap.to('#about-text', {
-					opacity: 1,
-					duration: 0.4,
-					y: '0px',
-					overwrite: true,
-					scrollTrigger: {
-						trigger: '#section3',
-						start: 'top center',
-						end: 'bottom center',
-						scrub: true,
-						onEnter: () => {
-							gsap.set('#about-text', { opacity: 0 });
-						}
-					}
-				});
-
-				gsap.to(mobile3DRef, {
-					scrollTrigger: {
-						trigger: '#section3',
-						start: '60% center',
-						end: '80% center',
-						scrub: false,
-						onEnter: () => {
-							gsap.to(mobile.rotation, {
-								x: (Math.PI / 180) * 10,
-								y: (Math.PI / 180) * 340,
-								z: (Math.PI / 180) * 2,
-								scale: 0.8,
-								duration: 0.8
-							});
-							screen2.scale.x = 0;
-							gsap.to(mobile3DRef, {
-								duration: 0.4,
-								rotate: '80deg',
-								left: '50vw',
-								translateX: '-50%'
-							});
-						},
-						onLeaveBack: () => {
-							// gsap.set(mobile.rotation, {
-							// 	x: (Math.PI / 180) * 10,
-							// 	y: (Math.PI / 180) * -25,
-							// 	z: (Math.PI / 180) * 2
-							// });
-							gsap.to(mobile.rotation, {
-								// { y: -1 / 5, x: -1 / 6 }
-								// y: (Math.PI / 180) * 20,
-								y: (Math.PI / 180) * 380,
-								x: (Math.PI / 180) * -20,
-								z: 0,
-								scale: 0.8,
-								duration: 1
-							});
-							screen2.scale.x = screen2.scale.y;
-							gsap.to(mobile3DRef, {
-								duration: 0.2,
-								left: 0,
-								scale: 1,
-								rotate: '0deg',
-								translateX: '0px'
-							});
-						}
-					}
-				});
-
-				gsap.to('#mobile-canvas', {
-					scrollTrigger: {
-						trigger: '#section1',
-						start: 'top center',
-						end: 'bottom bottom',
-						scrub: true,
-						onEnter: () => {
-							gsap.to('#mobile-canvas', {
-								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
-								left: MOBILE_SECTIONS_LEFT['SECTION1'],
-								duration: 0.2,
-								ease: 'none'
-							});
-						},
-						onLeaveBack: () => {
-							gsap.to('#mobile-canvas', {
-								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION0'],
-								left: MOBILE_SECTIONS_LEFT['SECTION0'],
-								duration: 0.2,
-								ease: 'none'
-							});
-						}
-					}
-				});
-				gsap.to('#mobile-canvas', {
-					scrollTrigger: {
-						trigger: '#section2',
-						start: 'top center',
-						end: 'bottom bottom',
-						scrub: true,
-						onEnter: () => {
-							gsap.to('#mobile-canvas', {
-								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION2'],
-								left: MOBILE_SECTIONS_LEFT['SECTION2'],
-								duration: 0.2,
-								ease: 'none'
-							});
-							rotateMobile.pause();
-							gsap.to(mobile.rotation, {
-								y: (Math.PI / 180) * 380,
-								x: (Math.PI / 180) * -20,
-								duration: 1
-							});
-							screen.scale.x = 0;
-						},
-						onLeaveBack: () => {
-							rotateMobile.resume();
-							gsap.to('#mobile-canvas', {
-								maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
-								left: MOBILE_SECTIONS_LEFT['SECTION1'],
-								duration: 0.2,
-								ease: 'none'
-							});
-							screen.scale.x = screen.scale.y;
-						}
-					}
-				});
-			});
-
-		// Animating bar
-		function animateBar(
-			triggerElement: string,
-			onEnterWidth: string,
-			onLeaveBackWidth: string,
-			onEnterOther: { [key: string]: any } = {},
-			onLeaveOther: { [key: string]: any } = {}
-		) {
-			gsap.to('.bar', {
-				scrollTrigger: {
-					trigger: triggerElement,
-					start: 'top center',
-					end: 'bottom bottom',
-					scrub: true,
-					onEnter: () => {
-						gsap.to('.bar', {
-							width: onEnterWidth,
-							duration: 0.2,
-							ease: 'none',
-							...onEnterOther
-						});
-					},
-					onLeaveBack: () => {
-						gsap.to('.bar', {
-							width: onLeaveBackWidth,
-							duration: 0.2,
-							ease: 'none',
-							...onLeaveOther
-						});
-					}
-				}
-			});
-		}
-
-		animateBar('#section1', BAR_SECTIONS['SECTION1'], BAR_SECTIONS['SECTION0']);
-		animateBar(
-			'#section2',
-			BAR_SECTIONS['SECTION2'],
-			BAR_SECTIONS['SECTION1'],
-			{ right: `calc(100vw - ${BAR_SECTIONS['SECTION2']})` },
-			{ right: 0 }
-		);
-	});
+	// onMount(async () => {
+	// 	const spline = await import('@splinetool/runtime');
+	// 	gsap.registerPlugin(ScrollTrigger);
+	// 	const app = new spline.Application(mobile3DRef);
+	// 	app
+	// 		.load('https://prod.spline.design/h81QulQb8GQq0-Oa/scene.splinecode')
+	// 		.then(() => {
+	// 			const mobile = app.findObjectByName('mobile');
+	// 			const screen = app.findObjectByName('Screen');
+	// 			const screen2 = app.findObjectByName('toggle');
+	// 			console.log(mobile, screen, screen2);
+	// 			if (!mobile || !screen || !screen2) return;
+	// 			gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
+	// 			gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
+	// 			gsap.set(mobile.rotation, { y: -1 / 5, x: -1 / 6 });
+	// 			let rotateMobile = gsap.to(mobile.rotation, {
+	// 				x: mobile.rotation.y,
+	// 				y: (Math.PI / 180) * 20,
+	// 				z: mobile.rotation.z,
+	// 				yoyoEase: true,
+	// 				duration: 5,
+	// 				repeat: -1,
+	// 				ease: 'Power1.easeInOut'
+	// 			});
+	// 			const tl = gsap
+	// 				.timeline({
+	// 					scrollTrigger: {
+	// 						scrub: true
+	// 					}
+	// 				})
+	// 				.to(mobileCanvasContainer, {
+	// 					y: SECTION1_Y_TRANSLATE,
+	// 					scrollTrigger: {
+	// 						trigger: '#section1',
+	// 						start: 'top center',
+	// 						end: 'bottom center',
+	// 						scrub: true
+	// 					}
+	// 				})
+	// 				.to(mobileCanvasContainer, {
+	// 					scrollTrigger: {
+	// 						trigger: '#section2',
+	// 						start: 'top center',
+	// 						end: 'bottom center',
+	// 						scrub: true,
+	// 						// onLeaveBack: () => {
+	// 						// 	gsap.to(mobileCanvasContainer, {
+	// 						// 		y: '20%',
+	// 						// 		duration: 0.2
+	// 						// 	});
+	// 						// }
+	// 						onEnter: () => {
+	// 							gsap.to('#mobile-canvas', {
+	// 								y: '0%',
+	// 								duration: 1
+	// 							});
+	// 						}
+	// 					}
+	// 				})
+	// 				.to(mobileCanvasContainer, {
+	// 					duration: 2,
+	// 					scrollTrigger: {
+	// 						trigger: '#section3',
+	// 						start: 'top center',
+	// 						end: '75% center',
+	// 						scrub: true,
+	// 						toggleClass: 'fullscreen',
+	// 						onEnter: () => {
+	// 							gsap.to('#blob', {
+	// 								width: '100vw',
+	// 								left: '50vw',
+	// 								translateX: '-50%',
+	// 								borderRadius: '0',
+	// 								duration: 0.6
+	// 							});
+	// 						},
+	// 						onLeave: () => {
+	// 							gsap.to(mobile3DRef, {
+	// 								scrollTrigger: {
+	// 									trigger: '#about-button',
+	// 									start: '-210px center',
+	// 									end: '600px center',
+	// 									scrub: 1
+	// 								},
+	// 								duration: 1,
+	// 								translateY: '-100vh'
+	// 							});
+	// 						},
+	// 						onLeaveBack: () => {
+	// 							gsap.to('#blob', {
+	// 								width: '100%',
+	// 								left: 'auto',
+	// 								translateX: '0%',
+	// 								borderRadius: '100%',
+	// 								duration: 0.4
+	// 							});
+	// 							gsap.to('#about-text', {
+	// 								opacity: 0,
+	// 								duration: 0.4
+	// 							});
+	// 						}
+	// 					}
+	// 				});
+	// 			gsap.to('#about-text', {
+	// 				opacity: 1,
+	// 				duration: 0.4,
+	// 				y: '0px',
+	// 				overwrite: true,
+	// 				scrollTrigger: {
+	// 					trigger: '#section3',
+	// 					start: 'top center',
+	// 					end: 'bottom center',
+	// 					scrub: true,
+	// 					onEnter: () => {
+	// 						gsap.set('#about-text', { opacity: 0 });
+	// 					}
+	// 				}
+	// 			});
+	// 			gsap.to(mobile3DRef, {
+	// 				scrollTrigger: {
+	// 					trigger: '#section3',
+	// 					start: '60% center',
+	// 					end: '80% center',
+	// 					scrub: false,
+	// 					onEnter: () => {
+	// 						gsap.to(mobile.rotation, {
+	// 							x: (Math.PI / 180) * 10,
+	// 							y: (Math.PI / 180) * 340,
+	// 							z: (Math.PI / 180) * 2,
+	// 							scale: 0.8,
+	// 							duration: 0.8
+	// 						});
+	// 						screen2.scale.x = 0;
+	// 						gsap.to(mobile3DRef, {
+	// 							duration: 0.4,
+	// 							rotate: '80deg',
+	// 							left: '50vw',
+	// 							translateX: '-50%'
+	// 						});
+	// 					},
+	// 					onLeaveBack: () => {
+	// 						// gsap.set(mobile.rotation, {
+	// 						// 	x: (Math.PI / 180) * 10,
+	// 						// 	y: (Math.PI / 180) * -25,
+	// 						// 	z: (Math.PI / 180) * 2
+	// 						// });
+	// 						gsap.to(mobile.rotation, {
+	// 							// { y: -1 / 5, x: -1 / 6 }
+	// 							// y: (Math.PI / 180) * 20,
+	// 							y: (Math.PI / 180) * 380,
+	// 							x: (Math.PI / 180) * -20,
+	// 							z: 0,
+	// 							scale: 0.8,
+	// 							duration: 1
+	// 						});
+	// 						screen2.scale.x = screen2.scale.y;
+	// 						gsap.to(mobile3DRef, {
+	// 							duration: 0.2,
+	// 							left: 0,
+	// 							scale: 1,
+	// 							rotate: '0deg',
+	// 							translateX: '0px'
+	// 						});
+	// 					}
+	// 				}
+	// 			});
+	// 			gsap.to('#mobile-canvas', {
+	// 				scrollTrigger: {
+	// 					trigger: '#section1',
+	// 					start: 'top center',
+	// 					end: 'bottom bottom',
+	// 					scrub: true,
+	// 					onEnter: () => {
+	// 						gsap.to('#mobile-canvas', {
+	// 							maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
+	// 							left: MOBILE_SECTIONS_LEFT['SECTION1'],
+	// 							duration: 0.2,
+	// 							ease: 'none'
+	// 						});
+	// 					},
+	// 					onLeaveBack: () => {
+	// 						gsap.to('#mobile-canvas', {
+	// 							maxWidth: MOBILE_SECTIONS_WIDTH['SECTION0'],
+	// 							left: MOBILE_SECTIONS_LEFT['SECTION0'],
+	// 							duration: 0.2,
+	// 							ease: 'none'
+	// 						});
+	// 					}
+	// 				}
+	// 			});
+	// 			gsap.to('#mobile-canvas', {
+	// 				scrollTrigger: {
+	// 					trigger: '#section2',
+	// 					start: 'top center',
+	// 					end: 'bottom bottom',
+	// 					scrub: true,
+	// 					onEnter: () => {
+	// 						gsap.to('#mobile-canvas', {
+	// 							maxWidth: MOBILE_SECTIONS_WIDTH['SECTION2'],
+	// 							left: MOBILE_SECTIONS_LEFT['SECTION2'],
+	// 							duration: 0.2,
+	// 							ease: 'none'
+	// 						});
+	// 						rotateMobile.pause();
+	// 						gsap.to(mobile.rotation, {
+	// 							y: (Math.PI / 180) * 380,
+	// 							x: (Math.PI / 180) * -20,
+	// 							duration: 1
+	// 						});
+	// 						screen.scale.x = 0;
+	// 					},
+	// 					onLeaveBack: () => {
+	// 						rotateMobile.resume();
+	// 						gsap.to('#mobile-canvas', {
+	// 							maxWidth: MOBILE_SECTIONS_WIDTH['SECTION1'],
+	// 							left: MOBILE_SECTIONS_LEFT['SECTION1'],
+	// 							duration: 0.2,
+	// 							ease: 'none'
+	// 						});
+	// 						screen.scale.x = screen.scale.y;
+	// 					}
+	// 				}
+	// 			});
+	// 		});
+	// });
 </script>
+
+<link
+	rel="preload"
+	href="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
+	as="fetch"
+/>
 
 <!-- <Toaster /> -->
 <ScrollToTop />
 
-<div
-	class="fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none overflow-clip"
+<!-- <div
+	class="hidden lg:block fixed w-screen top-0 left-0 h-[100svh] z-[20] pointer-events-none overflow-clip"
 >
 	<div
 		class="absolute left-[100vw] px-4 -translate-y-1/2 top-1/2 max-w-[400px] aspect-[1/2] w-full isolate"
@@ -340,9 +296,7 @@
 			class="absolute w-full h-full pointer-events-none"
 		/>
 	</div>
-</div>
-
-<div class="absolute top-0 right-0 z-[10] h-full bg-black bar hidden" />
+</div> -->
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
@@ -542,11 +496,8 @@
 				</div>
 			</div>
 		</section>
-		<section
-			id="section1"
-			class="grid"
-			style={`grid-template-columns: 1fr ${BAR_SECTIONS['SECTION1']};`}
-		>
+		<section id="section1" class="grid">
+			<!-- style={`grid-template-columns: 1fr ${BAR_SECTIONS['SECTION1']};`} -->
 			<div>
 				<LineConnectorWithTitle title="Community place">
 					<h2
@@ -615,11 +566,8 @@
 				</GridLayout>
 			</div>
 		</section>
-		<section
-			id="section2"
-			class="grid"
-			style={`grid-template-columns: ${BAR_SECTIONS['SECTION2']} 1fr;`}
-		>
+		<section id="section2" class="grid">
+			<!-- style={`grid-template-columns: ${BAR_SECTIONS['SECTION2']} 1fr;`} -->
 			<div />
 			<div>
 				<LineConnectorWithTitle
@@ -692,7 +640,7 @@
 				</GridLayout>
 			</div>
 		</section>
-		<section id="section3" class="relative">
+		<!-- <section id="section3" class="relative">
 			<Space gap={300} />
 			<Space gap={300} />
 			<h2
@@ -709,7 +657,7 @@
 				>About Effio</a
 			>
 			<Space gap={400} />
-		</section>
+		</section> -->
 	</div>
 	<Space gap={450} />
 	<Footer />
