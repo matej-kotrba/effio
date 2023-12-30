@@ -30,6 +30,24 @@
 
 	onMount(() => {
 		rect = card?.getBoundingClientRect();
+
+		window.addEventListener('scroll', () => {
+			rect = card?.getBoundingClientRect();
+		});
+
+		window.addEventListener('resize', () => {
+			rect = card?.getBoundingClientRect();
+		});
+
+		return () => {
+			window.removeEventListener('scroll', () => {
+				rect = card?.getBoundingClientRect();
+			});
+
+			window.removeEventListener('resize', () => {
+				rect = card?.getBoundingClientRect();
+			});
+		};
 	});
 </script>
 
@@ -49,7 +67,7 @@
 	on:mouseleave={resetRotate}
 >
 	<div
-		class="outline-8 outline lean bg-light_white outline-light_terciary dark:bg-dark_terciary"
+		class="overflow-hidden outline-8 outline lean bg-light_white outline-light_terciary dark:outline-dark_secondary dark:bg-dark_terciary"
 		style="--x: 0; --y: 0;"
 		bind:this={card}
 	>
@@ -81,7 +99,7 @@
 		inset: 0;
 		background-image: radial-gradient(
 			circle at var(--x, 0) var(--y, 0),
-			var(--light-terciary) -50%,
+			var(--light-terciary) -60%,
 			transparent 10rem
 		);
 		border-radius: 40px;

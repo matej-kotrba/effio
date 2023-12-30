@@ -13,7 +13,6 @@
 	import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -522,18 +521,39 @@
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
 							<h3
-								class="mb-auto font-medium text-h6 md:text-h4 text-light_text_black"
+								class="mb-auto font-semibold text-center text-h6 md:text-h4 text-light_text_black"
 							>
-								Explore what have community created!
+								Explore the community!
 							</h3>
 							<div>
-								<img
-									src="/imgs/community_place.svg"
-									alt="Community place"
-									class="max-w-[300px] mx-auto w-full xs:w-auto"
-								/>
+								<div class="relative">
+									<svg
+										class="highlight_effect"
+										viewBox="0 0 200 200"
+										xmlns="http://www.w3.org/2000/svg"
+										use:intersect
+										on:intersect={(e) => {
+											e.currentTarget.classList.toggle('active');
+										}}
+										on:unintersect={(e) => {
+											e.currentTarget.classList.toggle('active');
+										}}
+									>
+										<path
+											class="fill-light_primary dark:fill-dark_primary"
+											d="M43.1,-49.3C57.5,-39.2,72.1,-27.3,70.5,-15.5C68.9,-3.8,51.1,7.7,41.5,23.6C31.9,39.5,30.5,59.7,19.3,72.2C8,84.6,-13.1,89.3,-28.3,81.9C-43.4,74.5,-52.7,55.1,-57.9,37.6C-63.1,20,-64.4,4.2,-62.4,-11.7C-60.4,-27.6,-55.2,-43.6,-44.3,-54.3C-33.4,-65,-16.7,-70.4,-1.2,-69C14.3,-67.5,28.6,-59.4,43.1,-49.3Z"
+											transform="translate(100 90)"
+										/>
+									</svg>
+
+									<img
+										src="/imgs/svgs/homepage/community.svg"
+										alt="Community place"
+										class="max-w-[300px] mx-auto w-full xs:w-auto"
+									/>
+								</div>
 								<Space gap={36} />
-								<CallToAction text={'Visit'} center="right">
+								<CallToAction text={'Visit'} center="right" link="/community">
 									<iconify-icon
 										icon="material-symbols:arrow-right-alt-rounded"
 									/>
@@ -557,7 +577,7 @@
 							<div class="max-h-full mt-auto ml-auto w-fit">
 								<button
 									on:click={() => {}}
-									class="btn bg-light_primary dark:bg-dark_primary text-light_text_black hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+									class="text-white btn bg-light_primary dark:bg-dark_primary hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
 									type="button">Log In</button
 								>
 							</div>
@@ -594,7 +614,7 @@
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
 							<h3
-								class="mb-auto font-light text-h6 md:text-h4 text-light_white"
+								class="mb-auto font-light text-h6 md:text-h4 text-light_text_black"
 							>
 								Create your own tests using simple enviroment!
 							</h3>
@@ -606,7 +626,7 @@
 									class="max-w-[300px] mx-auto w-full xs:w-auto"
 								/>
 								<Space gap={36} />
-								<CallToAction text={'Visit'} center="right">
+								<CallToAction text={'Visit'} center="right" link={'#'}>
 									<iconify-icon
 										icon="material-symbols:arrow-right-alt-rounded"
 									/>
@@ -616,7 +636,7 @@
 					</slot>
 					<slot slot="b">
 						<h3
-							class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
 						>
 							Import and export in GIFT format compatible with other popular
 							platforms like Moodle.
@@ -624,7 +644,7 @@
 					</slot>
 					<slot slot="c">
 						<div class="flex flex-col justify-between h-full">
-							<h3 class="text-light_white text-body1 md:text-h5">
+							<h3 class="text-light_text_black text-body1 md:text-h5">
 								Want to create tests of you own?<br />All you need is to Log In
 								using one of these providers: GitHub, Google
 							</h3>
@@ -729,6 +749,24 @@
 	}
 	.grid-layout__about-us > .content {
 		grid-area: content;
+	}
+
+	.highlight_effect {
+		position: absolute;
+		width: 80%;
+		left: 50%;
+		z-index: -99;
+		transform: translateX(-50%);
+		filter: blur(60px);
+		opacity: 0;
+		scale: 1;
+		transition: 0.6s ease;
+	}
+
+	:global(.active).highlight_effect {
+		opacity: 1 !important;
+		scale: 1;
+		transition-delay: 300ms;
 	}
 
 	.fullscreen > #blob {

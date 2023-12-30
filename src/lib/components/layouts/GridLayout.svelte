@@ -3,6 +3,20 @@
 	import HoverLeaning from '../effects/HoverLeaning.svelte';
 	import { tweened } from 'svelte/motion';
 
+	type GridString = `${number} / ${number}`;
+	type GridArea = {
+		rows: GridString;
+		columns: GridString;
+	};
+
+	export let customLayout:
+		| {
+				a: GridArea;
+				b: GridArea;
+				c: GridArea;
+		  }
+		| undefined = undefined;
+
 	const effectX = tweened(0, {
 		duration: 200,
 		easing: cubicOut
@@ -27,17 +41,38 @@
 <section
 	class="flex flex-col lg:grid lg:max-h-[700px] px-1 gap-2 lg:gap-[40px]"
 >
-	<div class="a">
+	<div
+		class="a"
+		style={`${
+			customLayout && customLayout['a']
+				? `grid-column: ${customLayout['a']['columns']}; grid-row: ${customLayout['a']['rows']}`
+				: ''
+		}`}
+	>
 		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
 			<slot name="a" />
 		</HoverLeaning>
 	</div>
-	<div class="b">
+	<div
+		class="b"
+		style={`${
+			customLayout && customLayout['b']
+				? `grid-column: ${customLayout['b']['columns']}; grid-row: ${customLayout['b']['rows']}`
+				: ''
+		}`}
+	>
 		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
 			<slot name="b" />
 		</HoverLeaning>
 	</div>
-	<div class="c">
+	<div
+		class="c"
+		style={`${
+			customLayout && customLayout['c']
+				? `grid-column: ${customLayout['c']['columns']}; grid-row: ${customLayout['c']['rows']}`
+				: ''
+		}`}
+	>
 		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
 			<slot name="c" />
 		</HoverLeaning>

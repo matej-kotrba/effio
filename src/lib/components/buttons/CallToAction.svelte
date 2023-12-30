@@ -1,20 +1,21 @@
 <script lang="ts">
 	export let text: string = 'Call to Action';
 	export let center: 'left' | 'center' | 'right' = 'center';
+	export let link: string = '#';
 
 	let centerString = 'mx-auto';
 	if (center == 'left') centerString = 'mr-auto';
 	if (center == 'right') centerString = 'ml-auto';
 </script>
 
-<button
-	type="button"
-	class="flex items-center gap-2 px-10 py-4 font-semibold text-white rounded-full shadow-xl text-h4 {centerString}"
-	>{text}<slot /></button
+<a
+	href={link}
+	class="w-fit flex items-center gap-2 px-10 py-4 font-semibold text-white rounded-full shadow-xl text-h4 {centerString}"
+	>{text}<slot /></a
 >
 
 <style>
-	button {
+	a {
 		/* background-image: radial-gradient(
 				circle at right,
 				hsla(256, 100%, 79%, 0.8),
@@ -26,7 +27,7 @@
 		background-size: 150% 150%;
 		transition: 0.5s ease background-position;
 	}
-	button:hover {
+	a:hover {
 		background-position: right top;
 	}
 </style>
