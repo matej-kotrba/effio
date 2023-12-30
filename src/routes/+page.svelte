@@ -457,7 +457,7 @@
 	</section>
 </header>
 
-<main class="bg-light_quaternary dark:bg-dark_quaternary">
+<main class="">
 	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<!-- About us section -->
 		<section class="grid-layout__about-us">
@@ -562,6 +562,7 @@
 										class="highlight_effect"
 										viewBox="0 0 200 200"
 										xmlns="http://www.w3.org/2000/svg"
+										style="transition-delay: 100ms;"
 										use:intersect
 										on:intersect={(e) => {
 											e.currentTarget.classList.add('active');
@@ -675,13 +676,36 @@
 				<GridLayout>
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
-							<h3
-								class="mb-auto font-light text-h6 md:text-h4 text-light_text_black"
-							>
-								Create your own tests using simple enviroment!
+							<h3 class="mb-auto font-medium text-light_text_black">
+								<span class="font-semibold text-h6 md:text-h4"
+									>Create tests</span
+								>
+								<span class="text-body1 md:text-h6"
+									>using several question types, add comments, marking system
+									and customize behaviour of the test</span
+								>
 							</h3>
 							<Space gap={10} />
 							<div>
+								<svg
+									class="highlight_effect"
+									viewBox="0 0 200 200"
+									xmlns="http://www.w3.org/2000/svg"
+									style="transition-delay: 100ms;"
+									use:intersect
+									on:intersect={(e) => {
+										e.currentTarget.classList.add('active');
+									}}
+									on:unintersect={(e) => {
+										e.currentTarget.classList.remove('active');
+									}}
+								>
+									<path
+										class="fill-light_primary dark:fill-dark_primary"
+										d="M43.1,-49.3C57.5,-39.2,72.1,-27.3,70.5,-15.5C68.9,-3.8,51.1,7.7,41.5,23.6C31.9,39.5,30.5,59.7,19.3,72.2C8,84.6,-13.1,89.3,-28.3,81.9C-43.4,74.5,-52.7,55.1,-57.9,37.6C-63.1,20,-64.4,4.2,-62.4,-11.7C-60.4,-27.6,-55.2,-43.6,-44.3,-54.3C-33.4,-65,-16.7,-70.4,-1.2,-69C14.3,-67.5,28.6,-59.4,43.1,-49.3Z"
+										transform="translate(100 90)"
+									/>
+								</svg>
 								<img
 									src="/imgs/online_test.svg"
 									alt="Community place"
@@ -705,19 +729,12 @@
 						</h3>
 					</slot>
 					<slot slot="c">
-						<div class="flex flex-col justify-between h-full">
-							<h3 class="text-light_text_black text-body1 md:text-h5">
-								Want to create tests of you own?<br />All you need is to Log In
-								using one of these providers: GitHub, Google
-							</h3>
-							<div class="max-h-full mt-auto ml-auto w-fit">
-								<button
-									on:click={() => {}}
-									class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
-									type="button">Log In</button
-								>
-							</div>
-						</div>
+						<h3
+							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
+						>
+							Import and export in GIFT format compatible with other popular
+							platforms like Moodle.
+						</h3>
 					</slot>
 				</GridLayout>
 			</div>

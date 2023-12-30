@@ -149,7 +149,7 @@ will be used in the test creator -->
 						>Edit points</summary
 					>
 					<div
-						class="p-3 shadow-md menu dropdown-content z-[1] bg-light_grey dark:bg-dark_terciary rounded-box w-52"
+						class="p-3 shadow-md menu dropdown-content z-[10] bg-light_grey dark:bg-dark_terciary rounded-box w-52"
 					>
 						<h6 class="font-semibold text-center">Points for this question?</h6>
 						<p class="text-2xl font-semibold text-center">

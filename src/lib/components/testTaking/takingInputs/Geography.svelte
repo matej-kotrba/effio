@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Marker } from 'leaflet';
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, afterUpdate } from 'svelte';
 	import type { MiddlewareLocation } from '~components/testCreator/creatorInputs/Geography.svelte';
 	import {
 		LATITUDE_MAX,
@@ -12,6 +12,7 @@
 	} from '~schemas/textInput';
 	import type { TestObject } from '~stores/testObject';
 	import 'leaflet/dist/leaflet.css';
+	import { intersect } from '~use/intersectionObserver';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<GeographyQuestion> | null =
@@ -160,7 +161,13 @@
 	}
 </script>
 
-<div class="flex flex-col gap-2">
+<div
+	class="flex flex-col gap-2"
+	use:intersect={{ once: true }}
+	on:intersect={() => {
+		map.invalidateSize();
+	}}
+>
 	<span class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
 		>You have tolerance of {content.tolerence} km</span
 	>

@@ -42,6 +42,7 @@
 
 	let testImageFile: File | undefined = undefined;
 
+	let modal: HTMLDialogElement;
 	let openTagModal: () => void;
 
 	let tags: Tag[] = [];
@@ -82,7 +83,7 @@
 		bind:open={openPreview}
 		formClasses="h-[min(800px,95vh)] p-2"
 	>
-		<div class="h-[calc(100%-1em)] overflow-y-auto overscroll-contain">
+		<div class="h-[calc(100%-1em)] overflow-y-auto overscroll-contain w-full">
 			{#if testType === 'REGULAR'}
 				{#each $testObject['questions'] as _, index}
 					<Input
