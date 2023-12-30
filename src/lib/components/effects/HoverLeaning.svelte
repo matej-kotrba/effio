@@ -5,8 +5,11 @@
 
 	let card: HTMLDivElement | null = null;
 	let rect: DOMRect | undefined = undefined;
+	export let noLean: boolean = false;
+	export let noStyles: boolean = false;
 
 	function setRotate(event: MouseEvent): void {
+		if (noLean) return;
 		if (!card) return;
 		const { clientX, clientY } = event;
 		const rect = card.getBoundingClientRect();
@@ -67,8 +70,14 @@
 	on:mouseleave={resetRotate}
 >
 	<div
-		class="overflow-hidden outline-8 outline lean bg-light_white outline-light_terciary dark:outline-dark_secondary dark:bg-dark_terciary"
-		style="--x: 0; --y: 0;"
+		class={`${
+			noStyles === false
+				? 'overflow-hidden outline-8 outline lean bg-light_white outline-light_terciary dark:outline-dark_secondary dark:bg-dark_terciary'
+				: 'h-full'
+		}`}
+		style={`--x: 0; --y: 0; transform-style: ${
+			noLean ? 'flat' : 'preserve-3d'
+		};`}
 		bind:this={card}
 	>
 		<slot />

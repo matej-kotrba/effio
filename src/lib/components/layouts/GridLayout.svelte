@@ -9,11 +9,25 @@
 		columns: GridString;
 	};
 
+	export let id: string = '';
 	export let customLayout:
 		| {
 				a: GridArea;
 				b: GridArea;
 				c: GridArea;
+		  }
+		| undefined = undefined;
+
+	type LayoutOptions = {
+		withoutStyle?: boolean;
+		withoutLean?: boolean;
+	};
+
+	export let layoutOptions:
+		| {
+				a?: LayoutOptions;
+				b?: LayoutOptions;
+				c?: LayoutOptions;
 		  }
 		| undefined = undefined;
 
@@ -40,6 +54,7 @@
 />
 <section
 	class="flex flex-col lg:grid lg:max-h-[700px] px-1 gap-2 lg:gap-[40px]"
+	{...id !== '' ? { id } : {}}
 >
 	<div
 		class="a"
@@ -49,7 +64,11 @@
 				: ''
 		}`}
 	>
-		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
+		<HoverLeaning
+			noLean={layoutOptions && layoutOptions['a']?.withoutLean}
+			noStyles={layoutOptions && layoutOptions['a']?.withoutStyle}
+			effect={{ x: $effectX, y: $effectY }}
+		>
 			<slot name="a" />
 		</HoverLeaning>
 	</div>
@@ -61,7 +80,11 @@
 				: ''
 		}`}
 	>
-		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
+		<HoverLeaning
+			noLean={layoutOptions && layoutOptions['b']?.withoutLean}
+			noStyles={layoutOptions && layoutOptions['b']?.withoutStyle}
+			effect={{ x: $effectX, y: $effectY }}
+		>
 			<slot name="b" />
 		</HoverLeaning>
 	</div>
@@ -73,7 +96,11 @@
 				: ''
 		}`}
 	>
-		<HoverLeaning effect={{ x: $effectX, y: $effectY }}>
+		<HoverLeaning
+			noLean={layoutOptions && layoutOptions['c']?.withoutLean}
+			noStyles={layoutOptions && layoutOptions['c']?.withoutStyle}
+			effect={{ x: $effectX, y: $effectY }}
+		>
 			<slot name="c" />
 		</HoverLeaning>
 	</div>

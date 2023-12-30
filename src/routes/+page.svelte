@@ -13,10 +13,25 @@
 	import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+	import { onMount } from 'svelte';
 
 	export let data;
 
 	let displayUnderline = false;
+
+	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		gsap.to('#section1_mobile', {
+			scrollTrigger: {
+				trigger: '#section1_grid',
+				start: 'top center',
+				end: 'bottom center',
+				scrub: 2
+			},
+			y: 200
+		});
+	});
 
 	// const BAR_SECTIONS = {
 	// 	SECTION0: '0px',
@@ -269,12 +284,6 @@
 	// });
 </script>
 
-<link
-	rel="preload"
-	href="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
-	as="fetch"
-/>
-
 <!-- <Toaster /> -->
 <ScrollToTop />
 
@@ -517,7 +526,29 @@
 						Browse and share your own created tests for all other users here
 					</p>
 				</LineConnectorWithTitle>
-				<GridLayout>
+				<GridLayout
+					id="section1_grid"
+					customLayout={{
+						a: {
+							columns: '1 / 3',
+							rows: '1 / 3'
+						},
+						b: {
+							columns: '3 / 4',
+							rows: '1 / 3'
+						},
+						c: {
+							columns: '4 / 6',
+							rows: '1 / 3'
+						}
+					}}
+					layoutOptions={{
+						b: {
+							withoutStyle: true,
+							withoutLean: true
+						}
+					}}
+				>
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
 							<h3
@@ -533,10 +564,10 @@
 										xmlns="http://www.w3.org/2000/svg"
 										use:intersect
 										on:intersect={(e) => {
-											e.currentTarget.classList.toggle('active');
+											e.currentTarget.classList.add('active');
 										}}
 										on:unintersect={(e) => {
-											e.currentTarget.classList.toggle('active');
+											e.currentTarget.classList.remove('active');
 										}}
 									>
 										<path
@@ -562,24 +593,55 @@
 						</div>
 					</slot>
 					<slot slot="b">
-						<h3
-							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
+						<div
+							class="grid w-full h-full overflow-hidden scale-110 place-content-center"
+							style="transform: translateY(-200px);"
+							id="section1_mobile"
 						>
-							Read more about the community place and all its features.
-						</h3>
+							<img src="/imgs/svgs/homepage/mobile_section1.png" alt="" />
+						</div>
 					</slot>
 					<slot slot="c">
-						<div class="flex flex-col justify-between h-full">
+						<div class="flex flex-col justify-between h-full font-semibold">
 							<h3 class="text-light_text_black text-body1 md:text-h5">
-								Want to create tests of you own?<br />All you need is to Log In
-								using one of these providers: GitHub, Google
+								Want to create tests of your own?<br />
+								<span class="font-normal text-body1"
+									>All you need is free account.</span
+								>
 							</h3>
+							<div class="relative">
+								<svg
+									class="highlight_effect"
+									viewBox="0 0 200 200"
+									xmlns="http://www.w3.org/2000/svg"
+									use:intersect
+									on:intersect={(e) => {
+										e.currentTarget.classList.add('active');
+									}}
+									on:unintersect={(e) => {
+										e.currentTarget.classList.remove('active');
+									}}
+								>
+									<path
+										class="fill-light_secondary dark:fill-dark_secondary"
+										d="M43.1,-49.3C57.5,-39.2,72.1,-27.3,70.5,-15.5C68.9,-3.8,51.1,7.7,41.5,23.6C31.9,39.5,30.5,59.7,19.3,72.2C8,84.6,-13.1,89.3,-28.3,81.9C-43.4,74.5,-52.7,55.1,-57.9,37.6C-63.1,20,-64.4,4.2,-62.4,-11.7C-60.4,-27.6,-55.2,-43.6,-44.3,-54.3C-33.4,-65,-16.7,-70.4,-1.2,-69C14.3,-67.5,28.6,-59.4,43.1,-49.3Z"
+										transform="translate(100 90)"
+									/>
+								</svg>
+
+								<img
+									src="/imgs/svgs/homepage/build.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+							</div>
 							<div class="max-h-full mt-auto ml-auto w-fit">
-								<button
+								<CallToAction center="right" text="Log in" link="/login" />
+								<!-- <button
 									on:click={() => {}}
 									class="text-white btn bg-light_primary dark:bg-dark_primary hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
 									type="button">Log In</button
-								>
+								> -->
 							</div>
 						</div>
 					</slot>
@@ -764,7 +826,7 @@
 	}
 
 	:global(.active).highlight_effect {
-		opacity: 1 !important;
+		opacity: 0.6 !important;
 		scale: 1;
 		transition-delay: 300ms;
 	}
