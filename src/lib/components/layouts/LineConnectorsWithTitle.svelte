@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class="flex gap-6 px-4 duration-500 opacity-0 sm:px-8 md:px-12 box group lg:min-h-[500px] md:min-h-[400px] min-h-[300px]"
+	class="flex gap-6 px-4 duration-500 opacity-0 sm:px-8 md:px-12 box group lg:min-h-[400px] md:min-h-[300px] min-h-[200px]"
 	style="--line-color: {lineColor};"
 	use:intersection={true}
 	on:intersect={(event) => onIntersect(event, ['opacity-100', 'active'])}

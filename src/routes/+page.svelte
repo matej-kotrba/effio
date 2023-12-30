@@ -522,7 +522,7 @@
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
 							<h3
-								class="mb-auto font-light text-h6 md:text-h4 text-light_white"
+								class="mb-auto font-medium text-h6 md:text-h4 text-light_text_black"
 							>
 								Explore what have community created!
 							</h3>
@@ -543,21 +543,21 @@
 					</slot>
 					<slot slot="b">
 						<h3
-							class="max-w-full md:max-w-[50%] text-light_white text-body1 md:text-h5"
+							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
 						>
 							Read more about the community place and all its features.
 						</h3>
 					</slot>
 					<slot slot="c">
 						<div class="flex flex-col justify-between h-full">
-							<h3 class="text-light_white text-body1 md:text-h5">
+							<h3 class="text-light_text_black text-body1 md:text-h5">
 								Want to create tests of you own?<br />All you need is to Log In
 								using one of these providers: GitHub, Google
 							</h3>
 							<div class="max-h-full mt-auto ml-auto w-fit">
 								<button
 									on:click={() => {}}
-									class="btn bg-light_primary dark:bg-dark_primary text-light_white hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+									class="btn bg-light_primary dark:bg-dark_primary text-light_text_black hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
 									type="button">Log In</button
 								>
 							</div>
