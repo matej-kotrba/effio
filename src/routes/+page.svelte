@@ -27,7 +27,7 @@
 				trigger: '#section1_grid',
 				start: 'top center',
 				end: 'bottom center',
-				scrub: 2
+				scrub: 1
 			},
 			y: 200
 		});
@@ -652,7 +652,7 @@
 		<section id="section2" class="grid">
 			<!-- style={`grid-template-columns: ${BAR_SECTIONS['SECTION2']} 1fr;`} -->
 			<div />
-			<div>
+			<div class="relative">
 				<LineConnectorWithTitle
 					title="Test creator"
 					lineColor={'var(--success)'}
@@ -721,22 +721,61 @@
 						</div>
 					</slot>
 					<slot slot="b">
-						<h3
-							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
-						>
-							Import and export in GIFT format compatible with other popular
-							platforms like Moodle.
-						</h3>
+						<div class="grid grid-cols-6">
+							<div class="col-span-3">
+								<h3
+									class="max-w-full text-light_text_black text-body1 md:text-h5"
+								>
+									<b>Import</b> and <b>export</b> your tests in GIFT format compatible
+									with other platforms.
+								</h3>
+							</div>
+							<div class="relative col-span-3">
+								<img
+									src="/imgs/svgs/homepage/transfer.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+							</div>
+						</div>
 					</slot>
 					<slot slot="c">
-						<h3
-							class="max-w-full md:max-w-[50%] text-light_text_black text-body1 md:text-h5"
-						>
-							Import and export in GIFT format compatible with other popular
-							platforms like Moodle.
-						</h3>
+						<div class="grid grid-cols-6">
+							<div class="relative col-span-3">
+								<img
+									src="/imgs/svgs/homepage/programming.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+							</div>
+							<div class="col-span-3">
+								<h3
+									class="max-w-full text-light_text_black text-body1 md:text-h5"
+								>
+									Make your own <b>programming</b> assignments and try others in
+									VS Code integrated editor
+								</h3>
+							</div>
+						</div>
 					</slot>
 				</GridLayout>
+				<div
+					class="absolute right-0 -translate-y-1/2 pointer-events-none top-full"
+				>
+					<img
+						src="/imgs/svgs/homepage/programming-test.png"
+						alt="Community place"
+						class="max-w-[500px] mx-auto w-full xs:w-auto drop-effect"
+						use:intersect
+						on:intersect={(e) => {
+							e.currentTarget.classList.add('active');
+						}}
+						on:unintersect={(e) => {
+							e.currentTarget.classList.remove('active');
+							console.log('ad');
+						}}
+					/>
+				</div>
 			</div>
 		</section>
 		<!-- <section id="section3" class="relative">
@@ -846,6 +885,24 @@
 		opacity: 0.6 !important;
 		scale: 1;
 		transition-delay: 300ms;
+	}
+
+	.drop-effect {
+		filter: drop-shadow(0px 0px 0px var(--light-terciary));
+		transition: 0.6s ease-in-out;
+		transition-delay: 200ms;
+	}
+
+	:global(.dark) .drop-effect {
+		filter: drop-shadow(0px 0px 0px var(--dark-primary));
+	}
+
+	:global(.active).drop-effect {
+		filter: drop-shadow(0px 0px 20px var(--light-terciary));
+	}
+
+	:global(.dark) :global(.active).drop-effect {
+		filter: drop-shadow(0px 0px 20px var(--dark-primary));
 	}
 
 	.fullscreen > #blob {
