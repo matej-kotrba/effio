@@ -2,6 +2,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import HoverLeaning from '../effects/HoverLeaning.svelte';
 	import { tweened } from 'svelte/motion';
+	import { twMerge } from 'tailwind-merge';
 
 	type GridString = `${number} / ${number}`;
 	type GridArea = {
@@ -31,6 +32,12 @@
 		  }
 		| undefined = undefined;
 
+	export let layoutStyles: {
+		a?: string;
+		b?: string;
+		c?: string;
+	} = {};
+
 	const effectX = tweened(0, {
 		duration: 200,
 		easing: cubicOut
@@ -53,11 +60,11 @@
 	}}
 />
 <section
-	class="flex flex-col lg:grid lg:max-h-[700px] px-1 gap-2 lg:gap-[40px]"
+	class="flex flex-col lg:grid lg:max-h-[700px] px-1 gap-8 lg:gap-[40px]"
 	{...id !== '' ? { id } : {}}
 >
 	<div
-		class="a"
+		class={twMerge('a', layoutStyles['a'])}
 		style={`${
 			customLayout && customLayout['a']
 				? `grid-column: ${customLayout['a']['columns']}; grid-row: ${customLayout['a']['rows']}`
@@ -73,7 +80,7 @@
 		</HoverLeaning>
 	</div>
 	<div
-		class="b"
+		class={twMerge('b', layoutStyles['b'])}
 		style={`${
 			customLayout && customLayout['b']
 				? `grid-column: ${customLayout['b']['columns']}; grid-row: ${customLayout['b']['rows']}`
@@ -89,7 +96,7 @@
 		</HoverLeaning>
 	</div>
 	<div
-		class="c"
+		class={twMerge('c', layoutStyles['c'])}
 		style={`${
 			customLayout && customLayout['c']
 				? `grid-column: ${customLayout['c']['columns']}; grid-row: ${customLayout['c']['rows']}`

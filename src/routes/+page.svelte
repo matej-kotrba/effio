@@ -14,6 +14,9 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
+	import { layouts } from 'chart.js';
+	import { LG } from '~/utils/responsive';
+	import { browser } from '$app/environment';
 
 	export let data;
 
@@ -548,9 +551,12 @@
 							withoutLean: true
 						}
 					}}
+					layoutStyles={{
+						b: 'hidden lg:grid'
+					}}
 				>
 					<slot slot="a">
-						<div class="flex flex-col justify-between h-full">
+						<div class="flex flex-col justify-between h-full lg:max-w-[auto]">
 							<h3
 								class="mb-auto font-semibold text-center text-h6 md:text-h4 text-light_text_black"
 							>
@@ -595,7 +601,7 @@
 					</slot>
 					<slot slot="b">
 						<div
-							class="grid w-full h-full overflow-hidden scale-110 place-content-center"
+							class="w-full h-full overflow-hidden scale-110 lg:grid place-content-center"
 							style="transform: translateY(-200px);"
 							id="section1_mobile"
 						>
@@ -740,12 +746,12 @@
 						</div>
 					</slot>
 					<slot slot="c">
-						<div class="grid grid-cols-6">
+						<div class="grid grid-cols-6 gap-2">
 							<div class="relative col-span-3">
 								<img
 									src="/imgs/svgs/homepage/programming.svg"
 									alt="Community place"
-									class="max-w-[300px] mx-auto w-full xs:w-auto"
+									class="max-w-[300px] mx-auto object-contain w-full"
 								/>
 							</div>
 							<div class="col-span-3">
@@ -760,7 +766,7 @@
 					</slot>
 				</GridLayout>
 				<div
-					class="absolute right-0 -translate-y-1/2 pointer-events-none top-full"
+					class="absolute right-0 translate-y-[-35%] xs:translate-y-[-30%] sm:translate-y-[-40%] 2xl:-translate-y-1/2 pointer-events-none top-full"
 				>
 					<img
 						src="/imgs/svgs/homepage/programming-test.png"
