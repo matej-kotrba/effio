@@ -22,7 +22,7 @@ const questionTemplateSchema = z.object({
 export type QuestionTemplate = z.infer<typeof questionTemplateSchema>
 
 export const appRouter = router({
-  getTemplates: procedure.query(async ({ ctx, input }) => {
+  getTemplates: procedure.query(async ({ ctx }) => {
     const templates = await ctx.prisma.template.findMany()
     return templates
   }),
@@ -137,12 +137,12 @@ export const appRouter = router({
 
     return groupTests
   }),
+  // TODO: Might be limited to only accessable test by specific user
   getTestById: procedure.input(z.object({
     id: z.string(),
     includeGroupSubcategories: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
     const test = await ctx.prisma.test.findUnique({
-      // TODO: Might be limited to only accessable test by specific user
       where: {
         id: input.id,
       },

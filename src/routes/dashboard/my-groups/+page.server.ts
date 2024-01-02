@@ -5,7 +5,6 @@ import { createGroupSchema, joinGroupSchema } from "./schemas"
 import { TRPCError } from "@trpc/server";
 import { IMAGE_IMPORT_SIZE_IN_MB } from "~helpers/constants";
 import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
-import type { UploadStream } from "cloudinary";
 
 export const load: ServerLoad = async (event) => {
   const form = await superValidate(createGroupSchema)

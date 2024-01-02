@@ -12,8 +12,6 @@ export const load: ServerLoad = async (request) => {
   const context = await createContext(request)
   const record = appRouter.createCaller(context).records.getTestRecordById({ id: id });
 
-  // if (!record.record) throw redirect(307, "/dashboard")
-
   return {
     streaming: {
       record: record

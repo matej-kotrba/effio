@@ -15,10 +15,39 @@
 
 	let templates: QuestionTemplate[] = [];
 
+	let config: ChartConfiguration<'bar'>;
+
+	let chart: Chart;
+	let chartRecords: Chart;
+
 	async function getTemplates() {
 		templates = (await trpc(
 			$page
 		).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
+	}
+
+	function updateChartColors(chart: Chart) {
+		if (chart?.config?.options?.plugins?.title?.color) {
+			chart.config.options.plugins.title.color = window
+				.getComputedStyle(document.body)
+				.getPropertyValue(
+					$applicationStates.darkMode.isDarkMode
+						? '--dark-text-white'
+						: '--light-text-black'
+				);
+			chart.config.data?.datasets?.forEach((item) => {
+				if (item !== undefined) {
+					(item.backgroundColor as Array<string>)[0] = getComputedStyle(
+						document.documentElement
+					).getPropertyValue(
+						$applicationStates.darkMode.isDarkMode
+							? '--dark-primary'
+							: '--light-primary'
+					);
+				}
+			});
+			chart.update();
+		}
 	}
 
 	onMount(async () => {
@@ -41,9 +70,9 @@
 				}
 			]
 		};
-		const config: ChartConfiguration = {
+		config = {
 			type: 'bar',
-			data: graphData,
+			data: graphData as any,
 			options: {
 				clip: 1,
 				// @ts-ignore
@@ -166,10 +195,17 @@
 		const ctxRecords = portfolioRecords.getContext('2d');
 
 		if (ctx && ctxRecords) {
-			let chart = new Chart(ctx, config);
-			let chartRecords = new Chart(ctxRecords, configRecords);
+			chart = new Chart(ctx, config);
+			chartRecords = new Chart(ctxRecords, configRecords);
 		}
 	});
+
+	$: {
+		updateChartColors(chart);
+		updateChartColors(chartRecords);
+
+		$applicationStates.darkMode.isDarkMode;
+	}
 </script>
 
 <div class="flex flex-wrap justify-center gap-4 xs:justify-start">
