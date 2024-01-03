@@ -7,11 +7,11 @@
 	import type {
 		ChartData,
 		ChartConfiguration,
-		ChartType,
-		ScaleOptions
+		ChartType
 	} from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
 	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
+	import { months } from '~helpers/constants.js';
 
 	export let data;
 
@@ -40,6 +40,17 @@
 				responsive: true,
 				spacing: 0,
 				scales: {
+					x: {
+						ticks: {
+							color: window
+								.getComputedStyle(document.body)
+								.getPropertyValue(
+									$applicationStates.darkMode.isDarkMode
+										? '--dark-text-white-80'
+										: '--light-text-black-80'
+								)
+						}
+					},
 					y: {
 						beginAtZero: true,
 						ticks: {
@@ -55,7 +66,7 @@
 							usePointStyle: true,
 							padding: 10,
 							font: {
-								size: 14
+								size: 16
 							},
 							color: window
 								.getComputedStyle(document.body)
@@ -78,18 +89,20 @@
 					}
 				}
 			}
-		};
+		} as ChartConfiguration;
 	}
 
 	function updateChartColors(chart: Chart) {
 		if (chart?.config?.options?.plugins?.title?.color) {
-			// chart.config.options.plugins.title.color = window
-			// 	.getComputedStyle(document.body)
-			// 	.getPropertyValue(
-			// 		$applicationStates.darkMode.isDarkMode
-			// 			? '--dark-text-white'
-			// 			: '--light-text-black'
-			// 	);
+			if (chart?.config?.options?.scales?.x?.ticks?.color !== undefined) {
+				chart.config.options.scales.x.ticks.color = window
+					.getComputedStyle(document.body)
+					.getPropertyValue(
+						$applicationStates.darkMode.isDarkMode
+							? '--dark-text-white-80'
+							: '--light-text-black-80'
+					);
+			}
 			chart.config.data?.datasets?.forEach((item) => {
 				if (item !== undefined) {
 					(item.backgroundColor as Array<string>)[0] = getComputedStyle(
@@ -99,6 +112,9 @@
 							? '--dark-primary'
 							: '--light-primary'
 					);
+					item.borderColor = $applicationStates.darkMode.isDarkMode
+						? '#FFFFFF'
+						: '#000000';
 				}
 			});
 			chart.update();
@@ -107,7 +123,13 @@
 
 	onMount(async () => {
 		const testsCreatedData: ChartData = {
-			labels: data.testCreationData?.map((data) => data.period),
+			labels: data.testCreationData?.map(
+				(data) =>
+					`${months[+data.period.substring(5, 7) - 1]} ${data.period.substring(
+						0,
+						4
+					)}`
+			),
 			datasets: [
 				{
 					label: 'Tests created',
@@ -129,7 +151,13 @@
 			setupConfig(testsCreatedData);
 
 		const testsTakenData: ChartData = {
-			labels: data.testTakenData?.map((data) => data.period),
+			labels: data.testTakenData?.map(
+				(data) =>
+					`${months[+data.period.substring(5, 7) - 1]} ${data.period.substring(
+						0,
+						4
+					)}`
+			),
 			datasets: [
 				{
 					label: 'Tests taken',
@@ -143,7 +171,13 @@
 						) || '#6722e6'
 					],
 					borderWidth: 2,
-					minBarLength: 20
+					borderColor: getComputedStyle(
+						document.documentElement
+					).getPropertyValue(
+						$applicationStates.darkMode.isDarkMode ? '#FFFFFF' : '#000000'
+					),
+
+					minBarLength: 10
 				}
 			]
 		};
