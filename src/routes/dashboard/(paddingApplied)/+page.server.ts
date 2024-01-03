@@ -7,6 +7,56 @@ type TestCreationActivity = {
   period: string;
 }
 
+function fillRecordsWithMissingMonths(records: TestCreationActivity[]) {
+  for (let i = 0; i < records.length; i++) {
+    if (records[+i + 1]) {
+      const currentYear = +records[+i].period.slice(0, 4)
+      const nextYear = +records[+i + 1].period.slice(0, 4)
+      const currentMonth = +records[+i].period.slice(5, 7)
+      const nextMonth = +records[+i + 1].period.slice(5, 7)
+
+      let iterator = 0
+      for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
+        records.splice(+i + 1 + iterator, 0, {
+          count: 0n,
+          period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`,
+        })
+        iterator++
+      }
+    }
+    else if (i === records.length - 1) {
+      const now = new Date()
+
+      const currentYear = +records[+i].period.slice(0, 4)
+      const nextYear = now.getFullYear()
+      const currentMonth = +records[+i].period.slice(5, 7)
+      const nextMonth = now.getMonth() + 1
+
+      let iterator = 0
+      for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth; k++) {
+        records.splice(+i + 1 + iterator, 0, {
+          count: 0n,
+          period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`,
+        })
+        iterator++
+      }
+    }
+  }
+
+  // Filling the test to have atleast 5 months of records
+  if (records.length < 5) {
+    const currentYear = +records[0].period.slice(0, 4)
+    const currentMonth = +records[0].period.slice(5, 7)
+
+    for (let i = records.length; i < 5; i++) {
+      records.unshift({
+        count: 0n,
+        period: `${currentMonth - i <= 0 ? currentYear - 1 : currentYear}-${String((currentMonth - i + 1) <= 0 ? 12 - currentMonth - i + 1 : currentMonth - i + 1).padStart(2, '0')}`,
+      })
+    }
+  }
+}
+
 export const load = async ({ locals }) => {
   const id = (await locals.getSession() as Session & { user: { id: string } })?.user?.id as string
 
@@ -17,7 +67,7 @@ export const load = async ({ locals }) => {
     const resultPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
     SELECT 
     COUNT(id) as "count",
-    LEFT(createdAt, 7) as "period" 
+    LEFT(createdAt, 7) as "period"
     FROM Test 
     WHERE ownerId = ${id}
     GROUP BY LEFT(createdAt, 7)
@@ -27,7 +77,7 @@ export const load = async ({ locals }) => {
     const resultTestsTakenPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
     SELECT 
     COUNT(id) as "count",
-    LEFT(createdAt, 7) as "period" 
+    LEFT(createdAt, 7) as "period"
     FROM TestRecord
     WHERE userId = ${id}
     GROUP BY LEFT(createdAt, 7)
@@ -36,44 +86,14 @@ export const load = async ({ locals }) => {
 
     const [result, resultTestsTaken] = await Promise.all([resultPromise, resultTestsTakenPromise])
 
-    // Fill in the motnhs with no activity
-    for (let i = 0; i < result.length; i++) {
-      if (result[+i + 1]) {
-        const currentYear = +result[+i].period.slice(0, 4)
-        const nextYear = +result[+i + 1].period.slice(0, 4)
-        const currentMonth = +result[+i].period.slice(5, 7)
-        const nextMonth = +result[+i + 1].period.slice(5, 7)
+    console.log(result, resultTestsTaken)
 
-        let iterator = 0
-        for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
-          result.splice(+i + 1 + iterator, 0, {
-            count: 0n,
-            period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`
-          })
-          iterator++
-        }
-      }
-    }
+    // Fill in the motnhs with no activity
+    fillRecordsWithMissingMonths(result)
 
     testCreationSummary = result
 
-    for (let i = 0; i < resultTestsTaken.length; i++) {
-      if (resultTestsTaken[+i + 1]) {
-        const currentYear = +resultTestsTaken[+i].period.slice(0, 4)
-        const nextYear = +resultTestsTaken[+i + 1].period.slice(0, 4)
-        const currentMonth = +resultTestsTaken[+i].period.slice(5, 7)
-        const nextMonth = +resultTestsTaken[+i + 1].period.slice(5, 7)
-
-        let iterator = 0
-        for (let k = 0; k < (nextYear - currentYear) * 12 + nextMonth - currentMonth - 1; k++) {
-          resultTestsTaken.splice(+i + 1 + iterator, 0, {
-            count: 0n,
-            period: `${currentYear + Math.floor((currentMonth + k) / 12)}-${String((currentMonth + k) % 12 + 1).padStart(2, '0')}`
-          })
-          iterator++
-        }
-      }
-    }
+    fillRecordsWithMissingMonths(resultTestsTaken)
 
     testTakenSummary = resultTestsTaken
   }

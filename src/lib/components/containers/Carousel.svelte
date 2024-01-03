@@ -126,7 +126,7 @@
 			onClick={scrollRight}
 		/>
 	</div>
-	<div class="w-full h-full overflow-hidden">
+	<div class="w-full h-full overflow-x-clip">
 		{#await data}
 			<div class="@container h-full">
 				<div class="flex w-full py-1 scroller flex-nowrap">

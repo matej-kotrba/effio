@@ -4,7 +4,12 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
-	import type { ChartData, ChartConfiguration } from 'chart.js/auto/auto';
+	import type {
+		ChartData,
+		ChartConfiguration,
+		ChartType,
+		ScaleOptions
+	} from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
 	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
 
@@ -15,8 +20,6 @@
 
 	let templates: QuestionTemplate[] = [];
 
-	let config: ChartConfiguration<'bar'>;
-
 	let chart: Chart;
 	let chartRecords: Chart;
 
@@ -26,15 +29,67 @@
 		).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
 	}
 
+	function setupConfig(data: ChartData) {
+		return {
+			type: 'bar' as ChartType,
+			data: data,
+			options: {
+				clip: 1,
+				// @ts-ignore
+				borderRadius: '5',
+				responsive: true,
+				spacing: 0,
+				scales: {
+					y: {
+						beginAtZero: true,
+						ticks: {
+							precision: 0
+						}
+					}
+				},
+				plugins: {
+					legend: {
+						position: 'bottom' as const,
+						display: false,
+						labels: {
+							usePointStyle: true,
+							padding: 10,
+							font: {
+								size: 14
+							},
+							color: window
+								.getComputedStyle(document.body)
+								.getPropertyValue(
+									$applicationStates.darkMode.isDarkMode
+										? '--dark-text-white-80'
+										: '--light-text-black-80'
+								)
+						}
+					},
+					title: {
+						display: true,
+						color: window
+							.getComputedStyle(document.body)
+							.getPropertyValue(
+								$applicationStates.darkMode.isDarkMode
+									? '--dark-text-white-80'
+									: '--light-text-black-80'
+							)
+					}
+				}
+			}
+		};
+	}
+
 	function updateChartColors(chart: Chart) {
 		if (chart?.config?.options?.plugins?.title?.color) {
-			chart.config.options.plugins.title.color = window
-				.getComputedStyle(document.body)
-				.getPropertyValue(
-					$applicationStates.darkMode.isDarkMode
-						? '--dark-text-white'
-						: '--light-text-black'
-				);
+			// chart.config.options.plugins.title.color = window
+			// 	.getComputedStyle(document.body)
+			// 	.getPropertyValue(
+			// 		$applicationStates.darkMode.isDarkMode
+			// 			? '--dark-text-white'
+			// 			: '--light-text-black'
+			// 	);
 			chart.config.data?.datasets?.forEach((item) => {
 				if (item !== undefined) {
 					(item.backgroundColor as Array<string>)[0] = getComputedStyle(
@@ -51,7 +106,7 @@
 	}
 
 	onMount(async () => {
-		const graphData: ChartData = {
+		const testsCreatedData: ChartData = {
 			labels: data.testCreationData?.map((data) => data.period),
 			datasets: [
 				{
@@ -70,58 +125,10 @@
 				}
 			]
 		};
-		config = {
-			type: 'bar',
-			data: graphData as any,
-			options: {
-				clip: 1,
-				// @ts-ignore
-				borderRadius: '5',
-				responsive: true,
-				spacing: 0,
-				scales: {
-					y: {
-						beginAtZero: true,
-						ticks: {
-							precision: 0
-						}
-					}
-				},
-				plugins: {
-					legend: {
-						position: 'bottom',
-						display: false,
-						labels: {
-							usePointStyle: true,
-							padding: 10,
-							font: {
-								size: 14
-							},
-							color: window
-								.getComputedStyle(document.body)
-								.getPropertyValue(
-									$applicationStates.darkMode.isDarkMode
-										? '--dark-text-white-80'
-										: '--light-text-black-80'
-								)
-						}
-					},
-					title: {
-						display: true,
-						text: 'Tests created monthly',
-						color: window
-							.getComputedStyle(document.body)
-							.getPropertyValue(
-								$applicationStates.darkMode.isDarkMode
-									? '--dark-text-white-80'
-									: '--light-text-black-80'
-							)
-					}
-				}
-			}
-		};
+		const testsCreatedConfig: ChartConfiguration =
+			setupConfig(testsCreatedData);
 
-		const graphRecordsData: ChartData = {
+		const testsTakenData: ChartData = {
 			labels: data.testTakenData?.map((data) => data.period),
 			datasets: [
 				{
@@ -140,63 +147,14 @@
 				}
 			]
 		};
-		const configRecords: ChartConfiguration = {
-			type: 'bar',
-			data: graphRecordsData,
-			options: {
-				clip: 1,
-				// @ts-ignore
-				borderRadius: '5',
-				responsive: true,
-				spacing: 0,
-				scales: {
-					y: {
-						beginAtZero: true,
-						ticks: {
-							precision: 0
-						}
-					}
-				},
-				plugins: {
-					legend: {
-						position: 'bottom',
-						display: false,
-						labels: {
-							usePointStyle: true,
-							padding: 10,
-							font: {
-								size: 14
-							},
-							color: window
-								.getComputedStyle(document.body)
-								.getPropertyValue(
-									$applicationStates.darkMode.isDarkMode
-										? '--dark-text-white-80'
-										: '--light-text-black-80'
-								)
-						}
-					},
-					title: {
-						display: true,
-						text: 'Tests taken monthly',
-						color: window
-							.getComputedStyle(document.body)
-							.getPropertyValue(
-								$applicationStates.darkMode.isDarkMode
-									? '--dark-text-white-80'
-									: '--light-text-black-80'
-							)
-					}
-				}
-			}
-		};
+		const testsTakenConfig: ChartConfiguration = setupConfig(testsTakenData);
 
 		const ctx = portfolio.getContext('2d');
 		const ctxRecords = portfolioRecords.getContext('2d');
 
 		if (ctx && ctxRecords) {
-			chart = new Chart(ctx, config);
-			chartRecords = new Chart(ctxRecords, configRecords);
+			chart = new Chart(ctx, testsCreatedConfig);
+			chartRecords = new Chart(ctxRecords, testsTakenConfig);
 		}
 	});
 
@@ -223,11 +181,19 @@
 	/>
 </div>
 
-<div class="grid grid-cols-1 mx-auto lg:grid-cols-2 place-items-center">
-	<div class="w-full">
+<div
+	class="grid grid-cols-1 gap-4 mx-auto mt-8 lg:grid-cols-2 place-items-center"
+>
+	<div
+		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<h3 class="font-bold text-h6">Tests created monthly</h3>
 		<canvas bind:this={portfolio} width="400" class="w-full" />
 	</div>
-	<div class="w-full">
+	<div
+		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<h3 class="font-bold text-h6">Tests taken monthly</h3>
 		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
 	</div>
 </div>

@@ -174,43 +174,25 @@
 			<CardSkeleton />
 		</div>
 	{:else}
-		<div class="w-full">
-			<Carousel
-				data={recentTests.data.map((item) => {
-					return {
-						id: item.id,
-						published: item.published,
-						icon: item.owner.image,
-						title: item.title,
-						description: item.description,
-						img: item.imageUrl,
-						createdAt: new Date(item.createdAt),
-						stars: item._count.stars,
-						tags: item.tags.map((tag) => tag.tag),
-						type: item.type,
-						options: modalTabsGenerator(item)
-					};
-				})}
-			/>
+		<div class="w-full grid__container">
+			{#each recentTests.data as test}
+				<CardAlternative
+					navigationLink={`/tests/${test.id}`}
+					data={{
+						id: test.id,
+						published: test.published,
+						icon: test.owner.image,
+						title: test.title,
+						description: test.description,
+						img: test.imageUrl,
+						createdAt: new Date(test.createdAt),
+						stars: test._count.stars,
+						tags: test.tags.map((tag) => tag.tag),
+						options: modalTabsGenerator(test)
+					}}
+				/>
+			{/each}
 		</div>
-		<!-- {#each recentTests.data as test}
-			<CardAlternative
-				navigationLink={`/tests/${test.id}`}
-				data={{
-					id: test.id,
-					published: test.published,
-					icon: test.owner.image,
-					title: test.title,
-					description: test.description,
-					img: test.imageUrl,
-					createdAt: new Date(test.createdAt),
-					stars: test._count.stars,
-					tags: test.tags.map((tag) => tag.tag),
-					options: modalTabsGenerator(test)
-				}}
-			/> -->
-
-		<!-- {/each} -->
 	{/if}
 </div>
 
