@@ -38,7 +38,7 @@
 		<button
 			type="button"
 			disabled={!!resultFormat}
-			on:click|self={() => (selectedInput = index)}
+			on:click={() => (selectedInput = index)}
 			class="flex justify-between px-6 py-3 duration-100 rounded-md shadow-md {resultFormat ===
 				null || resultFormat.isCorrect
 				? 'bg-white dark:bg-dark_light_grey'

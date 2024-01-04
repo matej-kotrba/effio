@@ -81,6 +81,7 @@
 					createdAt: item.createdAt,
 					stars: item._count.stars,
 					type: item.type,
+					ownerId: item.ownerId,
 					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag)
 				} satisfies IdCardAlternativeProps;
 			});

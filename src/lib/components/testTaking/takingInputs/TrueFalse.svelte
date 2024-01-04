@@ -22,7 +22,7 @@
 		<button
 			type="button"
 			disabled={!!resultFormat}
-			on:click|self={() =>
+			on:click={() =>
 				(checkBoxValues[index]['isTrue'] = !checkBoxValues[index]['isTrue'])}
 			class="flex justify-between px-6 py-3 duration-100 {resultFormat ===
 				null || resultFormat.isCorrect

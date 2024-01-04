@@ -4,6 +4,7 @@
 
 	export type IdCardAlternativeProps = CardAlternativeProps & {
 		id: string;
+		ownerId?: string;
 		type: TestType;
 	};
 
@@ -17,6 +18,7 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import SkeletonLine from '~components/informatic/SkeletonLine.svelte';
 	import CardAlternative from './card/CardAlternative.svelte';
+	import { page } from '$app/stores';
 
 	export let data: CarouselItemInput;
 	let resolvedData: CardAlternativeProps[] | undefined = undefined;
@@ -164,6 +166,9 @@
 							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
 						>
 							<CardAlternative
+								canStarTest={!!item.ownerId &&
+									!!$page.data.session?.user?.id &&
+									$page.data.session.user.id !== item.ownerId}
 								class="mx-auto"
 								navigationLink={'/tests/' + item.id}
 								type={item.type}

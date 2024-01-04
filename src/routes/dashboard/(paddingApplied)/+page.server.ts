@@ -44,7 +44,7 @@ function fillRecordsWithMissingMonths(records: TestCreationActivity[]) {
   }
 
   // Filling the test to have atleast 5 months of records
-  if (records.length < 5) {
+  if (records.length < 5 && records.length > 0) {
     const currentYear = +records[0].period.slice(0, 4)
     const currentMonth = +records[0].period.slice(5, 7)
 
@@ -83,6 +83,15 @@ export const load = async ({ locals }) => {
     GROUP BY LEFT(createdAt, 7)
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
+
+    // const tagsTookTestFrom = prisma.$queryRaw`
+    //   SELECT
+    //   COUNT(id) as "count",
+    //   FROM TestRecord tr
+    //   JOIN Test t ON tr.test_id = t.id
+    //   WHERE userId = ${id}
+    //   GROUP BY test.testGroup.tags
+    // `
 
     const [result, resultTestsTaken] = await Promise.all([resultPromise, resultTestsTakenPromise])
 
