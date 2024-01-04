@@ -143,7 +143,7 @@
 						) || '#6722e6'
 					],
 					borderWidth: 2,
-					minBarLength: 20
+					minBarLength: 10
 				}
 			]
 		};
