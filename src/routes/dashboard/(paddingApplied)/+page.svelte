@@ -17,11 +17,13 @@
 
 	let portfolio: HTMLCanvasElement;
 	let portfolioRecords: HTMLCanvasElement;
+	let avarageMarkingCanvas: HTMLCanvasElement;
 
 	let templates: QuestionTemplate[] = [];
 
 	let chart: Chart;
 	let chartRecords: Chart;
+	let chartAvarage: Chart;
 
 	async function getTemplates() {
 		templates = (await trpc(
@@ -183,12 +185,53 @@
 		};
 		const testsTakenConfig: ChartConfiguration = setupConfig(testsTakenData);
 
+		const avarageScoreConfig: ChartConfiguration = {
+			type: 'doughnut',
+			data: {
+				labels: ['Correct', 'Incorrect'],
+				datasets: [
+					{
+						label: 'Correct',
+						data: [
+							data.testAvarageResult !== undefined
+								? +(
+										100 -
+										data.testAvarageResult.userPoints /
+											(data.testAvarageResult.maxPoints / 100)
+								  ).toFixed(1)
+								: 0,
+							data.testAvarageResult !== undefined
+								? +(
+										data.testAvarageResult.userPoints /
+										(data.testAvarageResult.maxPoints / 100)
+								  ).toFixed(1)
+								: 0
+						],
+						backgroundColor: ['#48f542', '#fc4747']
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				plugins: {
+					legend: {
+						position: 'top'
+					},
+					title: {
+						display: false
+					}
+				}
+			}
+		};
+
 		const ctx = portfolio.getContext('2d');
 		const ctxRecords = portfolioRecords.getContext('2d');
+		const ctxAvarage = avarageMarkingCanvas.getContext('2d');
 
-		if (ctx && ctxRecords) {
+		if (ctx && ctxRecords && ctxAvarage) {
 			chart = new Chart(ctx, testsCreatedConfig);
 			chartRecords = new Chart(ctxRecords, testsTakenConfig);
+			chartAvarage = new Chart(ctxAvarage, avarageScoreConfig);
 		}
 	});
 
@@ -229,5 +272,11 @@
 	>
 		<h3 class="font-bold text-h6">Tests taken monthly</h3>
 		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
+	</div>
+	<div
+		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<h3 class="font-bold text-h6">Avarage test percentage</h3>
+		<canvas bind:this={avarageMarkingCanvas} width="400" class="w-full" />
 	</div>
 </div>

@@ -7,6 +7,12 @@ type TestCreationActivity = {
   period: string;
 }
 
+type TestAvarageData = {
+  count: number;
+  maxPoints: string | number;
+  userPoints: number;
+}
+
 function fillRecordsWithMissingMonths(records: TestCreationActivity[]) {
   for (let i = 0; i < records.length; i++) {
     if (records[+i + 1]) {
@@ -60,9 +66,6 @@ function fillRecordsWithMissingMonths(records: TestCreationActivity[]) {
 export const load = async ({ locals }) => {
   const id = (await locals.getSession() as Session & { user: { id: string } })?.user?.id as string
 
-  let testCreationSummary;
-  let testTakenSummary;
-
   if (id) {
     const resultPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
     SELECT 
@@ -84,32 +87,47 @@ export const load = async ({ locals }) => {
     ORDER BY LEFT(createdAt, 7) ASC   
     `;
 
-    // const tagsTookTestFrom = prisma.$queryRaw`
-    //   SELECT
-    //   COUNT(id) as "count",
-    //   FROM TestRecord tr
-    //   JOIN Test t ON tr.test_id = t.id
-    //   WHERE userId = ${id}
-    //   GROUP BY test.testGroup.tags
-    // `
+    const testAvaragePromise: Promise<TestAvarageData[]> = prisma.$queryRaw`
+      SELECT
+        COUNT(DISTINCT tr.id) as "count",
+        SUM(q.points) as "maxPoints",
+        SUM(qr.userPoints) as "userPoints"
+      FROM User user
+      JOIN TestRecord tr ON user.id = tr.userId
+      JOIN QuestionRecord qr ON tr.id = qr.testRecordId
+      JOIN Question q ON qr.questionId = q.id
+      WHERE user.id = ${id}
+    `
 
-    const [result, resultTestsTaken] = await Promise.all([resultPromise, resultTestsTakenPromise])
+    const tagsTookTestFromPromise = prisma.$queryRaw`
+      SELECT
+        COUNT(tr.id) as "count",
+        tag.name as "name"
+      FROM Test tst
+      JOIN TagOnTests tot ON tst.id = tot.testId
+      JOIN Tag tag ON tot.tagId = tag.id
+      JOIN TestVersion t ON tst.id = t.testId
+      JOIN TestRecord tr ON t.versionId = tr.testId
+      WHERE tr.userId = ${id}
+      GROUP BY tag.id
+    `
 
-    console.log(result, resultTestsTaken)
+    const [result, resultTestsTaken, testAvarage, tagsTookTestFrom] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise])
 
     // Fill in the motnhs with no activity
     fillRecordsWithMissingMonths(result)
 
-    testCreationSummary = result
-
     fillRecordsWithMissingMonths(resultTestsTaken)
 
-    testTakenSummary = resultTestsTaken
+    return {
+      testCreationData: result,
+      testTakenData: resultTestsTaken,
+      testAvarageResult: { ...testAvarage[0], maxPoints: +testAvarage[0].maxPoints } satisfies TestAvarageData,
+      tagsTookTestFromResult: tagsTookTestFrom as { count: number, name: string }[]
+    }
   }
-
-  return {
-    testCreationData: testCreationSummary,
-    testTakenData: testTakenSummary
+  else {
+    redirect(307, "/")
   }
 }
 
