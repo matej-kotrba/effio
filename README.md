@@ -71,54 +71,53 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 ### Used technologies:
 
 <details>
-  <summary><strong>Frontend</strong></summary>
+<summary><strong>Frontend</strong></summary>
 
-    ### WORK
-    - Svelte
-        - Svelte French Toast
-    - Tailwind
-        - Daisy UI
-        - tailwind-merge
-    - Chart.js
-    - GSAP
-    - Other
-        - Iconify
-        - Leaflet
-        - monaco-editor
-        - SandboxJS
-        - gift-pegjs
+- Svelte
+    - Svelte French Toast
+- Tailwind
+    - Daisy UI
+    - tailwind-merge
+- Chart.js
+- GSAP
+- Other
+    - Iconify
+    - Leaflet
+    - monaco-editor
+    - SandboxJS
+    - gift-pegjs
 </details>
 
 <details>
   <summary><strong>Backend</strong></summary>
     
-    - SvelteKit
-        - Superforms
-    - tRPC
-        - trpc-sveltekit
-    - Prisma
-    - Auth
-        - Auth.js (Oauth - Google, Github)
-    - NodeJS
+- SvelteKit
+    - Superforms
+- tRPC
+    - trpc-sveltekit
+- Prisma
+- Auth
+    - Auth.js (Oauth - Google, Github)
+- NodeJS
 </details>
 
 <details>
   <summary><strong>Database and providers</strong></summary>
     
-    - Planetscale - MySQL DB, connected via Prisma
-    - Vercel - application hosting, serverless function hosting (sort of), CDN distribution,
-    - Cloudinary - image bucket
-    - Pusher - takes care of web sockets needs
+- Planetscale - MySQL DB, connected via Prisma
+- Vercel - application hosting, serverless function hosting (sort of), CDN distribution,
+- Cloudinary - image bucket
+- Pusher - takes care of web sockets needs
 </details>
 
 <details>
   <summary><strong>Both</strong></summary>
     
-    - TypeScript
-        - ts-reset
-    - Zod
-    - Bundler - Vite
-    - Package manager - PNPM
+- TypeScript
+    - ts-reset
+- Zod
+- Bundler - Vite
+- Package manager - PNPM
 </details>
 
 
