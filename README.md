@@ -69,41 +69,57 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 > “The name is Sveltegen” - @ThePrimeagen
 
 ### Used technologies:
-- SvelteKit
-  - Superforms
-  - Svelte French Toast
-- TypeScript
-  - ts-reset
+
+<details>
+<summary><strong>Frontend</strong></summary>
+
+- Svelte
+    - Svelte French Toast
 - Tailwind
-  - Daisy UI
-  - tailwind-merge
-- tRPC
-  - trpc-sveltekit 
-- Zod
+    - Daisy UI
+    - tailwind-merge
 - Chart.js
-- Prisma
-- Animations
-    - GSAP
-- Auth
-  - Auth.js (Oauth - Google, Github)
-- Bundler
-  - Vite
-- Package manager
-  - pnpm
-- Database
-  - MySQL, connection via Prisma
-- Hosting
-  - Vercel, Planetscale, Cloudinary, Pusher, Splite
-- Cloud services APIs
-    - Cloudinary
-    - Pusher
-    - Splite
+- GSAP
 - Other
-    - Iconify.design
+    - Iconify
+    - Leaflet
+    - monaco-editor
     - SandboxJS
     - gift-pegjs
-    - Leaflet,
-    - monaco-editor
+</details>
+
+<details>
+  <summary><strong>Backend</strong></summary>
+    
+- SvelteKit
+    - Superforms
+- tRPC
+    - trpc-sveltekit
+- Prisma
+- Auth
+    - Auth.js (Oauth - Google, Github)
+- NodeJS
+</details>
+
+<details>
+  <summary><strong>Database and providers</strong></summary>
+    
+- Planetscale - MySQL DB, connected via Prisma
+- Vercel - application hosting, serverless function hosting (sort of), CDN distribution,
+- Cloudinary - image bucket
+- Pusher - takes care of web sockets needs
+</details>
+
+<details>
+  <summary><strong>Both</strong></summary>
+    
+- TypeScript
+    - ts-reset
+- Zod
+- Bundler - Vite
+- Package manager - PNPM
+</details>
+
 
 ## Timeline
 - January -> April - Learning stack and testing it separatly
