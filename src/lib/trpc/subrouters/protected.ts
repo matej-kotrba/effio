@@ -310,7 +310,7 @@ export const protectedRouter = router({
               title: question.title,
               content: question.content,
               typeId: question.questionTypeId,
-              testId: testData.versionId,
+              testId: testData.id,
               points: question.points
             } as Prisma.QuestionCreateManyInput
           })

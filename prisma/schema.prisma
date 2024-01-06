@@ -107,7 +107,7 @@ model Test {
 }
 
 model TestVersion {
-  versionId      String       @id @default(uuid())
+  id             String       @id @default(uuid())
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   version        Int
@@ -132,7 +132,7 @@ model Question {
   content   Json
   points    Int              @default(0)
   type      QuestionType     @relation(fields: [typeId], references: [id], onDelete: Cascade)
-  test      TestVersion      @relation(fields: [testId], references: [versionId], onDelete: Cascade)
+  test      TestVersion      @relation(fields: [testId], references: [id], onDelete: Cascade)
   records   QuestionRecord[]
 
   @@index([typeId])
@@ -162,7 +162,7 @@ model TestRecord {
   subacategoryId          String?
   userPoints              Float             @default(0)
   shouldCountToStatistics Boolean           @default(true)
-  test                    TestVersion       @relation(fields: [testId], references: [versionId], onDelete: Cascade)
+  test                    TestVersion       @relation(fields: [testId], references: [id], onDelete: Cascade)
   questionRecords         QuestionRecord[]
   user                    User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
   subcategory             GroupSubcategory? @relation(fields: [subacategoryId], references: [id], onDelete: Cascade)

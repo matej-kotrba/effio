@@ -25,7 +25,7 @@ export const recordsRouter = router({
 
     const test = await ctx.prisma.testVersion.findUnique({
       where: {
-        versionId: input.testId
+        id: input.testId
       },
       include: {
         testGroup: {

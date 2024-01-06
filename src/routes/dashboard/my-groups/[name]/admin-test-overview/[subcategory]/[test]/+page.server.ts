@@ -71,13 +71,13 @@ export const load: ServerLoad = async ({ parent, params }) => {
     take: 1
   })
 
-  if (!newestTestVersion?.versionId) throw redirect(307, "/dashboard/my-groups")
+  if (!newestTestVersion?.id) throw redirect(307, "/dashboard/my-groups")
 
   const totalForEachQuestion = await prisma.question.findMany({
     where: {
       test: {
         testId: testId,
-        versionId: newestTestVersion.versionId
+        id: newestTestVersion.id
       },
     },
     select: {

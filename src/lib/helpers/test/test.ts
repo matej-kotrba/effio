@@ -29,7 +29,7 @@ export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "o
   const markSystem = checkMarkSystem(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
-    versionId: testData.testVersions[0].versionId,
+    versionId: testData.testVersions[0].id,
     title: testData.title,
     description: testData.description,
     published: testData.published,

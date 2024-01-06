@@ -1,6 +1,7 @@
 import type { Session } from '@auth/core/types.js';
 import { redirect } from '@sveltejs/kit'
 import prisma from '~/lib/prisma';
+import { trpcServer } from '~helpers/trpcServer.js';
 
 type TestCreationActivity = {
   count: bigint;
@@ -63,7 +64,8 @@ function fillRecordsWithMissingMonths(records: TestCreationActivity[]) {
   }
 }
 
-export const load = async ({ locals }) => {
+export const load = async (e) => {
+  const { locals } = e
   const id = (await locals.getSession() as Session & { user: { id: string } })?.user?.id as string
 
   if (id) {
@@ -107,9 +109,10 @@ export const load = async ({ locals }) => {
       JOIN TagOnTests tot ON tst.id = tot.testId
       JOIN Tag tag ON tot.tagId = tag.id
       JOIN TestVersion t ON tst.id = t.testId
-      JOIN TestRecord tr ON t.versionId = tr.testId
+      JOIN TestRecord tr ON t.id = tr.testId
       WHERE tr.userId = ${id}
       GROUP BY tag.id
+      ORDER BY tag.name ASC
     `
 
     const [result, resultTestsTaken, testAvarage, tagsTookTestFrom] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise])
@@ -123,7 +126,7 @@ export const load = async ({ locals }) => {
       testCreationData: result,
       testTakenData: resultTestsTaken,
       testAvarageResult: { ...testAvarage[0], maxPoints: +testAvarage[0].maxPoints } satisfies TestAvarageData,
-      tagsTookTestFromResult: tagsTookTestFrom as { count: number, name: string }[]
+      tagsTookTestFromResult: tagsTookTestFrom as { count: number, name: string }[],
     }
   }
   else {

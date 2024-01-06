@@ -18,12 +18,14 @@
 	let portfolio: HTMLCanvasElement;
 	let portfolioRecords: HTMLCanvasElement;
 	let avarageMarkingCanvas: HTMLCanvasElement;
+	let canvasTag: HTMLCanvasElement;
 
 	let templates: QuestionTemplate[] = [];
 
 	let chart: Chart;
 	let chartRecords: Chart;
 	let chartAvarage: Chart;
+	let chartTags: Chart;
 
 	async function getTemplates() {
 		templates = (await trpc(
@@ -32,10 +34,27 @@
 	}
 
 	function setupConfig(data: ChartData) {
+		let delayed = false;
 		return {
 			type: 'bar' as ChartType,
 			data: data,
 			options: {
+				animation: {
+					onComplete: () => {
+						delayed = true;
+					},
+					delay: (context) => {
+						let delay = 0;
+						if (
+							context.type === 'data' &&
+							context.mode === 'default' &&
+							!delayed
+						) {
+							delay = context.dataIndex * 300 + context.datasetIndex * 100;
+						}
+						return delay;
+					}
+				},
 				clip: 1,
 				// @ts-ignore
 				borderRadius: '5',
@@ -207,15 +226,33 @@
 								  ).toFixed(1)
 								: 0
 						],
+
 						backgroundColor: ['#48f542', '#fc4747']
 					}
 				]
 			},
 			options: {
+				animation: {
+					delay: 200
+				},
 				responsive: true,
 				plugins: {
 					legend: {
-						position: 'top'
+						display: false
+					},
+					tooltip: {
+						callbacks: {
+							label: function (context) {
+								let label = context.label || '';
+								if (label) {
+									label += ': ';
+								}
+								if (context.parsed !== undefined) {
+									label += context.parsed + '%';
+								}
+								return label;
+							}
+						}
 					},
 					title: {
 						display: false
@@ -224,14 +261,87 @@
 			}
 		};
 
+		const tagsData: ChartData = {
+			labels: data.tagsTookTestFromResult?.map((tag) => tag.name) || [],
+			datasets: [
+				{
+					label: 'Tests completed with this tag',
+					data:
+						data.tagsTookTestFromResult?.map((tag) => Number(tag.count)) || [],
+					fill: true,
+					backgroundColor: window
+						.getComputedStyle(document.body)
+						.getPropertyValue(
+							$applicationStates.darkMode.isDarkMode
+								? '--dark-primary-transparent'
+								: '--light-primary-transparent'
+						),
+					borderColor: window
+						.getComputedStyle(document.body)
+						.getPropertyValue(
+							$applicationStates.darkMode.isDarkMode
+								? '--dark-secondary'
+								: '--light-secondary'
+						),
+					pointBackgroundColor: window
+						.getComputedStyle(document.body)
+						.getPropertyValue(
+							$applicationStates.darkMode.isDarkMode
+								? '--dark-primary'
+								: '--light-primary'
+						),
+					pointBorderColor: '#fff',
+					pointHoverBackgroundColor: '#fff',
+					pointHoverBorderColor: window
+						.getComputedStyle(document.body)
+						.getPropertyValue(
+							$applicationStates.darkMode.isDarkMode
+								? '--dark-primary'
+								: '--light-primary'
+						)
+				}
+			]
+		};
+
+		const tagsConfig: ChartConfiguration = {
+			type: 'radar',
+			data: tagsData,
+			options: {
+				plugins: {
+					legend: {
+						display: false
+					}
+				},
+				elements: {
+					line: {
+						borderWidth: 3
+					},
+					point: {
+						radius: 6
+					}
+				},
+				scales: {
+					r: {
+						suggestedMin: 0,
+						ticks: {
+							display: true,
+							stepSize: 1
+						}
+					}
+				}
+			}
+		};
+
 		const ctx = portfolio.getContext('2d');
 		const ctxRecords = portfolioRecords.getContext('2d');
 		const ctxAvarage = avarageMarkingCanvas.getContext('2d');
+		const ctxTags = canvasTag.getContext('2d');
 
-		if (ctx && ctxRecords && ctxAvarage) {
+		if (ctx && ctxRecords && ctxAvarage && ctxTags) {
 			chart = new Chart(ctx, testsCreatedConfig);
 			chartRecords = new Chart(ctxRecords, testsTakenConfig);
 			chartAvarage = new Chart(ctxAvarage, avarageScoreConfig);
+			chartTags = new Chart(ctxTags, tagsConfig);
 		}
 	});
 
@@ -277,6 +387,17 @@
 		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 	>
 		<h3 class="font-bold text-h6">Avarage test percentage</h3>
-		<canvas bind:this={avarageMarkingCanvas} width="400" class="w-full" />
+		<p>From {data.testAvarageResult?.count} tests</p>
+		<div class="w-1/2 mx-auto">
+			<canvas bind:this={avarageMarkingCanvas} width="400" />
+		</div>
+	</div>
+	<div
+		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<h3 class="font-bold text-h6">Avarage test percentage</h3>
+		<div class="w-1/2 mx-auto">
+			<canvas bind:this={canvasTag} width="400" />
+		</div>
 	</div>
 </div>
