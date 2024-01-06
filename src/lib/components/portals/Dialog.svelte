@@ -51,7 +51,7 @@
 			class="absolute top-0 left-0 z-[11] w-full h-full bg-white dark:bg-dark_grey"
 		/>
 		<div
-			class="bg-light_text_black_40 absolute inset-0 grid place-content-center duration-150 z-10 {isSubmitting
+			class="bg-light_text_black_40 rounded-lg absolute inset-0 grid place-content-center duration-150 z-10 {isSubmitting
 				? 'opacity-100 pointer-events-auto'
 				: 'opacity-0 pointer-events-none'}"
 		>

@@ -16,6 +16,7 @@
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import Carousel from '~components/containers/Carousel.svelte';
+	import { enviromentFetch } from '~helpers/fetch';
 
 	export let data;
 
@@ -138,9 +139,15 @@
 					getRecentTests();
 					//TODO: Intentionally not refetching test collection, becuase if working properly it should not need to refetch
 					if (response['test']) filterTestsFilter([response['test']['id']]);
-					// recentTests.data = recentTests.data.filter(
-					// 	(item) => item.id !== $modalStore.modalDeleteInfo.id
-					// );
+					if (response['test']?.imageUrl) {
+						enviromentFetch({
+							path: 'cloudinary/deleteImage',
+							method: 'POST',
+							body: JSON.stringify({
+								imageUrl: response['test'].imageUrl
+							})
+						});
+					}
 				}
 			}}>Delete</button
 		>
