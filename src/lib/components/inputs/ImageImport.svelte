@@ -1,7 +1,10 @@
 <script lang="ts">
 	import toast from 'svelte-french-toast';
 	import { twMerge } from 'tailwind-merge';
-	import { IMAGE_IMPORT_SIZE_IN_MB } from '~helpers/constants';
+	import {
+		ALLOWED_IMAGE_TYPES,
+		IMAGE_IMPORT_SIZE_IN_MB
+	} from '~helpers/constants';
 
 	export let title: string;
 	export let maxImageSizeInMB = IMAGE_IMPORT_SIZE_IN_MB;
@@ -21,6 +24,26 @@
 		if (imageRef === null || !e.currentTarget.files) return;
 		const file = e.currentTarget.files[0];
 		exportedFile = file;
+
+		if (file.type.split('/')[0] !== 'image') {
+			toast.error('File is not an image!');
+			e.currentTarget.value = '';
+			imageRef.src = '';
+
+			return;
+		}
+
+		if (ALLOWED_IMAGE_TYPES.includes(file.type.split('/')[1]) === false) {
+			toast.error(
+				`File type is not supported!\nUse ${ALLOWED_IMAGE_TYPES.join(
+					', '
+				)} instead`
+			);
+			e.currentTarget.value = '';
+			imageRef.src = '';
+
+			return;
+		}
 
 		if (!file) return;
 
@@ -55,7 +78,7 @@
 			type="file"
 			name="image"
 			on:change={onImageUpload}
-			accept="image/jpeg, image/png, image/jpg, image/webp, image/avif"
+			accept={ALLOWED_IMAGE_TYPES.map((name) => `image/${name}`).join(', ')}
 			class="absolute w-full h-full opacity-0 cursor-pointer"
 		/>
 		<div

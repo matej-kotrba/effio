@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit"
 import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
-import { IMAGE_IMPORT_SIZE_IN_MB } from "~helpers/constants"
+import { ALLOWED_IMAGE_TYPES, IMAGE_IMPORT_SIZE_IN_MB } from "~helpers/constants"
 
 export const POST = async ({ request }) => {
   const formData = await request.formData()
@@ -14,7 +14,7 @@ export const POST = async ({ request }) => {
     })
   }
 
-  const ALLOWED_IMAGE_TYPES = ["png", "jpg", "jpeg", "avif", "webp"]
+
 
   let uploadStream: any;
 
@@ -36,7 +36,7 @@ export const POST = async ({ request }) => {
     const arrayBuffer = await image.arrayBuffer()
     const buffer = new Uint8Array(arrayBuffer)
     uploadStream = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ allowed_formats: ["png", "jpg", "jpeg", "webp"], folder: "tests" }, (error, result) => {
+      cloudinary.uploader.upload_stream({ allowed_formats: ALLOWED_IMAGE_TYPES, folder: "tests" }, (error, result) => {
         if (error) {
           return reject(error)
         }
