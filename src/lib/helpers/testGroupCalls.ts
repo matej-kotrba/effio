@@ -107,8 +107,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
       // }
     })
 
-    console.log("RESPONSE", response)
-
     const json: any = await response.json()
     if (json.url !== undefined) {
       data = json.url

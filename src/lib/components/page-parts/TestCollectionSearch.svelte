@@ -165,7 +165,7 @@
 	/>
 </div>
 <Space />
-<div class="@container">
+<div class="@container max-w-[1400px] mx-auto">
 	{#if tests.length === 0}
 		<div class="flex flex-col items-center gap-1">
 			<iconify-icon
@@ -182,8 +182,11 @@
 			>
 		</div>
 	{:else}
-		<!-- @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1 -->
-		<div class="grid gap-2 gap-y-4 grid__layout">
+		<!-- grid__layout -->
+
+		<div
+			class="grid gap-2 gap-y-4 @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
+		>
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
 					<CardAlternative
@@ -286,7 +289,7 @@
 <Space />
 
 <style>
-	.grid__layout {
+	/* .grid__layout {
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	}
 
@@ -294,5 +297,5 @@
 		.grid__layout {
 			grid-template-columns: repeat(6, minmax(210px, 1fr));
 		}
-	}
+	} */
 </style>

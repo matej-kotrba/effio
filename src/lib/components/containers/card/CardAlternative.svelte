@@ -90,7 +90,7 @@
 
 <div
 	class={twMerge(
-		'px-1 mx-auto w-full max-w-[260px] aspect-[4/5] @container',
+		'px-1 mx-auto w-full max-w-[300px] aspect-[4/5] @container',
 		classes
 	)}
 >

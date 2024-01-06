@@ -333,10 +333,11 @@
 				areTestsInView = false;
 			}
 		}}
-		class={`relative gap-y-1 xs:gap-y-2 grid grid__container min-h-[24rem] ${
+		class={`relative gap-y-1 xs:gap-y-2 grid @7xl:grid-cols-7 @5xl:grid-cols-5 @3xl:grid-cols-4 @2xl:grid-cols-3 @sm:grid-cols-2 grid-cols-1 min-h-[24rem] ${
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
 	>
+		<!-- grid__container -->
 		{#if requestedTests !== undefined}
 			{#if requestedTests.length === 0}
 				<div
@@ -410,7 +411,7 @@
 </div>
 
 <style>
-	.grid__container {
+	/* .grid__container {
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	}
 
@@ -418,7 +419,7 @@
 		.grid__container {
 			grid-template-columns: repeat(6, minmax(210px, 1fr));
 		}
-	}
+	} */
 
 	.underline-effect::after {
 		content: '';
