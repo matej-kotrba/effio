@@ -16,12 +16,16 @@ export const load: ServerLoad = async (request) => {
 
   if (!test) throw redirect(307, "/?message=This test does not exist&type=error")
 
+  const transformed = transformTestToTakeFormat(test)
+
+  const returnedData = {
+    ...test,
+    ...transformed
+  }
+
   try {
     return {
-      testContent: {
-        ...test,
-        ...transformTestToTakeFormat(test)
-      }
+      testContent: returnedData
     }
   }
   catch (e) {

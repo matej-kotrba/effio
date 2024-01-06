@@ -214,15 +214,15 @@
 						data: [
 							data.testAvarageResult !== undefined
 								? +(
-										100 -
 										data.testAvarageResult.userPoints /
-											(data.testAvarageResult.maxPoints / 100)
+										(data.testAvarageResult.maxPoints / 100)
 								  ).toFixed(1)
 								: 0,
 							data.testAvarageResult !== undefined
 								? +(
+										100 -
 										data.testAvarageResult.userPoints /
-										(data.testAvarageResult.maxPoints / 100)
+											(data.testAvarageResult.maxPoints / 100)
 								  ).toFixed(1)
 								: 0
 						],
@@ -326,6 +326,18 @@
 						ticks: {
 							display: true,
 							stepSize: 1
+						},
+						pointLabels: {
+							font: {
+								size: 18
+							},
+							color: window
+								.getComputedStyle(document.body)
+								.getPropertyValue(
+									$applicationStates.darkMode.isDarkMode
+										? '--dark-text-white'
+										: '--light-text-black'
+								)
 						}
 					}
 				}

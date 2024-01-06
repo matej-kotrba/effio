@@ -236,10 +236,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
         ],
         matchedAnswers: {
           [crypto.randomUUID()]: {
-            answer: ""
+            answer: "",
           },
           [crypto.randomUUID()]: {
-            answer: ""
+            answer: "",
           }
         }
       }
@@ -266,7 +266,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       if (answer.answers.length !== original.answers.length) return false
       let correctAnswersCount = 0
       for (const i in answer.answers) {
-        if (answer.answers[i].matchedAnswerIndex === original.answers[i].matchedAnswerIndex) {
+        if (answer.answers[i].matchedAnswerIndex === original.answers[answer.answers[i].id].matchedAnswerIndex) {
           correctAnswersCount++
         }
       }
@@ -309,7 +309,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
     },
     "shuffleAnswers": (question: ConnectQuestion): ConnectQuestion => {
-      return {
+      const shuffled = {
         ...question,
         answers: question.answers.map(value => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
@@ -318,6 +318,8 @@ export const questionContentFunctions: QuestionContentTransformation = {
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value))
       }
+
+      return shuffled
     }
   },
   "write": {

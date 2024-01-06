@@ -71,9 +71,9 @@
 			// @ts-ignore
 			questionContentFunctions[question['question']['type']['slug']][
 				'checkAnswerCorrectness'
-			](question['question']['content'], question['content']),
-			question['content'],
-			question['question']['content']
+			](question['content'], question['question']['content']),
+			question['question']['content'],
+			question['content']
 		);
 	})}
 	{#if res.record}

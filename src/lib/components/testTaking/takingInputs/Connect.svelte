@@ -57,7 +57,7 @@
 
 	let attachPoints: {
 		[key: string]: {
-			ref: HTMLButtonElement | undefined;
+			ref: HTMLDivElement | undefined;
 			x: number | undefined;
 			y: number | undefined;
 		};
@@ -325,8 +325,7 @@
 					]};"
 			>
 				<div class="relative grid">
-					<button
-						type="button"
+					<div
 						class={`w-6 bg-transparent border-2 rounded-full aspect-square border-light_secondary dark:border-dark_secondary `}
 						bind:this={attachPoints[index].ref}
 					/>

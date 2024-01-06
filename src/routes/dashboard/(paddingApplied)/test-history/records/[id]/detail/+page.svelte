@@ -77,9 +77,9 @@
 			// @ts-ignore
 			questionContentFunctions[question['question']['type']['slug']][
 				'checkAnswerCorrectness'
-			](question['question']['content'], question['content']),
-			question['content'],
-			question['question']['content']
+			](question['content'], question['question']['content']),
+			question['question']['content'],
+			question['content']
 		);
 	})}
 	{#if res.record}
@@ -108,7 +108,7 @@
 			subtitle={res.record.description}
 		/>
 
-		{#if $testObject}
+		{#if $testObject && questionData}
 			<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
 				{#each res.record['questionRecords'] as question, index}
 					<Input
@@ -119,19 +119,7 @@
 								? ' border-error'
 								: 'border-transparent'
 						}`}
-						resultFormat={{
-							// @ts-ignore
-							isCorrect: questionContentFunctions[
-								question['question']['type']['slug']
-							]['checkAnswerCorrectness'](
-								question['question']['content'],
-								question['content']
-							),
-							// @ts-ignore
-							correctAnswer: question['question']['content'],
-							// @ts-ignore
-							userAnswer: question['content']
-						}}
+						resultFormat={questionData[index]}
 						isHighlighted={index === higlightedInputIndex}
 						points={question.question.points
 							? {
