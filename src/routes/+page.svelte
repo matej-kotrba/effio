@@ -70,7 +70,6 @@
 	// 			const mobile = app.findObjectByName('mobile');
 	// 			const screen = app.findObjectByName('Screen');
 	// 			const screen2 = app.findObjectByName('toggle');
-	// 			console.log(mobile, screen, screen2);
 	// 			if (!mobile || !screen || !screen2) return;
 	// 			gsap.set(mobile.scale, { x: 1, y: 1, z: 1 });
 	// 			gsap.set(mobile.position, { x: STARTING_TRANSLATE_X, y: 0 });
@@ -778,7 +777,6 @@
 						}}
 						on:unintersect={(e) => {
 							e.currentTarget.classList.remove('active');
-							console.log('ad');
 						}}
 					/>
 				</div>

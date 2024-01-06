@@ -4,7 +4,7 @@ import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
 export const POST = async ({ request }) => {
   const data = await request.json()
 
-  console.log(data)
+  console.log("A TAMTO", data)
   if (!data) {
     fail(400, {
       message: "No body provided"
@@ -23,7 +23,7 @@ export const POST = async ({ request }) => {
 
   try {
     const result = await cloudinary.uploader.destroy(id)
-    console.log(result)
+    console.log("TOHLEE", result)
   }
   catch (e) {
     return json({ success: false, error: e })

@@ -46,8 +46,6 @@ export async function POST(event) {
 
   if (!test) return json({ error: "Test not found!", success: false })
 
-  // console.log(body.questions, test.testVersions[0].questions)
-
   const result = body.questions.map((question) => {
     const compareQuestion = test.testVersions[0].questions.find(item => item.id === question.id)
     if (!compareQuestion || !Object.keys(questionContentFunctions).includes(question.questionType)) throw new Error("Question not found!")

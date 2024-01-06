@@ -83,7 +83,6 @@ export type IsTestValidResponse = {
 // TODO: Return actuall errors from the server and set them to the test object from isTestValidAndSetErrorsToTestObject function
 // Check the validity of the test object on the server
 export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValidProps): Promise<IsTestValidResponse> {
-  // console.log("SERVER VALIDATION", obj)
   const res = await enviromentFetch({
     path: "validateTest",
     method: "POST",
@@ -258,12 +257,6 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
   if (isError && message === "") {
     message = "Some inputs are incorrect."
   }
-
-  // console.log({
-  //   store: result,
-  //   isError,
-  //   message
-  // })
 
   return {
     store: result,

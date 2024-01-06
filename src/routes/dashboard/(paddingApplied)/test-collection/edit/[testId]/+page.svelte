@@ -21,7 +21,7 @@
 
 	let isSubmitting = false;
 
-	let testImageFile: File | null = null;
+	let testImageFile: File | undefined = undefined;
 
 	initializeTestToTestStore(data.testData);
 
@@ -164,6 +164,7 @@
 	sectionTransitionDuration={0}
 	testType={data.testData.type}
 	testData={data.testData}
+	bind:testImageFile
 />
 <Space gap={10} />
 {#if data.testData.type === 'REGULAR'}

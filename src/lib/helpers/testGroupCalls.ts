@@ -91,6 +91,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
+
   // Setup the image
   let data: string | undefined = undefined;
   if (props.data.image !== undefined && props.data.image !== null) {
@@ -105,6 +106,9 @@ export const validateTestAndRecordIt = async (props: Props) => {
       //   "Content-Type": "multipart/form-data"
       // }
     })
+
+    console.log("RESPONSE", response)
+
     const json: any = await response.json()
     if (json.url !== undefined) {
       data = json.url
@@ -142,7 +146,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
       });
     }
     else if (props.type === "update") {
-      console.log("RANDOM:", props.data.isRandomized)
       const imageUrlToDeleteTest = await trpc(get(page)).getTestById.query({
         id: props.data.id,
       })

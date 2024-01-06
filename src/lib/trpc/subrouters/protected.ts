@@ -176,8 +176,6 @@ export const protectedRouter = router({
         }
       })
 
-      // console.log("VERSION", version)
-
       const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
       const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
 
@@ -390,7 +388,6 @@ export const protectedRouter = router({
     let response;
 
     if (input.decrement === true) {
-      console.log("adasd")
       response = await ctx.prisma.testStar.deleteMany({
         where: {
           userId: ctx.userId,

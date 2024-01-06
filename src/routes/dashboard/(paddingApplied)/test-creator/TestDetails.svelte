@@ -40,7 +40,7 @@
 		}
 	}
 
-	let testImageFile: File | undefined = undefined;
+	export let testImageFile: File | undefined = undefined;
 
 	let modal: HTMLDialogElement;
 	let openTagModal: () => void;

@@ -64,7 +64,7 @@
 
 <div class="p-2 rounded-md shadow-sm bg-light_whiter dark:bg-dark_grey">
 	<div class="flex items-center gap-2">
-		<div class="dropdown dropdown-hover dropdown-top">
+		<div class="z-10 dropdown dropdown-hover dropdown-top">
 			<button
 				type="button"
 				tabindex="0"

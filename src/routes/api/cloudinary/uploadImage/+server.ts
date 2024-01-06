@@ -52,7 +52,6 @@ export const POST = async ({ request }) => {
       status: 400
     })
   }
-  console.log(uploadStream)
   if (!uploadStream) {
     return json("")
   }

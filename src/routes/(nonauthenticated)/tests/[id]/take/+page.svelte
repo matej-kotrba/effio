@@ -58,7 +58,6 @@
 				isSubmitting = true;
 
 				// Then check the test on the server for the correct answers
-				// console.log('TEST', $testObject);
 				let res = await checkTestServerAndRecordIt($testObject);
 				if (!res['success']) {
 					submitError = res['error'] || 'Something went wrong';

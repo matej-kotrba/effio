@@ -36,11 +36,6 @@ const handleTRPCContext: Handle = createTRPCHandle({
 
 const prismaAdapter = PrismaAdapter(prisma)
 // prismaAdapter.linkAccount = (data => {
-//   console.log("AAAAAAAA")
-//   console.log(data)
-//   console.log({
-//     expires_at: data.expires_in ? data.expires_in : data.expires_at,
-//     ...data,
 //   })
 //   return prisma.account.create({
 //     data: {
