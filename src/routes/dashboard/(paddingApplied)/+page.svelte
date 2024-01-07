@@ -467,7 +467,7 @@
 			>
 				<span class="font-semibold">No data to display</span>
 			</div>
-			<div class="h-full mx-auto">
+			<div class="h-full p-2 mx-auto">
 				<canvas bind:this={avarageMarkingCanvas} width="400" />
 			</div>
 		</div>
@@ -485,7 +485,7 @@
 			>
 				<span class="font-semibold">No data to display</span>
 			</div>
-			<div class="w-1/2 mx-auto">
+			<div class="p-2 mx-auto">
 				<canvas bind:this={canvasTag} width="400" />
 			</div>
 		</div>
