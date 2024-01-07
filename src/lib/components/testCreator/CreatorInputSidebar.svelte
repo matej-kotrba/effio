@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { onMount } from 'svelte';
+	import Separator from '~components/separators/Separator.svelte';
 
 	type Inputs = {
 		name: string;
@@ -14,6 +15,8 @@
 	let asideWidth: number;
 
 	let asideElement: HTMLElement;
+
+	let isTipVisible = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -30,7 +33,17 @@
 		asideElement.style.setProperty('--blur-y', `${e.y}px`);
 	}
 
+	function onAknowladgeDragTip() {
+		isTipVisible = false;
+		localStorage?.setItem('creatorInputDragTipVisible', 'false');
+	}
+
 	onMount(() => {
+		if (localStorage?.getItem('creatorInputDragTipVisible') === 'false') {
+			isTipVisible = false;
+		} else {
+			isTipVisible = true;
+		}
 		asideElement.style.setProperty('--blur-x', `${-9999}px`);
 		asideElement.style.setProperty('--blur-y', `${-9999}px`);
 		for (let i in inputReferences) {
@@ -49,6 +62,37 @@
 	bind:clientWidth={asideWidth}
 	bind:this={asideElement}
 >
+	<div class={`${isTipVisible === false ? 'hidden' : 'visible'}`}>
+		<div
+			class="absolute z-[90] bg-light_grey dark:bg-dark_light_grey shadow-md rounded-lg p-2 bottom-full
+		before:content-[''] before:w-4 before:aspect-square before:bg-light_grey dark:before:bg-dark_light_grey
+		before:top-full before:left-1/2 before:translate-x-[-50%] before:absolute clipped_marker"
+		>
+			<div
+				class="flex items-center gap-1 text-light_text_black_80 dark:text-dark_text_white_80"
+			>
+				<iconify-icon icon="fluent-emoji-flat:light-bulb" class="text-2xl" /> Tip!
+			</div>
+			<Separator w={'100%'} h={'1px'} class={'bg-light_text_black_10'} />
+			<p>Add new inputs by dragging them into the field.</p>
+			<button
+				type="button"
+				on:click={onAknowladgeDragTip}
+				class="block ml-auto text-white dark:text-white btn btn-primary dark:btn-accent"
+				>Got it!</button
+			>
+		</div>
+		<div class="absolute z-[100] top-6 left-6">
+			<iconify-icon
+				icon="pepicons-pencil:hand-grab"
+				class="absolute top-0 left-0 text-6xl grab-anim"
+			/>
+			<iconify-icon
+				icon="pepicons-pencil:hand-point"
+				class="absolute top-0 left-0 text-6xl -rotate-12 pointer-anim"
+			/>
+		</div>
+	</div>
 	<div class="grid gap-2 p-2 grid__container {classes}">
 		{#each inputs as input, index (index)}
 			<div class="item-box">
@@ -160,5 +204,55 @@
 			var(--dark-primary),
 			transparent 6rem
 		);
+	}
+
+	.clipped_marker::before {
+		clip-path: polygon(50% 100%, 0 0, 100% 0);
+	}
+
+	.pointer-anim {
+		animation: pointer 5s infinite ease;
+	}
+
+	.grab-anim {
+		animation: grab 5s infinite ease;
+	}
+
+	@keyframes pointer {
+		0% {
+			transform: translateX(0%);
+			display: block;
+			opacity: 0;
+		}
+		49.9% {
+			opacity: 0;
+		}
+		50% {
+			transform: translateX(400%);
+			opacity: 1;
+		}
+		99.9% {
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(0%);
+			opacity: 0;
+		}
+	}
+	@keyframes grab {
+		0% {
+			transform: translateX(0%);
+			opacity: 1;
+		}
+		49.9% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+			transform: translateX(400%);
+		}
+		100% {
+			opacity: 0;
+		}
 	}
 </style>

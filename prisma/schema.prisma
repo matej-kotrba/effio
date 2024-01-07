@@ -85,7 +85,7 @@ model QuestionType {
 model Test {
   id                      String                    @id @default(uuid())
   title                   String
-  description             String
+  description             String                    @db.Text
   published               Boolean                   @default(false)
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
@@ -103,7 +103,7 @@ model Test {
   randomQuestionOrder     Boolean                   @default(true)
 
   @@index([ownerId])
-  @@index([title, description])
+  @@index([title])
 }
 
 model TestVersion {
@@ -154,7 +154,7 @@ model MarkSystem {
 model TestRecord {
   id                      String            @id @default(uuid())
   title                   String
-  description             String
+  description             String            @db.Text
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
   testId                  String
