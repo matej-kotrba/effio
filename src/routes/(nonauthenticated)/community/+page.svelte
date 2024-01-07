@@ -99,35 +99,11 @@
 		specificQuery: string | undefined = undefined,
 		usedTags: string[] = []
 	) {
-		// requestedTests = [
-		// 	...requestedTests,
-		// 	{
-		// 		id: 0,
-		// 		createdAt: new Date(),
-		// 		title: 'asdasda sasdas',
-		// 		description:
-		// 			'awhdas dhasd uxych usd hahdcyuixch yxjhc uiawsh djakshdais',
-		// 		owner: { name: 'aaaaaa aaaaa', image: '' },
-		// 		stars: 0,
-		// 		views: 0,
-		// 		tags: [],
-		// 		isPublic: false,
-		// 		ownerId: '',
-		// 		questions: [],
-		// 		__typename: 'Test',
-		// 		published: true,
-		// 		testVersions: 1,
-		// 		updatedAt: new Date(),
-		// 		version: 1
-		// 	}
-		// ];
-		// return;
 		if (requestedTests === undefined) return;
 
 		if (shouldReset) isResetting = true;
 		isFetchingNewTests = true;
 
-		// await new Promise((res) => setTimeout(res, 5000));
 		let newData = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT,
 			cursor:
@@ -148,6 +124,7 @@
 		if (!newData.tests) return;
 
 		requestedTests = [...requestedTests, ...newData.tests];
+		console.log(requestedTests);
 	}
 
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
@@ -372,6 +349,7 @@
 									img: test['imageUrl'],
 									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
+									stars: test._count.stars,
 									tags: getTypesafeTags(test.tags)
 								}}
 								type={test.type}

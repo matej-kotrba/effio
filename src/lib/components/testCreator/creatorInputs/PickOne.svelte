@@ -3,13 +3,12 @@
 	import TextInput from '~components/inputs/TextInput.svelte';
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
 	import { answerSchema } from '~schemas/textInput';
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
-	import { dropdown } from '~use/dropdown';
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
@@ -130,5 +129,4 @@
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>
-	<!-- <Toaster /> -->
 </form>

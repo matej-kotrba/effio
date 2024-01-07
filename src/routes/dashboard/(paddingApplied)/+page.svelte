@@ -12,6 +12,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
 	import { months } from '~helpers/constants.js';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 
 	export let data;
 
@@ -404,7 +405,27 @@
 	}
 </script>
 
-<div class="flex flex-wrap justify-center gap-4 xs:justify-start">
+<!-- <div>
+	{#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
+		{#each data.recentlyCompletedTests as test}
+			<CardAlternative
+				isStarredDefault={test.test.testGroup.stars !== undefined &&
+					test.test.testGroup.stars.length > 0}
+				type={test.test.testGroup.type}
+				navigationLink={`/tests/${test.test.testGroup.id}`}
+				canStarTest={test.test.testGroup.stars !== undefined &&
+					!!$page.data.session?.user?.id &&
+					$page.data.session.user.id !== test.test.testGroup.ownerId}
+				data={{
+					...test.test.testGroup,
+					stars: test.test.testGroup._count.stars,
+					tags: test.test.testGroup.tags.map((item) => item.tag)
+				}}
+			/>
+		{/each}
+	{/if}
+</div> -->
+<!-- <div class="flex flex-wrap justify-center gap-4 xs:justify-start">
 	<OverviewLink
 		icon="gridicons:create"
 		title="Create a new test"
@@ -417,7 +438,7 @@
 		link="/community"
 		bgImage="/imgs/svgs/overview/community.png"
 	/>
-</div>
+</div> -->
 
 <div
 	class="grid grid-cols-1 gap-4 mx-auto mt-8 lg:grid-cols-2 place-items-center"

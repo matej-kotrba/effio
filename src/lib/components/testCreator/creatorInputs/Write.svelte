@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AddNew from '../creatorUtils/AddNew.svelte';
 	import { flip } from 'svelte/animate';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { testObject } from '~stores/testObject';
 	import {
@@ -111,5 +111,4 @@
 	<div class="flex justify-center">
 		<AddNew onClick={onAddNew} />
 	</div>
-	<!-- <Toaster /> -->
 </form>

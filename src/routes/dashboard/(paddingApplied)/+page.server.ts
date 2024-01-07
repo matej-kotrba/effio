@@ -115,8 +115,47 @@ export const load = async (e) => {
       ORDER BY tag.name ASC
     `
 
-    const [result, resultTestsTaken, testAvarage, tagsTookTestFrom] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise])
-    console.log(tagsTookTestFrom)
+    const getRecentCompletedTestsPromise = prisma.testRecord.findMany({
+      where: {
+        userId: id
+      },
+      include: {
+        test: {
+          include: {
+            testGroup: {
+              include: {
+                _count: {
+                  select: {
+                    stars: true
+                  }
+                },
+                stars: {
+                  select: {
+                    userId: true,
+                    testId: true
+                  },
+                  where: {
+                    userId: id
+                  }
+                },
+                tags: {
+                  include: {
+                    tag: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      take: 3,
+      distinct: ["testId"],
+      orderBy: {
+        createdAt: "desc"
+      }
+    })
+
+    const [result, resultTestsTaken, testAvarage, tagsTookTestFrom, getRecentCompletedTests] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise, getRecentCompletedTestsPromise])
 
     // Fill in the motnhs with no activity
     fillRecordsWithMissingMonths(result)
@@ -128,6 +167,7 @@ export const load = async (e) => {
       testTakenData: resultTestsTaken,
       testAvarageResult: { ...testAvarage[0], maxPoints: +testAvarage[0].maxPoints } satisfies TestAvarageData,
       tagsTookTestFromResult: tagsTookTestFrom as { count: number, name: string }[],
+      recentlyCompletedTests: getRecentCompletedTests
     }
   }
   else {

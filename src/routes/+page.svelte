@@ -286,7 +286,6 @@
 	// });
 </script>
 
-<!-- <Toaster /> -->
 <ScrollToTop />
 
 <!-- <div
