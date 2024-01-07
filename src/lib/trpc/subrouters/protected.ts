@@ -259,14 +259,14 @@ export const protectedRouter = router({
             }
           })
         }),
-        ...linkedGroupsToCreate.map((item) => {
+        ...tagsToCreate?.map((item) => {
           return ctx.prisma.tagOnTests.create({
             data: {
               tagId: item,
               testId: input.testGroupId
             }
           })
-        }),
+        }) || [],
       ])
 
       const test = await ctx.prisma.test.update({

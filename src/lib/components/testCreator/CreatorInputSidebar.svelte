@@ -114,6 +114,14 @@
 		pointer-events: none;
 	}
 
+	:global(.dark) .item-box::before {
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--dark-primary),
+			transparent 6rem
+		);
+	}
+
 	.item-box > div::after {
 		content: '';
 		position: absolute;
@@ -128,6 +136,14 @@
 		opacity: 0;
 		pointer-events: none;
 		transition: 0.3s opacity ease;
+	}
+
+	:global(.dark) .item-box > div::after {
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--dark-primary),
+			transparent 6rem
+		);
 	}
 
 	.item-box > div:hover::after {

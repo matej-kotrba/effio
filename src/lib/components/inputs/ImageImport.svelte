@@ -16,6 +16,17 @@
 
 	let imageRef: HTMLImageElement | null = null;
 
+	$: {
+		if (exportedFile) {
+			const reader = new FileReader();
+			reader.readAsDataURL(exportedFile);
+
+			reader.onload = () => {
+				imageRef!.src = reader.result as string;
+			};
+		}
+	}
+
 	function onImageUpload(
 		e: Event & {
 			currentTarget: EventTarget & HTMLInputElement;

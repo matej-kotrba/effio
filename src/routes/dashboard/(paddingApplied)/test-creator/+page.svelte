@@ -70,6 +70,8 @@
 	let isSubmitting = false;
 	let isSuccess = false;
 
+	let testImageFile: File | undefined = undefined;
+
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean,
 		testImageFile?: File
@@ -371,7 +373,7 @@
 				bind:openPreview={openPreviewModal}
 				sectionTransitionDuration={SECTION_TRANSITION_DURATION}
 				{testType}
-				let:testImageFile
+				bind:testImageFile
 			>
 				<div class="flex justify-center gap-6 my-4">
 					{#if testType !== 'PROGRAMMING'}
