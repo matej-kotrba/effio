@@ -1,3 +1,4 @@
+import { randomIdLettersOnly } from "~helpers/randomId"
 import { validateCode } from "~helpers/validateCode"
 import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema } from "~schemas/textInput"
 
@@ -237,9 +238,11 @@ export const questionContentFunctions: QuestionContentTransformation = {
         matchedAnswers: {
           [crypto.randomUUID()]: {
             answer: "",
+            displayId: 0
           },
           [crypto.randomUUID()]: {
             answer: "",
+            displayId: 1
           }
         }
       }
@@ -317,6 +320,11 @@ export const questionContentFunctions: QuestionContentTransformation = {
         matchedAnswers: Object.fromEntries(Object.entries(question.matchedAnswers).map(value => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value))
+      }
+
+      const keys = Object.keys(shuffled.matchedAnswers)
+      for (const i in keys) {
+        shuffled.matchedAnswers[keys[i]].displayId = +i
       }
 
       return shuffled

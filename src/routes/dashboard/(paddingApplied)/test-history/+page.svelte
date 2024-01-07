@@ -98,7 +98,8 @@
 					/>
 				</div>
 			{:else}
-				<div class="flex flex-wrap gap-1">
+				<!-- Pagination controls -->
+				<div class="flex flex-wrap gap-1 mt-4">
 					{#if 3 - currentPage < 0}
 						<button
 							type="button"

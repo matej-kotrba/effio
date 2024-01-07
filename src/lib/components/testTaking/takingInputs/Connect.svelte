@@ -185,7 +185,11 @@
 					attachPoints[i].y = rect.top + rect.height / 2;
 				}
 			}
-			const keys = Object.keys(resultFormat.userAnswer.matchedAnswers);
+			const keys = Object.entries(resultFormat.userAnswer.matchedAnswers)
+				.sort((a, b) => {
+					return a[1].displayId - b[1].displayId;
+				})
+				.map((item) => item[0]);
 
 			for (let i in svgPositions) {
 				if (!svgPositions[i].ref) continue;
@@ -201,6 +205,10 @@
 			}
 		}
 	}
+
+	$: sortedMatchedAnswers = Object.values(content['matchedAnswers']).sort(
+		(a, b) => b.displayId - a.displayId
+	);
 </script>
 
 <svelte:window
@@ -286,7 +294,7 @@
 		{/each}
 	</div>
 	<div class="flex flex-col gap-2">
-		{#each Object.values(content['matchedAnswers']) as text, index}
+		{#each sortedMatchedAnswers as text, index}
 			{@const matchedId = resultFormat
 				? resultFormat['correctAnswer']['answers'].find(
 						(item) =>

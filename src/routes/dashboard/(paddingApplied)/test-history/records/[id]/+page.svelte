@@ -129,7 +129,7 @@
 				{/if}
 				<a
 					href={$page.url + '/detail'}
-					class="btn btn-outline dark:text-dark_text_white dark:outline-dark_text_white"
+					class="mt-2 btn btn-outline dark:text-dark_text_white dark:outline-dark_text_white"
 				>
 					Details
 				</a>

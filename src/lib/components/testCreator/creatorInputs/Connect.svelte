@@ -8,6 +8,7 @@
 	import { answerSchema } from '~schemas/textInput';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
+	import { randomIdLettersOnly } from '~helpers/randomId';
 
 	export let indexParent: number;
 
@@ -41,7 +42,8 @@
 			(
 				$testObject.questions[indexParent].content as ConnectQuestion
 			).matchedAnswers[crypto.randomUUID()] = {
-				answer: ''
+				answer: '',
+				displayId: Object.values(content.matchedAnswers).length
 			};
 			($testObject.questions[indexParent].content as ConnectQuestion).answers =
 				[
@@ -60,6 +62,12 @@
 			content.answers.filter((_, i) => i !== index);
 		delete ($testObject.questions[indexParent].content as ConnectQuestion)
 			.matchedAnswers[answerKeys[index]];
+
+		// Reassign the displayId
+		let entries = Object.entries(content.matchedAnswers);
+		for (let i = 0; i < entries.length; i++) {
+			content.matchedAnswers[entries[i][0]].displayId = i;
+		}
 		toast.success(`Question ${index + 1} deleted`);
 	}
 </script>

@@ -22,6 +22,7 @@ type ConnectQuestion = {
   matchedAnswers: {
     [key: string]: {
       answer: string;
+      displayId: number;
       error?: string;
     };
   }
