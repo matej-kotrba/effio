@@ -308,7 +308,13 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "calculatePoints": (q1: ConnectQuestion, q2: ConnectQuestion, maxPoints: number) => {
-      const correctAnswersCount = q1.answers.reduce((count, item, index) => item.matchedAnswerIndex === q2.answers[index].matchedAnswerIndex ? count + 1 : count, 0)
+      // const correctAnswersCount = q1.answers.reduce((count, item, index) => item.matchedAnswerIndex === q2.answers[index].matchedAnswerIndex ? count + 1 : count, 0)
+      const correctAnswersCount = q1.answers.reduce((count, item, index) => {
+        const q2Answer = q2.answers.find(ans => ans.id === item.id)
+        if (!q2Answer) return count
+        if (item.matchedAnswerIndex === q2Answer.matchedAnswerIndex) return count + 1
+        return count
+      }, 0)
       return +(correctAnswersCount / q1.answers.length * maxPoints).toFixed(2)
     },
     "shuffleAnswers": (question: ConnectQuestion): ConnectQuestion => {

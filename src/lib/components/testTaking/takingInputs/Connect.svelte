@@ -207,7 +207,7 @@
 	}
 
 	$: sortedMatchedAnswers = Object.values(content['matchedAnswers']).sort(
-		(a, b) => b.displayId - a.displayId
+		(a, b) => a.displayId - b.displayId
 	);
 </script>
 
@@ -263,7 +263,7 @@
 								style={`stroke:var(${
 									$applicationStates['darkMode']['isDarkMode']
 										? '--dark-terciary'
-										: '--light-quaternary'
+										: '--light-terciary'
 								});stroke-width:3`}
 							/>
 							<circle
@@ -295,11 +295,16 @@
 	</div>
 	<div class="flex flex-col gap-2">
 		{#each sortedMatchedAnswers as text, index}
+			{@const sortedMatchedAnsweres = Object.keys(
+				content['matchedAnswers']
+			).sort(
+				(a, b) =>
+					content['matchedAnswers'][a].displayId -
+					content['matchedAnswers'][b].displayId
+			)}
 			{@const matchedId = resultFormat
 				? resultFormat['correctAnswer']['answers'].find(
-						(item) =>
-							item.matchedAnswerIndex ===
-							Object.keys(content['matchedAnswers'])[index]
+						(item) => item.matchedAnswerIndex === sortedMatchedAnsweres[index]
 				  )?.id
 				: undefined}
 			<button
