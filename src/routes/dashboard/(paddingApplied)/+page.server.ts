@@ -103,7 +103,7 @@ export const load = async (e) => {
 
     const tagsTookTestFromPromise = prisma.$queryRaw`
       SELECT
-        COUNT(tr.id) as "count",
+        COUNT(DISTINCT tst.id) as "count",
         tag.name as "name"
       FROM Test tst
       JOIN TagOnTests tot ON tst.id = tot.testId
@@ -116,6 +116,7 @@ export const load = async (e) => {
     `
 
     const [result, resultTestsTaken, testAvarage, tagsTookTestFrom] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise])
+    console.log(tagsTookTestFrom)
 
     // Fill in the motnhs with no activity
     fillRecordsWithMissingMonths(result)

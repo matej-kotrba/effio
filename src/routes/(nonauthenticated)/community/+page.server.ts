@@ -5,7 +5,7 @@ import { appRouter } from "~/lib/trpc/router";
 export const load: ServerLoad = async (event) => {
   const context = await createContext(event)
 
-  const data = await appRouter.createCaller(context).getTags();
+  const data = await appRouter.createCaller(context).getTagss();
 
   return {
     tags: data.tags || []

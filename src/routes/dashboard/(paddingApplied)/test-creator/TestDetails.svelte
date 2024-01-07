@@ -53,7 +53,7 @@
 
 	async function getTags() {
 		if (gotTags === true) return;
-		const tagsResponse = await trpc($page).getTags.query();
+		const tagsResponse = await trpc($page).getTagss.query();
 		if (tagsResponse.success && tagsResponse.tags) {
 			tags = tagsResponse.tags;
 			visibleTags = tags;

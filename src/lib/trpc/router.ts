@@ -173,7 +173,7 @@ export const appRouter = router({
     if (!test) return null
     return test
   }),
-  getTags: procedure.query(async ({ ctx }) => {
+  getTagss: procedure.query(async ({ ctx }) => {
     const tags = await ctx.prisma.tag.findMany({
       orderBy: {
         name: "asc"

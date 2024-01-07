@@ -27,6 +27,13 @@
 	let chartAvarage: Chart;
 	let chartTags: Chart;
 
+	let activeStates = {
+		chart: false,
+		chartRecords: false,
+		chartAvarage: false,
+		chartTags: false
+	};
+
 	async function getTemplates() {
 		templates = (await trpc(
 			$page
@@ -143,6 +150,8 @@
 	}
 
 	onMount(async () => {
+		// Tests create graph
+
 		const testsCreatedData: ChartData = {
 			labels: data.testCreationData?.map(
 				(data) =>
@@ -168,8 +177,17 @@
 				}
 			]
 		};
+		if (
+			data.testCreationData !== undefined &&
+			data.testCreationData.length > 0
+		) {
+			activeStates.chart = true;
+		}
+
 		const testsCreatedConfig: ChartConfiguration =
 			setupConfig(testsCreatedData);
+
+		// Tests taken graph
 
 		const testsTakenData: ChartData = {
 			labels: data.testTakenData?.map(
@@ -202,7 +220,13 @@
 				}
 			]
 		};
+		if (data.testTakenData && data.testTakenData.length > 0) {
+			activeStates.chartRecords = true;
+		}
+
 		const testsTakenConfig: ChartConfiguration = setupConfig(testsTakenData);
+
+		// Avarage test percentage graph
 
 		const avarageScoreConfig: ChartConfiguration = {
 			type: 'doughnut',
@@ -236,6 +260,7 @@
 					delay: 200
 				},
 				responsive: true,
+				maintainAspectRatio: false,
 				plugins: {
 					legend: {
 						display: false
@@ -260,6 +285,14 @@
 				}
 			}
 		};
+		if (
+			data.testAvarageResult !== undefined &&
+			data.testAvarageResult.count > 0
+		) {
+			activeStates.chartAvarage = true;
+		}
+
+		// Tags graph
 
 		const tagsData: ChartData = {
 			labels: data.tagsTookTestFromResult?.map((tag) => tag.name) || [],
@@ -302,6 +335,12 @@
 				}
 			]
 		};
+		if (
+			data.tagsTookTestFromResult !== undefined &&
+			data.tagsTookTestFromResult.length > 0
+		) {
+			activeStates.chartTags = true;
+		}
 
 		const tagsConfig: ChartConfiguration = {
 			type: 'radar',
@@ -384,32 +423,71 @@
 	class="grid grid-cols-1 gap-4 mx-auto mt-8 lg:grid-cols-2 place-items-center"
 >
 	<div
-		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 	>
 		<h3 class="font-bold text-h6">Tests created monthly</h3>
-		<canvas bind:this={portfolio} width="400" class="w-full" />
-	</div>
-	<div
-		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-	>
-		<h3 class="font-bold text-h6">Tests taken monthly</h3>
-		<canvas bind:this={portfolioRecords} width="400" class="w-full" />
-	</div>
-	<div
-		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-	>
-		<h3 class="font-bold text-h6">Avarage test percentage</h3>
-		<p>From {data.testAvarageResult?.count} tests</p>
-		<div class="w-1/2 mx-auto">
-			<canvas bind:this={avarageMarkingCanvas} width="400" />
+		<div class="relative">
+			<div
+				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+					activeStates.chart ? 'hidden' : ''
+				}`}
+			>
+				<span class="font-semibold">No data to display</span>
+			</div>
+			<canvas bind:this={portfolio} width="400" class="w-full" />
 		</div>
 	</div>
 	<div
-		class="w-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<h3 class="font-bold text-h6">Tests taken monthly</h3>
+		<div class="relative">
+			<div
+				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+					activeStates.chartRecords ? 'hidden' : ''
+				}`}
+			>
+				<span class="font-semibold">No data to display</span>
+			</div>
+			<canvas bind:this={portfolioRecords} width="400" class="w-full" />
+		</div>
+	</div>
+	<div
+		class="relative flex flex-col w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+	>
+		<div class="w-full">
+			<h3 class="font-bold text-h6">Avarage test percentage</h3>
+			<p>From {data.testAvarageResult?.count} test(s)</p>
+		</div>
+		<div class="relative">
+			<div
+				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+					activeStates.chartAvarage ? 'hidden' : ''
+				}`}
+			>
+				<span class="font-semibold">No data to display</span>
+			</div>
+			<div class="h-full mx-auto">
+				<canvas bind:this={avarageMarkingCanvas} width="400" />
+			</div>
+		</div>
+	</div>
+	<div
+		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 	>
 		<h3 class="font-bold text-h6">Avarage test percentage</h3>
-		<div class="w-1/2 mx-auto">
-			<canvas bind:this={canvasTag} width="400" />
+
+		<div class="relative">
+			<div
+				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+					activeStates.chart ? 'hidden' : ''
+				}`}
+			>
+				<span class="font-semibold">No data to display</span>
+			</div>
+			<div class="w-1/2 mx-auto">
+				<canvas bind:this={canvasTag} width="400" />
+			</div>
 		</div>
 	</div>
 </div>

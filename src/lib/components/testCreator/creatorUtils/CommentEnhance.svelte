@@ -89,7 +89,7 @@
 			class={`absolute tooltip duration-150
 		${
 			displayOnHover
-				? 'group-hover/comment:opacity-100 sm:opacity-0 opacity-100'
+				? 'group-hover/comment:opacity-100 group-focus-within/comment:opacity-100 sm:opacity-0 opacity-100'
 				: 'opacity-100'
 		}
 		${
