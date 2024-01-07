@@ -15,10 +15,10 @@
 		};
 	}
 
+	// Recieves an array of marsk not the whole object
 	export function checkMarkSystem(markSystem: Prisma.JsonValue) {
 		if (markSystem === null || typeof markSystem !== 'object') return null;
 		if (markSystem.map === undefined) return null;
-
 		let markSystemTemp = markSystem as Array<unknown>;
 
 		for (let i = 0; i < markSystemTemp.length; i++) {

@@ -556,7 +556,7 @@
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full lg:max-w-[auto]">
 							<h3
-								class="mb-auto font-semibold text-center text-h6 md:text-h4 text-light_text_black"
+								class="mb-auto font-semibold text-center text-h6 md:text-h4 text-light_text_black dark:text-dark_text_white"
 							>
 								Explore the community!
 							</h3>
@@ -608,9 +608,11 @@
 					</slot>
 					<slot slot="c">
 						<div class="flex flex-col justify-between h-full font-semibold">
-							<h3 class="text-light_text_black text-body1 md:text-h5">
+							<h3
+								class="text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
+							>
 								Want to create tests of your own?<br />
-								<span class="font-normal text-body1"
+								<span class="font-normal text-body1 dark:text-dark_text_white"
 									>All you need is free account.</span
 								>
 							</h3>
@@ -680,11 +682,13 @@
 				<GridLayout>
 					<slot slot="a">
 						<div class="flex flex-col justify-between h-full">
-							<h3 class="mb-auto font-medium text-light_text_black">
+							<h3
+								class="mb-auto font-medium text-light_text_black dark:text-dark_text_white"
+							>
 								<span class="font-semibold text-h6 md:text-h4"
 									>Create tests</span
 								>
-								<span class="text-body1 md:text-h6"
+								<span class="text-body1 md:text-h6 dark:text-dark_text_white"
 									>using several question types, add comments, marking system
 									and customize behaviour of the test</span
 								>
@@ -728,7 +732,7 @@
 						<div class="grid grid-cols-6">
 							<div class="col-span-3">
 								<h3
-									class="max-w-full text-light_text_black text-body1 md:text-h5"
+									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
 								>
 									<b>Import</b> and <b>export</b> your tests in GIFT format compatible
 									with other platforms.
@@ -754,7 +758,7 @@
 							</div>
 							<div class="col-span-3">
 								<h3
-									class="max-w-full text-light_text_black text-body1 md:text-h5"
+									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
 								>
 									Make your own <b>programming</b> assignments and try others in
 									VS Code integrated editor

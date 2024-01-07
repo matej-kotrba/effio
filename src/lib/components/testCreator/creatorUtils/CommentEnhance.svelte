@@ -71,7 +71,7 @@
 				on:click={() => {
 					toggled = true;
 				}}
-				class={`duration-150 tooltip z-10 p-2 border-2 border-solid rounded-md bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
+				class={`duration-150 tooltip tooltip-left z-10 p-2 border-2 border-solid rounded-md bg-light_whiter dark:bg-dark_light_grey border-light_text_black_80`}
 			>
 				<iconify-icon
 					icon="solar:clipboard-linear"
@@ -86,7 +86,7 @@
 			on:click={() => {
 				toggled = true;
 			}}
-			class={`absolute tooltip duration-150
+			class={`absolute tooltip tooltip-left duration-150
 		${
 			displayOnHover
 				? 'group-hover/comment:opacity-100 group-focus-within/comment:opacity-100 sm:opacity-0 opacity-100'

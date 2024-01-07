@@ -165,7 +165,7 @@
 	class="flex flex-col gap-2"
 	use:intersect={{ once: true }}
 	on:intersect={() => {
-		map.invalidateSize();
+		map?.invalidateSize();
 	}}
 >
 	<span class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"

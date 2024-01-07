@@ -34,7 +34,7 @@
 		{#if maxPoints !== null && userPoints !== null}
 			<h3 class="text-h4">
 				Your result is: <span class="font-semibold">{mark || ''}</span>, {userPoints}/{maxPoints}
-				- {(userPoints / maxPoints || 0) * 100}%
+				- {((userPoints / maxPoints || 0) * 100).toFixed(2)}%
 			</h3>
 		{:else}
 			<h3 class="text-h4">Your results</h3>
@@ -71,7 +71,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="sticky left-0 z-10 flex gap-2 top-2" in:fade>
+	<div class="sticky left-0 z-[100] flex gap-2 top-2" in:fade>
 		<a href="/community">
 			<button
 				class="duration-100 shadow-md btn hover:bg-light_whiter hover:border-light_whiter dark:bg-dark_grey dark:border-dark_grey dark:text-dark_text_white dark:hover:bg-dark_light_grey"

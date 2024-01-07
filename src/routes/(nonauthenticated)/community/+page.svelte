@@ -314,7 +314,6 @@
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
 	>
-		<!-- grid__container -->
 		{#if requestedTests !== undefined}
 			{#if requestedTests.length === 0}
 				<div
@@ -380,11 +379,6 @@
 				{/each}
 			{/if}
 		{/if}
-		<!-- {#if isFetchingNewTests}
-			{#each Array(REQUEST_AMOUNT) as _}
-				<CardMinimalizedSkeleton />
-			{/each}
-		{/if} -->
 	</div>
 </div>
 

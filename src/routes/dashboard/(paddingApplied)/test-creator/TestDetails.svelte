@@ -25,6 +25,7 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
+	import { checkMarkSystem } from '../test-history/records/[id]/+page.svelte';
 
 	export let sectionTransitionDuration: number;
 	export let testType: TestType;
@@ -221,7 +222,9 @@
 		</div>
 	</div>
 	{#if testType !== 'PROGRAMMING'}
-		<MarkSystem />
+		<MarkSystem
+			defaultValue={checkMarkSystem($testObject.markSystem?.marks) || undefined}
+		/>
 	{/if}
 	<slot {testImageFile} />
 </div>

@@ -160,7 +160,7 @@
 			{#if type === 'PROGRAMMING'}
 				<div
 					data-tip="Programming test"
-					class="absolute bottom-0 left-0 z-10 grid pt-4 pb-2 pl-2 pr-4 bg-blue-500 place-content-center special-border-radius tooltip"
+					class="absolute bottom-0 left-0 z-10 grid pt-4 pb-2 pl-2 pr-4 bg-blue-500 place-content-center special-border-radius tooltip tooltip-right"
 				>
 					<iconify-icon icon="fa-solid:tools" class="text-white" />
 				</div>
