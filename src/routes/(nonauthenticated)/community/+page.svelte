@@ -220,7 +220,7 @@
 	}}
 >
 	<div
-		class={`absolute -left-[calc(50vw-50%)] top-0 w-screen h-full -z-10 duration-75 ${
+		class={`absolute -left-[calc(50vw-50%)] top-0 w-[calc(100vw-10px)] h-full -z-10 duration-75 ${
 			shouldBackdropNavbar ? 'backdrop-blur-xl' : ''
 		}`}
 	/>
