@@ -237,7 +237,7 @@ model Group {
   slug                String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
-  description         String             @default("")
+  description         String?            @db.Text
   ownerId             String
   imageUrl            String             @default("")
   users               GroupOnUsers[]
@@ -281,7 +281,7 @@ model GroupSubcategoryMessage {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   title              String?
-  content            String?
+  content            String?          @db.TinyText
   testId             String?
   groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
   sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)

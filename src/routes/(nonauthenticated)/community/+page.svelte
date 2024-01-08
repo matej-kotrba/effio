@@ -381,6 +381,7 @@
 		{/if}
 	</div>
 </div>
+<Space gap={150} />
 
 <style>
 	/* .grid__container {

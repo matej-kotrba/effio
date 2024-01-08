@@ -720,7 +720,11 @@
 									class="max-w-[300px] mx-auto w-full xs:w-auto"
 								/>
 								<Space gap={36} />
-								<CallToAction text={'Visit'} center="right" link={'#'}>
+								<CallToAction
+									text={'Visit'}
+									center="right"
+									link={'/dashboard/test-creator'}
+								>
 									<iconify-icon
 										icon="material-symbols:arrow-right-alt-rounded"
 									/>
@@ -804,7 +808,7 @@
 			<Space gap={400} />
 		</section> -->
 	</div>
-	<Space gap={450} />
+	<Space gap={200} />
 	<Footer />
 </main>
 

@@ -13,6 +13,7 @@
 	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
 	import { months } from '~helpers/constants.js';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import Space from '~components/separators/Space.svelte';
 
 	export let data;
 
@@ -477,7 +478,7 @@
 		class="relative flex flex-col w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 	>
 		<div class="w-full">
-			<h3 class="font-bold text-h6">Avarage test percentage</h3>
+			<h3 class="font-bold text-h6">Average test percentage</h3>
 			<p>From {data.testAvarageResult?.count} test(s)</p>
 		</div>
 		<div class="relative">
@@ -496,7 +497,7 @@
 	<div
 		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 	>
-		<h3 class="font-bold text-h6">Avarage test percentage</h3>
+		<h3 class="font-bold text-h6">Average test percentage</h3>
 
 		<div class="relative">
 			<div
@@ -512,3 +513,4 @@
 		</div>
 	</div>
 </div>
+<Space gap={150} />
