@@ -56,7 +56,7 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 <aside
-	class="sticky top-[10%] left-0 w-full parent"
+	class="sticky top-[10%] left-0 w-full parent z-10"
 	style="--blur-x: 0px;
 		--blur-y: 0px;"
 	bind:clientWidth={asideWidth}
