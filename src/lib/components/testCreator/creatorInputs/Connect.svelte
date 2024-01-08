@@ -15,8 +15,6 @@
 	$: content = $testObject.questions[indexParent].content as ConnectQuestion;
 	$: answersLength = content.answers.length;
 
-	$: console.log($testObject.questions[0].content);
-
 	const QUESTION_LIMIT = 10;
 
 	$: answerKeys = Object.entries(content.matchedAnswers)

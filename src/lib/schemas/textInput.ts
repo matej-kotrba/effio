@@ -2,13 +2,13 @@ import { z } from "zod"
 
 // GENERAL ANSWER
 export const ANSWER_MIN = 1
-export const ANSWER_MAX = 100
+export const ANSWER_MAX = 150
 export const ANSWER_TITLE_MIN = 8
 export const ANSWER_TITLE_MAX = 250
 export const DESCRIPTION_MIN = 15
 export const DESCRIPTION_MAX = 255
 export const TITLE_MIN = 8
-export const TITLE_MAX = 40
+export const TITLE_MAX = 150
 export const RESPONSE_MIN = 1
 export const RESPONSE_MAX = 255
 
