@@ -193,7 +193,13 @@
 		{#if $testObject.questions.length > 0 && (isInputSidebarOpen === true || windowWidth >= XL)}
 			<div
 				in:fly={{ x: -300 }}
-				out:fly={{ x: -300, duration: windowWidth <= XL ? 0 : undefined }}
+				out:fly={{
+					x: -300,
+					duration:
+						windowWidth <= XL || $testObject.questions.length === 0
+							? 0
+							: undefined
+				}}
 				class="h-full max-w-[340px]"
 			>
 				<CreatorInputSidebar

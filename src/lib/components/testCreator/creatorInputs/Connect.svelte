@@ -15,9 +15,15 @@
 	$: content = $testObject.questions[indexParent].content as ConnectQuestion;
 	$: answersLength = content.answers.length;
 
+	$: console.log($testObject.questions[0].content);
+
 	const QUESTION_LIMIT = 10;
 
-	$: answerKeys = Object.keys(content.matchedAnswers) as string[];
+	$: answerKeys = Object.entries(content.matchedAnswers)
+		.sort((a, b) => {
+			return a[1].displayId - b[1].displayId;
+		})
+		.map((item) => item[0]) as string[];
 	$: (
 		$testObject.questions[indexParent].content as ConnectQuestion
 	).answers.forEach((answer, index) => {
