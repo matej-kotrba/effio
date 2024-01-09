@@ -2,7 +2,7 @@
 	import { trpc } from '~/lib/trpc/client';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import type {
 		ChartData,
@@ -10,10 +10,9 @@
 		ChartType
 	} from 'chart.js/auto/auto';
 	import { applicationStates } from '~stores/applicationStates';
-	import OverviewLink from '~components/page-parts/OverviewLink.svelte';
 	import { months } from '~helpers/constants.js';
-	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import { browser } from '$app/environment';
 
 	export let data;
 
@@ -36,6 +35,18 @@
 		chartTags: false
 	};
 
+	function onResize() {
+		if (chart) {
+			chart.resize();
+		}
+		if (chartRecords) {
+			chartRecords.resize();
+		}
+		if (chartTags) {
+			chartTags.resize();
+		}
+	}
+
 	async function getTemplates() {
 		templates = (await trpc(
 			$page
@@ -47,6 +58,7 @@
 		return {
 			type: 'bar' as ChartType,
 			data: data,
+
 			options: {
 				animation: {
 					onComplete: () => {
@@ -228,72 +240,6 @@
 
 		const testsTakenConfig: ChartConfiguration = setupConfig(testsTakenData);
 
-		// Avarage test percentage graph
-
-		const avarageScoreConfig: ChartConfiguration = {
-			type: 'doughnut',
-			data: {
-				labels: ['Correct', 'Incorrect'],
-				datasets: [
-					{
-						label: 'Correct',
-						data: [
-							data.testAvarageResult !== undefined
-								? +(
-										data.testAvarageResult.userPoints /
-										(data.testAvarageResult.maxPoints / 100)
-								  ).toFixed(1)
-								: 0,
-							data.testAvarageResult !== undefined
-								? +(
-										100 -
-										data.testAvarageResult.userPoints /
-											(data.testAvarageResult.maxPoints / 100)
-								  ).toFixed(1)
-								: 0
-						],
-
-						backgroundColor: ['#48f542', '#fc4747']
-					}
-				]
-			},
-			options: {
-				animation: {
-					delay: 200
-				},
-				responsive: true,
-				maintainAspectRatio: false,
-				plugins: {
-					legend: {
-						display: false
-					},
-					tooltip: {
-						callbacks: {
-							label: function (context) {
-								let label = context.label || '';
-								if (label) {
-									label += ': ';
-								}
-								if (context.parsed !== undefined) {
-									label += context.parsed + '%';
-								}
-								return label;
-							}
-						}
-					},
-					title: {
-						display: false
-					}
-				}
-			}
-		};
-		if (
-			data.testAvarageResult !== undefined &&
-			data.testAvarageResult.count > 0
-		) {
-			activeStates.chartAvarage = true;
-		}
-
 		// Tags graph
 
 		const tagsData: ChartData = {
@@ -348,6 +294,8 @@
 			type: 'radar',
 			data: tagsData,
 			options: {
+				maintainAspectRatio: false,
+				responsive: true,
 				plugins: {
 					legend: {
 						display: false
@@ -387,14 +335,20 @@
 
 		const ctx = portfolio.getContext('2d');
 		const ctxRecords = portfolioRecords.getContext('2d');
-		const ctxAvarage = avarageMarkingCanvas.getContext('2d');
 		const ctxTags = canvasTag.getContext('2d');
 
-		if (ctx && ctxRecords && ctxAvarage && ctxTags) {
+		if (ctx && ctxRecords && ctxTags) {
 			chart = new Chart(ctx, testsCreatedConfig);
 			chartRecords = new Chart(ctxRecords, testsTakenConfig);
-			chartAvarage = new Chart(ctxAvarage, avarageScoreConfig);
 			chartTags = new Chart(ctxTags, tagsConfig);
+		}
+
+		window.addEventListener('resize', onResize);
+	});
+
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('resize', onResize);
 		}
 	});
 
@@ -402,6 +356,38 @@
 		updateChartColors(chart);
 		updateChartColors(chartRecords);
 
+		chartTags?.data.datasets.forEach((item) => {
+			item.backgroundColor = window
+				.getComputedStyle(document.body)
+				.getPropertyValue(
+					$applicationStates.darkMode.isDarkMode
+						? '--dark-primary-transparent'
+						: '--light-primary-transparent'
+				);
+			item.borderColor = window
+				.getComputedStyle(document.body)
+				.getPropertyValue(
+					$applicationStates.darkMode.isDarkMode
+						? '--dark-secondary'
+						: '--light-secondary'
+				);
+			// item.pointBackgroundColor = window
+			// 	.getComputedStyle(document.body)
+			// 	.getPropertyValue(
+			// 		$applicationStates.darkMode.isDarkMode
+			// 			? '--dark-primary'
+			// 			: '--light-primary'
+			// 	)
+			// item.pointHoverBorderColor = window
+			// 	.getComputedStyle(document.body)
+			// 	.getPropertyValue(
+			// 		$applicationStates.darkMode.isDarkMode
+			// 			? '--dark-primary'
+			// 			: '--light-primary'
+			// 	)
+		});
+
+		chartTags?.update();
 		$applicationStates.darkMode.isDarkMode;
 	}
 </script>
@@ -441,76 +427,72 @@
 	/>
 </div> -->
 
-<div
-	class="grid grid-cols-1 gap-4 mx-auto mt-8 lg:grid-cols-2 place-items-center"
->
+<div class="max-w-[1200px] @container">
 	<div
-		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		class="flex flex-col @2xl:grid gap-4 mx-auto mt-8 place-items-center grid__container"
 	>
-		<h3 class="font-bold text-h6">Tests created monthly</h3>
-		<div class="relative">
-			<div
-				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
-					activeStates.chart ? 'hidden' : ''
-				}`}
-			>
-				<span class="font-semibold">No data to display</span>
-			</div>
-			<canvas bind:this={portfolio} width="400" class="w-full" />
-		</div>
-	</div>
-	<div
-		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-	>
-		<h3 class="font-bold text-h6">Tests taken monthly</h3>
-		<div class="relative">
-			<div
-				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
-					activeStates.chartRecords ? 'hidden' : ''
-				}`}
-			>
-				<span class="font-semibold">No data to display</span>
-			</div>
-			<canvas bind:this={portfolioRecords} width="400" class="w-full" />
-		</div>
-	</div>
-	<div
-		class="relative flex flex-col w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-	>
-		<div class="w-full">
-			<h3 class="font-bold text-h6">Average test percentage</h3>
-			<p>From {data.testAvarageResult?.count} test(s)</p>
-		</div>
-		<div class="relative">
-			<div
-				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
-					activeStates.chartAvarage ? 'hidden' : ''
-				}`}
-			>
-				<span class="font-semibold">No data to display</span>
-			</div>
-			<div class="h-full p-2 mx-auto">
-				<canvas bind:this={avarageMarkingCanvas} width="400" />
+		<div
+			style="grid-area: a;"
+			class="w-full h-full p-1 border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		>
+			<h3 class="font-bold text-h6">Tests created monthly</h3>
+			<div class="relative">
+				<div
+					class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+						activeStates.chart ? 'hidden' : ''
+					}`}
+				>
+					<span class="font-semibold">No data to display</span>
+				</div>
+				<canvas bind:this={portfolio} width="400" class="w-full" />
 			</div>
 		</div>
-	</div>
-	<div
-		class="w-full h-full p-4 border-2 border-solid rounded-lg border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-	>
-		<h3 class="font-bold text-h6">Average test percentage</h3>
+		<div
+			style="grid-area: b;"
+			class="w-full h-full gap-1 p-1 border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		>
+			<h3 class="font-bold text-h6">Tests taken monthly</h3>
+			<div class="relative">
+				<div
+					class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+						activeStates.chartRecords ? 'hidden' : ''
+					}`}
+				>
+					<span class="font-semibold">No data to display</span>
+				</div>
+				<canvas bind:this={portfolioRecords} width="400" class="w-full" />
+			</div>
+		</div>
 
-		<div class="relative">
-			<div
-				class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
-					activeStates.chart ? 'hidden' : ''
-				}`}
-			>
-				<span class="font-semibold">No data to display</span>
-			</div>
-			<div class="p-2 mx-auto">
-				<canvas bind:this={canvasTag} width="400" />
+		<div
+			style="grid-area: c;"
+			class="w-full h-full gap-1 p-1 overflow-hidden border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+		>
+			<h3 class="font-bold text-h6">Average test percentage</h3>
+
+			<div class="relative @container/graph">
+				<div
+					class={`absolute grid w-full h-full shadow-md bg-light_text_black_10 backdrop-blur-2xl place-content-center rounded-2xl ${
+						activeStates.chartTags ? 'hidden' : ''
+					}`}
+				>
+					<span class="font-semibold">No data to display</span>
+				</div>
+				<div
+					class="grid w-full @2xl/graph:w-3/4 p-2 mx-auto place-content-center"
+				>
+					<canvas bind:this={canvasTag} width="400" />
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 <Space gap={150} />
+
+<style>
+	.grid__container {
+		grid-template-areas: 'a a b b' 'c c d e';
+		grid-auto-columns: 1fr;
+		grid-auto-rows: fit-content;
+	}
+</style>

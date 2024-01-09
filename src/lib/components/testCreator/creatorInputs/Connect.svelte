@@ -66,10 +66,11 @@
 		delete ($testObject.questions[indexParent].content as ConnectQuestion)
 			.matchedAnswers[answerKeys[index]];
 
+		answerKeys = answerKeys.filter((_, i) => i !== index);
+
 		// Reassign the displayId
-		let entries = Object.entries(content.matchedAnswers);
-		for (let i = 0; i < entries.length; i++) {
-			content.matchedAnswers[entries[i][0]].displayId = i;
+		for (let i = 0; i < Object.values(content.matchedAnswers).length; i++) {
+			content.matchedAnswers[answerKeys[i]].displayId = i;
 		}
 		toast.success(`Question ${index + 1} deleted`);
 	}
