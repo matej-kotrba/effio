@@ -135,7 +135,7 @@
 	<ScreenCover />
 {/if}
 
-<div class="inline-block">
+<div class="block">
 	<DashboardTitle
 		title="Test Editor"
 		subtitle="Here you can edit your previously created test"
@@ -143,7 +143,7 @@
 </div>
 
 <div
-	class="sticky top-0 left-0 z-20 inline-flex items-center justify-end float-right w-screen gap-3 p-2 ml-auto rounded-bl-lg md:w-fit backdrop-blur-xl"
+	class="sticky top-0 left-0 z-20 flex items-center justify-end w-screen gap-3 p-2 ml-auto rounded-bl-lg md:w-fit backdrop-blur-xl"
 >
 	<Toggle
 		title="Is Published"

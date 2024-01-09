@@ -50,6 +50,8 @@
 	let visibleTags = tags;
 	let gotTags = false;
 
+	const defaultMarkSystemData = get(testObject)?.markSystem;
+
 	export let openPreview: () => void = () => {};
 
 	async function getTags() {
@@ -223,7 +225,8 @@
 	</div>
 	{#if testType !== 'PROGRAMMING'}
 		<MarkSystem
-			defaultValue={checkMarkSystem($testObject.markSystem?.marks) || undefined}
+			isAdded={!!defaultMarkSystemData}
+			defaultValue={defaultMarkSystemData.marks}
 		/>
 	{/if}
 	<slot {testImageFile} />

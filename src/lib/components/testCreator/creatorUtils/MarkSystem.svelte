@@ -64,20 +64,14 @@
 
 <div class="p-2 rounded-md shadow-sm bg-light_whiter dark:bg-dark_grey">
 	<div class="flex items-center gap-2">
-		<div class="z-10 dropdown dropdown-hover dropdown-top">
-			<button
-				type="button"
-				tabindex="0"
-				class="m-1"
-				on:click={() => (isAdded = !isAdded)}>Enable marking?</button
-			>
+		<div class="z-10 gap-2 dropdown dropdown-hover dropdown-top">
+			<span>Enable marking?</span>
 			<p
 				class="dropdown-content z-[1] menu p-2 shadow bg-base-100 dark:bg-dark_grey rounded-box w-52"
 			>
 				Mark system enables being marked by the outcome of the test
 			</p>
 		</div>
-
 		<input
 			type="checkbox"
 			class="checkbox checkbox-primary dark:checkbox-accent"
