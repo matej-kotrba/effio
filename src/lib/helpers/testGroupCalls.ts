@@ -93,7 +93,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
 
 
   // Setup the image
-  let data: string | undefined = undefined;
+  let newlySavedImageUrl: string | undefined = undefined;
   if (props.data.image !== undefined && props.data.image !== null) {
     const form = new FormData()
     form.append("image", props.data.image)
@@ -109,7 +109,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
 
     const json: any = await response.json()
     if (json.url !== undefined) {
-      data = json.url
+      newlySavedImageUrl = json.url
     }
     else if (json.error) {
       toast.error(json.error)
@@ -125,7 +125,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
         description: props.data.description,
         questionContent: JSON.stringify(props.data.questions),
         isPublished: props.data.isPublished,
-        imageUrl: data || undefined,
+        imageUrl: newlySavedImageUrl || undefined,
         testType: props.data.testType,
         tagIds: props.data.tagIds,
         markSystem: props.data.markSystem?.marks
@@ -155,7 +155,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
         description: props.data.description,
         questionContent: JSON.stringify(props.data.questions),
         isPublished: props.data.isPublished,
-        imageUrl: data || undefined,
+        imageUrl: newlySavedImageUrl || undefined,
         tagIds: props.data.tagIds,
         markSystem: props.data.markSystem?.marks
           ? {
@@ -173,15 +173,15 @@ export const validateTestAndRecordIt = async (props: Props) => {
         isRandomized: props.data.isRandomized
       });
 
-      // if (response.test && imageUrlToDeleteTest.imageUrl !== response.testImage) {
-      enviromentFetch({
-        path: "cloudinary/deleteImage",
-        method: "POST",
-        body: JSON.stringify({
-          imageUrl: imageUrlToDeleteTest.imageUrl
+      if (response.test && newlySavedImageUrl !== undefined) {
+        enviromentFetch({
+          path: "cloudinary/deleteImage",
+          method: "POST",
+          body: JSON.stringify({
+            imageUrl: imageUrlToDeleteTest.imageUrl
+          })
         })
-      })
-      // }
+      }
     }
 
     if (props.callbacks.onSaveToDB !== undefined) {

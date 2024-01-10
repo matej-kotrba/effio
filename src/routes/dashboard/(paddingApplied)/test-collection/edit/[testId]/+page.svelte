@@ -45,7 +45,7 @@
 				questions: $testObject.questions,
 				markSystem: $testObject.markSystem,
 				isPublished: $testObject.published,
-				image: testImageFile || undefined,
+				image: testImageFile,
 				tagIds: $testObject.tagIds,
 				isRandomized: !!$testObject.randomizeQuestionOrder
 			},
