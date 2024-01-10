@@ -14,6 +14,9 @@
 	import { Confetti } from 'svelte-confetti';
 	import toast from 'svelte-french-toast';
 	import { isEqual } from 'lodash';
+	import { tweened } from 'svelte/motion';
+	import { get } from 'svelte/store';
+	import { circIn } from 'svelte/easing';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -91,7 +94,19 @@
 
 	let activateConfetti: boolean = false;
 
+	const CAN_RUN_AGAIN_DELAY_DURATION = 3000;
+
+	let canRunAgainDelay = tweened(0, {
+		duration: CAN_RUN_AGAIN_DELAY_DURATION,
+		easing: circIn
+	});
+
+	canRunAgainDelay.subscribe((value) => {
+		console.log(value);
+	});
+
 	async function compileCode() {
+		if (get(canRunAgainDelay) > 0) return;
 		if (!!result) return;
 		if (!sandbox) return;
 		const code = codeEditor.getValue();
@@ -140,6 +155,10 @@
 			await tick();
 			activateConfetti = true;
 		}
+
+		// Disabling the run button for a while
+		canRunAgainDelay.set(CAN_RUN_AGAIN_DELAY_DURATION, { duration: 0 });
+		canRunAgainDelay.set(0);
 	}
 
 	async function submitTest() {
@@ -254,7 +273,7 @@
 			style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
 			class="relative grid gap-4 !max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
 		>
-			<div class="relative w-full max-w-full overflow-hidden h-fit">
+			<div class="relative w-full max-w-full h-fit">
 				<!-- Placeholder for loading editor -->
 				<div class="relative min-h-[400px] h-fit max-w-full w-full">
 					{#if !codeEditor}
@@ -271,13 +290,20 @@
 					/>
 				</div>
 				<div class="flex gap-2 mt-4">
-					<BasicButton
-						title="Run"
-						onClick={compileCode}
-						buttonAttributes={{ disabled: !!result }}
+					<div
+						class="relative run-button"
+						style={`--cover-percentage: ${
+							($canRunAgainDelay / CAN_RUN_AGAIN_DELAY_DURATION) * 100
+						}%;`}
 					>
-						<iconify-icon icon="raphael:run" class="text-2xl" />
-					</BasicButton>
+						<BasicButton
+							title="Run"
+							onClick={compileCode}
+							buttonAttributes={{ disabled: $canRunAgainDelay > 0 || !!result }}
+						>
+							<iconify-icon icon="raphael:run" class="text-2xl" />
+						</BasicButton>
+					</div>
 					<BasicButton
 						title="Submit"
 						onClick={submitTest}
@@ -371,3 +397,24 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.run-button::after {
+		content: '';
+		inset: 0;
+		background-color: var(--light-grey);
+		border-radius: 6px;
+		position: absolute;
+		pointer-events: none;
+		opacity: 1;
+		mask-image: linear-gradient(
+			to top,
+			white calc(var(--cover-percentage)),
+			transparent calc(var(--cover-percentage))
+		);
+	}
+
+	:global(.dark) .run-button::after {
+		background-color: var(--dark_light_grey);
+	}
+</style>

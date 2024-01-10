@@ -13,6 +13,8 @@
 	import { months } from '~helpers/constants.js';
 	import Space from '~components/separators/Space.svelte';
 	import { browser } from '$app/environment';
+	import Counter from '~components/informatic/Counter.svelte';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 
 	export let data;
 
@@ -58,7 +60,6 @@
 		return {
 			type: 'bar' as ChartType,
 			data: data,
-
 			options: {
 				animation: {
 					onComplete: () => {
@@ -392,7 +393,7 @@
 	}
 </script>
 
-<!-- <div>
+<div class="recent-grid__container">
 	{#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
 		{#each data.recentlyCompletedTests as test}
 			<CardAlternative
@@ -405,13 +406,14 @@
 					$page.data.session.user.id !== test.test.testGroup.ownerId}
 				data={{
 					...test.test.testGroup,
+
 					stars: test.test.testGroup._count.stars,
 					tags: test.test.testGroup.tags.map((item) => item.tag)
 				}}
 			/>
 		{/each}
 	{/if}
-</div> -->
+</div>
 <!-- <div class="flex flex-wrap justify-center gap-4 xs:justify-start">
 	<OverviewLink
 		icon="gridicons:create"
@@ -468,7 +470,7 @@
 			style="grid-area: c;"
 			class="w-full h-full gap-1 p-1 overflow-hidden border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
-			<h3 class="font-bold text-h6">Average test percentage</h3>
+			<h3 class="font-bold text-h6">Tests by tags</h3>
 
 			<div class="relative @container/graph">
 				<div
@@ -485,13 +487,46 @@
 				</div>
 			</div>
 		</div>
+		{#if data.testAvarageResult}
+			<div
+				style="grid-area: d;"
+				class="flex flex-col w-full h-full gap-1 p-1 overflow-hidden border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			>
+				<h3 class="font-bold text-h6">Average test rating</h3>
+				<div class="flex items-center justify-center flex-1 gap-2">
+					<span>From {data.testAvarageResult.count} tests</span>
+					<div class="flex items-center w-20">
+						<Counter
+							class="bg-transparent rounded-none shadow-none"
+							count={+(
+								(data.testAvarageResult.userPoints /
+									data.testAvarageResult.maxPoints) *
+								100
+							).toFixed(0)}
+						/>
+						<span class="text-2xl font-bold"> % </span>
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
-<Space gap={150} />
+<Space gap={100} />
 
 <style>
+	.recent-grid__container {
+		display: grid;
+		gap: 12px;
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+		place-content: center;
+	}
+	@media screen and (min-width: 768px) {
+		.recent-grid__container {
+			place-content: start;
+		}
+	}
 	.grid__container {
-		grid-template-areas: 'a a b b' 'c c d e';
+		grid-template-areas: 'a a b b' 'c c d e' 'c c f g';
 		grid-auto-columns: 1fr;
 		grid-auto-rows: fit-content;
 	}

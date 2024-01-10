@@ -4,8 +4,6 @@
 	import { page } from '$app/stores';
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
-	import { onMount } from 'svelte';
-	import { LG } from '~/utils/responsive';
 
 	export let data;
 
@@ -85,7 +83,7 @@
 							? '/imgs/effio/text-dark.png'
 							: '/imgs/effio/text.png'}
 						alt="Effio logo"
-						class="drop-shadow-primary"
+						class="drop-shadow-primary h-[100px] object-contain"
 					/>
 				</a>
 				<div class="flex flex-col items-center gap-2">
@@ -96,7 +94,10 @@
 						class:active={browser && $page.url.pathname === '/dashboard'}
 						class:dark={$applicationStates['darkMode']['isDarkMode']}
 					>
-						<iconify-icon icon="foundation:graph-pie" class="text-2xl" /> Overview
+						<iconify-icon
+							icon="foundation:graph-pie"
+							class="text-2xl w-[25px]"
+						/> Overview
 					</a>
 					<a
 						on:click={() => (isSidebarShown = false)}
@@ -106,8 +107,10 @@
 						class:active={browser &&
 							$page.url.pathname.startsWith('/dashboard/test-creator')}
 					>
-						<iconify-icon icon="system-uicons:create" class="text-2xl" /> Create
-						a new test
+						<iconify-icon
+							icon="system-uicons:create"
+							class="text-2xl w-[25px]"
+						/> Create a new test
 					</a>
 					<a
 						on:click={() => (isSidebarShown = false)}
@@ -117,8 +120,10 @@
 						class:active={browser &&
 							$page.url.pathname.startsWith('/dashboard/test-collection')}
 					>
-						<iconify-icon icon="heroicons-solid:collection" class="text-2xl" /> Test
-						collection
+						<iconify-icon
+							icon="heroicons-solid:collection"
+							class="text-2xl w-[25px]"
+						/> Test collection
 					</a>
 					<a
 						on:click={() => (isSidebarShown = false)}
@@ -128,7 +133,8 @@
 						class:active={browser &&
 							$page.url.pathname.startsWith('/dashboard/test-history')}
 					>
-						<iconify-icon icon="ic:round-history" class="text-2xl" /> Test History
+						<iconify-icon icon="ic:round-history" class="text-2xl w-[25px]" /> Test
+						History
 					</a>
 					<a
 						on:click={() => (isSidebarShown = false)}
@@ -138,7 +144,7 @@
 						class:active={browser &&
 							$page.url.pathname.startsWith('/dashboard/my-groups')}
 					>
-						<iconify-icon icon="ion:share-social" class="text-2xl" />
+						<iconify-icon icon="ion:share-social" class="text-2xl w-[25px]" />
 						My Groups
 					</a>
 					<a
@@ -148,7 +154,7 @@
 					>
 						<iconify-icon
 							icon="fluent:people-community-24-filled"
-							class="text-2xl"
+							class="text-2xl w-[25px]"
 						/> Community place
 					</a>
 				</div>

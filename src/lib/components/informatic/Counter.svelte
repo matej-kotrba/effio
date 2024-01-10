@@ -24,7 +24,7 @@
 
 <div
 	class={twMerge(
-		'relative grid w-20 p-2 overflow-hidden bg-light_white dark:bg-dark_light_grey shadow-md rounded-full place-content-center aspect-square',
+		'relative flex items-center w-20 p-2 overflow-hidden bg-light_white dark:bg-dark_light_grey shadow-md rounded-full aspect-square',
 		classes
 	)}
 >
