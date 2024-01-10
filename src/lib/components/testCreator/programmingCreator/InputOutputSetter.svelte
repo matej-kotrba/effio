@@ -66,16 +66,16 @@
 		openDialog();
 		let inputData = content.tests[index].input;
 		let outputData = content.tests[index].output;
-		try {
-			inputData = (JSON.parse(inputData) as string).toString();
-		} catch (e) {
-			inputData = inputData;
-		}
-		try {
-			outputData = (JSON.parse(outputData) as string).toString();
-		} catch (e) {
-			outputData = outputData;
-		}
+		// try {
+		// 	inputData = (JSON.parse(inputData) as string).toString();
+		// } catch (e) {
+		// 	inputData = inputData;
+		// }
+		// try {
+		// 	outputData = (JSON.parse(outputData) as string).toString();
+		// } catch (e) {
+		// 	outputData = outputData;
+		// }
 		inputEditor.setValue(inputData);
 		outputEditor.setValue(outputData);
 		inputEditor.layout();
@@ -323,12 +323,12 @@
 						<span>I: </span>
 						<span
 							class={`${test.input ? '' : 'text-error dark:text-dark_error'}`}
-							>{test.input ? JSON.parse(test.input) : 'Unset'}</span
+							>{test.input ? test.input : 'Unset'}</span
 						>
 						<span>O: </span>
 						<span
 							class={`${test.output ? '' : 'text-error dark:text-dark_error'}`}
-							>{test.output ? JSON.parse(test.output) : 'Unset'}</span
+							>{test.output ? test.output : 'Unset'}</span
 						>
 					</div>
 				</button>

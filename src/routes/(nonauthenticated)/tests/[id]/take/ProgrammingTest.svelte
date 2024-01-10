@@ -13,6 +13,7 @@
 	import { browser } from '$app/environment';
 	import { Confetti } from 'svelte-confetti';
 	import toast from 'svelte-french-toast';
+	import { isEqual } from 'lodash';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -117,7 +118,7 @@
 				const exec = sandbox.compile(code);
 				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
 				const output = JSON.parse(item.output);
-				if (scriptResult === output) {
+				if (isEqual(scriptResult, output)) {
 					testsInfo[i] = {
 						result: JSON.stringify(scriptResult),
 						passed: true
