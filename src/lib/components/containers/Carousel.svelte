@@ -27,6 +27,8 @@
 		data.then((resolvedArray) => {
 			resolvedData = resolvedArray;
 		});
+	} else {
+		resolvedData = data;
 	}
 
 	let scrollerDiv: HTMLDivElement;
@@ -113,7 +115,7 @@
 	<div
 		class="flex gap-2"
 		class:hidden={resolvedData === undefined ||
-			countOfItems < resolvedData?.length}
+			resolvedData?.length <= countOfItems}
 	>
 		<IconButton
 			icon="ic:round-arrow-left"

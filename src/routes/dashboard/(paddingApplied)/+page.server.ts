@@ -129,6 +129,7 @@ export const load = async (e) => {
                     stars: true
                   }
                 },
+                owner: true,
                 stars: {
                   select: {
                     userId: true,

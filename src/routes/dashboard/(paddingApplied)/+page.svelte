@@ -15,6 +15,8 @@
 	import { browser } from '$app/environment';
 	import Counter from '~components/informatic/Counter.svelte';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import Carousel from '~components/containers/Carousel.svelte';
+	import Separator from '~components/separators/Separator.svelte';
 
 	export let data;
 
@@ -393,10 +395,22 @@
 	}
 </script>
 
-<div class="recent-grid__container">
-	{#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
-		{#each data.recentlyCompletedTests as test}
-			<CardAlternative
+{#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
+	<h3 class="font-semibold text-h4">Recently took tests</h3>
+	<Carousel
+		data={data.recentlyCompletedTests.map((item) => {
+			return {
+				...item,
+				stars: item.test.testGroup._count.stars,
+				tags: item.test.testGroup.tags.map((item) => item.tag),
+				type: item.test.testGroup.type,
+				icon: item.test.testGroup.owner.image
+			};
+		})}
+	/>
+	<Separator w={'100%'} h={'1px'} class="mt-2" />
+	<!-- {#each data.recentlyCompletedTests as test} -->
+	<!-- <CardAlternative
 				isStarredDefault={test.test.testGroup.stars !== undefined &&
 					test.test.testGroup.stars.length > 0}
 				type={test.test.testGroup.type}
@@ -410,10 +424,9 @@
 					stars: test.test.testGroup._count.stars,
 					tags: test.test.testGroup.tags.map((item) => item.tag)
 				}}
-			/>
-		{/each}
-	{/if}
-</div>
+			/> -->
+	<!-- {/each} -->
+{/if}
 <!-- <div class="flex flex-wrap justify-center gap-4 xs:justify-start">
 	<OverviewLink
 		icon="gridicons:create"
@@ -514,17 +527,6 @@
 <Space gap={100} />
 
 <style>
-	.recent-grid__container {
-		display: grid;
-		gap: 12px;
-		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-		place-content: center;
-	}
-	@media screen and (min-width: 768px) {
-		.recent-grid__container {
-			place-content: start;
-		}
-	}
 	.grid__container {
 		grid-template-areas: 'a a b b' 'c c d e' 'c c f g';
 		grid-auto-columns: 1fr;
