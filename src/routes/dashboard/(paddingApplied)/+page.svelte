@@ -40,6 +40,8 @@
 		chartTags: false
 	};
 
+	let dashboardContainerRef: HTMLDivElement;
+
 	function onResize() {
 		if (chart) {
 			chart.resize();
@@ -56,6 +58,15 @@
 		templates = (await trpc(
 			$page
 		).getQuestionsTypes.query()) as unknown as QuestionTemplate[];
+	}
+
+	function onMouseMove(
+		e: MouseEvent & {
+			currentTarget: EventTarget & Window;
+		}
+	) {
+		dashboardContainerRef.style.setProperty('--blur-x', `${e.x}px`);
+		dashboardContainerRef.style.setProperty('--blur-y', `${e.y}px`);
 	}
 
 	function setupConfig(data: ChartData) {
@@ -401,11 +412,12 @@
 	<Carousel
 		data={data.recentlyCompletedTests.map((item) => {
 			return {
-				...item,
+				...item.test.testGroup,
 				stars: item.test.testGroup._count.stars,
 				tags: item.test.testGroup.tags.map((item) => item.tag),
 				type: item.test.testGroup.type,
-				icon: item.test.testGroup.owner.image
+				icon: item.test.testGroup.owner.image,
+				img: item.test.testGroup.imageUrl
 			};
 		})}
 	/>
@@ -443,12 +455,19 @@
 	/>
 </div> -->
 
-<div class="max-w-[1200px] @container">
+<svelte:window on:mousemove={onMouseMove} />
+
+<div
+	class="max-w-[1200px] @container"
+	bind:this={dashboardContainerRef}
+	style="--blur-x: 0px;
+		--blur-y: 0px;"
+>
 	<div
-		class="flex flex-col @2xl:grid gap-4 mx-auto mt-8 place-items-center grid__container"
+		class="grid @2xl:grid-cols-2 gap-4 mx-auto mt-8 place-items-center grid__container"
 	>
 		<div
-			class="w-full h-full p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full p-1 overflow-y-auto border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests created monthly</h3>
 			<div class="relative">
@@ -463,7 +482,7 @@
 			</div>
 		</div>
 		<div
-			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests taken monthly</h3>
 			<div class="relative">
@@ -479,7 +498,7 @@
 		</div>
 
 		<div
-			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests by tags</h3>
 
@@ -499,9 +518,11 @@
 			</div>
 		</div>
 		{#if data.testAvarageResult}
-			<div class="grid w-full h-full grid-cols-2 gap-1 p-1 overflow-y-auto">
+			<div
+				class="grid w-full h-full @lg:grid-cols-2 gap-1 p-1 overflow-y-auto details__container"
+			>
 				<div
-					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+					class="flex flex-col p-2 border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 				>
 					<h4 class="font-bold text-body1">Average test rating</h4>
 					<div class="flex items-center justify-center flex-1 gap-2">
@@ -519,7 +540,7 @@
 					</div>
 				</div>
 				<div
-					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+					class="flex flex-col p-2 border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 				>
 					<h4 class="font-bold text-body1">Tests done this month</h4>
 					<div class="grid flex-1 place-content-center">
@@ -530,19 +551,19 @@
 					</div>
 				</div>
 				<div
-					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+					class="flex flex-col p-2 border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 				>
 					<h4 class="font-bold text-body1">Tests stared this month</h4>
 					<div class="flex items-center justify-center flex-1">
 						<Counter
 							class="bg-transparent rounded-none shadow-none"
-							count={Number(data.gaveStarsInLastMonth.count) + 10000}
+							count={Number(data.gaveStarsInLastMonth.count)}
 						/>
 						<Star class="text-4xl" />
 					</div>
 				</div>
 				<div
-					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+					class="flex flex-col p-2 border-2 border-solid rounded-lg item-box sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 				>
 					<h4 class="font-bold text-body1">Stars recieved this month</h4>
 					<div class="flex items-center justify-center flex-1">
@@ -560,8 +581,50 @@
 <Space gap={100} />
 
 <style>
-	.grid__container {
+	.details__container {
+		grid-auto-rows: auto 1fr;
+	}
+
+	.details__container > div {
+		grid-row: span 2;
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-rows: subgrid;
+	}
+
+	.item-box {
+		position: relative;
+		transition: 0.1s scale ease;
+	}
+
+	.item-box::before {
+		content: '';
+		position: absolute;
+		inset: 0px;
+		border-radius: inherit;
+		background-attachment: fixed;
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--light-primary),
+			transparent 8rem
+		);
+		z-index: -1;
+		opacity: 0.15;
+		pointer-events: none;
+	}
+
+	:global(.dark) .item-box::before {
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--dark-primary),
+			transparent 8rem
+		);
+	}
+
+	:global(.dark) .item-box::before {
+		background-image: radial-gradient(
+			circle at var(--blur-x, 0) var(--blur-y, 0),
+			var(--dark-primary),
+			transparent 8rem
+		);
 	}
 </style>
