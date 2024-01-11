@@ -206,12 +206,12 @@
 						}}
 						alt={data.title}
 						loading="lazy"
-						class="object-cover aspect-[5/3] w-full duration-150 origin-bottom rounded-t-md group-hover/image:blur-md"
+						class="object-cover aspect-[7/4] w-full duration-150 origin-bottom rounded-t-md group-hover/image:blur-md"
 					/>
 				</a>
 			</div>
 		</div>
-		<div class="flex flex-col h-full p-2 mt-3">
+		<div class="flex flex-col h-full max-h-full p-2 mt-3 overflow-hidden">
 			<abbr title={data.title} class="no-underline">
 				<h3
 					class="w-full overflow-hidden font-semibold text-center text-base @[13rem]:text-body1 overflow-ellipsis whitespace-nowrap"
@@ -226,15 +226,17 @@
 				>
 			{/if}
 			{#if data.description}
-				<div
-					class="@[13rem]:mt-1 text-center line-clamp-2 @[14rem]:line-clamp-3 text-body2 text-over"
-				>
-					{data.description}
+				<div class="flex-1">
+					<div
+						class="@[13rem]:mt-1 text-center line-clamp-2 @[15rem]:line-clamp-3 text-body2"
+					>
+						{data.description}
+					</div>
 				</div>
 			{/if}
 			{#if data.tags}
 				<div
-					class="flex gap-1 p-1 pb-2 mx-auto mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
+					class="flex gap-1 p-1 pb-0 mx-auto mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
 				>
 					{#each data.tags as tag}
 						<TagContainer {tag} />

@@ -156,7 +156,24 @@ export const load = async (e) => {
       }
     })
 
-    const [result, resultTestsTaken, testAvarage, tagsTookTestFrom, getRecentCompletedTests] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise, getRecentCompletedTestsPromise])
+    const receivedStarsInLastMonthPromise = prisma.$queryRaw`
+      SELECT
+        COUNT(DISTINCT st.id) as "count"
+      FROM TestStar st
+      JOIN Test tst ON tst.id = st.testId
+      WHERE tst.ownerId = ${id} AND LEFT(st.createdAt, 4) * 12 * 30 + RIGHT(LEFT(st.createdAt, 7), 2) * 30 + RIGHT(LEFT(st.createdAt, 10), 2) <= LEFT(NOW(), 4) * 12 * 30 + RIGHT(LEFT(NOW(), 7), 2) * 30 + RIGHT(LEFT(NOW(), 10), 2)
+    `
+
+    const gaveStarsInLastMonthPromise = prisma.$queryRaw`
+      SELECT
+        COUNT(DISTINCT st.id) as "count"
+      FROM TestStar st
+      WHERE st.userId = ${id} AND LEFT(st.createdAt, 4) * 12 * 30 + RIGHT(LEFT(st.createdAt, 7), 2) * 30 + RIGHT(LEFT(st.createdAt, 10), 2) <= LEFT(NOW(), 4) * 12 * 30 + RIGHT(LEFT(NOW(), 7), 2) * 30 + RIGHT(LEFT(NOW(), 10), 2)
+    `
+
+    const [result, resultTestsTaken, testAvarage, tagsTookTestFrom, getRecentCompletedTests, receivedStarsInLastMonth, gaveStarsInLastMonth] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise, getRecentCompletedTestsPromise, receivedStarsInLastMonthPromise, gaveStarsInLastMonthPromise])
+
+    console.log(receivedStarsInLastMonth)
 
     // Fill in the motnhs with no activity
     fillRecordsWithMissingMonths(result)
@@ -168,7 +185,9 @@ export const load = async (e) => {
       testTakenData: resultTestsTaken,
       testAvarageResult: { ...testAvarage[0], maxPoints: +testAvarage[0].maxPoints } satisfies TestAvarageData,
       tagsTookTestFromResult: tagsTookTestFrom as { count: number, name: string }[],
-      recentlyCompletedTests: getRecentCompletedTests
+      recentlyCompletedTests: getRecentCompletedTests,
+      receivedStarsInLastMonth: (receivedStarsInLastMonth as { count: number }[])[0],
+      gaveStarsInLastMonth: (gaveStarsInLastMonth as { count: number }[])[0]
     }
   }
   else {

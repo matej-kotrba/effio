@@ -17,6 +17,7 @@
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import Carousel from '~components/containers/Carousel.svelte';
 	import Separator from '~components/separators/Separator.svelte';
+	import Star from '~components/globals/Star.svelte';
 
 	export let data;
 
@@ -447,8 +448,7 @@
 		class="flex flex-col @2xl:grid gap-4 mx-auto mt-8 place-items-center grid__container"
 	>
 		<div
-			style="grid-area: a;"
-			class="w-full h-full p-1 border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests created monthly</h3>
 			<div class="relative">
@@ -463,8 +463,7 @@
 			</div>
 		</div>
 		<div
-			style="grid-area: b;"
-			class="w-full h-full gap-1 p-1 border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests taken monthly</h3>
 			<div class="relative">
@@ -480,8 +479,7 @@
 		</div>
 
 		<div
-			style="grid-area: c;"
-			class="w-full h-full gap-1 p-1 overflow-hidden border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+			class="w-full h-full gap-1 p-1 overflow-y-auto border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
 		>
 			<h3 class="font-bold text-h6">Tests by tags</h3>
 
@@ -501,23 +499,58 @@
 			</div>
 		</div>
 		{#if data.testAvarageResult}
-			<div
-				style="grid-area: d;"
-				class="flex flex-col w-full h-full gap-1 p-1 overflow-hidden border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
-			>
-				<h3 class="font-bold text-h6">Average test rating</h3>
-				<div class="flex items-center justify-center flex-1 gap-2">
-					<span>From {data.testAvarageResult.count} tests</span>
-					<div class="flex items-center w-20">
+			<div class="grid w-full h-full grid-cols-2 gap-1 p-1 overflow-y-auto">
+				<div
+					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+				>
+					<h4 class="font-bold text-body1">Average test rating</h4>
+					<div class="flex items-center justify-center flex-1 gap-2">
+						<div class="flex items-center w-20">
+							<Counter
+								class="bg-transparent rounded-none shadow-none"
+								count={+(
+									(data.testAvarageResult.userPoints /
+										data.testAvarageResult.maxPoints) *
+									100
+								).toFixed(0)}
+							/>
+							<span class="text-2xl font-bold"> % </span>
+						</div>
+					</div>
+				</div>
+				<div
+					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+				>
+					<h4 class="font-bold text-body1">Tests done this month</h4>
+					<div class="grid flex-1 place-content-center">
 						<Counter
 							class="bg-transparent rounded-none shadow-none"
-							count={+(
-								(data.testAvarageResult.userPoints /
-									data.testAvarageResult.maxPoints) *
-								100
-							).toFixed(0)}
+							count={Number(data.testAvarageResult.count)}
 						/>
-						<span class="text-2xl font-bold"> % </span>
+					</div>
+				</div>
+				<div
+					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+				>
+					<h4 class="font-bold text-body1">Tests stared this month</h4>
+					<div class="flex items-center justify-center flex-1">
+						<Counter
+							class="bg-transparent rounded-none shadow-none"
+							count={Number(data.gaveStarsInLastMonth.count) + 10000}
+						/>
+						<Star class="text-4xl" />
+					</div>
+				</div>
+				<div
+					class="flex flex-col border-2 border-solid rounded-lg sm:p-4 border-light_text_black_60 dark:border-dark_text_white_60 dark:bg-dark_text_white_10"
+				>
+					<h4 class="font-bold text-body1">Stars recieved this month</h4>
+					<div class="flex items-center justify-center flex-1">
+						<Counter
+							class="bg-transparent rounded-none shadow-none"
+							count={Number(data.receivedStarsInLastMonth.count)}
+						/>
+						<Star class="text-4xl" />
 					</div>
 				</div>
 			</div>
@@ -528,8 +561,7 @@
 
 <style>
 	.grid__container {
-		grid-template-areas: 'a a b b' 'c c d e' 'c c f g';
-		grid-auto-columns: 1fr;
-		grid-auto-rows: fit-content;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
 	}
 </style>
