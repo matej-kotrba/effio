@@ -402,6 +402,18 @@
 			// 	)
 		});
 
+		if (chartTags?.options?.scales?.r && chartTags?.options?.elements?.point) {
+			//@ts-ignore
+			chartTags.options.scales.r.pointLabels.color = window
+				.getComputedStyle(document.body)
+				.getPropertyValue(
+					$applicationStates.darkMode.isDarkMode
+						? '--dark-text-white'
+						: '--light-text-black'
+				);
+			chartTags.options.elements.point.backgroundColor = 'red';
+		}
+
 		chartTags?.update();
 		$applicationStates.darkMode.isDarkMode;
 	}
@@ -528,7 +540,7 @@
 					<div class="flex items-center justify-center flex-1 gap-2">
 						<div class="flex items-center w-20">
 							<Counter
-								class="bg-transparent rounded-none shadow-none"
+								class="bg-transparent rounded-none shadow-none dark:bg-transparent"
 								count={+(
 									(data.testAvarageResult.userPoints /
 										data.testAvarageResult.maxPoints) *
@@ -545,7 +557,7 @@
 					<h4 class="font-bold text-body1">Tests done this month</h4>
 					<div class="grid flex-1 place-content-center">
 						<Counter
-							class="bg-transparent rounded-none shadow-none"
+							class="bg-transparent rounded-none shadow-none dark:bg-transparent"
 							count={Number(data.testAvarageResult.count)}
 						/>
 					</div>
@@ -556,7 +568,7 @@
 					<h4 class="font-bold text-body1">Tests stared this month</h4>
 					<div class="flex items-center justify-center flex-1">
 						<Counter
-							class="bg-transparent rounded-none shadow-none"
+							class="bg-transparent rounded-none shadow-none dark:bg-transparent"
 							count={Number(data.gaveStarsInLastMonth.count)}
 						/>
 						<Star class="text-4xl" />
@@ -568,7 +580,7 @@
 					<h4 class="font-bold text-body1">Stars recieved this month</h4>
 					<div class="flex items-center justify-center flex-1">
 						<Counter
-							class="bg-transparent rounded-none shadow-none"
+							class="bg-transparent rounded-none shadow-none dark:bg-transparent"
 							count={Number(data.receivedStarsInLastMonth.count)}
 						/>
 						<Star class="text-4xl" />
