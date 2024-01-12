@@ -165,7 +165,7 @@
 				>
 					{#each awaitedData as item}
 						<div
-							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5]"
+							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5] flex items-center"
 						>
 							<CardAlternative
 								canStarTest={!!item.ownerId &&

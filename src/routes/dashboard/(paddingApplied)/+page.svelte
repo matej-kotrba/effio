@@ -328,7 +328,7 @@
 					r: {
 						suggestedMin: 0,
 						ticks: {
-							display: true,
+							display: false,
 							stepSize: 1
 						},
 						pointLabels: {
@@ -372,6 +372,14 @@
 		updateChartColors(chartRecords);
 
 		chartTags?.data.datasets.forEach((item) => {
+			//@ts-ignore
+			item.pointBackgroundColor = window
+				.getComputedStyle(document.body)
+				.getPropertyValue(
+					$applicationStates.darkMode.isDarkMode
+						? '--dark-primary'
+						: '--light-primary'
+				);
 			item.backgroundColor = window
 				.getComputedStyle(document.body)
 				.getPropertyValue(
@@ -411,7 +419,6 @@
 						? '--dark-text-white'
 						: '--light-text-black'
 				);
-			chartTags.options.elements.point.backgroundColor = 'red';
 		}
 
 		chartTags?.update();
@@ -433,7 +440,6 @@
 			};
 		})}
 	/>
-	<Separator w={'100%'} h={'1px'} class="mt-2" />
 	<!-- {#each data.recentlyCompletedTests as test} -->
 	<!-- <CardAlternative
 				isStarredDefault={test.test.testGroup.stars !== undefined &&
@@ -469,6 +475,9 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 
+<Space gap={30} />
+<h3 class="font-semibold text-h4">Recently took tests</h3>
+<Separator w={'100%'} h={'1px'} class="mt-2" />
 <div
 	class="max-w-[1200px] @container"
 	bind:this={dashboardContainerRef}

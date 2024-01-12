@@ -173,8 +173,6 @@ export const load = async (e) => {
 
     const [result, resultTestsTaken, testAvarage, tagsTookTestFrom, getRecentCompletedTests, receivedStarsInLastMonth, gaveStarsInLastMonth] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise, getRecentCompletedTestsPromise, receivedStarsInLastMonthPromise, gaveStarsInLastMonthPromise])
 
-    console.log(receivedStarsInLastMonth)
-
     // Fill in the motnhs with no activity
     fillRecordsWithMissingMonths(result)
 
