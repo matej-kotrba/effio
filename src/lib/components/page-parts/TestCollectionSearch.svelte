@@ -165,7 +165,7 @@
 	/>
 </div>
 <Space />
-<div class="@container max-w-[1400px] mx-auto">
+<div class="@container max-w-[1400px]">
 	{#if tests.length === 0}
 		<div class="flex flex-col items-center gap-1">
 			<iconify-icon

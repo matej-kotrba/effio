@@ -28,7 +28,9 @@
 		class={`toggle-input`}
 	>
 		<div class="relative">
-			<span class="rounded-full bg-light_text_black" />
+			<span
+				class="rounded-full bg-light_text_black dark:bg-dark_text_white_40"
+			/>
 		</div>
 	</button>
 </div>
@@ -51,6 +53,7 @@
 
 	:global(.dark) .toggle-input {
 		@apply bg-dark_terciary;
+		border: 1px solid var(--dark-text-white-40);
 	}
 
 	.toggle-input span {
