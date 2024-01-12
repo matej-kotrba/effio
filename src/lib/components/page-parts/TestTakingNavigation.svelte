@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { fade } from 'svelte/transition';
 	import type { Session } from '@auth/core/types';
 	import Space from '~components/separators/Space.svelte';
+
+	const testObject = getTestObject();
 
 	export let session: Session | null = null;
 

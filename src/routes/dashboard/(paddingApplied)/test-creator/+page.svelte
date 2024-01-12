@@ -8,7 +8,7 @@
 	import FileImport from '~components/inputs/FileImport.svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { navigating } from '$app/stores';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import {
 		initializeNewTestToTestStore,
 		isTestValidAndSetErrorsToTestObject
@@ -32,12 +32,14 @@
 
 	export let data;
 
+	const testObject = getTestObject();
+
 	const SECTION_TRANSITION_DURATION = 400;
 
 	let finishModalOpen: () => void;
 	let openPreviewModal: () => void;
 
-	initializeNewTestToTestStore({
+	initializeNewTestToTestStore(testObject, {
 		title: '',
 		description: '',
 		errors: {},
@@ -84,6 +86,7 @@
 		await validateTestAndRecordIt({
 			type: 'create',
 			data: {
+				testObject: testObject,
 				title: $testObject.title,
 				description: $testObject.description,
 				questions: $testObject.questions,

@@ -5,7 +5,7 @@
 		initializeTestToTestStore
 	} from '~helpers/test/test.js';
 	import { questionContentFunctions } from '~helpers/test/questionFunctions';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import Back from '~components/navigation/Back.svelte';
@@ -18,6 +18,8 @@
 
 	export let data;
 
+	const testObject = getTestObject();
+
 	let questionContainerRef: HTMLDivElement | null = null;
 
 	let higlightedInputIndex: number | null = null;
@@ -28,7 +30,7 @@
 		}
 
 		console.log(data.record.test.markSystemJSON);
-		initializeTestToTestStore({
+		initializeTestToTestStore(testObject, {
 			id: data.record.id,
 			title: data.record.title,
 			description: data.record.description,

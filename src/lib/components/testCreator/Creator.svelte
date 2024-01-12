@@ -28,7 +28,7 @@
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 	import { dndzone, SOURCES } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import CreatorInputSidebar from './CreatorInputSidebar.svelte';
@@ -45,6 +45,8 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
+
+	const testObject = getTestObject();
 
 	// Dropdown state
 	let isDropdownOpen = false;

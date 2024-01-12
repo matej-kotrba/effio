@@ -2,7 +2,7 @@
 	import type { Prisma, TestRecord } from '@prisma/client';
 	import type { editor } from 'monaco-editor';
 	import { onDestroy, onMount, tick } from 'svelte';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { handwrite } from '~use/handwrite';
 	import Hints from './Hints.svelte';
 	import Space from '~components/separators/Space.svelte';
@@ -49,6 +49,8 @@
 					};
 				}>)
 		| undefined = undefined;
+
+	const testObject = getTestObject();
 
 	$: content = $testObject.questions[0].content as ProgrammingQuestion;
 

@@ -1,4 +1,5 @@
-import { writable } from 'svelte/store';
+import { getContext, setContext } from 'svelte';
+import { writable, type Writable } from 'svelte/store';
 
 export type TestObject = {
   title: string;
@@ -14,7 +15,19 @@ export type TestObject = {
   errors: ClientTest["errors"]
 };
 
-export const testObject = writable<TestObject>();
+// export const testObject = writable<TestObject>();
+
+const TEST_CTX = "TEST_CTX"
+
+export function setTestObject(initialData: TestObject | { [key: string]: never }) {
+  const testObject = writable(initialData)
+  setContext(TEST_CTX, testObject)
+  return testObject
+}
+
+export function getTestObject() {
+  return getContext<Writable<TestObject>>(TEST_CTX)
+}
 
 // {
 //   title: 'This is title',

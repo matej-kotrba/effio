@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import {
 		checkTestClient,
 		checkTestServerAndRecordIt,
@@ -12,6 +12,8 @@
 	import ProgrammingTest from './ProgrammingTest.svelte';
 
 	export let data;
+
+	const testObject = getTestObject();
 
 	let isSubmitting = false;
 	let submitError: string = '';
@@ -28,7 +30,7 @@
 
 	let openDialog: () => void;
 
-	initializeTestToTestStore(data.testContent);
+	initializeTestToTestStore(testObject, data.testContent);
 </script>
 
 <Dialog bind:open={openDialog}>

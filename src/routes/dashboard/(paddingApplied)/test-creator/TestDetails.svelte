@@ -10,7 +10,7 @@
 		descriptionSchema,
 		titleSchema
 	} from '~schemas/textInput';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
 	import MarkSystem from '~components/testCreator/creatorUtils/MarkSystem.svelte';
@@ -25,7 +25,6 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
-	import { checkMarkSystem } from '../test-history/records/[id]/+page.svelte';
 
 	export let sectionTransitionDuration: number;
 	export let testType: TestType;
@@ -35,9 +34,11 @@
 		  >
 		| undefined = undefined;
 
+	const testObject = getTestObject();
+
 	$: {
 		if (testData) {
-			initializeTestToTestStore(testData);
+			initializeTestToTestStore(testObject, testData);
 		}
 	}
 

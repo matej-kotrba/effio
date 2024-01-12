@@ -31,6 +31,7 @@ export const recordsRouter = router({
         testGroup: {
           select: {
             published: true,
+            ownerId: true
           }
         }
       }
@@ -40,7 +41,7 @@ export const recordsRouter = router({
       throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
     }
 
-    if (test.testGroup.published === false) {
+    if (test.testGroup.published === false && ctx.user?.id !== test.testGroup.ownerId) {
       // Fore safety reasons
       throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
     }

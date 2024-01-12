@@ -3,7 +3,7 @@
 	import { flip } from 'svelte/animate';
 	import toast from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import {
 		WRITE_AMSWER_MAX,
 		WRITE_ANSWER_MIN,
@@ -17,6 +17,8 @@
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
+
+	const testObject = getTestObject();
 
 	// Reference to the test object content
 	$: content = $testObject.questions[indexParent].content as FillQuestion;

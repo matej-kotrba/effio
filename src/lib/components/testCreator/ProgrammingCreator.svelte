@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import TextAreaInput from '~components/inputs/TextAreaInput.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import Space from '~components/separators/Space.svelte';
@@ -9,16 +8,13 @@
 		PROGRAMMING_DESCRIPTION_MIN,
 		PROGRAMMING_TEST_MAX,
 		PROGRAMMING_TEST_MIN,
-		answerSchema,
-		descriptionSchema,
 		programmingDescriptionSchema,
 		programmingHintSchema,
 		titleSchema
 	} from '~schemas/textInput';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import InputOutputSetter from './programmingCreator/InputOutputSetter.svelte';
 	import { SOURCES, dndzone } from 'svelte-dnd-action';
-	import { flip } from 'svelte/animate';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
 
@@ -27,6 +23,8 @@
 
 	// Programming question can only be one on in the creator, that's why we use 0 as index
 	const INDEX_OF_QUESTION = 0;
+
+	const testObject = getTestObject();
 
 	if (createNewQuestion) {
 		$testObject.questions.push({

@@ -2,10 +2,10 @@
 	import { initializeTestToTestStore } from '~helpers/test/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import { goto } from '$app/navigation';
 	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
 	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 	import type { Prisma } from '@prisma/client';
+	import { getTestObject } from '~stores/testObject';
 
 	export let testContent: Prisma.TestGetPayload<{
 		include: {
@@ -29,7 +29,9 @@
 
 	export let testLink: string;
 
-	initializeTestToTestStore(testContent);
+	const testObject = getTestObject();
+
+	initializeTestToTestStore(testObject, testContent);
 
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		testContent.testVersions[0].markSystemJSON

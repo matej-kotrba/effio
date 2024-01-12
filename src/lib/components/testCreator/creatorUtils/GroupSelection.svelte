@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
@@ -11,6 +11,8 @@
 	// }>[];
 
 	export let testId: string = '';
+
+	const testObject = getTestObject();
 
 	let groups:
 		| Awaited<

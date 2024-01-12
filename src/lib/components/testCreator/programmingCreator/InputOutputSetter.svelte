@@ -4,7 +4,7 @@
 	import 'monaco-editor/min/vs/editor/editor.main.css';
 	import type { editor } from 'monaco-editor';
 	import { browser } from '$app/environment';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import Space from '~components/separators/Space.svelte';
 	import toast from 'svelte-french-toast';
 	import Sandbox from '@nyariv/sandboxjs';
@@ -13,6 +13,8 @@
 
 	export let questionIndex: number;
 	export let title = '';
+
+	const testObject = getTestObject();
 
 	gsap.registerPlugin(Flip);
 

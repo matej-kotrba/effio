@@ -6,7 +6,7 @@
 </script>
 
 <script lang="ts">
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { applicationStates } from '~stores/applicationStates';
 	import 'leaflet/dist/leaflet.css';
 	import { onDestroy, onMount } from 'svelte';
@@ -30,6 +30,8 @@
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 
 	export let indexParent: number;
+
+	const testObject = getTestObject();
 
 	let mapEl: HTMLDivElement;
 

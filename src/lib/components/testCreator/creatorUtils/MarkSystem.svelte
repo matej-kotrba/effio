@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import {
 		MARK_MAX,
 		MARK_MIN,
@@ -9,6 +9,11 @@
 		MARK_LIMIT_MAX_MARK_COUNT
 	} from '~schemas/textInput';
 	import RemoveButton from './RemoveButton.svelte';
+
+	type Mark = {
+		name: string;
+		limitInPercent: number | undefined;
+	};
 
 	export let isAdded = true;
 	export let defaultValue: MarkSystemJSON['marks'] = [
@@ -23,10 +28,7 @@
 		}
 	];
 
-	type Mark = {
-		name: string;
-		limitInPercent: number | undefined;
-	};
+	const testObject = getTestObject();
 
 	let marks: Mark[] = defaultValue.map((item) => {
 		return {

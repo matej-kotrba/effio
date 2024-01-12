@@ -1,5 +1,5 @@
 import type { TestFullType } from "~/Prisma";
-import { testObject, type TestObject } from "~stores/testObject";
+import type { TestObject } from "~stores/testObject";
 import { z } from "zod"
 import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
 import { enviromentFetch } from "../fetch";
@@ -8,10 +8,12 @@ import { trpc } from "../../trpc/client";
 import type { Prisma, TestRecord } from "@prisma/client";
 import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte";
 import { browser } from "$app/environment";
-import { get } from "svelte/store";
+import { get, type Writable } from "svelte/store";
 import { QUESTION_LIMIT, questionContentFunctions } from "./questionFunctions";
+import { createTRPCErrorNotification } from "~/lib/utils/notification";
+import { TRPCClientError } from "@trpc/client";
 
-export function initializeNewTestToTestStore(testData: ClientTest) {
+export function initializeNewTestToTestStore(testObject: Writable<TestObject>, testData: ClientTest) {
   testObject.set({
     title: testData.title,
     description: testData.description,
@@ -25,7 +27,7 @@ export function initializeNewTestToTestStore(testData: ClientTest) {
 
 // TODO: FIX THE TYPES
 
-export function initializeTestToTestStore(testData: ExcludePick<TestFullType, "owner" | "views">) {
+export function initializeTestToTestStore(testObject: Writable<TestObject>, testData: ExcludePick<TestFullType, "owner" | "views">) {
   const markSystem = checkMarkSystem(testData.testVersions[0].markSystemJSON)
   testObject.set({
     id: testData.id,
@@ -82,7 +84,7 @@ export type IsTestValidResponse = {
 
 // TODO: Return actuall errors from the server and set them to the test object from isTestValidAndSetErrorsToTestObject function
 // Check the validity of the test object on the server
-export async function isValidInputServerAndSetErrorsToTestObject(obj: IsTestValidProps): Promise<IsTestValidResponse> {
+export async function isValidInputServerAndSetErrorsToTestObject(testObject: Writable<TestObject>, obj: IsTestValidProps): Promise<IsTestValidResponse> {
   const res = await enviromentFetch({
     path: "validateTest",
     method: "POST",
@@ -359,23 +361,36 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
     success: false
   }
 
-  const recordedTest = await trpc().records.createTestRecord.mutate({
-    testId: test.versionId,
-    title: test.title,
-    description: test.description,
-    subcategoryId: subcategoryId,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    answerContent: questionData.map((item, index) => {
-      return {
-        questionRecordId: item.id,
-        questionId: test.questions[index].id,
-        userContent: item.userAnswer,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        points: questionContentFunctions[test.questions[index].questionType].calculatePoints(item.correctAnswer, item.userAnswer, test.questions[index].points)
-      }
+  let recordedTest: Awaited<
+    ReturnType<ReturnType<typeof trpc>['records']["createTestRecord"]['mutate']>
+  >
+  try {
+    recordedTest = await trpc().records.createTestRecord.mutate({
+      testId: test.versionId,
+      title: test.title,
+      description: test.description,
+      subcategoryId: subcategoryId,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      answerContent: questionData.map((item, index) => {
+        return {
+          questionRecordId: item.id,
+          questionId: test.questions[index].id,
+          userContent: item.userAnswer,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          points: questionContentFunctions[test.questions[index].questionType].calculatePoints(item.correctAnswer, item.userAnswer, test.questions[index].points)
+        }
+      })
     })
-  })
+  }
+  catch (e) {
+    if (e instanceof TRPCClientError) {
+      createTRPCErrorNotification(e)
+    }
+    return {
+      success: false
+    }
+  }
 
   if (!recordedTest || !recordedTest.test?.questionRecords) return {
     success: false

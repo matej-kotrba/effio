@@ -5,6 +5,7 @@
 	import { setContext } from 'svelte';
 	import { browser } from '$app/environment';
 	import { applicationStates } from '~stores/applicationStates';
+	import { setTestObject } from '~stores/testObject';
 	// import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 
 	export let data;
@@ -22,6 +23,8 @@
 	setContext('toast', toast);
 
 	let htmlTag: HTMLElement | undefined | null = undefined;
+
+	setTestObject({});
 
 	if (browser) {
 		if (localStorage.getItem('dark') === null) {

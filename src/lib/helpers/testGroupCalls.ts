@@ -1,6 +1,6 @@
 import { isTestValidAndSetErrorsToTestObject, isValidInputServerAndSetErrorsToTestObject, type IsTestValidProps } from "./test/test"
-import { testObject } from "~stores/testObject";
-import { get } from "svelte/store"
+import type { TestObject } from "~stores/testObject";
+import { get, type Writable } from "svelte/store"
 import { TRPCClientError } from "@trpc/client";
 import { trpc } from "../trpc/client";
 import { page } from "$app/stores"
@@ -37,13 +37,13 @@ const defaultCallbacks: Callbacks<Awaited<
 
 type Props = {
   type: "create",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, testType: TestType, isRandomized: boolean },
+  data: Required<IsTestValidProps> & { testObject: Writable<TestObject>, isPublished: boolean, image?: File, testType: TestType, isRandomized: boolean },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
   >, unknown>
 } | {
   type: "update",
-  data: Required<IsTestValidProps> & { isPublished: boolean, image?: File, id: string, isRandomized: boolean },
+  data: Required<IsTestValidProps> & { testObject: Writable<TestObject>, isPublished: boolean, image?: File, id: string, isRandomized: boolean },
   callbacks: Callbacks<Awaited<
     ReturnType<ReturnType<typeof trpc>['protected']["updateTest"]['mutate']>
   >, unknown>
@@ -56,6 +56,8 @@ export const validateTestAndRecordIt = async (props: Props) => {
   // General checks for the test
   // Setting mark system of programming test to empty object hence it is not needed
   if (props.type === "create" && props.data.testType === "PROGRAMMING") props.data.markSystem = {}
+
+  const { testObject } = props.data
 
   const currentStore = get(testObject);
 
@@ -77,7 +79,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
   }
 
   // TODO:
-  const serverResponse = await isValidInputServerAndSetErrorsToTestObject({
+  const serverResponse = await isValidInputServerAndSetErrorsToTestObject(testObject, {
     title: props.data.title,
     description: props.data.description,
     questions: props.data.questions,

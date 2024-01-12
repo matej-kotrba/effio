@@ -4,13 +4,15 @@
 	import { flip } from 'svelte/animate';
 	import toast from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { answerSchema } from '~schemas/textInput';
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 
 	export let indexParent: number;
+
+	const testObject = getTestObject();
 
 	const QUESTION_LIMIT = 10;
 

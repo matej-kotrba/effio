@@ -10,13 +10,15 @@ will be used in the test creator -->
 	import PickOneInput from '~components/testCreator/creatorInputs/PickOne.svelte';
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import { titleSchema } from '~schemas/textInput';
 	import Connect from './creatorInputs/Connect.svelte';
 	import Write from './creatorInputs/Write.svelte';
 	import Fill from './creatorInputs/Fill.svelte';
 	import { clickOutside } from '~use/clickOutside';
 	import Geography from './creatorInputs/Geography.svelte';
+
+	const testObject = getTestObject();
 
 	let dispatch = createEventDispatcher();
 

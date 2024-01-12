@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import Creator from '~components/testCreator/Creator.svelte';
-	import { testObject } from '~stores/testObject.js';
+	import { getTestObject } from '~stores/testObject.js';
 	import { initializeTestToTestStore } from '~helpers/test/test.js';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
@@ -17,13 +17,15 @@
 
 	export let data;
 
+	const testObject = getTestObject();
+
 	const toast: typeof Toast = getContext('toast');
 
 	let isSubmitting = false;
 
 	let testImageFile: File | undefined = undefined;
 
-	initializeTestToTestStore(data.testData);
+	initializeTestToTestStore(testObject, data.testData);
 
 	async function postEditedTest() {
 		if (isSubmitting) return;
@@ -39,6 +41,7 @@
 		await validateTestAndRecordIt({
 			type: 'update',
 			data: {
+				testObject: testObject,
 				id: $testObject.id as string,
 				title: $testObject.title,
 				description: $testObject.description,

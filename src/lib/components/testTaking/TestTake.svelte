@@ -22,7 +22,7 @@
 
 <script lang="ts">
 	import Input from '~components/testTaking/Input.svelte';
-	import { testObject } from '~stores/testObject';
+	import { getTestObject } from '~stores/testObject';
 	import {
 		checkTestClient,
 		checkTestServerAndRecordIt,
@@ -41,6 +41,8 @@
 	export let session: Session | null;
 	export let subcategoryId: string | undefined = undefined;
 
+	const testObject = getTestObject();
+
 	let isSubmitting = false;
 	let submitError: string = '';
 
@@ -56,7 +58,7 @@
 
 	let openDialog: () => void;
 
-	initializeTestToTestStore(testContent);
+	initializeTestToTestStore(testObject, testContent);
 
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		testContent.testVersions[0].markSystemJSON
