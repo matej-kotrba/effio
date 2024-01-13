@@ -3,13 +3,16 @@
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
-	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 	import { getTestObject } from '~stores/testObject';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 	import Star from '~components/globals/Star.svelte';
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
 	import Separator from '~components/separators/Separator.svelte';
+	import TagContainer from '~components/containers/tag/TagContainer.svelte';
+	import Carousel, {
+		type IdCardAlternativeProps
+	} from '~components/containers/Carousel.svelte';
 
 	export let testContent: NonNullable<
 		Awaited<ReturnType<ReturnType<typeof trpc>['getTestById']['query']>>
@@ -19,6 +22,8 @@
 
 	export let viewCount: number = -1;
 	export let userViewCount: number = -1;
+	export let isRandomShuffled: boolean = true;
+	export let relatedTests: IdCardAlternativeProps[] = [];
 
 	const testObject = getTestObject();
 
@@ -114,6 +119,31 @@
 						</div>
 					</div>
 				</div>
+				<div>
+					<span
+						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
+						>Is test randomly suhffled:</span
+					>
+					<span class="font-bold text-h6"
+						>{isRandomShuffled ? 'Yes' : 'No'}</span
+					>
+				</div>
+				<div>
+					<span
+						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
+						>Test tags:</span
+					><br />
+					<div class="flex flex-wrap w-full gap-1">
+						{#each testContent.tags as tag}
+							<TagContainer
+								color={tag.tag.color}
+								title={tag.tag.name}
+								isActive={false}
+								isDisabled={true}
+							/>
+						{/each}
+					</div>
+				</div>
 			</div>
 			<Space gap={30} />
 			<a href={testLink}>
@@ -189,4 +219,14 @@
 			</div>
 		</div>
 	</div>
+	<Space gap={60} />
+	<h3 class="font-semibold text-h6">You may also like</h3>
+	<Separator w={'100%'} h={'1px'} />
+	<Space gap={10} />
+	{#if relatedTests.length > 0}
+		<Carousel data={relatedTests} />
+	{:else}
+		<Space gap={20} />
+		<p class="text-body1">Sorry, nothing to display here</p>
+	{/if}
 </div>

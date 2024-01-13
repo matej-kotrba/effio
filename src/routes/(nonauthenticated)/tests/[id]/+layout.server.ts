@@ -24,16 +24,17 @@ export const load: ServerLoad = async (request) => {
     ...transformed
   }
 
-  const viewCount = await (await trpcServer(request)).getTestViewCount({ testId: id })
-  const userViewCount = await (await trpcServer(request)).getTestViewCount({ testId: id, userId: context.user?.id || undefined })
+  const viewCount = (await trpcServer(request)).getTestViewCount({ testId: id })
+  const userViewCount = (await trpcServer(request)).getTestViewCount({ testId: id, userId: context.user?.id || undefined })
+  const relatedTests = (await trpcServer(request)).getPopularTests({ take: 6, timePeriod: "month", tags: returnedData.tags.map(tag => tag.tag.slug), shouldORtags: true })
 
-  console.log(userViewCount)
 
   try {
     return {
       testContent: returnedData,
       viewCount: viewCount,
-      userViewCount: userViewCount
+      userViewCount: userViewCount,
+      relatedTests: relatedTests
     }
   }
   catch (e) {

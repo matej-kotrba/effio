@@ -238,7 +238,8 @@ export const appRouter = router({
     cursor: z.string().optional(),
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
-    timePeriod: z.enum(["day", "week", "two-weeks", "month", "year"]).optional()
+    timePeriod: z.enum(["day", "week", "two-weeks", "month", "year"]).optional(),
+    shouldORtags: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
 
     const timeTable: {
@@ -303,7 +304,7 @@ export const appRouter = router({
         createdAt: dateRange ? {
           gte: dateRange
         } : undefined,
-        AND: input.tags ? input.tags.map(tag => ({
+        [input.shouldORtags ? "OR" : "AND"]: input.tags ? input.tags.map(tag => ({
           tags: {
             some: {
               tag: {
