@@ -6,7 +6,7 @@
 	export let selectRef: HTMLSelectElement | null = null;
 </script>
 
-<div class="flex items-center gap-1">
+<div class="flex items-center gap-1 min-w-fit">
 	<select
 		bind:this={selectRef}
 		class="w-full max-w-xs shadow-lg select dark:bg-dark_light_grey"

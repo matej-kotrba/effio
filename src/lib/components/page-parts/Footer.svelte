@@ -3,7 +3,7 @@
 	import Space from '~components/separators/Space.svelte';
 </script>
 
-<footer class=" bg-light_quaternary dark:bg-dark_terciary relative z-[10000]">
+<footer class="relative bg-light_quaternary dark:bg-dark_terciary">
 	<div
 		class="container relative flex flex-col items-start justify-between gap-10 px-10 py-20 mx-auto md:flex-row"
 	>

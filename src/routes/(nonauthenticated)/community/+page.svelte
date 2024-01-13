@@ -124,7 +124,6 @@
 		if (!newData.tests) return;
 
 		requestedTests = [...requestedTests, ...newData.tests];
-		console.log(requestedTests);
 	}
 
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
@@ -310,7 +309,7 @@
 				areTestsInView = false;
 			}
 		}}
-		class={`relative gap-y-1 xs:gap-y-2 grid @7xl:grid-cols-7 @5xl:grid-cols-5 @3xl:grid-cols-4 @2xl:grid-cols-3 @sm:grid-cols-2 grid-cols-1 min-h-[24rem] ${
+		class={`relative gap-y-1 xs:gap-y-2 grid @10xl:grid-cols-7 @7xl:grid-cols-6 @5xl:grid-cols-5 @3xl:grid-cols-4 @xl:grid-cols-3 @sm:grid-cols-2 grid-cols-1 min-h-[24rem] ${
 			isResetting ? 'opacity-40' : 'opacity-100'
 		}`}
 	>

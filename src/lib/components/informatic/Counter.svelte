@@ -36,14 +36,14 @@
 
 <div
 	class={twMerge(
-		'relative flex items-center w-fit min-w-20 p-2 overflow-hidden bg-light_white dark:bg-dark_light_grey shadow-md rounded-full aspect-square',
+		'relative flex items-center w-fit  p-2 overflow-hidden bg-light_white dark:bg-dark_light_grey shadow-md rounded-full aspect-square',
 		classes
 	)}
 	use:intersect={{ once: true }}
 	on:intersect={() => (isAllowedToAnimate = true)}
 >
 	<!-- Placeholder value -->
-	<span class="font-bold text-center opacity-0 pointer-events-none text-h3"
+	<span class="p-2 font-bold text-center opacity-0 pointer-events-none text-h3"
 		>{count}</span
 	>
 	{#key $tweenedCount}

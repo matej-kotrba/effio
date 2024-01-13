@@ -408,7 +408,7 @@
 								>
 								<Counter
 									count={7}
-									class="bg-transparent shadow-none"
+									class="bg-transparent shadow-none dark:bg-transparent"
 									numberClasses="text-h1"
 									color="white"
 								/>

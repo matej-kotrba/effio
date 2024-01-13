@@ -5,8 +5,6 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { delayResults } from '~helpers/delay';
-	import DropdownSelect from '~components/collapsibles/DropdownSelect.svelte';
 	import { getContext } from 'svelte';
 	import type { TestFullType } from '~/Prisma';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
@@ -15,6 +13,7 @@
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
 	import type { Tag } from '@prisma/client';
+	import CardSkeleton from '~components/containers/card/CardSkeleton.svelte';
 
 	const modalTabsGenerator = getContext('modalTabsGenerator');
 
@@ -23,6 +22,7 @@
 	let searchQuery: string = '';
 	let isFetchingNewTests: boolean = false;
 	let isRegettingAllTests: boolean = false;
+	let isInitialFetch: boolean = true;
 
 	let tests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['getUserTestsById']['query']>
@@ -52,6 +52,7 @@
 		});
 
 		isFetchingNewTests = false;
+		isInitialFetch = false;
 
 		// Cleanup
 		if (shouldReset) {
@@ -150,7 +151,9 @@
 	}
 </script>
 
-<div class="flex items-center justify-center gap-2 px-12">
+<div
+	class="flex flex-col items-center justify-center gap-2 xs:px-12 sm:flex-row"
+>
 	<SearchBar searchFunction={searchForResults} />
 	<OrderButton
 		bind:selectRef={orderRef}
@@ -166,7 +169,15 @@
 </div>
 <Space />
 <div class="@container max-w-[1400px]">
-	{#if tests.length === 0}
+	{#if isInitialFetch}
+		<div
+			class="grid gap-2 gap-y-4 @6xl:grid-cols-5 @4xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
+		>
+			<CardSkeleton />
+			<CardSkeleton />
+			<CardSkeleton />
+		</div>
+	{:else if tests.length === 0}
 		<div class="flex flex-col items-center gap-1">
 			<iconify-icon
 				icon="solar:mask-sad-linear"
@@ -182,10 +193,8 @@
 			>
 		</div>
 	{:else}
-		<!-- grid__layout -->
-
 		<div
-			class="grid gap-2 gap-y-4 @7xl:grid-cols-5 @5xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
+			class="grid gap-2 gap-y-4 @6xl:grid-cols-5 @4xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
 		>
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
@@ -208,94 +217,8 @@
 						}}
 					/>
 				</div>
-				<!-- <div
-					class="relative rounded-md shadow-md aspect-[3/2] bg-light_whiter hover:bg-light_quaternary dark:bg-dark_light_grey dark:hover:bg-dark_terciary duration-100"
-				>
-					{#if test === tests[tests.length - 1]}
-						<a class="absolute inset-3">
-							<img
-								src="/imgs/content_imgs/liska.avif"
-								alt="Question"
-								class="object-cover w-full h-full rounded-md"
-							/>
-						</a>
-						<div class="relative z-[2]" use:addIntersection>
-							<div class="flex items-center justify-between w-full p-4">
-								<div class="flex items-center">
-									<iconify-icon
-										icon="ic:round-star-outline"
-										class="text-3xl text-white duration-100"
-									/>
-									<span class="text-sm text-white">{test.stars}</span>
-								</div>
-								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
-									<iconify-icon
-										icon="fluent:settings-24-filled"
-										class="text-2xl text-white"
-									/>
-								</DropdownSelect>
-							</div>
-						</div>
-						<div
-							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary bg-light_quaternary rounded-b-md text-semiBody1"
-						>
-							<abbr title={test.title} class="no-underline"
-								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">
-									{test.title}
-								</h5></abbr
-							>
-						</div>
-					{:else}
-						<a class="absolute inset-3">
-							<img
-								src="/imgs/content_imgs/liska.avif"
-								alt="Question"
-								class="object-cover w-full h-full rounded-md"
-							/>
-						</a>
-						<div class="relative z-[2]">
-							<div class="flex items-center justify-between w-full p-4">
-								<div class="flex items-center">
-									<iconify-icon
-										icon="ic:round-star-outline"
-										class="text-3xl text-white duration-100"
-									/>
-									<span class="text-sm text-white">{test.stars}</span>
-								</div>
-								<DropdownSelect dropdownTabs={TypesafeTabs(test)}>
-									<iconify-icon
-										icon="fluent:settings-24-filled"
-										class="text-2xl text-white"
-									/>
-								</DropdownSelect>
-							</div>
-						</div>
-						<div
-							class="absolute bottom-0 left-0 w-full px-4 py-1 text-center dark:bg-dark_terciary bg-light_quaternary rounded-b-md text-semiBody1"
-						>
-							<abbr title={test.title} class="no-underline"
-								><h5 class="overflow-hidden text-ellipsis whitespace-nowrap">
-									{test.title}
-								</h5></abbr
-							>
-						</div>
-					{/if}
-					
-				</div> -->
 			{/each}
 		</div>
 	{/if}
 </div>
 <Space />
-
-<style>
-	/* .grid__layout {
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	}
-
-	@media screen and (min-width: 1650px) {
-		.grid__layout {
-			grid-template-columns: repeat(6, minmax(210px, 1fr));
-		}
-	} */
-</style>
