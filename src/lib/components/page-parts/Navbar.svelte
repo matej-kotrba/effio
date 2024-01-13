@@ -3,8 +3,7 @@
 </script>
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
-
+	import DarkModeToggle from '~components/globals/DarkModeToggle.svelte';
 	import { signOut } from '@auth/sveltekit/client';
 
 	export let user: UpdatedSession | undefined;
@@ -88,6 +87,9 @@
 				>
 					<li>Community</li>
 				</a>
+				<div class="grid w-10 place-content-center">
+					<DarkModeToggle />
+				</div>
 				{#if !user}
 					<a
 						href="/login"

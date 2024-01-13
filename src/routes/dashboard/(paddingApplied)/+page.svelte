@@ -436,7 +436,8 @@
 				tags: item.test.testGroup.tags.map((item) => item.tag),
 				type: item.test.testGroup.type,
 				icon: item.test.testGroup.owner.image,
-				img: item.test.testGroup.imageUrl
+				img: item.test.testGroup.imageUrl,
+				isStarred: item.test.testGroup.stars.length > 0
 			};
 		})}
 	/>
@@ -476,7 +477,7 @@
 <svelte:window on:mousemove={onMouseMove} />
 
 <Space gap={30} />
-<h3 class="font-semibold text-h4">Recently took tests</h3>
+<h3 class="font-semibold text-h4">Recent activity</h3>
 <Separator w={'100%'} h={'1px'} class="mt-2" />
 <div
 	class="max-w-[1200px] @container"

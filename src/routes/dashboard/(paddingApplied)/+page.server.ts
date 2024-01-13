@@ -150,7 +150,7 @@ export const load = async (e) => {
         }
       },
       take: 3,
-      distinct: ["testId"],
+      distinct: ["title"],
       orderBy: {
         createdAt: "desc"
       }

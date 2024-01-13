@@ -6,6 +6,7 @@
 		id: string;
 		ownerId?: string;
 		type: TestType;
+		isStarred?: boolean;
 	};
 
 	export type CarouselItemInput =
@@ -113,9 +114,11 @@
 
 <section class="grid w-full h-full grid__layout">
 	<div
-		class="flex gap-2"
-		class:hidden={resolvedData === undefined ||
-			resolvedData?.length <= countOfItems}
+		class={`flex gap-2 ${
+			resolvedData === undefined || resolvedData?.length <= countOfItems
+				? 'opacity-0 pointer-events-none'
+				: ''
+		}`}
 	>
 		<IconButton
 			icon="ic:round-arrow-left"
@@ -168,6 +171,7 @@
 							class="min-w-[calc(100%/var(--items-count))] relative aspect-[4/5] flex items-center"
 						>
 							<CardAlternative
+								isStarredDefault={!!item.isStarred}
 								canStarTest={!!item.ownerId &&
 									!!$page.data.session?.user?.id &&
 									$page.data.session.user.id !== item.ownerId}
