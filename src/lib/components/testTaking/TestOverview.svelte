@@ -77,7 +77,7 @@
 	}
 </script>
 
-<div class="max-w-[1200px] mx-auto p-3 rounded-md">
+<div class="max-w-[1200px] w-full mx-auto p-3 rounded-md">
 	<h3 class="text-h3 font-extralight">Test overview</h3>
 	<div class="grid gap-4 md:grid-cols-2">
 		<div>
