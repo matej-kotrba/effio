@@ -147,6 +147,11 @@ export const appRouter = router({
         id: input.id,
       },
       include: {
+        _count: {
+          select: {
+            stars: true
+          }
+        },
         subcategories: input.includeGroupSubcategories || false,
         owner: true,
         tags: {
@@ -154,6 +159,15 @@ export const appRouter = router({
             tag: true
           }
         },
+        stars: ctx.user?.id ? {
+          select: {
+            userId: true,
+            testId: true
+          },
+          where: {
+            userId: ctx.user?.id
+          }
+        } : undefined,
         testVersions: {
           include: {
             questions: {
@@ -187,6 +201,32 @@ export const appRouter = router({
       success: true,
       tags
     }
+  }),
+  getTestViewCount: procedure.input(z.object({
+    testId: z.string()
+  })).query(async ({ ctx, input }) => {
+    const count = await ctx.prisma.test.findUnique({
+      where: {
+        id: input.testId
+      },
+      include: {
+        testVersions: {
+          orderBy: {
+            "createdAt": "desc"
+          },
+          take: 1,
+          include: {
+            _count: {
+              select: {
+                records: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    return count?.testVersions[0]?._count.records || 0
   }),
   getPopularTests: procedure.input(z.object({
     take: z.number().optional(),

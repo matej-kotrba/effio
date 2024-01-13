@@ -21,6 +21,7 @@ export default {
 				light_whiter: '#F5F5F5',
 				light_grey: '#e7e5e4',
 				light_grey_dark: '#cccccc',
+				light_star: '#fef9c3',
 
 				dark_primary: '#0092CA',
 				dark_primary_light: '#393E46',
@@ -37,6 +38,7 @@ export default {
 				dark_grey: '#1f1f1f',
 				dark_black: '#111111',
 				dark_blacker: '#000000',
+				dark_star: '#a16207',
 
 				success: '#5cb85c',
 				error: '#B00020',

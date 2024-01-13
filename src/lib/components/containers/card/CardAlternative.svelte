@@ -60,7 +60,7 @@
 				isSubmittingStar = true;
 				isStarred = true;
 				data.stars += 1;
-				await trpc($page).protected.starTest.query({
+				await trpc($page).protected.starTest.mutate({
 					testGroupId: data.id
 				});
 			} catch {
@@ -74,7 +74,7 @@
 				isSubmittingStar = true;
 				isStarred = false;
 				data.stars -= 1;
-				await trpc($page).protected.starTest.query({
+				await trpc($page).protected.starTest.mutate({
 					testGroupId: data.id,
 					decrement: true
 				});
@@ -122,7 +122,7 @@
 						on:click={starTest}
 						disabled={canStarTest === false || isSubmittingStar === true}
 						class={`absolute flex items-center z-[2] gap-1 px-2 py-1 rounded-lg right-1 top-1 bg-light_white dark:bg-dark_grey shadow-md duration-100 ${
-							isStarred ? 'bg-yellow-100 dark:bg-yellow-700' : ''
+							isStarred ? 'bg-light_star dark:bg-dark_star' : ''
 						} hover:bg-light_secondary dark:hover:bg-dark_secondary disabled:bg-light_grey_dark dark:disabled:bg-slate-600
 						text-light_text_black dark:text-dark_text_white hover:text-light_whiter disabled:hover:text-light_text_black
 						dark:disabled:hover:text-dark_text_white`}

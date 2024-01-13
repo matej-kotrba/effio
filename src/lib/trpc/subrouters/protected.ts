@@ -366,7 +366,7 @@ export const protectedRouter = router({
   starTest: loggedInProcedure.input(z.object({
     testGroupId: z.string(),
     decrement: z.boolean().optional()
-  })).query(async ({ ctx, input }) => {
+  })).mutation(async ({ ctx, input }) => {
     const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.testGroupId

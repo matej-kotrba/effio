@@ -2,6 +2,7 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import { appRouter } from "~/lib/trpc/router";
 import { createContext } from "~/lib/trpc/context"
 import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
+import { trpcServer } from "~helpers/trpcServer";
 
 // TODO: Can be client, no .server needed
 export const load: ServerLoad = async (request) => {
@@ -23,9 +24,12 @@ export const load: ServerLoad = async (request) => {
     ...transformed
   }
 
+  const viewCount = await (await trpcServer(request)).getTestViewCount({ testId: id })
+
   try {
     return {
-      testContent: returnedData
+      testContent: returnedData,
+      viewCount: viewCount
     }
   }
   catch (e) {
