@@ -25,11 +25,15 @@ export const load: ServerLoad = async (request) => {
   }
 
   const viewCount = await (await trpcServer(request)).getTestViewCount({ testId: id })
+  const userViewCount = await (await trpcServer(request)).getTestViewCount({ testId: id, userId: context.user?.id || undefined })
+
+  console.log(userViewCount)
 
   try {
     return {
       testContent: returnedData,
-      viewCount: viewCount
+      viewCount: viewCount,
+      userViewCount: userViewCount
     }
   }
   catch (e) {

@@ -7,6 +7,7 @@
 
 <TestOverview
 	viewCount={data.viewCount}
+	userViewCount={data.userViewCount}
 	testContent={data.testContent}
 	testLink={`${$page.url.pathname}/take`}
 />

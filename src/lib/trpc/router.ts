@@ -203,11 +203,12 @@ export const appRouter = router({
     }
   }),
   getTestViewCount: procedure.input(z.object({
-    testId: z.string()
+    testId: z.string(),
+    userId: z.string().optional()
   })).query(async ({ ctx, input }) => {
     const count = await ctx.prisma.test.findUnique({
       where: {
-        id: input.testId
+        id: input.testId,
       },
       include: {
         testVersions: {
@@ -218,7 +219,11 @@ export const appRouter = router({
           include: {
             _count: {
               select: {
-                records: true
+                records: {
+                  where: {
+                    userId: input.userId
+                  }
+                }
               }
             }
           }

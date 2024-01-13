@@ -16,7 +16,9 @@
 	>;
 
 	export let testLink: string;
+
 	export let viewCount: number = -1;
+	export let userViewCount: number = -1;
 
 	const testObject = getTestObject();
 
@@ -72,7 +74,7 @@
 
 <div class="max-w-[1200px] mx-auto p-3 rounded-md">
 	<h3 class="text-h3 font-extralight">Test overview</h3>
-	<div class="grid grid-cols-2 gap-4">
+	<div class="grid gap-4 md:grid-cols-2">
 		<div>
 			<div class="p-2">
 				<p class="mb-3">
@@ -91,6 +93,7 @@
 					<span
 						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
 						>Author:</span
+					><span class="font-semibold text-body1">{testContent.owner.name}</span
 					>
 					<div class="dropdown dropdown-hover dropdown-top">
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -134,8 +137,20 @@
 			</div>
 			{#if viewCount >= 0}
 				<div class="flex items-center justify-end gap-1">
-					{viewCount}
-					<iconify-icon icon="lets-icons:view-alt-fill" />
+					<span class="font-semibold text-h6">Total attempts: {viewCount}</span>
+					<div class="grid place-content-center">
+						<iconify-icon icon="lets-icons:view-alt-fill" class="text-2xl" />
+					</div>
+				</div>
+			{/if}
+			{#if userViewCount >= 0}
+				<div class="flex items-center justify-end gap-1">
+					<span class="font-semibold text-h6"
+						>Your attempts: {userViewCount}</span
+					>
+					<div class="grid place-content-center">
+						<iconify-icon icon="mdi:user" class="text-2xl" />
+					</div>
 				</div>
 			{/if}
 			<h4 class="font-semibold text-h6">Marking</h4>
