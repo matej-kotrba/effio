@@ -197,10 +197,16 @@
 			contextmenu: false
 		});
 
+		codeEditor.onKeyUp(() => {
+			codeCharacterCount = codeEditor.getValue().length;
+		});
+
 		window.addEventListener('resize', () => {
 			codeEditor.layout();
 		});
 	});
+
+	$: codeCharacterCount = codeEditor?.getValue().length;
 
 	onDestroy(() => {
 		if (browser) {
@@ -273,8 +279,9 @@
 		</div>
 		<div
 			style={`max-height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - 100px); height: calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px); grid-template-rows: auto 1fr;`}
-			class="relative grid gap-4 !max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
+			class="relative grid !max-h-fit @4xl:max-h-[auto] !h-fit @4xl:h-[auto]"
 		>
+			<div class="text-right">{codeCharacterCount} characters</div>
 			<div class="relative w-full max-w-full h-fit">
 				<!-- Placeholder for loading editor -->
 				<div class="relative min-h-[400px] h-fit max-w-full w-full">
