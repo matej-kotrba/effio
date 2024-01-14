@@ -481,5 +481,25 @@ export const groupsRouter = router({
       success: true,
       users: users
     }
+  }),
+
+  leaveGroup: loggedInProcedure.input(z.object({
+    groupId: z.string(),
+  })).mutation(({ ctx, input }) => {
+    const group = ctx.prisma.groupOnUsers.deleteMany({
+      where: {
+        groupId: input.groupId,
+        userId: ctx.userId
+      }
+    })
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
+    }
+
+    return {
+      success: true,
+      group: group
+    }
   })
 })

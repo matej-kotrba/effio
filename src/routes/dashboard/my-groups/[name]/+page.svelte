@@ -4,9 +4,11 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import { trpc } from '~/lib/trpc/client';
-	import { randomId } from '~helpers/randomId.js';
+	import { goto } from '$app/navigation';
 	import toast from 'svelte-french-toast';
 	import Space from '~components/separators/Space.svelte';
+	import { createTRPCErrorNotification } from '~/lib/utils/notification';
+	import { TRPCClientError } from '@trpc/client';
 
 	export let data;
 
@@ -26,6 +28,21 @@
 			groupId: data.group.id
 		});
 		if (response) code = response.id;
+	}
+
+	async function leaveGroup() {
+		if (data.session?.user?.id === data.group.ownerId) return;
+		try {
+			const response = await trpc($page).groups.leaveGroup.mutate({
+				groupId: data.group.id
+			});
+			if (response.success) {
+				goto('/dashboard/my-groups');
+				toast.success('You successfully left the group');
+			}
+		} catch (e) {
+			if (e instanceof TRPCClientError) createTRPCErrorNotification(e);
+		}
 	}
 </script>
 
@@ -80,6 +97,10 @@
 			<div>
 				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
 				<IconButton icon="fluent:settings-24-filled" onClick={() => {}} />
+			</div>
+		{:else}
+			<div>
+				<IconButton icon="pepicons-pop:leave" onClick={leaveGroup} />
 			</div>
 		{/if}
 	</div>

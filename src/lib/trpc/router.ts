@@ -239,7 +239,8 @@ export const appRouter = router({
     tags: z.array(z.string()).optional(),
     searchQuery: z.string().optional(),
     timePeriod: z.enum(["day", "week", "two-weeks", "month", "year"]).optional(),
-    shouldORtags: z.boolean().optional()
+    shouldORtags: z.boolean().optional(),
+    excludedTests: z.array(z.string()).optional()
   })).query(async ({ ctx, input }) => {
 
     const timeTable: {
@@ -300,6 +301,9 @@ export const appRouter = router({
         } : undefined
       },
       where: {
+        id: {
+          notIn: input.excludedTests || []
+        },
         published: true,
         createdAt: dateRange ? {
           gte: dateRange

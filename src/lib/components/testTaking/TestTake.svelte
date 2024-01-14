@@ -129,6 +129,7 @@
 					if (!res['questionData']) return;
 					result = res['questionData'];
 					returnedTestRecord = res['test'];
+					scrollTo(0, 0);
 					// ...
 				}
 
