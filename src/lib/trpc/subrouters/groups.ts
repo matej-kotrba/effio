@@ -485,8 +485,8 @@ export const groupsRouter = router({
 
   leaveGroup: loggedInProcedure.input(z.object({
     groupId: z.string(),
-  })).mutation(({ ctx, input }) => {
-    const group = ctx.prisma.groupOnUsers.deleteMany({
+  })).mutation(async ({ ctx, input }) => {
+    const group = await ctx.prisma.groupOnUsers.deleteMany({
       where: {
         groupId: input.groupId,
         userId: ctx.userId
