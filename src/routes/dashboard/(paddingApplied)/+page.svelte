@@ -551,11 +551,13 @@
 						<div class="flex items-center w-20">
 							<Counter
 								class="bg-transparent rounded-none shadow-none dark:bg-transparent"
-								count={+(
-									(data.testAvarageResult.userPoints /
-										data.testAvarageResult.maxPoints) *
-									100
-								).toFixed(0)}
+								count={+data.testAvarageResult.userPoints === 0
+									? 0
+									: +(
+											(data.testAvarageResult.userPoints /
+												data.testAvarageResult.maxPoints) *
+											100
+									  ).toFixed(0)}
 							/>
 							<span class="text-2xl font-bold"> % </span>
 						</div>
