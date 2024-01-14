@@ -180,7 +180,16 @@ export const groupsRouter = router({
         ]
       },
       include: {
-        users: input.includeUsers || false,
+        users: input.includeUsers ? {
+          include: {
+            user: {
+              select: {
+                name: true,
+                image: true,
+              }
+            }
+          }
+        } : undefined,
         groupsSubcategories: input.includeSubcategories || false,
         owner: input.includeOwner || false,
       }

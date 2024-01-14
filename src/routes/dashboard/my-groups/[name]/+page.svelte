@@ -66,13 +66,50 @@
 </Dialog>
 
 <div class="p-4">
+	<div>
+		<h3 class="text-h3">
+			<span class="font-thin">Welcome to</span>
+			<span class="font-semibold">{data.group.name}</span>
+		</h3>
+		<p class="text-body1">
+			{data.group.description}
+		</p>
+	</div>
+	<div class="grid grid-cols-2 gap-4 mt-12">
+		<div>
+			<h4 class="text-h5">Quick navigation</h4>
+			<Separator w={'100%'} h={'2px'} />
+			<Space gap={10} />
+			<div class="flex flex-col gap-1">
+				{#each data['group']['groupsSubcategories'] as channel}
+					<a
+						href="{$page.url.href}/{channel.slug}"
+						class="w-full px-4 py-2 border-2 border-solid border-light_text_black_80 rounded-2xl max-w-[24rem]
+						hover:bg-light_grey duration-100 dark:hover:bg-dark_light_grey dark:border-dark_text_white_80"
+					>
+						{channel.name}
+					</a>
+				{/each}
+			</div>
+		</div>
+		<div>
+			<h4 class="text-h5">Users</h4>
+			<Separator w={'100%'} h={'2px'} />
+			<Space gap={10} />
+			<div class="flex flex-col gap-1">
+				{#each data['group']['users'] as user}
+					<img src={user} alt="" />
+				{/each}
+			</div>
+		</div>
+	</div>
+
 	{#if data.session?.user?.id === data.group.ownerId}
-		<section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
+		<!-- <section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
 			<div class="flex items-center justify-between">
 				<h4 class="font-semibold text-h4">Admin part</h4>
 				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
 			</div>
-			<!-- <Separator w="100%" h="1px" /> -->
 			<div>
 				<a
 					href="/dashboard/my-groups/{data.group.slug}/admin-test-overview"
@@ -81,6 +118,6 @@
 					<h5>Test overview</h5>
 				</a>
 			</div>
-		</section>
+		</section> -->
 	{/if}
 </div>

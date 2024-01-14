@@ -14,7 +14,7 @@ export const load = async (event) => {
     name: event.params.name,
     includeUsers: true,
     includeOwner: true,
-    includeSubcategories: true
+    includeSubcategories: true,
   })
 
   if (!groupFullData) {
