@@ -66,14 +66,22 @@
 </Dialog>
 
 <div class="p-4">
-	<div>
-		<h3 class="text-h3">
-			<span class="font-thin">Welcome to</span>
-			<span class="font-semibold">{data.group.name}</span>
-		</h3>
-		<p class="text-body1">
-			{data.group.description}
-		</p>
+	<div class="flex justify-between">
+		<div>
+			<h3 class="text-h3">
+				<span class="font-thin">Welcome to</span>
+				<span class="font-semibold">{data.group.name}</span>
+			</h3>
+			<p class="text-body1">
+				{data.group.description}
+			</p>
+		</div>
+		{#if data.session?.user?.id === data.group.ownerId}
+			<div>
+				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
+				<IconButton icon="fluent:settings-24-filled" onClick={() => {}} />
+			</div>
+		{/if}
 	</div>
 	<div class="grid grid-cols-2 gap-4 mt-12">
 		<div>
@@ -97,15 +105,58 @@
 			<Separator w={'100%'} h={'2px'} />
 			<Space gap={10} />
 			<div class="flex flex-col gap-1">
+				<div class="grid grid-leader__container gap-x-1">
+					<iconify-icon
+						icon="akar-icons:crown"
+						class="h-8 mx-auto text-3xl text-yellow-500 tooltip tooltip-top"
+						data-tip="Group owner"
+					/>
+					<div
+						class="w-12 col-start-1 row-start-2 overflow-hidden rounded-lg aspect-square"
+					>
+						<img
+							src={data.group.owner.image || '/imgs/svgs/user-circle.svg'}
+							alt={data.group.owner.name}
+						/>
+					</div>
+					<span class="self-center col-start-2 row-start-2 font-semibold"
+						>{data.group.owner.name}</span
+					>
+				</div>
+				<Space gap={10} />
 				{#each data['group']['users'] as user}
-					<img src={user} alt="" />
+					{#if user.user && user.userId !== data.group.ownerId}
+						<div class="flex items-center gap-1">
+							<div class="w-12 overflow-hidden rounded-lg aspect-square">
+								<img
+									src={user.user.image || '/imgs/svgs/user-circle.svg'}
+									alt={user.user.name}
+								/>
+							</div>
+							<span class="font-semibold">{user.user.name}</span>
+						</div>
+					{/if}
 				{/each}
 			</div>
 		</div>
+		{#if data.session?.user?.id === data.group.ownerId}
+			<div>
+				<h4 class="text-h5">Admin section</h4>
+				<Separator w={'100%'} h={'2px'} />
+				<Space gap={10} />
+				<div>
+					<a
+						href="/dashboard/my-groups/{data.group.slug}/admin-test-overview"
+						class="p-2 rounded-md w-[200px] grid place-content-center shadow-md aspect-square bg-light_whiter dark:bg-dark_terciary"
+					>
+						<h5 class="font-semibold">Test overview</h5>
+					</a>
+				</div>
+			</div>
+		{/if}
 	</div>
 
-	{#if data.session?.user?.id === data.group.ownerId}
-		<!-- <section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
+	<!-- <section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
 			<div class="flex items-center justify-between">
 				<h4 class="font-semibold text-h4">Admin part</h4>
 				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
@@ -119,5 +170,11 @@
 				</a>
 			</div>
 		</section> -->
-	{/if}
 </div>
+
+<style>
+	.grid-leader__container {
+		grid-template-columns: auto 1fr;
+		grid-auto-rows: auto;
+	}
+</style>

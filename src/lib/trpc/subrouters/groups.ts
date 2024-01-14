@@ -158,7 +158,7 @@ export const groupsRouter = router({
   getGroupByName: loggedInProcedure.input(z.object({
     id: z.string(),
     name: z.string(),
-    includeUsers: z.boolean().optional(),
+    // includeUsers: z.boolean().optional(),
     includeSubcategories: z.boolean().optional(),
     includeOwner: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
@@ -180,7 +180,7 @@ export const groupsRouter = router({
         ]
       },
       include: {
-        users: input.includeUsers ? {
+        users: {
           include: {
             user: {
               select: {
@@ -188,8 +188,13 @@ export const groupsRouter = router({
                 image: true,
               }
             }
+          },
+          orderBy: {
+            user: {
+              name: "asc"
+            }
           }
-        } : undefined,
+        },
         groupsSubcategories: input.includeSubcategories || false,
         owner: input.includeOwner || false,
       }
