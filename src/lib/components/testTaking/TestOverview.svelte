@@ -14,9 +14,11 @@
 		type IdCardAlternativeProps
 	} from '~components/containers/Carousel.svelte';
 
-	export let testContent: NonNullable<
+	type TestContentRaw = NonNullable<
 		Awaited<ReturnType<ReturnType<typeof trpc>['getTestById']['query']>>
 	>;
+
+	export let testContent: ExcludePick<TestContentRaw, 'subcategories'>;
 
 	export let testLink: string;
 
@@ -24,6 +26,7 @@
 	export let userViewCount: number = -1;
 	export let isRandomShuffled: boolean = true;
 	export let relatedTests: IdCardAlternativeProps[] = [];
+	export let displayRelatedTests: boolean = true;
 
 	const testObject = getTestObject();
 
@@ -220,13 +223,15 @@
 		</div>
 	</div>
 	<Space gap={60} />
-	<h3 class="font-semibold text-h6">You may also like</h3>
-	<Separator w={'100%'} h={'1px'} />
-	<Space gap={10} />
-	{#if relatedTests.length > 0}
-		<Carousel data={relatedTests} />
-	{:else}
-		<Space gap={20} />
-		<p class="text-body1">Sorry, nothing to display here</p>
+	{#if displayRelatedTests === true}
+		<h3 class="font-semibold text-h6">You may also like</h3>
+		<Separator w={'100%'} h={'1px'} />
+		<Space gap={10} />
+		{#if relatedTests.length > 0}
+			<Carousel data={relatedTests} />
+		{:else}
+			<Space gap={20} />
+			<p class="text-body1">Sorry, nothing to display here</p>
+		{/if}
 	{/if}
 </div>

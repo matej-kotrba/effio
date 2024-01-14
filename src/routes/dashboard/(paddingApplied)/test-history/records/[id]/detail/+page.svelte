@@ -29,7 +29,6 @@
 			return;
 		}
 
-		console.log(data.record.test.markSystemJSON);
 		initializeTestToTestStore(testObject, {
 			id: data.record.id,
 			title: data.record.title,

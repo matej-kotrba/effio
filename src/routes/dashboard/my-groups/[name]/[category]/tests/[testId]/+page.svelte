@@ -6,6 +6,8 @@
 </script>
 
 <TestOverview
+	displayRelatedTests={false}
+	isRandomShuffled={data.testContent.randomQuestionOrder}
 	testContent={data.testContent}
 	testLink={`${$page.url.pathname}/take`}
 />

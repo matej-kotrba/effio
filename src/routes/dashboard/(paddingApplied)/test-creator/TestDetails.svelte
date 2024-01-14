@@ -142,7 +142,7 @@
 			defualtImage={testData?.imageUrl}
 		/>
 	</div>
-	<div class="z-[100]">
+	<div class="z-[20]">
 		<div class="flex flex-col @xl:items-center @xl:flex-row gap-2 @xl:gap-0">
 			<div class="flex items-center gap-2 mr-auto">
 				{#if testType === 'REGULAR'}

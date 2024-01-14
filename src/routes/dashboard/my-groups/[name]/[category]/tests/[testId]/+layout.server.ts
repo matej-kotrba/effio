@@ -2,11 +2,22 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import prisma from "$lib/prisma"
 import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
-export const load: ServerLoad = async ({ params }) => {
+export const load: ServerLoad = async ({ params, locals }) => {
   const id = params.testId
+  const session = (await locals.getSession()) as UpdatedSession
+
+  if (!session) {
+    throw redirect(307, "/login")
+  }
 
   if (!id) {
     throw redirect(307, "/dashboard/my-groups")
+  }
+
+  const userId = session.user?.id
+
+  if (!userId) {
+    throw redirect(307, "/login")
   }
 
   try {
@@ -35,6 +46,11 @@ export const load: ServerLoad = async ({ params }) => {
         }
       },
       include: {
+        _count: {
+          select: {
+            stars: true
+          }
+        },
         tags: {
           include: {
             tag: true
@@ -52,6 +68,15 @@ export const load: ServerLoad = async ({ params }) => {
             createdAt: "desc"
           }
         },
+        stars: userId ? {
+          select: {
+            userId: true,
+            testId: true
+          },
+          where: {
+            userId: userId
+          }
+        } : undefined,
         owner: true
       }
     })

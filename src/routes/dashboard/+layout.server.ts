@@ -10,7 +10,11 @@ export const load: ServerLoad = async (event) => {
 
   const questionsTypes = appRouter.createCaller(context).getQuestionsTypes();
 
-  // const data = await prisma.testRecord.deleteMany()
+  // await prisma.group.delete({
+  //   where: {
+  //     id: "f5b240a4-ef37-4923-87ab-ceb94d3e613f"
+  //   }
+  // })
 
   return {
     questionsTypes: questionsTypes

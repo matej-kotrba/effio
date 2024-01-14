@@ -63,7 +63,7 @@
 		.filter((item) => !!item);
 </script>
 
-<div class="dropdown dropdown-end dropdown-bottom z-[10000]">
+<div class="dropdown dropdown-end dropdown-bottom z-[100]">
 	<button
 		type="button"
 		class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
