@@ -367,13 +367,15 @@
 				<div class="relative grid gap-4 sm:grid-cols-2">
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="py-4 font-bold text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white hover:bg-light_primary hover:brightness-125"
+						class={`py-4 font-bold text-center normal-case border-4 rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white 
+						border-solid border-light_primary hover:bg-light_white hover:text-light_primary duration-150`}
 					>
 						{data.session?.user ? 'Go to Dashboard' : 'Start now'}
 					</a>
 					<a
 						href={data.session?.user ? '/dashboard' : '/login'}
-						class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary text-light_white hover:bg-light_secondary hover:brightness-125"
+						class={`py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_terciary
+						 text-light_white border-4 border-solid border-light_terciary hover:bg-light_white hover:text-light_terciary duration-150`}
 					>
 						Learn More
 					</a>
@@ -446,7 +448,8 @@
 							/> -->
 							<a
 								href={'/community'}
-								class="py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
+								class={`py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary
+								 text-light_white dark:text-dark_text_white border-4 border-solid border-light_primary hover:bg-light_white hover:text-light_primary duration-150`}
 							>
 								Visit community place
 							</a>
@@ -498,7 +501,7 @@
 					</p>
 					<a
 						href={'/about'}
-						class="px-8 py-2 rounded-lg h-fit whitespace-nowrap text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white hover:bg-light_primary hover:brightness-125"
+						class="px-8 py-2 duration-150 border-4 border-solid rounded-lg h-fit whitespace-nowrap text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white border-light_primary hover:bg-light_white hover:text-light_primary"
 					>
 						About us
 					</a>
