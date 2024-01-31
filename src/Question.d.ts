@@ -68,6 +68,13 @@ type GeographyQuestion = {
   }
 }
 
+type ImageQuestion = {
+  type: "image";
+  imageUrl?: string;
+  correctAnswerId?: number;
+  answers: Answer[];
+}
+
 type ProgrammingQuestion = {
   type: "programming",
   description: string,
@@ -105,6 +112,7 @@ type QuestionTypeMap = {
   'write': WriteQuestion;
   'fill': FillQuestion;
   'geography': GeographyQuestion;
+  "image": ImageQuestion;
   "programming": ProgrammingQuestion;
 }
 

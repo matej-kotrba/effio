@@ -29,6 +29,9 @@ export const questionMethods: QuestionMethods = {
   },
   "programming": {
     icon: "solar:programming-bold"
+  },
+  "image": {
+    icon: "clarity:image-line"
   }
 }
 
@@ -553,6 +556,78 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "shuffleAnswers": (question: GeographyQuestion): GeographyQuestion => {
       return question
+    }
+  },
+  "image": {
+    "createNew": () => {
+      return {
+        type: 'image',
+        correctAnswerId: 0,
+        imageUrl: undefined,
+        answers: [
+          {
+            id: 0,
+            answer: ''
+          },
+          {
+            id: 1,
+            answer: ''
+          }
+        ]
+      }
+    },
+    "separateAnswer": (question: ImageQuestion): ImageQuestion => {
+      return {
+        ...question,
+        correctAnswerId: undefined,
+        answers: question.answers.map((item) => {
+          return {
+            ...item,
+            response: ""
+          }
+        })
+      }
+    },
+    "checkAnswerPresence": (question: ImageQuestion): boolean => {
+      return !(question.correctAnswerId === undefined)
+    },
+    "checkAnswerCorrectness": (answer: ImageQuestion, original: ImageQuestion) => {
+      return answer.correctAnswerId === original.correctAnswerId
+    },
+    "checkCreatorCorrectFormat": (content: ImageQuestion) => {
+      let isError = false
+      let message = ""
+
+      if (content.correctAnswerId === undefined || content.correctAnswerId > content.answers.length - 1 || content.correctAnswerId < 0) {
+        isError = true
+        message = "Please select the correct answer."
+
+      }
+
+      for (const item in content.answers) {
+        const result = answerSchema.safeParse(content.answers[item].answer)
+        if (result.success === false) {
+          isError = true
+          content.answers[item].error = result.error.errors[0].message
+        }
+      }
+
+      return {
+        isError: isError,
+        message: message,
+        store: content
+      }
+    },
+    "calculatePoints": (q1: ImageQuestion, q2: ImageQuestion, maxPoints: number) => {
+      return q1.correctAnswerId === q2.correctAnswerId ? maxPoints : 0
+    },
+    "shuffleAnswers": (question: ImageQuestion): ImageQuestion => {
+      return {
+        ...question,
+        answers: question.answers.map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value)
+      }
     }
   },
   "programming": {
