@@ -75,7 +75,7 @@
 			</div>
 		</button>
 		{#if resultFormat && resultFormat.userAnswer['correctAnswerId'] === id && resultFormat.correctAnswer.answers[index].response}
-			<Comment response={resultFormat.correctAnswer.answers[index].response} />
+			<Comment response={resultFormat.correctAnswer.answers[id].response} />
 			<!-- <p
 				class="p-2 rounded-sm text-light_text_black dark:text-dark_text_white_60 bg-light_grey dark:bg-dark_light_grey"
 			>
