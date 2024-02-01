@@ -299,7 +299,8 @@ type CheckServer = {
   //({ isCorrect: boolean } & { [key: string]: unknown })[]
 }
 
-// Check test on the server for correctness of the answers
+// Check test on the server for correctness of the answers,
+// for test taking
 
 export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId?: string): Promise<CheckServer> => {
   if (test.id === undefined || test.versionId === undefined) return {
@@ -395,8 +396,6 @@ export const checkTestServerAndRecordIt = async (test: TestObject, subcategoryId
   if (!recordedTest || !recordedTest.test?.questionRecords) return {
     success: false
   }
-
-  // TODO: Like really try to think this through
 
   const shuffledArray = []
   for (const i in questionData) {

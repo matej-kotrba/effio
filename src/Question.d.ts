@@ -71,6 +71,7 @@ type GeographyQuestion = {
 type ImageQuestion = {
   type: "image";
   imageUrl?: string;
+  imageFile?: File;
   correctAnswerId?: number;
   answers: Answer[];
 }

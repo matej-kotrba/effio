@@ -1,3 +1,4 @@
+import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 import { randomIdLettersOnly } from "~helpers/randomId"
 import { validateCode } from "~helpers/validateCode"
 import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema } from "~schemas/textInput"
@@ -59,6 +60,7 @@ type QuestionContentTransformation = {
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] },
     "calculatePoints": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key], maxPoints: number) => number,
     "shuffleAnswers": (question: QuestionTypeMap[Key]) => QuestionTypeMap[Key]
+    "onActionWithDB"?: (operation: "create" | "update" | "delete", question: QuestionTypeMap[Key]) => Promise<{ isError: boolean, message?: string, imageUrl?: string, transformedQuestion: ImageQuestion }>
   } & (Key extends string ? AdditionalMethods[Key] : object)
 }
 
@@ -628,6 +630,38 @@ export const questionContentFunctions: QuestionContentTransformation = {
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value)
       }
+    },
+    "onActionWithDB": async (operation, question) => {
+      // Transform the question's copy directly so it can be used elsewhere withou conditional checking of question type
+      const questionCopy = { ...question }
+      console.log(question)
+
+      if (operation === "create") {
+        const image = question.imageFile
+        if (!image) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
+        if (image.size > IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB * 1024 * 1024) {
+          return { isError: true, message: `Image is larger than ${IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB}MB`, transformedQuestion: questionCopy }
+        }
+        else if (!ALLOWED_IMAGE_TYPES.includes(image.type.split("/")[1])) {
+          return { isError: true, message: "Image is not a valid type", transformedQuestion: questionCopy }
+        }
+
+        const form = new FormData()
+        form.append("image", image)
+
+        const response = await fetch("/api/cloudinary/uploadImage", {
+          method: "POST",
+          body: form,
+        })
+
+        const json: any = await response.json()
+        if (json.url !== undefined) {
+          questionCopy.imageUrl = json.url
+          return { isError: false, imageUrl: json.url, transformedQuestion: questionCopy }
+        }
+        return { isError: true, message: "Error in uploading the image", transformedQuestion: questionCopy }
+      }
+      return { isError: true, message: "Invalid operation", transformedQuestion: questionCopy }
     }
   },
   "programming": {

@@ -9,6 +9,7 @@ import { createTRPCErrorNotification } from "../utils/notification";
 import toast from "svelte-french-toast";
 import { enviromentFetch } from "./fetch";
 import type { TestType } from "@prisma/client";
+import { questionContentFunctions } from "./test/questionFunctions";
 
 // Awaited<
 //   ReturnType<ReturnType<typeof trpc>['protected']["saveTest"]['mutate']>
@@ -78,7 +79,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
-  // TODO:
+  // Sending test to the API endpoint to save it to the DB
   const serverResponse = await isValidInputServerAndSetErrorsToTestObject(testObject, {
     title: props.data.title,
     description: props.data.description,
@@ -120,6 +121,24 @@ export const validateTestAndRecordIt = async (props: Props) => {
 
   try {
     let response;
+    const questions = props.data.questions
+
+    const imageQuestionsPromises: (ReturnType<NonNullable<typeof questionContentFunctions["image"]["onActionWithDB"]>> | undefined)[] = []
+    for (const i in questions) {
+      const questionTypeFunctionCall = questionContentFunctions[questions[i].questionType].onActionWithDB
+      if (questionTypeFunctionCall) {
+        imageQuestionsPromises[i] = questionTypeFunctionCall(props.type, questions[i].content as any)
+      }
+    }
+
+    const awaitedImageQuestions = await Promise.all(imageQuestionsPromises)
+
+    for (const i in awaitedImageQuestions) {
+      const data = awaitedImageQuestions[i]
+      if (data) {
+        questions[i].content = data.transformedQuestion
+      }
+    }
 
     if (props.type === "create") {
       response = await trpc(get(page)).protected.saveTest.mutate({

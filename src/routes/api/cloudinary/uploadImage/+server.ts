@@ -14,8 +14,6 @@ export const POST = async ({ request }) => {
     })
   }
 
-
-
   let uploadStream: any;
 
   if (image instanceof File) {
