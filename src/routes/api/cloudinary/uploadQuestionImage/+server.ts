@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit"
 import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
-import { ALLOWED_IMAGE_TYPES, IMAGE_IMPORT_SIZE_IN_MB } from "~helpers/constants"
+import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 
 export const POST = async ({ request, locals }) => {
   const session = await locals.getSession()
@@ -24,9 +24,9 @@ export const POST = async ({ request, locals }) => {
   let uploadStream: any;
 
   if (image instanceof File) {
-    if (image.size > IMAGE_IMPORT_SIZE_IN_MB * 1024 * 1024) {
+    if (image.size > IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB * 1024 * 1024) {
       return json({
-        error: `Image is larger than ${IMAGE_IMPORT_SIZE_IN_MB}MB`
+        error: `Image is larger than ${IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB}MB`
       }, {
         status: 400
       })
@@ -41,7 +41,7 @@ export const POST = async ({ request, locals }) => {
     const arrayBuffer = await image.arrayBuffer()
     const buffer = new Uint8Array(arrayBuffer)
     uploadStream = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ allowed_formats: ALLOWED_IMAGE_TYPES, folder: "tests" }, (error, result) => {
+      cloudinary.uploader.upload_stream({ allowed_formats: ALLOWED_IMAGE_TYPES, folder: "questions" }, (error, result) => {
         if (error) {
           return reject(error)
         }

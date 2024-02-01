@@ -649,7 +649,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
         const form = new FormData()
         form.append("image", image)
 
-        const response = await fetch("/api/cloudinary/uploadImage", {
+        const response = await fetch("/api/cloudinary/uploadQuestionImage", {
           method: "POST",
           body: form,
         })
