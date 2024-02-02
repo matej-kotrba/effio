@@ -118,7 +118,8 @@
 	}
 
 	onMount(() => {
-		if (content.imageFile) {
+		if (content.imageFile instanceof File) {
+			console.log(content.imageFile);
 			const reader = new FileReader();
 			reader.readAsDataURL(content.imageFile);
 			reader.onload = () => {

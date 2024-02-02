@@ -2,6 +2,7 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import type { Prisma, TagOnTests, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
+import { questionContentFunctions } from "~helpers/test/questionFunctions"
 
 export const protectedRouter = router({
   saveTest: loggedInProcedure.input(z.object({
@@ -334,6 +335,17 @@ export const protectedRouter = router({
       const test = await ctx.prisma.test.findUnique({
         where: {
           id: input.testGroupId
+        },
+        include: {
+          testVersions: {
+            take: 1,
+            orderBy: {
+              version: "desc"
+            },
+            include: {
+              questions: true
+            }
+          }
         }
       })
 
@@ -343,6 +355,12 @@ export const protectedRouter = router({
 
       if (test.ownerId !== ctx.userId) {
         throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to delete this test" })
+      }
+
+      // Call functions for deleting the questions (for example to remove images from storage bucket)
+      for (const question of test.testVersions[0].questions) {
+
+        questionContentFunctions[question.content].delete(question.content)
       }
 
       const deleteTest = await ctx.prisma.test.delete({

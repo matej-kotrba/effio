@@ -103,16 +103,18 @@
 		>
 			<div>
 				{#if data.options !== undefined && data.options.length > 0}
-					<div
-						class="absolute flex items-center z-[2000] gap-1 px-2 py-1 rounded-lg left-1 top-1 bg-light_white dark:bg-dark_grey"
-					>
+					<div class="absolute flex items-center z-[2000] gap-1 left-1 top-1">
 						<DropdownSelect dropdownTabs={data.options}>
-							<iconify-icon
-								icon="fluent:settings-24-filled"
-								class={twMerge(
-									'text-2xl duration-100 text-light_text_black dark:text-dark_text_white'
-								)}
-							/>
+							<div
+								class="grid px-2 py-1 rounded-lg bg-light_white dark:bg-dark_grey place-content-center"
+							>
+								<iconify-icon
+									icon="fluent:settings-24-filled"
+									class={twMerge(
+										'text-2xl duration-100 text-light_text_black dark:text-dark_text_white'
+									)}
+								/>
+							</div>
 						</DropdownSelect>
 					</div>
 				{/if}

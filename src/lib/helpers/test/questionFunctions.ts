@@ -634,9 +634,20 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "onActionWithDB": async (operation, question) => {
       // Transform the question's copy directly so it can be used elsewhere withou conditional checking of question type
       const questionCopy = { ...question }
-      console.log(question)
 
-      if (operation === "create") {
+      if (operation === "delete" || operation === "update") {
+        if (question.imageUrl) {
+          await fetch("/api/cloudinary/deleteImage", {
+            method: "POST",
+            body: JSON.stringify({
+              imageUrl: question.imageUrl,
+              folderPath: "questions"
+            })
+          })
+        }
+      }
+
+      if (operation === "create" || operation === "update") {
         const image = question.imageFile
         if (!image) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
         if (image.size > IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB * 1024 * 1024) {

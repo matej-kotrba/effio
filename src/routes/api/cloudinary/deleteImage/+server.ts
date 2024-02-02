@@ -15,14 +15,14 @@ export const POST = async (event) => {
   }
 
 
-  const { imageUrl } = data as { imageUrl: string | undefined }
+  const { imageUrl, folderPath } = data as { imageUrl: string | undefined, folderPath: string | undefined }
   if (!imageUrl) {
     fail(400, {
       message: "No image url provided"
     })
   }
 
-  const id = `tests/${(imageUrl?.split("/").pop())?.split(".")[0]}`
+  const id = `${folderPath ? folderPath : "tests"}/${(imageUrl?.split("/").pop())?.split(".")[0]}`
 
   try {
     const result = await cloudinary.uploader.destroy(id)

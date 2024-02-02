@@ -11,7 +11,7 @@
 		<slot />
 	</button>
 	<ul
-		class="w-40 p-2 -translate-x-1/2 bg-white dropdown-content menu shadow-surrounding shadow-light_text_black_20 rounded-box left-1/2 text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
+		class="w-40 p-2 bg-white dropdown-content menu shadow-surrounding shadow-light_text_black_20 rounded-box text-light_text_black dark:text-dark_text_white dark:bg-dark_grey"
 	>
 		{#each dropdownTabs as item}
 			<li class="group">

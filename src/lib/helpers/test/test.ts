@@ -48,6 +48,7 @@ export function initializeTestToTestStore(testObject: Writable<TestObject>, test
       const item: QuestionClient = {
         id: question.id,
         title: question.title,
+        // Udělat check jestli je ten content správně, tu funkci pak použít i v protected do deletu
         content: question.content as QuestionTypeMap[typeof type],
         questionTypeId: question.typeId,
         questionType: type,
