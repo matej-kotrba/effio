@@ -1,7 +1,11 @@
 import { fail, json } from '@sveltejs/kit'
 import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
+import { checkRequestOrigin } from '~/lib/server/utils/endpoints.js'
 
-export const POST = async ({ request }) => {
+export const POST = async (event) => {
+  checkRequestOrigin(event)
+  const { request } = event
+
   const data = await request.json()
 
   if (!data) {

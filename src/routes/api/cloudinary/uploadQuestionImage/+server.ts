@@ -1,8 +1,12 @@
 import { json } from "@sveltejs/kit"
 import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
+import { checkRequestOrigin } from "~/lib/server/utils/endpoints.js"
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 
-export const POST = async ({ request, locals }) => {
+export const POST = async (event) => {
+  checkRequestOrigin(event)
+  const { request, locals } = event
+
   const session = await locals.getSession()
   if (!session?.user?.name) return json({
     error: "You are not allowed to upload images"
