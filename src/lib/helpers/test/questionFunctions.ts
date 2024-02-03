@@ -1,5 +1,5 @@
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
-import { randomIdLettersOnly } from "~helpers/randomId"
+import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
 import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema } from "~schemas/textInput"
 
@@ -637,13 +637,15 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       if (operation === "delete" || operation === "update") {
         if (question.imageUrl) {
-          await fetch("/api/cloudinary/deleteImage", {
+          const data = await enviromentFetch({
+            path: "cloudinary/deleteImage",
             method: "POST",
             body: JSON.stringify({
               imageUrl: question.imageUrl,
               folderPath: "questions"
             })
           })
+          console.log(data)
         }
       }
 
