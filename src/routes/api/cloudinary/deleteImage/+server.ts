@@ -3,6 +3,8 @@ import { cloudinary } from "~/lib/server/cloudinary/cloudinaryConfig"
 import { checkRequestOrigin } from '~/lib/server/utils/endpoints.js'
 
 export const POST = async (event) => {
+
+  console.log("START")
   checkRequestOrigin(event)
   const { request } = event
 
@@ -16,6 +18,7 @@ export const POST = async (event) => {
 
 
   const { imageUrl, folderPath } = data as { imageUrl: string | undefined, folderPath: string | undefined }
+  console.log(imageUrl)
   if (!imageUrl) {
     fail(400, {
       message: "No image url provided"

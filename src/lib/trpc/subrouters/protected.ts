@@ -343,7 +343,11 @@ export const protectedRouter = router({
               version: "desc"
             },
             include: {
-              questions: true
+              questions: {
+                include: {
+                  type: true
+                }
+              },
             }
           }
         }
@@ -359,8 +363,13 @@ export const protectedRouter = router({
 
       // Call functions for deleting the questions (for example to remove images from storage bucket)
       for (const question of test.testVersions[0].questions) {
-
-        questionContentFunctions[question.content].delete(question.content)
+        // TODO: Later that question.content should be validated
+        const typeCheckedFunction = questionContentFunctions[question.type.slug as keyof QuestionTypeMap].onActionWithDB
+        if (typeCheckedFunction && question.content) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          typeCheckedFunction("delete", question.content)
+        }
       }
 
       const deleteTest = await ctx.prisma.test.delete({
