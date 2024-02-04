@@ -33,6 +33,9 @@ export const questionMethods: QuestionMethods = {
   },
   "image": {
     icon: "clarity:image-line"
+  },
+  "bitmap": {
+    icon: "bi:map"
   }
 }
 
@@ -637,7 +640,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       if (operation === "delete" || operation === "update") {
         if (question.imageUrl) {
-          const data = await enviromentFetch({
+          await enviromentFetch({
             path: "cloudinary/deleteImage",
             method: "POST",
             body: JSON.stringify({
@@ -648,8 +651,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
               "Content-type": "application/json"
             }
           })
-
-          console.log(data)
         }
       }
 
@@ -679,6 +680,80 @@ export const questionContentFunctions: QuestionContentTransformation = {
         return { isError: true, message: "Error in uploading the image", transformedQuestion: questionCopy }
       }
       return { isError: true, message: "Invalid operation", transformedQuestion: questionCopy }
+    }
+  },
+  "bitmap": {
+    "createNew": () => {
+      return {
+        type: "bitmap",
+        initial: {
+          location: [0, 0],
+          zoom: 6
+        },
+        tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
+        answerPoint: {
+          location: [100, 100]
+        }
+      }
+    },
+    "separateAnswer": (question): BitmapQuestion => {
+      return {
+        ...question,
+        answerPoint: {
+          location: question.initial.location
+        }
+      }
+    },
+    "checkAnswerPresence": (question): boolean => {
+      return typeof question.answerPoint.location[0] === "number" && typeof question.answerPoint.location[1] === "number"
+    },
+    "checkAnswerCorrectness": (answer, original) => {
+      if (!answer.answerPoint.location || !original.answerPoint.location) return false
+      const lat1 = answer.answerPoint.location[0]
+      const lon1 = answer.answerPoint.location[1]
+      const lat2 = original.answerPoint.location[0]
+      const lon2 = original.answerPoint.location[1]
+
+      const distance = Math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
+
+      return distance <= original.tolerence
+    },
+    "checkCreatorCorrectFormat": (content) => {
+      let isError = false
+      let message = ""
+
+      const parsedTolerance = geographyToleranceSchema.safeParse(content.tolerence)
+
+      if (parsedTolerance.success === false) {
+        isError = true
+        message = parsedTolerance.error.errors[0].message
+      }
+
+      const parsedLocation = geographyLocationSchema.safeParse(content.initial.location)
+
+      if (parsedLocation.success === false) {
+        isError = true
+        message = parsedLocation.error.errors[0].message
+      }
+
+      const answerLocation = geographyLocationSchema.safeParse(content.answerPoint.location)
+
+      if (answerLocation.success === false) {
+        isError = true
+        message = answerLocation.error.errors[0].message
+      }
+
+      return {
+        isError: isError,
+        message: message,
+        store: content
+      }
+    },
+    "calculatePoints": (q1, q2, maxPoints: number) => {
+      return questionContentFunctions["bitmap"].checkAnswerCorrectness(q1, q2) ? maxPoints : 0
+    },
+    "shuffleAnswers": (question): BitmapQuestion => {
+      return question
     }
   },
   "programming": {

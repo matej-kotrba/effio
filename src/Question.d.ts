@@ -76,6 +76,25 @@ type ImageQuestion = {
   answers: Answer[];
 }
 
+type BitmapQuestion = {
+  type: "bitmap";
+  imageUrl?: string;
+  imageFile?: File;
+  initial: {
+    location: GeographyLocation;
+    zoom: number;
+    errors?: [string?, string?]
+  },
+  tolerence: number,
+  answerPoint: {
+    location: GeographyLocation;
+    errors?: [string?, string?]
+  },
+  errors?: {
+    tolerence?: string;
+  }
+}
+
 type ProgrammingQuestion = {
   type: "programming",
   description: string,
@@ -115,6 +134,7 @@ type QuestionTypeMap = {
   'geography': GeographyQuestion;
   "image": ImageQuestion;
   "programming": ProgrammingQuestion;
+  "bitmap": BitmapQuestion
 }
 
 type QuestionContent = QuestionTypeMap[keyof QuestionTypeMap];

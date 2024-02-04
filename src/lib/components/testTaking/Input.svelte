@@ -7,6 +7,7 @@
 	import Write from './takingInputs/Write.svelte';
 	import Fill from './takingInputs/Fill.svelte';
 	import Geography from './takingInputs/Geography.svelte';
+	import Image from './takingInputs/Image.svelte';
 
 	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let testObject: TestObject;
@@ -142,6 +143,15 @@
 				{questionIndex}
 				resultFormat={resultFormat &&
 				resultFormat['userAnswer']['type'] === 'geography'
+					? typedResultFormat
+					: null}
+			/>
+		{:else if testObject['questions'][questionIndex]['questionType'] === 'image'}
+			<Image
+				{testObject}
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'image'
 					? typedResultFormat
 					: null}
 			/>
