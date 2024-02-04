@@ -643,8 +643,12 @@ export const questionContentFunctions: QuestionContentTransformation = {
             body: JSON.stringify({
               imageUrl: question.imageUrl,
               folderPath: "questions"
-            })
+            }),
+            headers: {
+              "Content-type": "application/json"
+            }
           })
+
           console.log(data)
         }
       }

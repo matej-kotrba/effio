@@ -8,7 +8,7 @@ type Props = {
 }
 
 export const enviromentFetch = ({ path, method = "GET", body, headers }: Props) => {
-  console.log(`${dev ? `http://localhost:5173/api/${path}` : `https://effio.vercel.app/api/${path}`}`)
+  console.log(`${dev ? `http://localhost:5173/api/${path}` : `https://effio.vercel.app/api/${path}`}`, method)
   return fetch(`${dev ? `http://localhost:5173/api/${path}` : `https://effio.vercel.app/api/${path}`}`, {
     method,
     body,
