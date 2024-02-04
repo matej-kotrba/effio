@@ -18,6 +18,7 @@ will be used in the test creator -->
 	import { clickOutside } from '~use/clickOutside';
 	import Geography from './creatorInputs/Geography.svelte';
 	import Image from './creatorInputs/Image.svelte';
+	import Bitmap from './creatorInputs/Bitmap.svelte';
 
 	const testObject = getTestObject();
 
@@ -138,6 +139,8 @@ will be used in the test creator -->
 					<Geography on:questionDetails indexParent={index} />
 				{:else if $testObject['questions'][index]['questionType'] === 'image'}
 					<Image on:questionDetails indexParent={index} />
+				{:else if $testObject['questions'][index]['questionType'] === 'bitmap'}
+					<Bitmap on:questionDetails indexParent={index} />
 				{/if}
 			</div>
 			<div class="flex items-center justify-between">
