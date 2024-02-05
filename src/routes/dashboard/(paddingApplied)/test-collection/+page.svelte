@@ -129,7 +129,6 @@
 					testGroupId: $modalStore.modalDeleteInfo.id
 				});
 				isDeletingTest = false;
-				console.log(response);
 				if (!response['success']) {
 					if (response['message']) {
 						toast.error(response['message']);

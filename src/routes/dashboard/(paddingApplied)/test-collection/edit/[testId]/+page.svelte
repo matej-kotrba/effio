@@ -6,7 +6,7 @@
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { goto } from '$app/navigation';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { toast as Toast } from 'svelte-french-toast';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import { TRPCClientError } from '@trpc/client';

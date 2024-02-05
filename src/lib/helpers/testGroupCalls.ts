@@ -94,7 +94,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
     return;
   }
 
-
   // Setup the image
   let newlySavedImageUrl: string | undefined = undefined;
   if (props.data.image !== undefined && props.data.image !== null) {
@@ -170,7 +169,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
       })
 
       if (imageUrlToDeleteTest === null) return
-
       response = await trpc(get(page)).protected.updateTest.mutate({
         title: props.data.title,
         description: props.data.description,

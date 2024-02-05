@@ -644,7 +644,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       const questionCopy = { ...question }
 
       if (operation === "delete" || operation === "update") {
-        if (question.imageUrl) {
+        if (question.imageUrl && question.imageFile && question.imageFile instanceof File) {
           await enviromentFetch({
             path: "cloudinary/deleteImage",
             method: "POST",
@@ -661,7 +661,8 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       if (operation === "create" || operation === "update") {
         const image = question.imageFile
-        if (!image) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
+        if ((!image || !(image instanceof File)) && question.imageUrl) return { isError: false, transformedQuestion: questionCopy }
+        if (!image || !(image instanceof File)) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
         if (image.size > IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB * 1024 * 1024) {
           return { isError: true, message: `Image is larger than ${IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB}MB`, transformedQuestion: questionCopy }
         }
