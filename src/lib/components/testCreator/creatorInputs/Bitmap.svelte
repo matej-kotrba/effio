@@ -147,9 +147,9 @@
 		leafletMap.setMaxBounds(bounds);
 		leafletMap.setMinZoom(2);
 
-		leaflet
-			.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
-			.addTo(leafletMap);
+		// leaflet
+		// 	.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+		// 	.addTo(leafletMap);
 
 		initialMarker = leaflet
 			.marker(content.initial.location, {

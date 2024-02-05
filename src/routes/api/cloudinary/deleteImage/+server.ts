@@ -3,8 +3,7 @@ import { deleteImageFromCloudinary } from '~/lib/server/cloudinary/utils.js'
 import { checkRequestOrigin } from '~/lib/server/utils/endpoints.js'
 
 export const POST = async (event) => {
-  console.log("RUNNING")
-  // checkRequestOrigin(event)
+  checkRequestOrigin(event)
   const { request } = event
 
   const data = await request.json()

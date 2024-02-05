@@ -15,11 +15,11 @@
 		IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB
 	} from '~helpers/constants';
 	import { onMount } from 'svelte';
+	import { setImageUpload } from '../../inputs/ImageImportV2.svelte';
 
 	export let indexParent: number;
 
 	export let maxImageSizeInMB = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB;
-	export let exportedFile: File | null = null;
 
 	const testObject = getTestObject();
 
@@ -74,52 +74,20 @@
 			currentTarget: EventTarget & HTMLInputElement;
 		}
 	) {
-		if (imageRef === null || !e.currentTarget.files) return;
-		const file = e.currentTarget.files[0];
-		exportedFile = file;
-
-		if (file.type.split('/')[0] !== 'image') {
-			toast.error('File is not an image!');
-			e.currentTarget.value = '';
-			imageRef.src = '';
-
-			return;
-		}
-
-		if (ALLOWED_IMAGE_TYPES.includes(file.type.split('/')[1]) === false) {
-			toast.error(
-				`File type is not supported!\nUse ${ALLOWED_IMAGE_TYPES.join(
-					', '
-				)} instead`
-			);
-			e.currentTarget.value = '';
-			imageRef.src = '';
-
-			return;
-		}
-
-		if (!file) return;
-
-		if (file.size > maxImageSizeInMB * 1024 * 1024) {
-			toast.error(`Image is too big! Max size is ${maxImageSizeInMB}MB`);
-			e.currentTarget.value = '';
-			imageRef.src = '';
-
-			return;
-		}
-
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		content.imageFile = file;
-
-		reader.onload = () => {
-			uploadedImageUrl = reader.result as string;
-		};
+		if (imageRef === null) return;
+		setImageUpload(
+			e,
+			ALLOWED_IMAGE_TYPES,
+			maxImageSizeInMB,
+			(file, resultUrl) => {
+				content.imageFile = file;
+				uploadedImageUrl = resultUrl;
+			}
+		);
 	}
 
 	onMount(() => {
 		if (content.imageFile instanceof File) {
-			console.log(content.imageFile);
 			const reader = new FileReader();
 			reader.readAsDataURL(content.imageFile);
 			reader.onload = () => {

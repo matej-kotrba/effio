@@ -609,6 +609,11 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       }
 
+      // if (!content.imageUrl && !content.imageFile) {
+      //   isError = true
+      //   message = "Please include image"
+      // }
+
       for (const item in content.answers) {
         const result = answerSchema.safeParse(content.answers[item].answer)
         if (result.success === false) {
