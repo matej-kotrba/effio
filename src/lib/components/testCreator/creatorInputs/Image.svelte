@@ -15,15 +15,16 @@
 		IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB
 	} from '~helpers/constants';
 	import { onMount } from 'svelte';
-	import { setImageUpload } from '../../inputs/ImageImportV2.svelte';
+	import ImageImportV2, {
+		setImageUpload
+	} from '../../inputs/ImageImportV2.svelte';
 
 	export let indexParent: number;
 
-	export let maxImageSizeInMB = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB;
+	let maxImageSizeInMB = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB;
 
 	const testObject = getTestObject();
 
-	let imageRef: HTMLImageElement;
 	let uploadedImageUrl: string | null = null;
 
 	// Reference to the test object content
@@ -74,7 +75,6 @@
 			currentTarget: EventTarget & HTMLInputElement;
 		}
 	) {
-		if (imageRef === null) return;
 		setImageUpload(
 			e,
 			ALLOWED_IMAGE_TYPES,
@@ -98,30 +98,12 @@
 </script>
 
 <form class="relative flex flex-col gap-4">
-	<div
-		class="relative grid w-full border-2 border-black border-dashed aspect-video place-content-center"
-	>
-		<input
-			type="file"
-			name="image-upload-{indexParent}"
-			id="image-upload-{indexParent}"
-			accept={ALLOWED_IMAGE_TYPES.map((name) => `image/${name}`).join(', ')}
-			class="absolute w-full h-full opacity-0 cursor-pointer"
-			on:change={onImageUpload}
-		/>
-		<div
-			class="absolute w-full h-full overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-md pointer-events-none left-1/2 top-1/2"
-		>
-			<img
-				bind:this={imageRef}
-				src={uploadedImageUrl || content.imageUrl}
-				alt="Group icon"
-				class="object-cover w-full h-full text-transparent"
-			/>
-		</div>
-		<iconify-icon icon="ph:image-light" class="mx-auto text-4xl" />
-		<span>Upload image</span>
-	</div>
+	<ImageImportV2
+		{onImageUpload}
+		uploadedImageUrl={uploadedImageUrl || content?.imageUrl}
+		allowedImageTypes={ALLOWED_IMAGE_TYPES}
+		inputId={indexParent}
+	/>
 	<!-- Display a limit of the questions -->
 	<div class="flex justify-end">
 		<div class="flex gap-1">

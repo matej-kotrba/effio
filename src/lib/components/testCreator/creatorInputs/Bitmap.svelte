@@ -21,10 +21,20 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 	import type { MiddlewareLocation } from './Geography.svelte';
+	import ImageImportV2, {
+		setImageUpload
+	} from '~components/inputs/ImageImportV2.svelte';
+	import {
+		ALLOWED_IMAGE_TYPES,
+		IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB
+	} from '~helpers/constants';
 
 	export let indexParent: number;
+	let maxImageSizeInMB = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB;
 
 	const testObject = getTestObject();
+
+	let uploadedImageUrl: string | null = null;
 
 	let mapEl: HTMLDivElement;
 
@@ -32,6 +42,8 @@
 	$: content = $testObject.questions[indexParent].content as BitmapQuestion;
 
 	//TODO: Rerender happens even if updating only tolerance
+
+	let leafletMap: L.Map;
 
 	let initialMarker: Marker;
 	let answerMarker: Marker;
@@ -66,6 +78,22 @@
 	) {
 		if (!e.currentTarget) return;
 		leafletMap.setZoom(e.currentTarget.valueAsNumber ?? GEOGRAPHY_ZOOM_MIN);
+	}
+
+	function onImageUpload(
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		setImageUpload(
+			e,
+			ALLOWED_IMAGE_TYPES,
+			maxImageSizeInMB,
+			(file, resultUrl) => {
+				content.imageFile = file;
+				uploadedImageUrl = resultUrl;
+			}
+		);
 	}
 
 	$: {
@@ -113,7 +141,8 @@
 
 	$: answerMarkerToleranceCircle?.setRadius(content.tolerence * 1000);
 
-	let leafletMap: L.Map;
+	$: {
+	}
 
 	onMount(async () => {
 		const leaflet = await import('leaflet');
@@ -129,22 +158,24 @@
 			shadowSize: [41, 41]
 		});
 
-		let map = leaflet.map('map', {
-			crs: leaflet.CRS.Simple
-		});
+		leafletMap = leaflet
+			.map(mapEl, {
+				crs: leaflet.CRS.Simple
+			})
+			.setView(content.initial.location, content.initial.zoom);
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		leafletMap = leaflet
-			.map(mapEl)
-			.setView(content.initial.location, content.initial.zoom);
+		// leafletMap = leaflet
+		// 	.map(mapEl)
+		// 	.setView(content.initial.location, content.initial.zoom);
 
-		let bounds = leaflet.latLngBounds(
-			leaflet.latLng(LATITUDE_MIN, LONGITUDE_MIN),
-			leaflet.latLng(LATITUDE_MAX, LONGITUDE_MAX)
-		);
+		// let bounds = leaflet.latLngBounds(
+		// 	leaflet.latLng(LATITUDE_MIN, LONGITUDE_MIN),
+		// 	leaflet.latLng(LATITUDE_MAX, LONGITUDE_MAX)
+		// );
 
-		leafletMap.setMaxBounds(bounds);
+		// leafletMap.setMaxBounds(bounds);
 		leafletMap.setMinZoom(2);
 
 		// leaflet
@@ -196,6 +227,14 @@
 		leafletMap.on('zoom', (e) => {
 			content.initial.zoom = leafletMap.getZoom();
 		});
+
+		if (content.imageFile instanceof File) {
+			const reader = new FileReader();
+			reader.readAsDataURL(content.imageFile);
+			reader.onload = () => {
+				uploadedImageUrl = reader.result as string;
+			};
+		}
 	});
 
 	onDestroy(() => {
@@ -206,6 +245,12 @@
 </script>
 
 <form class="relative flex flex-col gap-4">
+	<ImageImportV2
+		{onImageUpload}
+		uploadedImageUrl={uploadedImageUrl || content?.imageUrl}
+		allowedImageTypes={ALLOWED_IMAGE_TYPES}
+		inputId={indexParent}
+	/>
 	<Collapsible title="Show options" openedTitle="Hide options">
 		<div class="flex gap-2">
 			<ErrorEnhance

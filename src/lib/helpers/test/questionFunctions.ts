@@ -609,10 +609,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
 
       }
 
-      // if (!content.imageUrl && !content.imageFile) {
-      //   isError = true
-      //   message = "Please include image"
-      // }
+      if (!content.imageUrl && !content.imageFile) {
+        isError = true
+        message = "Please include image"
+      }
 
       for (const item in content.answers) {
         const result = answerSchema.safeParse(content.answers[item].answer)
@@ -747,6 +747,11 @@ export const questionContentFunctions: QuestionContentTransformation = {
       if (answerLocation.success === false) {
         isError = true
         message = answerLocation.error.errors[0].message
+      }
+
+      if (!content.imageUrl && !content.imageFile) {
+        isError = true
+        message = "Please include image"
       }
 
       return {
