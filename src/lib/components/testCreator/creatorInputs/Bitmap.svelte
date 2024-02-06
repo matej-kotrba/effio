@@ -28,6 +28,7 @@
 		ALLOWED_IMAGE_TYPES,
 		IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB
 	} from '~helpers/constants';
+	import type L from 'leaflet';
 
 	export let indexParent: number;
 	let maxImageSizeInMB = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB;
@@ -42,6 +43,8 @@
 	$: content = $testObject.questions[indexParent].content as BitmapQuestion;
 
 	//TODO: Rerender happens even if updating only tolerance
+
+	let leaflet: typeof L | undefined;
 
 	let leafletMap: L.Map;
 
@@ -141,11 +144,33 @@
 
 	$: answerMarkerToleranceCircle?.setRadius(content.tolerence * 1000);
 
+	let currentImageLayer: L.ImageOverlay | undefined = undefined;
+
 	$: {
+		if (uploadedImageUrl) {
+			const image = new Image();
+			image.src = uploadedImageUrl;
+			image.onload = () => {
+				if (uploadedImageUrl && leaflet) {
+					console.log(image.width, image.height);
+					currentImageLayer = leaflet
+						.imageOverlay(uploadedImageUrl, [
+							[-image.height / 2, -image.width / 2],
+							[image.height / 2, image.width / 2]
+						])
+						.addTo(leafletMap);
+
+					leafletMap.setMaxBounds([
+						[-image.height / 2, -image.width / 2],
+						[image.height / 2, image.width / 2]
+					]);
+				}
+			};
+		}
 	}
 
 	onMount(async () => {
-		const leaflet = await import('leaflet');
+		leaflet = await import('leaflet');
 
 		let DefaultIcon = leaflet.icon({
 			iconUrl: '/imgs/icons/marker/marker-icon.png',
@@ -170,13 +195,8 @@
 		// 	.map(mapEl)
 		// 	.setView(content.initial.location, content.initial.zoom);
 
-		// let bounds = leaflet.latLngBounds(
-		// 	leaflet.latLng(LATITUDE_MIN, LONGITUDE_MIN),
-		// 	leaflet.latLng(LATITUDE_MAX, LONGITUDE_MAX)
-		// );
-
-		// leafletMap.setMaxBounds(bounds);
-		leafletMap.setMinZoom(2);
+		leafletMap.setMinZoom(-2);
+		leafletMap.setMaxZoom(1);
 
 		// leaflet
 		// 	.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
