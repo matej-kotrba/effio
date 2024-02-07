@@ -191,16 +191,8 @@
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		// leafletMap = leaflet
-		// 	.map(mapEl)
-		// 	.setView(content.initial.location, content.initial.zoom);
-
 		leafletMap.setMinZoom(-2);
 		leafletMap.setMaxZoom(1);
-
-		// leaflet
-		// 	.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
-		// 	.addTo(leafletMap);
 
 		initialMarker = leaflet
 			.marker(content.initial.location, {
