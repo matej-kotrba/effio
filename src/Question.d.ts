@@ -80,11 +80,7 @@ type BitmapQuestion = {
   type: "bitmap";
   imageUrl?: string;
   imageFile?: File;
-  initial: {
-    location: GeographyLocation;
-    zoom: number;
-    errors?: [string?, string?]
-  },
+  zoom: number;
   tolerence: number,
   answerPoint: {
     location: GeographyLocation;

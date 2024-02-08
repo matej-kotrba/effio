@@ -919,10 +919,6 @@
 		filter: drop-shadow(0px 0px 20px var(--dark-primary));
 	}
 
-	.fullscreen > #blob {
-		animation: blob_scale 6s ease-in-out infinite alternate;
-	}
-
 	@keyframes blob_scale {
 		from {
 			scale: 0.95;

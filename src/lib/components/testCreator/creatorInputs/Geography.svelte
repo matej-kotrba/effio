@@ -146,6 +146,7 @@
 			leaflet.latLng(LATITUDE_MIN, LONGITUDE_MIN),
 			leaflet.latLng(LATITUDE_MAX, LONGITUDE_MAX)
 		);
+		console.log(bounds);
 
 		leafletMap.setMaxBounds(bounds);
 		leafletMap.setMinZoom(2);

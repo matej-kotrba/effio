@@ -163,10 +163,6 @@
 		color: var(--light-whiter);
 	} */
 
-	.settings-button:hover {
-		animation: rotate-settings 0.2s ease-in-out forwards;
-	}
-
 	@keyframes rotate-settings {
 		from {
 			rotate: 0;

@@ -4,18 +4,14 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Circle, Marker } from 'leaflet';
 	import {
-		LATITUDE_MIN,
-		LATITUDE_MAX,
-		LONGITUDE_MIN,
-		LONGITUDE_MAX,
 		latitudeSchema,
 		longitudeSchema,
 		GEOGRAPHY_TOLERANCE_MIN,
 		GEOGRAPHY_TOLERANCE_MAX,
 		geographyToleranceSchema,
 		GEOGRAPHY_TOLERANCE_DEFAULT,
-		GEOGRAPHY_ZOOM_MIN,
-		GEOGRAPHY_ZOOM_MAX
+		BITMAP_ZOOM_MIN,
+		BITMAP_ZOOM_MAX
 	} from '~schemas/textInput';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -48,31 +44,8 @@
 
 	let leafletMap: L.Map;
 
-	let initialMarker: Marker;
 	let answerMarker: Marker;
 	let answerMarkerToleranceCircle: Circle;
-
-	let answerLocation: MiddlewareLocation = {
-		lat: String(
-			($testObject.questions[indexParent].content as BitmapQuestion).answerPoint
-				.location[0]
-		),
-		lng: String(
-			($testObject.questions[indexParent].content as BitmapQuestion).answerPoint
-				.location[1]
-		)
-	};
-
-	let initialLocation: MiddlewareLocation = {
-		lat: String(
-			($testObject.questions[indexParent].content as BitmapQuestion).initial
-				.location[0]
-		),
-		lng: String(
-			($testObject.questions[indexParent].content as BitmapQuestion).initial
-				.location[1]
-		)
-	};
 
 	function onZoomRangeInput(
 		e: Event & {
@@ -80,7 +53,7 @@
 		}
 	) {
 		if (!e.currentTarget) return;
-		leafletMap.setZoom(e.currentTarget.valueAsNumber ?? GEOGRAPHY_ZOOM_MIN);
+		leafletMap.setZoom(e.currentTarget.valueAsNumber ?? BITMAP_ZOOM_MIN);
 	}
 
 	function onImageUpload(
@@ -99,41 +72,7 @@
 		);
 	}
 
-	$: {
-		try {
-			const parsedLat = latitudeSchema.parse(Number(initialLocation.lat));
-			content.initial.location[0] = parsedLat;
-		} catch (e) {
-			initialLocation.lat = String(content.initial.location[0]);
-		}
-		try {
-			const parsedLng = longitudeSchema.parse(Number(initialLocation.lng));
-			content.initial.location[1] = parsedLng;
-		} catch (e) {
-			initialLocation.lng = String(content.initial.location[1]);
-		}
-		try {
-			initialMarker.setLatLng(content.initial.location);
-		} catch (e) {}
-	}
-	$: {
-		try {
-			const parsedLat = latitudeSchema.parse(Number(answerLocation.lat));
-			content.answerPoint.location[0] = parsedLat;
-		} catch (e) {
-			answerLocation.lat = String(content.answerPoint.location[0]);
-		}
-		try {
-			const parsedLng = longitudeSchema.parse(Number(answerLocation.lng));
-			content.answerPoint.location[1] = parsedLng;
-		} catch (e) {
-			answerLocation.lng = String(content.answerPoint.location[1]);
-		}
-		try {
-			answerMarker.setLatLng(content.answerPoint.location);
-			answerMarkerToleranceCircle.setLatLng(content.answerPoint.location);
-		} catch (e) {}
-	}
+	$: console.log(content.answerPoint.location);
 
 	$: {
 		if (typeof content.tolerence === 'string' && content.tolerence !== '') {
@@ -145,25 +84,34 @@
 	$: answerMarkerToleranceCircle?.setRadius(content.tolerence * 1000);
 
 	let currentImageLayer: L.ImageOverlay | undefined = undefined;
+	let currentImageURL: string | undefined = undefined;
 
 	$: {
-		if (uploadedImageUrl) {
+		if (uploadedImageUrl && currentImageURL !== uploadedImageUrl) {
 			const image = new Image();
 			image.src = uploadedImageUrl;
 			image.onload = () => {
+				if (currentImageLayer) {
+					currentImageLayer.remove();
+				}
 				if (uploadedImageUrl && leaflet) {
-					console.log(image.width, image.height);
+					const bounds = [
+						[0, 0],
+						[image.height, image.width]
+					];
+
+					console.log(bounds);
 					currentImageLayer = leaflet
-						.imageOverlay(uploadedImageUrl, [
-							[-image.height / 2, -image.width / 2],
-							[image.height / 2, image.width / 2]
-						])
+						.imageOverlay(uploadedImageUrl, bounds)
 						.addTo(leafletMap);
+					currentImageURL = uploadedImageUrl;
 
 					leafletMap.setMaxBounds([
-						[-image.height / 2, -image.width / 2],
-						[image.height / 2, image.width / 2]
+						[0, 0],
+						[image.height, image.width]
 					]);
+
+					leafletMap.fitBounds(bounds);
 				}
 			};
 		}
@@ -187,20 +135,13 @@
 			.map(mapEl, {
 				crs: leaflet.CRS.Simple
 			})
-			.setView(content.initial.location, content.initial.zoom);
+			.setView(content.answerPoint.location, content.zoom);
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		leafletMap.setMinZoom(-2);
-		leafletMap.setMaxZoom(1);
-
-		initialMarker = leaflet
-			.marker(content.initial.location, {
-				draggable: true,
-				autoPan: true
-			})
-			.addTo(leafletMap)
-			.bindTooltip('Initial User View');
+		leafletMap.setMinZoom(BITMAP_ZOOM_MIN);
+		leafletMap.setMaxZoom(BITMAP_ZOOM_MAX);
+		leafletMap.setZoom(content.zoom);
 
 		answerMarker = leaflet
 			.marker(content.answerPoint.location, {
@@ -219,25 +160,17 @@
 			})
 			.addTo(leafletMap);
 
-		initialMarker.on('dragend', (e) => {
-			const location = e.target.getLatLng() as {
-				lat: number;
-				lng: number;
-			};
-			initialLocation.lat = String(location.lat.toFixed(6));
-			initialLocation.lng = String(location.lng.toFixed(6));
-		});
+		// TODO:
 		answerMarker.on('dragend', (e) => {
 			const location = e.target.getLatLng() as {
 				lat: number;
 				lng: number;
 			};
-			answerLocation.lat = String(location.lat.toFixed(6));
-			answerLocation.lng = String(location.lng.toFixed(6));
+			console.log(location);
 		});
 
 		leafletMap.on('zoom', (e) => {
-			content.initial.zoom = leafletMap.getZoom();
+			content.zoom = leafletMap.getZoom();
 		});
 
 		if (content.imageFile instanceof File) {
@@ -252,7 +185,6 @@
 	onDestroy(() => {
 		leafletMap?.remove();
 		answerMarker?.remove();
-		initialMarker?.remove();
 	});
 </script>
 
@@ -264,106 +196,6 @@
 		inputId={indexParent}
 	/>
 	<Collapsible title="Show options" openedTitle="Hide options">
-		<div class="flex gap-2">
-			<ErrorEnhance
-				error={content.initial.errors ? content.initial.errors[0] : ''}
-			>
-				<TextInputSimple
-					displayOutside={true}
-					title="Initial View Latitude"
-					inputProperties={{ type: 'number' }}
-					titleName="lat"
-					validationSchema={latitudeSchema}
-					bind:inputValue={initialLocation.lat}
-					on:error={(event) => {
-						if (!content.initial.errors) content.initial.errors = [];
-						content.initial.errors[0] = event.detail;
-					}}
-					on:focusout={() => {
-						if (
-							initialLocation.lat === '' ||
-							'' + content.initial.location[0] != initialLocation.lat
-						) {
-							initialLocation.lat = String(content.initial.location[0]);
-						}
-					}}
-				/>
-			</ErrorEnhance>
-			<ErrorEnhance
-				error={content.initial.errors ? content.initial.errors[1] : ''}
-			>
-				<TextInputSimple
-					displayOutside={true}
-					title="Initial View Latitude"
-					inputProperties={{ type: 'number' }}
-					titleName="lng"
-					validationSchema={longitudeSchema}
-					bind:inputValue={initialLocation.lng}
-					on:error={(event) => {
-						if (!content.initial.errors) content.initial.errors = [];
-						content.initial.errors[1] = event.detail;
-					}}
-					on:focusout={() => {
-						if (
-							initialLocation.lng === '' ||
-							'' + content.initial.location[1] != initialLocation.lng
-						) {
-							initialLocation.lng = String(content.initial.location[1]);
-						}
-					}}
-				/>
-			</ErrorEnhance>
-		</div>
-		<div class="flex gap-2">
-			<ErrorEnhance
-				error={content.answerPoint.errors ? content.answerPoint.errors[0] : ''}
-			>
-				<TextInputSimple
-					displayOutside={true}
-					title="Answer Point Latitude"
-					inputProperties={{ type: 'number' }}
-					titleName="lat_answer"
-					validationSchema={latitudeSchema}
-					bind:inputValue={answerLocation.lat}
-					on:error={(event) => {
-						if (!content.answerPoint.errors) content.answerPoint.errors = [];
-						content.answerPoint.errors[0] = event.detail;
-					}}
-					on:focusout={() => {
-						if (
-							answerLocation.lat === '' ||
-							'' + content.answerPoint.location[0] != answerLocation.lat
-						) {
-							answerLocation.lat = String(content.initial.location[0]);
-						}
-					}}
-				/>
-			</ErrorEnhance>
-			<ErrorEnhance
-				error={content.answerPoint.errors ? content.answerPoint.errors[1] : ''}
-			>
-				<TextInputSimple
-					displayOutside={true}
-					title="Answer Point Latitude"
-					inputProperties={{ type: 'number' }}
-					titleName="lng_answer"
-					validationSchema={longitudeSchema}
-					bind:inputValue={answerLocation.lng}
-					on:error={(event) => {
-						if (!content.answerPoint.errors) content.answerPoint.errors = [];
-						content.answerPoint.errors[1] = event.detail;
-					}}
-					on:focusout={() => {
-						if (
-							answerLocation.lng === '' ||
-							'' + content.answerPoint.location[1] != answerLocation.lng
-						) {
-							answerLocation.lng = String(content.initial.location[1]);
-						}
-					}}
-				/>
-			</ErrorEnhance>
-		</div>
 		<div>
 			<div>
 				<span class="text-body2">Answer Tolerance</span>
@@ -401,9 +233,9 @@
 				<span class="text-body2">Zoom Level</span>
 				<input
 					type="range"
-					min={GEOGRAPHY_ZOOM_MIN}
-					max={GEOGRAPHY_ZOOM_MAX}
-					bind:value={content.initial.zoom}
+					min={BITMAP_ZOOM_MIN}
+					max={BITMAP_ZOOM_MAX}
+					bind:value={content.zoom}
 					class="range range-sm range-primary dark:range-accent"
 					on:input={onZoomRangeInput}
 				/>

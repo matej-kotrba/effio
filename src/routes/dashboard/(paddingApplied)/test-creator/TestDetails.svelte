@@ -26,7 +26,6 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
 
-	export let sectionTransitionDuration: number;
 	export let testType: TestType;
 	export let testData:
 		| NonNullable<

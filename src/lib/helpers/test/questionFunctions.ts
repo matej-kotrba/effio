@@ -1,7 +1,7 @@
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
-import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema } from "~schemas/textInput"
+import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN } from "~schemas/textInput"
 
 type QuestionMethods = {
   [Key in keyof QuestionTypeMap]: {
@@ -692,10 +692,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
     "createNew": () => {
       return {
         type: "bitmap",
-        initial: {
-          location: [0, 0],
-          zoom: 6
-        },
+        zoom: BITMAP_ZOOM_MIN,
         tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
         answerPoint: {
           location: [100, 100]
@@ -706,7 +703,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return {
         ...question,
         answerPoint: {
-          location: question.initial.location
+          location: [0, 0]
         }
       }
     },
@@ -733,13 +730,6 @@ export const questionContentFunctions: QuestionContentTransformation = {
       if (parsedTolerance.success === false) {
         isError = true
         message = parsedTolerance.error.errors[0].message
-      }
-
-      const parsedLocation = geographyLocationSchema.safeParse(content.initial.location)
-
-      if (parsedLocation.success === false) {
-        isError = true
-        message = parsedLocation.error.errors[0].message
       }
 
       const answerLocation = geographyLocationSchema.safeParse(content.answerPoint.location)
