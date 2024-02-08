@@ -2,7 +2,7 @@
 	import { getTestObject } from '~stores/testObject';
 	import 'leaflet/dist/leaflet.css';
 	import { onDestroy, onMount } from 'svelte';
-	import type { Circle, Marker } from 'leaflet';
+	import type { Circle, LatLngBoundsExpression, Marker } from 'leaflet';
 	import {
 		latitudeSchema,
 		longitudeSchema,
@@ -81,10 +81,17 @@
 		}
 	}
 
-	$: answerMarkerToleranceCircle?.setRadius(content.tolerence * 1000);
+	$: answerMarkerToleranceCircle?.setRadius(content.tolerence);
+
+	$: {
+		try {
+			answerMarkerToleranceCircle.setLatLng(content.answerPoint.location);
+		} catch (e) {}
+	}
 
 	let currentImageLayer: L.ImageOverlay | undefined = undefined;
 	let currentImageURL: string | undefined = undefined;
+	let currentImageSizes: [number, number] | undefined = undefined;
 
 	$: {
 		if (uploadedImageUrl && currentImageURL !== uploadedImageUrl) {
@@ -98,13 +105,17 @@
 					const bounds = [
 						[0, 0],
 						[image.height, image.width]
-					];
+					] as LatLngBoundsExpression;
 
-					console.log(bounds);
+					currentImageSizes = [image.width, image.height];
+
 					currentImageLayer = leaflet
 						.imageOverlay(uploadedImageUrl, bounds)
 						.addTo(leafletMap);
 					currentImageURL = uploadedImageUrl;
+
+					answerMarker.setLatLng([image.height / 2, image.width / 2]);
+					content.answerPoint.location = [image.height / 2, image.width / 2];
 
 					leafletMap.setMaxBounds([
 						[0, 0],
@@ -145,8 +156,7 @@
 
 		answerMarker = leaflet
 			.marker(content.answerPoint.location, {
-				draggable: true,
-				autoPan: true
+				draggable: true
 			})
 			.addTo(leafletMap)
 			.bindTooltip('Marking answer position');
@@ -156,17 +166,29 @@
 				color: '#6433f0',
 				fillColor: '#6433f035',
 				fillOpacity: 0.5,
-				radius: content.tolerence * 1000
+				radius: content.tolerence
 			})
 			.addTo(leafletMap);
 
-		// TODO:
 		answerMarker.on('dragend', (e) => {
 			const location = e.target.getLatLng() as {
 				lat: number;
 				lng: number;
 			};
-			console.log(location);
+			if (!currentImageSizes) return;
+			// Check if marker is out of the bounds
+			if (location.lat < 0) {
+				location.lat = 0;
+			} else if (location.lat > currentImageSizes[1]) {
+				location.lat = currentImageSizes[1];
+			}
+			if (location.lng < 0) {
+				location.lng = 0;
+			} else if (location.lng > currentImageSizes[0]) {
+				location.lng = currentImageSizes[0];
+			}
+			answerMarker.setLatLng(location);
+			content.answerPoint.location = [location['lat'], location['lng']];
 		});
 
 		leafletMap.on('zoom', (e) => {
