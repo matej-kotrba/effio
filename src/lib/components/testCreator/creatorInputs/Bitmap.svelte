@@ -72,8 +72,6 @@
 		);
 	}
 
-	$: console.log(content.answerPoint.location);
-
 	$: {
 		if (typeof content.tolerence === 'string' && content.tolerence !== '') {
 			content.tolerence =

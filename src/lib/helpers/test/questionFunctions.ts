@@ -1,7 +1,7 @@
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
-import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN } from "~schemas/textInput"
+import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema } from "~schemas/textInput"
 
 type QuestionMethods = {
   [Key in keyof QuestionTypeMap]: {
@@ -725,14 +725,14 @@ export const questionContentFunctions: QuestionContentTransformation = {
       let isError = false
       let message = ""
 
-      const parsedTolerance = geographyToleranceSchema.safeParse(content.tolerence)
+      const parsedTolerance = bitmapToleranceSchema.safeParse(content.tolerence)
 
       if (parsedTolerance.success === false) {
         isError = true
         message = parsedTolerance.error.errors[0].message
       }
 
-      const answerLocation = geographyLocationSchema.safeParse(content.answerPoint.location)
+      const answerLocation = bitmapToleranceSchema.safeParse(content.answerPoint.location)
 
       if (answerLocation.success === false) {
         isError = true
