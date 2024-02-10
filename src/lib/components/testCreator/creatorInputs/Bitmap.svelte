@@ -72,6 +72,23 @@
 		);
 	}
 
+	function checkAndSetLocation(location: { lat: number; lng: number }) {
+		if (!currentImageSizes) return;
+		// Check if marker is out of the bounds
+		if (location.lat < 0) {
+			location.lat = 0;
+		} else if (location.lat > currentImageSizes[1]) {
+			location.lat = currentImageSizes[1];
+		}
+		if (location.lng < 0) {
+			location.lng = 0;
+		} else if (location.lng > currentImageSizes[0]) {
+			location.lng = currentImageSizes[0];
+		}
+		answerMarker.setLatLng(location);
+		content.answerPoint.location = [location['lat'], location['lng']];
+	}
+
 	$: {
 		if (typeof content.tolerence === 'string' && content.tolerence !== '') {
 			content.tolerence =
@@ -112,8 +129,8 @@
 						.addTo(leafletMap);
 					currentImageURL = uploadedImageUrl;
 
-					answerMarker.setLatLng([image.height / 2, image.width / 2]);
-					content.answerPoint.location = [image.height / 2, image.width / 2];
+					// answerMarker.setLatLng([image.height / 2, image.width / 2]);
+					// content.answerPoint.location = [image.height / 2, image.width / 2];
 
 					leafletMap.setMaxBounds([
 						[0, 0],
@@ -121,6 +138,8 @@
 					]);
 
 					leafletMap.fitBounds(bounds);
+
+					checkAndSetLocation(answerMarker.getLatLng());
 				}
 			};
 		}
@@ -173,25 +192,18 @@
 				lat: number;
 				lng: number;
 			};
-			if (!currentImageSizes) return;
-			// Check if marker is out of the bounds
-			if (location.lat < 0) {
-				location.lat = 0;
-			} else if (location.lat > currentImageSizes[1]) {
-				location.lat = currentImageSizes[1];
-			}
-			if (location.lng < 0) {
-				location.lng = 0;
-			} else if (location.lng > currentImageSizes[0]) {
-				location.lng = currentImageSizes[0];
-			}
-			answerMarker.setLatLng(location);
-			content.answerPoint.location = [location['lat'], location['lng']];
+
+			checkAndSetLocation(location);
 		});
 
 		leafletMap.on('zoom', (e) => {
 			content.zoom = leafletMap.getZoom();
 		});
+
+		if (content.imageFile instanceof File || content.imageUrl) {
+			// Meaning that the image was already used so the location is not new
+			answerMarker.setLatLng(content.answerPoint.location);
+		}
 
 		if (content.imageFile instanceof File) {
 			const reader = new FileReader();
@@ -215,7 +227,7 @@
 		allowedImageTypes={ALLOWED_IMAGE_TYPES}
 		inputId={indexParent}
 	/>
-	<Collapsible title="Show options" openedTitle="Hide options">
+	<Collapsible title="Show options" openedTitle="Hide options" class="w-full">
 		<div>
 			<div>
 				<span class="text-body2">Answer Tolerance</span>
