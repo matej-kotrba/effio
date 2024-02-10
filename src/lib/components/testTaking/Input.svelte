@@ -8,6 +8,7 @@
 	import Fill from './takingInputs/Fill.svelte';
 	import Geography from './takingInputs/Geography.svelte';
 	import Image from './takingInputs/Image.svelte';
+	import Bitmap from './takingInputs/Bitmap.svelte';
 
 	type ResultFormat = null | QuestionServerCheckResponse<QuestionContent>;
 	export let testObject: TestObject;
@@ -152,6 +153,15 @@
 				{questionIndex}
 				resultFormat={resultFormat &&
 				resultFormat['userAnswer']['type'] === 'image'
+					? typedResultFormat
+					: null}
+			/>
+		{:else if testObject['questions'][questionIndex]['questionType'] === 'bitmap'}
+			<Bitmap
+				{testObject}
+				{questionIndex}
+				resultFormat={resultFormat &&
+				resultFormat['userAnswer']['type'] === 'bitmap'
 					? typedResultFormat
 					: null}
 			/>

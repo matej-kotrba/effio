@@ -63,11 +63,61 @@ type QuestionContentTransformation = {
     "checkCreatorCorrectFormat": (content: QuestionTypeMap[Key]) => { isError: boolean, message: string, store: QuestionTypeMap[Key] },
     "calculatePoints": (q1: QuestionTypeMap[Key], q2: QuestionTypeMap[Key], maxPoints: number) => number,
     "shuffleAnswers": (question: QuestionTypeMap[Key]) => QuestionTypeMap[Key]
-    "onActionWithDB"?: (operation: "create" | "update" | "delete", question: QuestionTypeMap[Key]) => Promise<{ isError: boolean, message?: string, imageUrl?: string, transformedQuestion: ImageQuestion }>
+    "onActionWithDB"?: (operation: "create" | "update" | "delete", question: QuestionTypeMap[Key]) => Promise<{ isError: boolean, message?: string, imageUrl?: string, transformedQuestion: QuestionTypeMap[Key] }>
   } & (Key extends string ? AdditionalMethods[Key] : object)
 }
 
 export const QUESTION_LIMIT = 25;
+
+// General upload action for image inputs
+async function uploadImageAction<T extends (ImageQuestion | BitmapQuestion)>(operation: "delete" | "update" | "create", question: T, uploadLimit = IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB): Promise<{ isError: boolean, message?: string, imageUrl?: string, transformedQuestion: T }> {
+  // Transform the question's copy directly so it can be used elsewhere withou conditional checking of question type
+  const questionCopy = { ...question }
+
+  if (operation === "delete" || operation === "update") {
+    if (question.imageUrl && question.imageFile && question.imageFile instanceof File) {
+      await enviromentFetch({
+        path: "cloudinary/deleteImage",
+        method: "POST",
+        body: JSON.stringify({
+          imageUrl: question.imageUrl,
+          folderPath: "questions"
+        }),
+        headers: {
+          "Content-type": "application/json"
+        }
+      })
+    }
+  }
+
+  if (operation === "create" || operation === "update") {
+    const image = question.imageFile
+    if ((!image || !(image instanceof File)) && question.imageUrl) return { isError: false, transformedQuestion: questionCopy }
+    if (!image || !(image instanceof File)) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
+    if (image.size > uploadLimit * 1024 * 1024) {
+      return { isError: true, message: `Image is larger than ${uploadLimit}MB`, transformedQuestion: questionCopy }
+    }
+    else if (!ALLOWED_IMAGE_TYPES.includes(image.type.split("/")[1])) {
+      return { isError: true, message: "Image is not a valid type", transformedQuestion: questionCopy }
+    }
+
+    const form = new FormData()
+    form.append("image", image)
+
+    const response = await fetch("/api/cloudinary/uploadQuestionImage", {
+      method: "POST",
+      body: form,
+    })
+
+    const json: any = await response.json()
+    if (json.url !== undefined) {
+      questionCopy.imageUrl = json.url
+      return { isError: false, imageUrl: json.url, transformedQuestion: questionCopy }
+    }
+    return { isError: true, message: "Error in uploading the image", transformedQuestion: questionCopy }
+  }
+  return { isError: true, message: "Invalid operation", transformedQuestion: questionCopy }
+}
 
 // Transform the question into data which will not contain answers
 export const questionContentFunctions: QuestionContentTransformation = {
@@ -640,53 +690,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     },
     "onActionWithDB": async (operation, question) => {
-      // Transform the question's copy directly so it can be used elsewhere withou conditional checking of question type
-      const questionCopy = { ...question }
-
-      if (operation === "delete" || operation === "update") {
-        if (question.imageUrl && question.imageFile && question.imageFile instanceof File) {
-          await enviromentFetch({
-            path: "cloudinary/deleteImage",
-            method: "POST",
-            body: JSON.stringify({
-              imageUrl: question.imageUrl,
-              folderPath: "questions"
-            }),
-            headers: {
-              "Content-type": "application/json"
-            }
-          })
-        }
-      }
-
-      if (operation === "create" || operation === "update") {
-        const image = question.imageFile
-        if ((!image || !(image instanceof File)) && question.imageUrl) return { isError: false, transformedQuestion: questionCopy }
-        if (!image || !(image instanceof File)) return { isError: true, message: "No image provided", transformedQuestion: questionCopy }
-        if (image.size > IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB * 1024 * 1024) {
-          return { isError: true, message: `Image is larger than ${IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB}MB`, transformedQuestion: questionCopy }
-        }
-        else if (!ALLOWED_IMAGE_TYPES.includes(image.type.split("/")[1])) {
-          return { isError: true, message: "Image is not a valid type", transformedQuestion: questionCopy }
-        }
-
-        const form = new FormData()
-        form.append("image", image)
-
-        const response = await fetch("/api/cloudinary/uploadQuestionImage", {
-          method: "POST",
-          body: form,
-        })
-
-        const json: any = await response.json()
-        if (json.url !== undefined) {
-          questionCopy.imageUrl = json.url
-          return { isError: false, imageUrl: json.url, transformedQuestion: questionCopy }
-        }
-        return { isError: true, message: "Error in uploading the image", transformedQuestion: questionCopy }
-      }
-      return { isError: true, message: "Invalid operation", transformedQuestion: questionCopy }
+      return uploadImageAction(operation, question)
     }
+
   },
   "bitmap": {
     "createNew": () => {
@@ -711,15 +717,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return typeof question.answerPoint.location[0] === "number" && typeof question.answerPoint.location[1] === "number"
     },
     "checkAnswerCorrectness": (answer, original) => {
-      if (!answer.answerPoint.location || !original.answerPoint.location) return false
-      const lat1 = answer.answerPoint.location[0]
-      const lon1 = answer.answerPoint.location[1]
-      const lat2 = original.answerPoint.location[0]
-      const lon2 = original.answerPoint.location[1]
+      const answerDistance = Math.sqrt(Math.abs(answer.answerPoint.location[0] - original.answerPoint.location[0]) ** 2 + Math.abs(answer.answerPoint.location[1] - original.answerPoint.location[1]) ** 2)
 
-      const distance = Math.sqrt((lat1 - lat2) ** 2 + (lon1 - lon2) ** 2)
-
-      return distance <= original.tolerence
+      return answerDistance <= original.tolerence
     },
     "checkCreatorCorrectFormat": (content) => {
       let isError = false
@@ -755,6 +755,9 @@ export const questionContentFunctions: QuestionContentTransformation = {
     },
     "shuffleAnswers": (question): BitmapQuestion => {
       return question
+    },
+    "onActionWithDB": async (operation, question) => {
+      return uploadImageAction(operation, question)
     }
   },
   "programming": {
