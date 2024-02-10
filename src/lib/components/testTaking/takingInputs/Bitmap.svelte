@@ -80,7 +80,7 @@
 
 			resultToleranceCircle = leaflet
 				.circle(resultFormat.correctAnswer.answerPoint.location, {
-					radius: resultFormat.correctAnswer.tolerence * 1000,
+					radius: resultFormat.correctAnswer.tolerence,
 					color: resultFormat.isCorrect ? '#1ac725' : '#f03737',
 					fillColor: resultFormat.isCorrect ? '#1ac72535' : '#f0373735',
 					fillOpacity: 0.5
@@ -190,7 +190,7 @@
 	}}
 >
 	<span class="text-body2 text-light_text_black_80 dark:text-dark_text_white_80"
-		>You have tolerance of {content.tolerence} km</span
+		>You have tolerance of {content.tolerence} px</span
 	>
 	<div class="w-full h-[300px] relative">
 		<div bind:this={mapEl} class="absolute inset-0 z-[10]" />
