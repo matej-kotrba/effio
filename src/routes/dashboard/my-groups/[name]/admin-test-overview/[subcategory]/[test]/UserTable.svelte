@@ -391,6 +391,7 @@
 							class="flex justify-center text-center"
 						>
 							<img
+								referrerpolicy="no-referrer"
 								class="w-8 font-normal rounded-full aspect-square text-light_text_black dark:text-dark_text_white"
 								src={userOrAnonymousSrc(user.image)}
 								alt="User"

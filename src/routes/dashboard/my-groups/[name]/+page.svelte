@@ -150,6 +150,7 @@
 						<div class="flex items-center gap-1">
 							<div class="w-12 overflow-hidden rounded-lg aspect-square">
 								<img
+									referrerpolicy="no-referrer"
 									src={user.user.image || '/imgs/svgs/user-circle.svg'}
 									alt={user.user.name}
 								/>

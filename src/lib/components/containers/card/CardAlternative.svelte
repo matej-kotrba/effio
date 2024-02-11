@@ -145,6 +145,7 @@
 							src={data.icon}
 							alt=""
 							loading="lazy"
+							referrerpolicy="no-referrer"
 							use:onImageLoad
 							on:imageerror={(e) => {
 								isIconFallback = true;

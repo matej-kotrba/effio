@@ -356,6 +356,7 @@
 							<div>
 								<div class="flex items-center gap-1 mb-1">
 									<img
+										referrerpolicy="no-referrer"
 										src={message.sender.image}
 										alt="User"
 										class="w-8 rounded-lg aspect-square"

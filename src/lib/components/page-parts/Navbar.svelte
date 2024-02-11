@@ -102,6 +102,7 @@
 					<div class="dropdown dropdown-end">
 						<button tabindex="0" type="button">
 							<img
+								referrerpolicy="no-referrer"
 								src={user?.user?.image}
 								alt="Icon"
 								class="w-10 rounded-full"
@@ -147,7 +148,12 @@
 				<!-- <img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" /> -->
 				<div class="dropdown dropdown-end">
 					<button tabindex="0" type="button">
-						<img src={user?.user?.image} alt="Icon" class="w-10 rounded-full" />
+						<img
+							referrerpolicy="no-referrer"
+							src={user?.user?.image}
+							alt="Icon"
+							class="w-10 rounded-full"
+						/>
 					</button>
 					<ul
 						class="relative gap-1 p-2 mt-2 shadow-md menu dropdown-content bg-base-100 rounded-box w-52 dark:bg-dark_light_grey"
