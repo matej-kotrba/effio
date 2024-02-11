@@ -1,11 +1,17 @@
-import type { Session } from "@auth/core/types";
+import type { Session, User } from "@auth/core/types";
+import type { UserRoles } from "@prisma/client";
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
 	type UpdatedSession = Session & {
 		user?: {
 			id?: string | null
+			role?: UserRoles
 		};
+	}
+
+	type UpdatedUser = User & {
+		role: UserRoles
 	}
 
 	namespace App {

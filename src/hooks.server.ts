@@ -59,15 +59,18 @@ const handleAuth: Handle = SvelteKitAuth({
     Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
   ],
   secret: AUTH_SECRET,
+
   callbacks: {
     session: async ({ session, user }: { session: Session, user: User | AdapterUser }): Promise<UpdatedSession> => {
-
       const newSession: UpdatedSession = session
+      const newUser: UpdatedUser = user as UpdatedUser
+
       if (newSession?.user && user) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         newSession.user!.id = user.id as string;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        newSession.user!.role = newUser.role
       }
-
       return newSession as UpdatedSession;
     },
     signIn: async ({ account }) => {
@@ -79,13 +82,16 @@ const handleAuth: Handle = SvelteKitAuth({
 const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
 
   const session = await event.locals.getSession()
-
   if (event.url.pathname.startsWith("/dashboard") && !(session?.user)) {
     throw redirect(303, "/login")
   }
 
   if (event.url.pathname.startsWith("/login") && (session?.user)) {
     throw redirect(303, "/dashboard")
+  }
+
+  if (event.url.pathname.startsWith("/admin") && (!(session?.user) || session?.user?.role !== "ADMIN")) {
+    throw redirect(303, "/")
   }
 
   return resolve(event)

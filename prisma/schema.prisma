@@ -44,6 +44,7 @@ model User {
   email                    String?                   @unique
   emailVerified            DateTime?
   image                    String?
+  role                     UserRoles                 @default(USER)
   accounts                 Account[]
   sessions                 Session[]
   tests                    Test[]
@@ -304,6 +305,11 @@ model TestStar {
   @@unique([testId, userId])
   @@index([testId])
   @@index([userId])
+}
+
+enum UserRoles {
+  ADMIN
+  USER
 }
 
 enum MessageTypes {
