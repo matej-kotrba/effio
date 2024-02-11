@@ -75,7 +75,7 @@ async function uploadImageAction<T extends (ImageQuestion | BitmapQuestion)>(ope
   const questionCopy = { ...question }
 
   if (operation === "delete" || operation === "update") {
-    if (question.imageUrl && question.imageFile && question.imageFile instanceof File) {
+    if (question.imageUrl && operation === "update" ? question.imageFile && question.imageFile instanceof File : true) {
       await enviromentFetch({
         path: "cloudinary/deleteImage",
         method: "POST",
@@ -757,6 +757,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question
     },
     "onActionWithDB": async (operation, question) => {
+      console.log(question, question.imageFile)
       return uploadImageAction(operation, question)
     }
   },
