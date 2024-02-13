@@ -10,24 +10,7 @@
 	export let data;
 
 	let isSidebarShown = false;
-	// $: isSidebarCollapsible = false;
-
-	// onMount(() => {
-	// 	const width = getComputedStyle(document.documentElement).width;
-	// 	if (+width.slice(0, width.length - 2) < LG) {
-	// 		isSidebarCollapsible = true;
-	// 	} else {
-	// 		isSidebarCollapsible = false;
-	// 	}
-	// 	window.addEventListener('resize', (e) => {
-	// 		const width = getComputedStyle(document.documentElement).width;
-	// 		if (+width.slice(0, width.length - 2) <= LG) {
-	// 			isSidebarCollapsible = true;
-	// 		} else {
-	// 			isSidebarCollapsible = false;
-	// 		}
-	// 	});
-	// });
+	let setIsSidebarShown: (value: boolean) => void;
 
 	function getBreadcrumbsPath(index: number) {
 		const parts = $page['url']['pathname']
@@ -58,6 +41,7 @@
 </script>
 
 <DashboardSidebarWrapper
+	bind:setSidebarShown={setIsSidebarShown}
 	{isSidebarShown}
 	session={data.session}
 	links={[
@@ -100,7 +84,9 @@
 		>
 			<!-- Hamburger menu -->
 			<button
-				on:click={() => (isSidebarShown = !isSidebarShown)}
+				on:click={() => {
+					setIsSidebarShown(!isSidebarShown);
+				}}
 				class="block mr-auto md:hidden"
 				type="button"
 			>

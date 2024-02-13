@@ -14,6 +14,7 @@
 
 	export let isSidebarShown: boolean;
 	export let session: UpdatedSession;
+	export let setSidebarShown: (value: boolean) => void;
 </script>
 
 <!-- Main sidebar -->
@@ -29,14 +30,14 @@
 		<button
 			type="button"
 			class="ml-auto"
-			on:click={() => (isSidebarShown = !isSidebarShown)}
+			on:click={() => setSidebarShown(!isSidebarShown)}
 		>
 			<iconify-icon icon="ic:round-close" class="text-3xl" />
 		</button>
 	</div>
 	<!-- Links of the sidebar -->
 	<div class="flex flex-col items-center px-2 xl:px-4">
-		<a class="w-[160px]" on:click={() => (isSidebarShown = false)} href="/">
+		<a class="w-[160px]" on:click={() => setSidebarShown(false)} href="/">
 			<img
 				src={$applicationStates['darkMode']['isDarkMode']
 					? '/imgs/effio/text-dark.png'
@@ -48,7 +49,7 @@
 		<div class="flex flex-col items-center gap-2">
 			{#each links as { title, icon, href }}
 				<a
-					on:click={() => (isSidebarShown = false)}
+					on:click={() => setSidebarShown(false)}
 					href="/{href}"
 					class="flex items-center justify-start w-full gap-2 px-6 py-3 duration-100 text-body3 lg:text-body2 btn dark:hover:bg-dark_text_white_20 btn-ghost text-light_text_black dark:text-dark_text_white"
 					class:active={browser && $page.url.pathname === `/${href}`}

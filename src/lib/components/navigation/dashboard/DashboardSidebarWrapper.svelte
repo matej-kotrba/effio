@@ -10,11 +10,14 @@
 
 	export let isSidebarShown: boolean;
 	export let session: UpdatedSession;
+	export const setSidebarShown = (value: boolean) => {
+		isSidebarShown = value;
+	};
 </script>
 
 <main class="min-h-full duration-100 grid__layout dark:bg-dark_black">
 	<div>
-		<Sidebar {isSidebarShown} {session} {links} />
+		<Sidebar {isSidebarShown} {session} {links} {setSidebarShown} />
 	</div>
 	<div>
 		<slot />
