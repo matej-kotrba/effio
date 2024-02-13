@@ -46,7 +46,7 @@
 				class="drop-shadow-primary h-[100px] object-contain"
 			/>
 		</a>
-		<div class="flex flex-col items-center gap-2">
+		<div class="flex flex-col items-center w-full gap-2">
 			{#each links as { title, icon, href }}
 				<a
 					on:click={() => setSidebarShown(false)}
