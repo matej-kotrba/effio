@@ -54,15 +54,15 @@
 				})
 		},
 		{
-			id: 'name',
-			accessorKey: 'name',
-			header: 'Name',
-			cell: (info) => info.getValue()
-		},
-		{
 			id: 'id',
 			accessorKey: 'id',
 			header: 'ID',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'name',
+			accessorKey: 'name',
+			header: 'Name',
 			cell: (info) => info.getValue()
 		},
 		{
@@ -129,13 +129,12 @@
 </script>
 
 <div class="p-2">
-	<div class="h-2" />
-	<table>
-		<thead>
+	<table class="w-full max-w-[600px] border-collapse border-2 border-black">
+		<thead class="">
 			{#each $table.getHeaderGroups() as headerGroup}
-				<tr>
+				<tr class="border-black border-solid border-y-2">
 					{#each headerGroup.headers as header}
-						<th colSpan={header.colSpan}>
+						<th colSpan={header.colSpan} class="text-left">
 							{#if !header.isPlaceholder}
 								<div
 									class:cursor-pointer={header.column.getCanSort()}
@@ -162,7 +161,7 @@
 		</thead>
 		<tbody>
 			{#each $table.getRowModel().rows.slice(0, 10) as row}
-				<tr>
+				<tr class="border-black border-solid border-y-2">
 					{#each row.getVisibleCells() as cell}
 						<td>
 							<svelte:component
@@ -176,27 +175,3 @@
 	</table>
 	<div>{$table.getRowModel().rows.length} Rows</div>
 </div>
-
-<style>
-	table {
-		border: 1px solid lightgray;
-	}
-
-	tbody {
-		border-bottom: 1px solid lightgray;
-	}
-
-	th {
-		border-bottom: 1px solid lightgray;
-		border-right: 1px solid lightgray;
-		padding: 2px 4px;
-	}
-
-	tfoot {
-		color: gray;
-	}
-
-	tfoot th {
-		font-weight: normal;
-	}
-</style>
