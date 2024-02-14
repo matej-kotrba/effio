@@ -4,15 +4,18 @@
 		createSvelteTable,
 		getCoreRowModel,
 		getSortedRowModel,
-		flexRender
+		flexRender,
+		renderComponent
 	} from '@tanstack/svelte-table';
 	import type {
 		ColumnDef,
 		OnChangeFn,
+		RowSelectionState,
 		SortingState,
 		TableOptions
 	} from '@tanstack/svelte-table';
 	import type { UserRoles } from '@prisma/client';
+	import RowCheckBox from './RowCheckBox.svelte';
 
 	type User = {
 		id: string;
@@ -35,6 +38,22 @@
 
 	const columns: ColumnDef<User>[] = [
 		{
+			id: 'select',
+			header: ({ table }) =>
+				renderComponent(RowCheckBox, {
+					checked: table.getIsAllRowsSelected(),
+					indeterminate: table.getIsSomeRowsSelected(),
+					onChange: table.getToggleAllRowsSelectedHandler()
+				}),
+			cell: (props) =>
+				renderComponent(RowCheckBox, {
+					checked: props.row.getIsSelected(),
+					disabled: !props.row.getCanSelect(),
+					indeterminate: props.row.getIsSomeSelected(),
+					onChange: props.row.getToggleSelectedHandler()
+				})
+		},
+		{
 			id: 'name',
 			accessorKey: 'name',
 			header: 'Name',
@@ -55,6 +74,26 @@
 	];
 
 	let sorting: SortingState = [];
+	let selection: RowSelectionState = {};
+
+	const onSelect = (updater: any) => {
+		if (updater instanceof Function) {
+			selection = updater(selection);
+		} else {
+			selection = updater;
+		}
+
+		options.update(
+			(old) =>
+				({
+					...old,
+					state: {
+						...old.state,
+						rowSelection: selection
+					}
+				} as TableOptions<User>)
+		);
+	};
 
 	const setSorting: OnChangeFn<SortingState> = (updater) => {
 		if (updater instanceof Function) {
@@ -75,8 +114,11 @@
 		data: mock,
 		columns,
 		state: {
-			sorting
+			sorting,
+			rowSelection: selection
 		},
+		enableRowSelection: true,
+		onRowSelectionChange: onSelect,
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
