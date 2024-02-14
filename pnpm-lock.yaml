@@ -26,6 +26,9 @@ dependencies:
   '@tailwindcss/container-queries':
     specifier: ^0.1.1
     version: 0.1.1(tailwindcss@3.3.1)
+  '@tanstack/svelte-table':
+    specifier: ^8.12.0
+    version: 8.12.0(svelte@4.2.3)
   '@trpc/client':
     specifier: ^10.19.1
     version: 10.19.1(@trpc/server@10.19.1)
@@ -151,9 +154,6 @@ devDependencies:
   svelte-dnd-action:
     specifier: ^0.9.22
     version: 0.9.22(svelte@4.2.3)
-  svelte-headless-table:
-    specifier: ^0.18.2
-    version: 0.18.2(svelte@4.2.3)
   tailwindcss:
     specifier: ^3.3.1
     version: 3.3.1(postcss@8.4.21)
@@ -794,6 +794,21 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/svelte-table@8.12.0(svelte@4.2.3):
+    resolution: {integrity: sha512-IgmCj4tVUgjQAUa895XommqNkNdlbi5K3MgcuyB7SbgRMXZXWUrz4chDSrFSseosLz+hcizXsoavmDcDm/WYwA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      svelte: ^4.0.0 || ^3.49.0
+    dependencies:
+      '@tanstack/table-core': 8.12.0
+      svelte: 4.2.3
+    dev: false
+
+  /@tanstack/table-core@8.12.0:
+    resolution: {integrity: sha512-cq/ylWVrOwixmwNXQjgZaQw1Izf7+nPxjczum7paAnMtwPg1S2qRAJU+Jb8rEBUWm69voC/zcChmePlk2hc6ug==}
+    engines: {node: '>=12'}
     dev: false
 
   /@total-typescript/ts-reset@0.4.2:
@@ -2693,17 +2708,6 @@ packages:
       svelte-writable-derived: 3.1.0(svelte@4.2.3)
     dev: false
 
-  /svelte-headless-table@0.18.2(svelte@4.2.3):
-    resolution: {integrity: sha512-dnDTaXW5CNzRUjHVbc/Hb0Zv80zU4VcIUnAja6OuZriXvim1AqcWYQCHPRzBGwqj1m3YEHHNvspSzY0o5HzA0A==}
-    peerDependencies:
-      svelte: ^4.0.0
-    dependencies:
-      svelte: 4.2.3
-      svelte-keyed: 2.0.0(svelte@4.2.3)
-      svelte-render: 2.0.1(svelte@4.2.3)
-      svelte-subscribe: 2.0.1(svelte@4.2.3)
-    dev: true
-
   /svelte-hmr@0.15.3(svelte@4.2.3):
     resolution: {integrity: sha512-41snaPswvSf8TJUhlkoJBekRrABDXDMdpNpT2tfHIv4JuhgvHqLMhEPGtaQn0BmbNSTkuz2Ed20DF2eHw0SmBQ==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -2711,14 +2715,6 @@ packages:
       svelte: ^3.19.0 || ^4.0.0
     dependencies:
       svelte: 4.2.3
-
-  /svelte-keyed@2.0.0(svelte@4.2.3):
-    resolution: {integrity: sha512-7TeEn+QbJC2OJrHiuM0T8vMBkms3DNpTE+Ir+NtnVBnBMA78aL4f1ft9t0Hn/pBbD/TnIXi4YfjFRAgtN+DZ5g==}
-    peerDependencies:
-      svelte: ^4.0.0
-    dependencies:
-      svelte: 4.2.3
-    dev: true
 
   /svelte-preprocess@5.1.1(postcss@8.4.21)(svelte@4.2.3)(typescript@5.0.3):
     resolution: {integrity: sha512-p/Dp4hmrBW5mrCCq29lEMFpIJT2FZsRlouxEc5qpbOmXRbaFs7clLs8oKPwD3xCFyZfv1bIhvOzpQkhMEVQdMw==}
@@ -2766,23 +2762,6 @@ packages:
       strip-indent: 3.0.0
       svelte: 4.2.3
       typescript: 5.0.3
-    dev: true
-
-  /svelte-render@2.0.1(svelte@4.2.3):
-    resolution: {integrity: sha512-RpB0SurwXm4xhjvHHtjeqMmvd645FURb79GFOotScOSqnKK5vpqBgoBPGC0pp+E/eZgDSQ9rRAdn/+N4ys1mXQ==}
-    peerDependencies:
-      svelte: ^4.0.0
-    dependencies:
-      svelte: 4.2.3
-      svelte-subscribe: 2.0.1(svelte@4.2.3)
-    dev: true
-
-  /svelte-subscribe@2.0.1(svelte@4.2.3):
-    resolution: {integrity: sha512-eKXIjLxB4C7eQWPqKEdxcGfNXm2g/qJ67zmEZK/GigCZMfrTR3m7DPY93R6MX+5uoqM1FRYxl8LZ1oy4URWi2A==}
-    peerDependencies:
-      svelte: ^4.0.0
-    dependencies:
-      svelte: 4.2.3
     dev: true
 
   /svelte-writable-derived@3.1.0(svelte@4.2.3):
