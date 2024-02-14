@@ -129,10 +129,12 @@
 </script>
 
 <div class="p-2">
-	<table class="w-full max-w-[600px] border-collapse border-2 border-black">
+	<table
+		class="w-full max-w-[600px] border-collapse border-[2px] border-gray-300"
+	>
 		<thead class="">
 			{#each $table.getHeaderGroups() as headerGroup}
-				<tr class="border-black border-solid border-y-2">
+				<tr class="border-gray-300 border-solid border-y-[1px] bg-gray-100">
 					{#each headerGroup.headers as header}
 						<th colSpan={header.colSpan} class="text-left">
 							{#if !header.isPlaceholder}
@@ -140,6 +142,7 @@
 									class:cursor-pointer={header.column.getCanSort()}
 									class:select-none={header.column.getCanSort()}
 									on:click={header.column.getToggleSortingHandler()}
+									class="flex items-center font-semibold"
 								>
 									<svelte:component
 										this={flexRender(
@@ -148,9 +151,11 @@
 										)}
 									/>
 									{#if header.column.getIsSorted().toString() === 'asc'}
-										🔼
+										<span>🔼</span>
 									{:else if header.column.getIsSorted().toString() === 'desc'}
-										🔽
+										<span>🔽</span>
+									{:else}
+										<span class="opacity-0">🔽</span>
 									{/if}
 								</div>
 							{/if}
@@ -161,12 +166,17 @@
 		</thead>
 		<tbody>
 			{#each $table.getRowModel().rows.slice(0, 10) as row}
-				<tr class="border-black border-solid border-y-2">
+				<tr class="border-gray-300 border-solid border-y-[1px] bg-slate-50">
 					{#each row.getVisibleCells() as cell}
 						<td>
-							<svelte:component
-								this={flexRender(cell.column.columnDef.cell, cell.getContext())}
-							/>
+							<div class="flex items-center">
+								<svelte:component
+									this={flexRender(
+										cell.column.columnDef.cell,
+										cell.getContext()
+									)}
+								/>
+							</div>
 						</td>
 					{/each}
 				</tr>
@@ -175,3 +185,10 @@
 	</table>
 	<div>{$table.getRowModel().rows.length} Rows</div>
 </div>
+
+<style>
+	td,
+	th {
+		padding: 0.6rem;
+	}
+</style>
