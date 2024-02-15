@@ -122,6 +122,8 @@
 	});
 
 	const table = createSvelteTable(options);
+
+	$: console.log(selection);
 </script>
 
 <div class="p-2">
@@ -161,8 +163,14 @@
 			{/each}
 		</thead>
 		<tbody>
-			{#each $table.getRowModel().rows.slice(0, 10) as row}
-				<tr class="border-gray-300 border-solid border-y-[1px] bg-slate-50">
+			{#each $table.getRowModel().rows.slice(0, 10) as row, index}
+				<tr
+					class="border-gray-300 border-solid border-y-[1px] bg-slate-50 {selection[
+						index
+					]
+						? 'bg-indigo-100'
+						: ''}"
+				>
 					{#each row.getVisibleCells() as cell}
 						<td>
 							<div class="flex items-center">

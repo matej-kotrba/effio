@@ -24,10 +24,13 @@
 		aspect-ratio: 1/1;
 		border: 1px solid var(--light-text-black-40);
 		border-radius: 8px;
+		cursor: pointer;
 	}
 
 	.container {
-		position: relative;
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
 	}
 
 	.container::after {
@@ -36,11 +39,23 @@
 		inset: 3px;
 		background-color: var(--light-primary);
 		border-radius: 6px;
-		pointer-events: none;
-		opacity: 1;
+		opacity: 0;
 	}
 
-	:where(input:checked) .container::after {
+	input:indeterminate + .container::after {
+		opacity: 1;
+		background-color: var(--warning);
+	}
+
+	input:indeterminate {
+		border: 1px solid var(--warning);
+	}
+
+	input:checked {
+		border: 1px solid var(--light-primary);
+	}
+
+	input:checked + .container::after {
 		opacity: 1;
 	}
 </style>
