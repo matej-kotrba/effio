@@ -5,6 +5,7 @@ import { groupMessagesRouter } from "./subrouters/groupMessages"
 import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 import { groupInvitesRouter } from "./subrouters/groupInvite";
+import { adminRouter } from "./subrouters/admin/router"
 import type { QuestionType } from "@prisma/client"
 
 // Schema of template question type
@@ -338,6 +339,7 @@ export const appRouter = router({
   groups: groupsRouter,
   groupMessages: groupMessagesRouter,
   groupInvites: groupInvitesRouter,
+  admin: adminRouter
 })
 
 export type Router = typeof appRouter

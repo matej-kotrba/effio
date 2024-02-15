@@ -17,24 +17,20 @@
 	import type { UserRoles } from '@prisma/client';
 	import RowCheckBox from './RowCheckBox.svelte';
 
+	export let data: User[] = [];
+
+	$: {
+		options.update((options) => ({
+			...options,
+			data
+		}));
+	}
+
 	type User = {
 		id: string;
 		name: string;
 		role: UserRoles;
 	};
-
-	const mock: User[] = [
-		{
-			id: '1',
-			name: 'John Doe',
-			role: 'ADMIN'
-		},
-		{
-			id: '2',
-			name: 'Jane Doe',
-			role: 'USER'
-		}
-	];
 
 	const columns: ColumnDef<User>[] = [
 		{
@@ -111,7 +107,7 @@
 	};
 
 	const options = writable<TableOptions<User>>({
-		data: mock,
+		data: data,
 		columns,
 		state: {
 			sorting,
@@ -130,7 +126,7 @@
 
 <div class="p-2">
 	<table
-		class="w-full max-w-[600px] border-collapse border-[2px] border-gray-300"
+		class="w-full max-w-[900px] border-collapse border-[2px] border-gray-300"
 	>
 		<thead class="">
 			{#each $table.getHeaderGroups() as headerGroup}
