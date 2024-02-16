@@ -16,6 +16,11 @@
 	} from '@tanstack/svelte-table';
 	import type { UserRoles } from '@prisma/client';
 	import RowCheckBox from './RowCheckBox.svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import {
+		createObserver,
+		type CreateObserverReturn
+	} from '~/lib/utils/observers';
 
 	export let data: User[] = [];
 
@@ -35,12 +40,12 @@
 	const columns: ColumnDef<User>[] = [
 		{
 			id: 'select',
-			header: ({ table }) =>
-				renderComponent(RowCheckBox, {
-					checked: table.getIsAllRowsSelected(),
-					indeterminate: table.getIsSomeRowsSelected(),
-					onChange: table.getToggleAllRowsSelectedHandler()
-				}),
+			// header: ({ table }) =>
+			// 	renderComponent(RowCheckBox, {
+			// 		checked: table.getIsAllRowsSelected(),
+			// 		indeterminate: table.getIsSomeRowsSelected(),
+			// 		onChange: table.getToggleAllRowsSelectedHandler()
+			// 	}),
 			cell: (props) =>
 				renderComponent(RowCheckBox, {
 					checked: props.row.getIsSelected(),
@@ -123,7 +128,33 @@
 
 	const table = createSvelteTable(options);
 
-	$: console.log(selection);
+	const dispatch = createEventDispatcher();
+
+	function onLastRowIntersection() {
+		dispatch('last-row-intersection');
+	}
+
+	let addIntersectionUse: CreateObserverReturn['addIntersection'];
+
+	onMount(() => {
+		const { observer, addIntersection } = createObserver({
+			callback: (entry, observer) => {
+				if (entry.isIntersecting) {
+					console.log('Intersecting');
+					onLastRowIntersection();
+
+					observer.unobserve(entry.target);
+				}
+			}
+		});
+		addIntersectionUse = addIntersection;
+
+		onLastRowIntersection();
+
+		return () => {
+			observer.disconnect();
+		};
+	});
 </script>
 
 <div class="p-2">
@@ -131,11 +162,13 @@
 		class="w-full max-w-[900px] border-collapse border-[2px] border-gray-300"
 	>
 		<thead class="">
-			{#each $table.getHeaderGroups() as headerGroup}
+			{#each $table.getHeaderGroups() as headerGroup, index}
 				<tr class="border-gray-300 border-solid border-y-[1px] bg-gray-100">
 					{#each headerGroup.headers as header}
 						<th colSpan={header.colSpan} class="text-left">
 							{#if !header.isPlaceholder}
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
 								<div
 									class:cursor-pointer={header.column.getCanSort()}
 									class:select-none={header.column.getCanSort()}
@@ -163,12 +196,13 @@
 			{/each}
 		</thead>
 		<tbody>
-			{#each $table.getRowModel().rows.slice(0, 10) as row, index}
+			{#each $table.getRowModel().rows as row, index}
 				<tr
+					use:addIntersectionUse={{ shouldActive: true }}
 					class="border-gray-300 border-solid border-y-[1px] bg-slate-50 {selection[
 						index
 					]
-						? 'bg-indigo-100'
+						? 'bg-indigo-200'
 						: ''}"
 				>
 					{#each row.getVisibleCells() as cell}
@@ -189,6 +223,11 @@
 	</table>
 	<div>{$table.getRowModel().rows.length} Rows</div>
 </div>
+
+<!-- Indicates that more users should be requested -->
+<!-- {#key data.length}
+	<div use:addIntersectionUse={{ shouldActive: true }} />
+{/key} -->
 
 <style>
 	td,

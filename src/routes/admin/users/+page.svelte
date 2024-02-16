@@ -17,41 +17,20 @@
 	async function getNewUsers(reset: boolean = false) {
 		const newUsers = await trpc($page).admin.getUsersAdmin.query({
 			limit: USERS_LIMIT,
-			cursor: users[users.length - 1]?.id
+			cursor: users[users.length - 1]?.id,
+			skip: users.length
 		});
-
+		console.log(newUsers);
 		if (reset) {
 			users = newUsers;
 		} else {
 			users = [...users, ...newUsers];
 		}
-
-		console.log(users);
 	}
-
-	let addIntersectionUse: CreateObserverReturn['addIntersection'];
-
-	onMount(() => {
-		const { observer, addIntersection } = createObserver({
-			callback: (entry, observer) => {
-				if (entry.isIntersecting) {
-					getNewUsers(false);
-
-					observer.unobserve(entry.target);
-				}
-			}
-		});
-		addIntersectionUse = addIntersection;
-
-		getNewUsers(false);
-
-		return () => {
-			observer.disconnect();
-		};
-	});
 </script>
 
 <Table
+	on:last-row-intersection={() => getNewUsers()}
 	data={users.map((item) => {
 		return {
 			id: item.id,
