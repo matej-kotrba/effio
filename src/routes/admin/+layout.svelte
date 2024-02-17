@@ -1,6 +1,8 @@
 <script lang="ts">
 	import DashboardSidebarWrapper from '~components/navigation/dashboard/DashboardSidebarWrapper.svelte';
-	import Navbar from '~components/page-parts/Navbar.svelte';
+	import Navbar, {
+		NONAUTHENTICATED_NAV_HEIGHT
+	} from '~components/page-parts/Navbar.svelte';
 
 	export let data;
 
@@ -14,6 +16,7 @@
 		bind:setSidebarShown={setIsSidebarShown}
 		{isSidebarShown}
 		session={data.session}
+		heightDecreaseValue={NONAUTHENTICATED_NAV_HEIGHT}
 		links={[
 			{
 				title: 'Overview',

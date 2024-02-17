@@ -8,19 +8,21 @@ export const adminRouter = router({
     cursor: z.string().optional(),
     searchQuery: z.string().optional(),
     order: z.enum(["stars", "date"]).optional(),
-    skip: z.number().optional(),
   })).query(async ({ ctx, input }) => {
     const users = await ctx.prisma.user.findMany({
       cursor: input.cursor ? {
         id: input.cursor
       } : undefined,
       take: input.limit,
-      skip: input.skip,
+      skip: input.cursor ? 1 : 0,
       where: {
         name: {
           contains: input.searchQuery ? input.searchQuery : undefined
         },
       },
+      orderBy: {
+        name: "asc"
+      }
     })
     return users
   })

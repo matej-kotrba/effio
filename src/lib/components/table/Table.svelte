@@ -21,6 +21,7 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
+	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 
 	export let data: User[] = [];
 
@@ -157,79 +158,112 @@
 	});
 </script>
 
-<div class="p-2">
-	<table
-		class="w-full max-w-[900px] border-collapse border-[2px] border-gray-300"
-	>
-		<thead class="">
-			{#each $table.getHeaderGroups() as headerGroup, index}
-				<tr class="border-gray-300 border-solid border-y-[1px] bg-gray-100">
-					{#each headerGroup.headers as header}
-						<th colSpan={header.colSpan} class="text-left">
-							{#if !header.isPlaceholder}
-								<!-- svelte-ignore a11y-click-events-have-key-events -->
-								<!-- svelte-ignore a11y-no-static-element-interactions -->
-								<div
-									class:cursor-pointer={header.column.getCanSort()}
-									class:select-none={header.column.getCanSort()}
-									on:click={header.column.getToggleSortingHandler()}
-									class="flex items-center font-semibold"
-								>
-									<svelte:component
-										this={flexRender(
-											header.column.columnDef.header,
-											header.getContext()
-										)}
-									/>
-									{#if header.column.getIsSorted().toString() === 'asc'}
-										<span>🔼</span>
-									{:else if header.column.getIsSorted().toString() === 'desc'}
-										<span>🔽</span>
-									{:else}
-										<span class="opacity-0">🔽</span>
+<div class="p-2 grid__container">
+	<div>
+		<div
+			class="relative overflow-y-auto border-collapse overscroll-contain"
+			style="max-height: calc(100vh - {NONAUTHENTICATED_NAV_HEIGHT}px - 16px - 3em);"
+		>
+			<table class="w-full max-w-[900px]">
+				<thead class="">
+					{#each $table.getHeaderGroups() as headerGroup, index}
+						<tr class="border-gray-300 border-solid border-[1px] bg-gray-100">
+							{#each headerGroup.headers as header}
+								<th colSpan={header.colSpan} class="text-left">
+									{#if !header.isPlaceholder}
+										<!-- svelte-ignore a11y-click-events-have-key-events -->
+										<!-- svelte-ignore a11y-no-static-element-interactions -->
+										<div
+											class:cursor-pointer={header.column.getCanSort()}
+											class:select-none={header.column.getCanSort()}
+											on:click={header.column.getToggleSortingHandler()}
+											class="flex items-center font-semibold"
+										>
+											<svelte:component
+												this={flexRender(
+													header.column.columnDef.header,
+													header.getContext()
+												)}
+											/>
+											{#if header.column.getIsSorted().toString() === 'asc'}
+												<span>🔼</span>
+											{:else if header.column
+												.getIsSorted()
+												.toString() === 'desc'}
+												<span>🔽</span>
+											{:else}
+												<span class="opacity-0">🔽</span>
+											{/if}
+										</div>
 									{/if}
-								</div>
-							{/if}
-						</th>
+								</th>
+							{/each}
+						</tr>
 					{/each}
-				</tr>
-			{/each}
-		</thead>
-		<tbody>
-			{#each $table.getRowModel().rows as row, index}
-				<tr
-					use:addIntersectionUse={{ shouldActive: true }}
-					class="border-gray-300 border-solid border-y-[1px] bg-slate-50 {selection[
-						index
-					]
-						? 'bg-indigo-200'
-						: ''}"
-				>
-					{#each row.getVisibleCells() as cell}
-						<td>
-							<div class="flex items-center">
-								<svelte:component
-									this={flexRender(
-										cell.column.columnDef.cell,
-										cell.getContext()
-									)}
-								/>
-							</div>
-						</td>
+				</thead>
+				<tbody>
+					{#each $table.getRowModel().rows as row, index}
+						{#if index === data.length - 1}
+							<tr
+								use:addIntersectionUse={{ shouldActive: true }}
+								class="border-gray-300 border-solid border-[1px] bg-slate-50 {selection[
+									index
+								]
+									? 'bg-violet-200'
+									: ''}"
+							>
+								{#each row.getVisibleCells() as cell}
+									<td>
+										<div class="flex items-center">
+											<svelte:component
+												this={flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											/>
+										</div>
+									</td>
+								{/each}
+							</tr>
+						{:else}
+							<tr
+								class="border-gray-300 border-solid border-[1px] bg-slate-50 {selection[
+									index
+								]
+									? 'bg-violet-200'
+									: ''}"
+							>
+								{#each row.getVisibleCells() as cell}
+									<td>
+										<div class="flex items-center">
+											<svelte:component
+												this={flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
+											/>
+										</div>
+									</td>
+								{/each}
+							</tr>
+						{/if}
 					{/each}
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-	<div>{$table.getRowModel().rows.length} Rows</div>
+				</tbody>
+			</table>
+		</div>
+		<div>{$table.getRowModel().rows.length} Rows</div>
+	</div>
+	<div>
+		<slot />
+	</div>
 </div>
 
-<!-- Indicates that more users should be requested -->
-<!-- {#key data.length}
-	<div use:addIntersectionUse={{ shouldActive: true }} />
-{/key} -->
-
 <style>
+	.grid__container {
+		display: grid;
+		grid-template-columns: min(100%, 900px) 1fr;
+	}
+
 	td,
 	th {
 		padding: 0.6rem;

@@ -14,11 +14,13 @@
 
 	export let isSidebarShown: boolean;
 	export let session: UpdatedSession;
+	export let heightDecreaseValue: number = 0;
 	export let setSidebarShown: (value: boolean) => void;
 </script>
 
 <!-- Main sidebar -->
 <aside
+	style="min-height: calc(100svh - {heightDecreaseValue}px);"
 	class="bg-light_white dark:bg-dark_black sm:bg-none min-w-[100vw] xs:min-w-[210px] md:max-w-[210px]
 			 lg:max-w-[260px] md:block fixed md:sticky top-0 duration-150 {isSidebarShown
 		? 'left-0'

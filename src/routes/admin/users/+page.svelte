@@ -17,8 +17,7 @@
 	async function getNewUsers(reset: boolean = false) {
 		const newUsers = await trpc($page).admin.getUsersAdmin.query({
 			limit: USERS_LIMIT,
-			cursor: users[users.length - 1]?.id,
-			skip: users.length
+			cursor: users[users.length - 1]?.id
 		});
 		console.log(newUsers);
 		if (reset) {
@@ -30,7 +29,7 @@
 </script>
 
 <Table
-	on:last-row-intersection={() => getNewUsers()}
+	on:last-row-intersection={() => getNewUsers(false)}
 	data={users.map((item) => {
 		return {
 			id: item.id,
@@ -38,4 +37,8 @@
 			role: item.role
 		};
 	})}
-/>
+>
+	<div>
+		<h3>Group operations</h3>
+	</div>
+</Table>
