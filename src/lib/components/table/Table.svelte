@@ -24,6 +24,7 @@
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 
 	export let data: User[] = [];
+	export let tableSelection: RowSelectionState = {};
 
 	$: {
 		options.update((options) => ({
@@ -76,13 +77,12 @@
 	];
 
 	let sorting: SortingState = [];
-	let selection: RowSelectionState = {};
 
 	const onSelect = (updater: any) => {
 		if (updater instanceof Function) {
-			selection = updater(selection);
+			tableSelection = updater(tableSelection);
 		} else {
-			selection = updater;
+			tableSelection = updater;
 		}
 
 		options.update(
@@ -91,7 +91,7 @@
 					...old,
 					state: {
 						...old.state,
-						rowSelection: selection
+						rowSelection: tableSelection
 					}
 				} as TableOptions<User>)
 		);
@@ -117,7 +117,7 @@
 		columns,
 		state: {
 			sorting,
-			rowSelection: selection
+			rowSelection: tableSelection
 		},
 		enableRowSelection: true,
 		onRowSelectionChange: onSelect,
@@ -206,7 +206,7 @@
 						{#if index === data.length - 1}
 							<tr
 								use:addIntersectionUse={{ shouldActive: true }}
-								class="border-gray-300 border-solid border-[1px] bg-slate-50 {selection[
+								class="border-gray-300 border-solid border-[1px] bg-slate-50 {tableSelection[
 									index
 								]
 									? 'bg-violet-200'
@@ -227,7 +227,7 @@
 							</tr>
 						{:else}
 							<tr
-								class="border-gray-300 border-solid border-[1px] bg-slate-50 {selection[
+								class="border-gray-300 border-solid border-[1px] bg-slate-50 {tableSelection[
 									index
 								]
 									? 'bg-violet-200'
@@ -262,6 +262,7 @@
 	.grid__container {
 		display: grid;
 		grid-template-columns: min(100%, 900px) 1fr;
+		gap: 1em;
 	}
 
 	td,
