@@ -1,9 +1,9 @@
 import { z } from "zod"
-import { adminLoggingProcedure, adminProcedure, router } from "../../setup"
+import { adminProcedure, router, logAdminAction } from "../../setup"
 import { TRPCError } from "@trpc/server"
 
 export const adminRouter = router({
-  getUsersAdmin: adminLoggingProcedure.meta({ action: "DELETE_USERS" }).input(z.object({
+  getUsersAdmin: adminProcedure.meta({ action: "DELETE_USERS" }).input(z.object({
     limit: z.number(),
     cursor: z.string().optional(),
     searchQuery: z.string().optional(),
@@ -26,10 +26,10 @@ export const adminRouter = router({
     })
     return users
   }),
-  deleteUsersAdmin: adminLoggingProcedure.input(z.object({
+  deleteUsersAdmin: adminProcedure.input(z.object({
     usersIds: z.array(z.string())
   })).mutation(async ({ ctx, input }) => {
-    const users = await ctx.prisma.user.deleteMany({
+    const { count } = await ctx.prisma.user.deleteMany({
       where: {
         id: {
           in: input.usersIds
@@ -37,6 +37,13 @@ export const adminRouter = router({
       }
     })
 
-    return users
+    logAdminAction(ctx, {
+      action: "DELETE_USERS",
+      data: {
+        count: count,
+        ids: input.usersIds
+      }
+    })
+    return count
   })
 })

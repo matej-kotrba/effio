@@ -1,18 +1,9 @@
 import { TRPCError, initTRPC } from "@trpc/server"
 import type { Context } from "./context";
 import superjson from "superjson"
+import type { User } from "@prisma/client";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface TRCPMeta { }
-
-type TRPCMetaAdminAction = "DELETE_USERS"
-
-// Admin extension
-interface TRCPMeta {
-  action?: TRPCMetaAdminAction;
-}
-
-export const t = initTRPC.context<Context>().meta<TRCPMeta>().create(
+export const t = initTRPC.context<Context>().create(
   {
     transformer: superjson
   }
@@ -45,11 +36,38 @@ const isAdmin = t.middleware(async (opts) => {
   })
 })
 
-const adminLogging = t.middleware(async (opts) => {
-  const result = await opts.next()
-  return result
-})
-
 export const loggedInProcedure = procedure.use(isLoggedIn)
 export const adminProcedure = procedure.use(isAdmin)
-export const adminLoggingProcedure = procedure.use(isAdmin).use(adminLogging)
+
+type AdminLogContentObject = {
+  action: "DELETE_USERS"
+  data: { count: number, ids: string[] }
+} | {
+  action: "BLOCKED_USERS"
+  data: User[]
+}
+
+// Admin log function
+export function logAdminAction(ctx: Context, content: AdminLogContentObject) {
+  if (!ctx.user?.id || ctx.user.role !== "ADMIN") {
+    return
+  }
+  let adminLogActionString = ""
+
+  if (content.action === "DELETE_USERS") {
+    adminLogActionString = "Deleted " + content.data.count + " users: " + content.data.ids.join(", ")
+  }
+  else if (content.action === "BLOCKED_USERS") {
+    adminLogActionString = "Blocked users: " + content.data.map(user => user.name).join(", ")
+  }
+  else {
+    return
+  }
+
+  const log = ctx.prisma.adminLogs.create({
+    data: {
+      action: content.action,
+      userId: ctx.user.id,
+    }
+  })
+}

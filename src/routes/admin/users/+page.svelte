@@ -11,6 +11,9 @@
 	import type { RowSelectionState } from '@tanstack/svelte-table';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
+	import toast from 'svelte-french-toast';
+	import { createTRPCErrorNotification } from '~/lib/utils/notification';
+	import { TRPCClientError } from '@trpc/client';
 
 	const USERS_LIMIT = 20;
 
@@ -31,6 +34,27 @@
 		} else {
 			users = [...users, ...newUsers];
 		}
+	}
+
+	async function deleteUsersFromDB() {
+		const usersToDelete = Object.entries(tableSelection).map(([index, _]) => {
+			return { name: users[+index].name, id: users[+index].id };
+		});
+
+		let deletedUsers = 0;
+		try {
+			deletedUsers = await trpc($page).admin.deleteUsersAdmin.mutate({
+				usersIds: usersToDelete.map((user) => user.id)
+			});
+		} catch (e) {
+			if (e instanceof TRPCClientError) {
+				createTRPCErrorNotification(e);
+			} else {
+				toast.error('Unknown error occurred');
+			}
+		}
+
+		toast.success(`Deleted ${deletedUsers} users`);
 	}
 </script>
 
@@ -75,8 +99,9 @@
 						{/each}
 					</div>
 					<SimpleButton>Cancel</SimpleButton>
-					<SimpleButton class="hover:text-error dark:hover:text-dark_error"
-						>Delete</SimpleButton
+					<SimpleButton
+						class="hover:text-error dark:hover:text-dark_error"
+						onClick={deleteUsersFromDB}>Delete</SimpleButton
 					>
 				</div>
 			</TableActionButton>
