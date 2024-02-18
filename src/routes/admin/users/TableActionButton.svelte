@@ -6,14 +6,14 @@
 	export let dialogTitle: string;
 	export let backdropColorEffect: string;
 	export let borderColorEffect: string;
-	export let onClickCallback = (dialogOpen: typeof openDialog) => {};
+	export let onClickCallback = (dialog: HTMLDialogElement) => {};
+	export let isSubmittingDialog = false;
 
 	let classes = '';
 	export { classes as class };
 
+	let dialogRef: HTMLDialogElement;
 	let buttonElement: HTMLButtonElement;
-
-	let openDialog: () => void;
 
 	function onMouseMove(
 		e: MouseEvent & {
@@ -25,12 +25,16 @@
 	}
 
 	function onClick() {
-		onClickCallback(openDialog);
+		onClickCallback(dialogRef);
 	}
 </script>
 
 <svelte:window on:mousemove={onMouseMove} />
-<Dialog bind:open={openDialog} title={dialogTitle}>
+<Dialog
+	bind:modal={dialogRef}
+	title={dialogTitle}
+	isSubmitting={isSubmittingDialog}
+>
 	<slot name="dialog" />
 </Dialog>
 <button

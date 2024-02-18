@@ -14,15 +14,19 @@
 
 	export const open = () => modal?.showModal();
 	export const close = () => {
+		if (!modal) return;
 		modal.animate([{ opacity: 1 }, { opacity: 0 }], {
 			duration: 150,
 			easing: 'ease-in-out'
-		}).onfinish = () => modal.close();
+		}).onfinish = () => {
+			if (!modal) return;
+			modal.close();
+		};
 	};
 	export let isSuccessOpen = false;
 	export let isSubmitting = false;
 
-	let modal: HTMLDialogElement;
+	export let modal: HTMLDialogElement | undefined = undefined;
 </script>
 
 <dialog
@@ -39,10 +43,14 @@
 			formClasses
 		)}
 		on:submit={() => {
+			if (!modal) return;
 			modal.animate([{ opacity: 1 }, { opacity: 0 }], {
 				duration: 150,
 				easing: 'ease-in-out'
-			}).onfinish = () => modal.close();
+			}).onfinish = () => {
+				if (!modal) return;
+				modal.close();
+			};
 		}}
 	>
 		<SuccessKeyframe

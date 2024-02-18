@@ -36,7 +36,10 @@
 		}
 	}
 
+	let isFetchingAction = false;
+
 	async function deleteUsersFromDB() {
+		isFetchingAction = true;
 		const usersToDelete = Object.entries(tableSelection).map(([index, _]) => {
 			return { name: users[+index].name, id: users[+index].id };
 		});
@@ -53,6 +56,8 @@
 				toast.error('Unknown error occurred');
 			}
 		}
+
+		isFetchingAction = false;
 
 		toast.success(`Deleted ${deletedUsers} users`);
 	}
@@ -77,9 +82,10 @@
 				dialogTitle="User deletion"
 				backdropColorEffect="rgb(255,0,0,0.1)"
 				borderColorEffect="rgb(255,0,0)"
-				onClickCallback={(openDialog) => {
+				isSubmittingDialog={isFetchingAction}
+				onClickCallback={(modal) => {
 					if (Object.keys(tableSelection).length > 0) {
-						openDialog();
+						modal.showModal();
 					}
 				}}
 			>
