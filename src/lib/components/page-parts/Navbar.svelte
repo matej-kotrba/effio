@@ -25,6 +25,14 @@
 		<a href="/">
 			<img src="/imgs/logo.png" alt="Logo" class="w-[70px]" />
 		</a>
+		{#if user?.user?.role === 'ADMIN'}
+			<a
+				href="/admin"
+				class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
+			>
+				<li>Admin</li>
+			</a>
+		{/if}
 		<a
 			href="/"
 			class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
@@ -69,6 +77,14 @@
 			<ul
 				class="flex items-center justify-center h-full gap-2 text-sm uppercase text-light_text_black dark:text-dark_text_white"
 			>
+				{#if user?.user?.role === 'ADMIN'}
+					<a
+						href="/admin"
+						class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"
+					>
+						<li>Admin</li>
+					</a>
+				{/if}
 				<a
 					href="/"
 					class="relative px-4 py-2 font-semibold duration-200 rounded-md hover:bg-gray-200 dark:hover:bg-dark_light_grey hover:text-light_primary dark:hover:text-white"

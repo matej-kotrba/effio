@@ -2,7 +2,17 @@ import { TRPCError, initTRPC } from "@trpc/server"
 import type { Context } from "./context";
 import superjson from "superjson"
 
-export const t = initTRPC.context<Context>().create(
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface TRCPMeta { }
+
+type TRPCMetaAdminAction = "DELETE_USERS"
+
+// Admin extension
+interface TRCPMeta {
+  action?: TRPCMetaAdminAction;
+}
+
+export const t = initTRPC.context<Context>().meta<TRCPMeta>().create(
   {
     transformer: superjson
   }
@@ -35,5 +45,11 @@ const isAdmin = t.middleware(async (opts) => {
   })
 })
 
+const adminLogging = t.middleware(async (opts) => {
+  const result = await opts.next()
+  return result
+})
+
 export const loggedInProcedure = procedure.use(isLoggedIn)
 export const adminProcedure = procedure.use(isAdmin)
+export const adminLoggingProcedure = procedure.use(isAdmin).use(adminLogging)

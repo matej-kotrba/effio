@@ -6,6 +6,7 @@
 	export let dialogTitle: string;
 	export let backdropColorEffect: string;
 	export let borderColorEffect: string;
+	export let onClickCallback = (dialogOpen: typeof openDialog) => {};
 
 	let classes = '';
 	export { classes as class };
@@ -22,6 +23,10 @@
 		buttonElement.style.setProperty('--blur-x', `${e.x}px`);
 		buttonElement.style.setProperty('--blur-y', `${e.y}px`);
 	}
+
+	function onClick() {
+		onClickCallback(openDialog);
+	}
 </script>
 
 <svelte:window on:mousemove={onMouseMove} />
@@ -37,7 +42,7 @@
 		'relative grid p-4 rounded-2xl place-content-center bg-light_whiter shadow-md',
 		classes
 	)}
-	on:click={openDialog}
+	on:click={onClick}
 >
 	<slot />
 </button>

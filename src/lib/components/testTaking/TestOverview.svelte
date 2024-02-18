@@ -157,14 +157,14 @@
 			<div class="flex items-stretch justify-end gap-1">
 				<SimpleButton
 					onClick={starTest}
-					classes={`${isStarred ? 'bg-light_star dark:bg-dark_star' : ''}`}
+					class={`${isStarred ? 'bg-light_star dark:bg-dark_star' : ''}`}
 				>
 					<div class="flex items-center gap-1">
 						<Star />
 						{testContent?._count.stars}
 					</div>
 				</SimpleButton>
-				<SimpleButton classes="grid place-content-center">
+				<SimpleButton class="grid place-content-center">
 					<iconify-icon icon="emojione-monotone:exclamation-mark" />
 				</SimpleButton>
 			</div>

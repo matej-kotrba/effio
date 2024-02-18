@@ -9,6 +9,8 @@
 	} from '~/lib/utils/observers';
 	import TableActionButton from './TableActionButton.svelte';
 	import type { RowSelectionState } from '@tanstack/svelte-table';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 
 	const USERS_LIMIT = 20;
 
@@ -51,13 +53,18 @@
 				dialogTitle="User deletion"
 				backdropColorEffect="rgb(255,0,0,0.1)"
 				borderColorEffect="rgb(255,0,0)"
+				onClickCallback={(openDialog) => {
+					if (Object.keys(tableSelection).length > 0) {
+						openDialog();
+					}
+				}}
 			>
 				<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
 				<div slot="dialog">
 					<span>Are you sure you want to delete all selected users?</span>
-					<div class="flex flex-wrap gap-2">
+					<div class="flex flex-wrap gap-2 mb-2">
 						{#each Object.entries(tableSelection).map(([index, _]) => {
-							return { name: users[+index].name };
+							return { name: users[+index].name, id: users[+index].id };
 						}) as user, index}
 							<span class="text-red-500">{user.name}</span>
 							<span
@@ -67,6 +74,10 @@
 							>
 						{/each}
 					</div>
+					<SimpleButton>Cancel</SimpleButton>
+					<SimpleButton class="hover:text-error dark:hover:text-dark_error"
+						>Delete</SimpleButton
+					>
 				</div>
 			</TableActionButton>
 		</div>

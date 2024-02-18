@@ -54,6 +54,7 @@ model User {
   groupsOwned              Group[]
   staredTests              TestStar[]
   GroupSubcategoreyMessage GroupSubcategoryMessage[]
+  adminLogs                AdminLogs[]
 
   @@index([name, id])
 }
@@ -304,6 +305,16 @@ model TestStar {
 
   @@unique([testId, userId])
   @@index([testId])
+  @@index([userId])
+}
+
+model AdminLogs {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
   @@index([userId])
 }
 
