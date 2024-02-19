@@ -35,7 +35,7 @@
 	title={dialogTitle}
 	isSubmitting={isSubmittingDialog}
 >
-	<slot name="dialog" />
+	<slot name="dialog" modal={dialogRef} />
 </Dialog>
 <button
 	type="button"

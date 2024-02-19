@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+	export type User = {
+		id: string;
+		name: string;
+		role: UserRoles;
+	};
+</script>
+
 <script lang="ts">
 	import { writable } from 'svelte/store';
 	import {
@@ -32,12 +40,6 @@
 			data
 		}));
 	}
-
-	type User = {
-		id: string;
-		name: string;
-		role: UserRoles;
-	};
 
 	const columns: ColumnDef<User>[] = [
 		{
@@ -127,7 +129,7 @@
 		debugTable: true
 	});
 
-	const table = createSvelteTable(options);
+	export const table = createSvelteTable(options);
 
 	const dispatch = createEventDispatcher();
 

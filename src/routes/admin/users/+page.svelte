@@ -1,25 +1,23 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
-	import Table from '~components/table/Table.svelte';
-	import {
-		createObserver,
-		type CreateObserverReturn
-	} from '~/lib/utils/observers';
+	import Table, { type User } from '~components/table/Table.svelte';
 	import TableActionButton from './TableActionButton.svelte';
 	import type { RowSelectionState } from '@tanstack/svelte-table';
-	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 	import toast from 'svelte-french-toast';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification';
 	import { TRPCClientError } from '@trpc/client';
+	import type { Table as TableType } from '@tanstack/svelte-table';
+	import type { Readable } from 'svelte/store';
 
 	const USERS_LIMIT = 20;
 
 	let users: Awaited<
 		ReturnType<ReturnType<typeof trpc>['admin']['getUsersAdmin']['query']>
 	> = [];
+
+	let table: Readable<TableType<User>>;
 
 	let tableSelection: RowSelectionState = {};
 
@@ -28,7 +26,6 @@
 			limit: USERS_LIMIT,
 			cursor: users[users.length - 1]?.id
 		});
-		console.log(newUsers);
 		if (reset) {
 			users = newUsers;
 		} else {
@@ -59,13 +56,23 @@
 
 		isFetchingAction = false;
 
-		toast.success(`Deleted ${deletedUsers} users`);
+		if (deletedUsers > 0) {
+			users = users.filter((user) => {
+				return !usersToDelete.some((userToDelete) => {
+					return userToDelete.id === user.id;
+				});
+			});
+			$table.resetRowSelection();
+
+			toast.success(`Deleted ${deletedUsers} user(s)`);
+		}
 	}
 </script>
 
 <Table
 	on:last-row-intersection={() => getNewUsers(false)}
 	bind:tableSelection
+	bind:table
 	data={users.map((item) => {
 		return {
 			id: item.id,
@@ -90,7 +97,7 @@
 				}}
 			>
 				<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
-				<div slot="dialog">
+				<div slot="dialog" let:modal={dialogRef}>
 					<span>Are you sure you want to delete all selected users?</span>
 					<div class="flex flex-wrap gap-2 mb-2">
 						{#each Object.entries(tableSelection).map(([index, _]) => {
@@ -107,7 +114,10 @@
 					<SimpleButton>Cancel</SimpleButton>
 					<SimpleButton
 						class="hover:text-error dark:hover:text-dark_error"
-						onClick={deleteUsersFromDB}>Delete</SimpleButton
+						onClick={async () => {
+							await deleteUsersFromDB();
+							dialogRef.close();
+						}}>Delete</SimpleButton
 					>
 				</div>
 			</TableActionButton>
