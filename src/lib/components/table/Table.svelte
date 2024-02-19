@@ -125,8 +125,7 @@
 		onRowSelectionChange: onSelect,
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		debugTable: true
+		getSortedRowModel: getSortedRowModel()
 	});
 
 	export const table = createSvelteTable(options);

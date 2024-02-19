@@ -32,6 +32,11 @@
 				title: 'Tests',
 				icon: 'lets-icons:form-fill',
 				href: 'admin/tests'
+			},
+			{
+				title: 'Log',
+				icon: 'octicon:log-16',
+				href: 'admin/log'
 			}
 		]}
 	>

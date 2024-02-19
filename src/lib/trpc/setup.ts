@@ -48,7 +48,8 @@ type AdminLogContentObject = {
 }
 
 // Admin log function
-export function logAdminAction(ctx: Context, content: AdminLogContentObject) {
+export async function logAdminAction(ctx: Context, content: AdminLogContentObject) {
+  console.log("logAdminAction", ctx.user)
   if (!ctx.user?.id || ctx.user.role !== "ADMIN") {
     return
   }
@@ -64,10 +65,15 @@ export function logAdminAction(ctx: Context, content: AdminLogContentObject) {
     return
   }
 
-  const log = ctx.prisma.adminLogs.create({
+  console.log("Creating")
+
+  const log = await ctx.prisma.adminLogs.create({
     data: {
       action: content.action,
+      message: adminLogActionString,
       userId: ctx.user.id,
     }
   })
+
+  console.log(log)
 }

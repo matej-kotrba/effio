@@ -1,6 +1,7 @@
-import { json } from "@sveltejs/kit"
-import type { RequestHandler } from "./$types"
+import type { User } from "@prisma/client"
+import { json, type RequestHandler } from "@sveltejs/kit"
 import prisma from "~/lib/prisma"
+import { randomId } from "~helpers/randomId"
 
 export const GET: RequestHandler = async ({ url, locals }) => {
   const session = await locals.getSession() as UpdatedSession
@@ -11,13 +12,14 @@ export const GET: RequestHandler = async ({ url, locals }) => {
   }
   const count = url.searchParams.get("count")
 
-  await prisma.test.createMany({
+  await prisma.user.createMany({
     data: Array.from({ length: Number(count) }, (_, i) => {
+      const id = randomId()
       return {
-        title: "Example test " + i,
-        description: "This is an example test",
-        ownerId: session.user!.id!,
-      }
+        email: `${id}@email.com`,
+        name: id,
+        role: "USER"
+      } satisfies PartialPick<User, "id" | "emailVerified" | "image">
     })
   })
 
