@@ -10,6 +10,7 @@
 	import { TRPCClientError } from '@trpc/client';
 	import type { Table as TableType } from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
+	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 
 	const USERS_LIMIT = 20;
 
@@ -18,6 +19,7 @@
 	> = [];
 
 	let table: Readable<TableType<User>>;
+	let groupOperationsHeight: number;
 
 	let tableSelection: RowSelectionState = {};
 
@@ -69,58 +71,60 @@
 	}
 </script>
 
+<div class="p-2" bind:clientHeight={groupOperationsHeight}>
+	<h3 class="font-semibold text-h6">Group operations</h3>
+	<div>
+		<TableActionButton
+			tooltip="Delete all selected users"
+			dialogTitle="User deletion"
+			backdropColorEffect="rgb(255,0,0,0.1)"
+			borderColorEffect="rgb(255,0,0)"
+			isSubmittingDialog={isFetchingAction}
+			onClickCallback={(modal) => {
+				if (Object.keys(tableSelection).length > 0) {
+					modal.showModal();
+				}
+			}}
+		>
+			<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
+			<div slot="dialog" let:modal={dialogRef}>
+				<span>Are you sure you want to delete all selected users?</span>
+				<div class="flex flex-wrap gap-2 mb-2">
+					{#each Object.entries(tableSelection).map(([index, _]) => {
+						return { name: users[+index].name, id: users[+index].id };
+					}) as user, index}
+						<span class="text-red-500">{user.name}</span>
+						<span
+							>{index !== Object.entries(tableSelection).length - 1
+								? ','
+								: ''}</span
+						>
+					{/each}
+				</div>
+				<SimpleButton>Cancel</SimpleButton>
+				<SimpleButton
+					class="hover:text-error dark:hover:text-dark_error"
+					onClick={async () => {
+						await deleteUsersFromDB();
+						dialogRef.close();
+					}}>Delete</SimpleButton
+				>
+			</div>
+		</TableActionButton>
+	</div>
+</div>
 <Table
 	on:last-row-intersection={() => getNewUsers(false)}
 	bind:tableSelection
 	bind:table
+	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
 	data={users.map((item) => {
 		return {
 			id: item.id,
 			name: item.name ?? '',
-			role: item.role
+			role: item.role,
+			provider: item.accounts.map((account) => account.provider).join(', '),
+			email: item.email || ''
 		};
 	})}
->
-	<div>
-		<h3 class="font-semibold text-h6">Group operations</h3>
-		<div>
-			<TableActionButton
-				tooltip="Delete all selected users"
-				dialogTitle="User deletion"
-				backdropColorEffect="rgb(255,0,0,0.1)"
-				borderColorEffect="rgb(255,0,0)"
-				isSubmittingDialog={isFetchingAction}
-				onClickCallback={(modal) => {
-					if (Object.keys(tableSelection).length > 0) {
-						modal.showModal();
-					}
-				}}
-			>
-				<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
-				<div slot="dialog" let:modal={dialogRef}>
-					<span>Are you sure you want to delete all selected users?</span>
-					<div class="flex flex-wrap gap-2 mb-2">
-						{#each Object.entries(tableSelection).map(([index, _]) => {
-							return { name: users[+index].name, id: users[+index].id };
-						}) as user, index}
-							<span class="text-red-500">{user.name}</span>
-							<span
-								>{index !== Object.entries(tableSelection).length - 1
-									? ','
-									: ''}</span
-							>
-						{/each}
-					</div>
-					<SimpleButton>Cancel</SimpleButton>
-					<SimpleButton
-						class="hover:text-error dark:hover:text-dark_error"
-						onClick={async () => {
-							await deleteUsersFromDB();
-							dialogRef.close();
-						}}>Delete</SimpleButton
-					>
-				</div>
-			</TableActionButton>
-		</div>
-	</div>
-</Table>
+/>

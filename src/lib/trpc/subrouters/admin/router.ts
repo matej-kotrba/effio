@@ -15,6 +15,13 @@ export const adminRouter = router({
       } : undefined,
       take: input.limit,
       skip: input.cursor ? 1 : 0,
+      include: {
+        accounts: {
+          select: {
+            provider: true,
+          }
+        }
+      },
       where: {
         name: {
           contains: input.searchQuery ? input.searchQuery : undefined

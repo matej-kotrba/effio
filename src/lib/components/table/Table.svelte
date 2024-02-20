@@ -3,6 +3,8 @@
 		id: string;
 		name: string;
 		role: UserRoles;
+		provider: string;
+		email: string;
 	};
 </script>
 
@@ -29,10 +31,10 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
-	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 
 	export let data: User[] = [];
 	export let tableSelection: RowSelectionState = {};
+	export let maxHeight: string = 'auto';
 
 	$: {
 		options.update((options) => ({
@@ -65,9 +67,21 @@
 			cell: (info) => info.getValue()
 		},
 		{
+			id: 'provider',
+			accessorKey: 'provider',
+			header: 'Provider',
+			cell: (info) => info.getValue()
+		},
+		{
 			id: 'name',
 			accessorKey: 'name',
 			header: 'Name',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'email',
+			accessorKey: 'email',
+			header: 'Email',
 			cell: (info) => info.getValue()
 		},
 		{
@@ -142,7 +156,6 @@
 		const { observer, addIntersection } = createObserver({
 			callback: (entry, observer) => {
 				if (entry.isIntersecting) {
-					console.log('Intersecting');
 					onLastRowIntersection();
 
 					observer.unobserve(entry.target);
@@ -159,13 +172,13 @@
 	});
 </script>
 
-<div class="p-2 grid__container">
+<div class="p-2">
 	<div>
 		<div
 			class="relative overflow-y-auto border-collapse overscroll-contain"
-			style="max-height: calc(100vh - {NONAUTHENTICATED_NAV_HEIGHT}px - 16px - 3em);"
+			style="max-height: {maxHeight}"
 		>
-			<table class="w-full max-w-[900px]">
+			<table class="w-full">
 				<thead class="">
 					{#each $table.getHeaderGroups() as headerGroup, index}
 						<tr class="border-gray-300 border-solid border-[1px] bg-gray-100">
