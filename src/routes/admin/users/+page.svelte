@@ -1,18 +1,80 @@
 <script lang="ts">
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
-	import Table, { type User } from '~components/table/Table.svelte';
+	import Table from '~components/table/Table.svelte';
 	import TableActionButton from './TableActionButton.svelte';
-	import type { RowSelectionState } from '@tanstack/svelte-table';
+	import {
+		renderComponent,
+		type RowSelectionState
+	} from '@tanstack/svelte-table';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 	import toast from 'svelte-french-toast';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification';
 	import { TRPCClientError } from '@trpc/client';
-	import type { Table as TableType } from '@tanstack/svelte-table';
+	import type { ColumnDef, Table as TableType } from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
+	import type { UserRoles } from '@prisma/client';
+	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 
 	const USERS_LIMIT = 20;
+
+	type User = {
+		id: string;
+		name: string;
+		role: UserRoles;
+		provider: string;
+		email: string;
+	};
+
+	const columns: ColumnDef<User>[] = [
+		{
+			id: 'select',
+			// header: ({ table }) =>
+			// 	renderComponent(RowCheckBox, {
+			// 		checked: table.getIsAllRowsSelected(),
+			// 		indeterminate: table.getIsSomeRowsSelected(),
+			// 		onChange: table.getToggleAllRowsSelectedHandler()
+			// 	}),
+			cell: (props) =>
+				renderComponent(RowCheckBox, {
+					checked: props.row.getIsSelected(),
+					disabled: !props.row.getCanSelect(),
+					indeterminate: props.row.getIsSomeSelected(),
+					onChange: props.row.getToggleSelectedHandler()
+				})
+		},
+		{
+			id: 'id',
+			accessorKey: 'id',
+			header: 'ID',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'provider',
+			accessorKey: 'provider',
+			header: 'Provider',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'name',
+			accessorKey: 'name',
+			header: 'Name',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'email',
+			accessorKey: 'email',
+			header: 'Email',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'role',
+			accessorKey: 'role',
+			header: 'Role',
+			cell: (info) => info.getValue()
+		}
+	];
 
 	let users: Awaited<
 		ReturnType<ReturnType<typeof trpc>['admin']['getUsersAdmin']['query']>
@@ -117,6 +179,7 @@
 	on:last-row-intersection={() => getNewUsers(false)}
 	bind:tableSelection
 	bind:table
+	{columns}
 	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
 	data={users.map((item) => {
 		return {

@@ -12,6 +12,63 @@
 
 	const USERS_LIMIT = 20;
 
+	type User = {
+		id: string;
+		name: string;
+		role: UserRoles;
+		provider: string;
+		email: string;
+	};
+
+	const columns: ColumnDef<User>[] = [
+		{
+			id: 'select',
+			// header: ({ table }) =>
+			// 	renderComponent(RowCheckBox, {
+			// 		checked: table.getIsAllRowsSelected(),
+			// 		indeterminate: table.getIsSomeRowsSelected(),
+			// 		onChange: table.getToggleAllRowsSelectedHandler()
+			// 	}),
+			cell: (props) =>
+				renderComponent(RowCheckBox, {
+					checked: props.row.getIsSelected(),
+					disabled: !props.row.getCanSelect(),
+					indeterminate: props.row.getIsSomeSelected(),
+					onChange: props.row.getToggleSelectedHandler()
+				})
+		},
+		{
+			id: 'id',
+			accessorKey: 'id',
+			header: 'ID',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'provider',
+			accessorKey: 'provider',
+			header: 'Provider',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'name',
+			accessorKey: 'name',
+			header: 'Name',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'email',
+			accessorKey: 'email',
+			header: 'Email',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'role',
+			accessorKey: 'role',
+			header: 'Role',
+			cell: (info) => info.getValue()
+		}
+	];
+
 	let users: Awaited<
 		ReturnType<ReturnType<typeof trpc>['admin']['getUsersAdmin']['query']>
 	> = [];

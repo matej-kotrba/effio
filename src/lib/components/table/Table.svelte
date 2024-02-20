@@ -1,21 +1,10 @@
-<script lang="ts" context="module">
-	export type User = {
-		id: string;
-		name: string;
-		role: UserRoles;
-		provider: string;
-		email: string;
-	};
-</script>
-
 <script lang="ts">
 	import { writable } from 'svelte/store';
 	import {
 		createSvelteTable,
 		getCoreRowModel,
 		getSortedRowModel,
-		flexRender,
-		renderComponent
+		flexRender
 	} from '@tanstack/svelte-table';
 	import type {
 		ColumnDef,
@@ -24,7 +13,6 @@
 		SortingState,
 		TableOptions
 	} from '@tanstack/svelte-table';
-	import type { UserRoles } from '@prisma/client';
 	import RowCheckBox from './RowCheckBox.svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import {
@@ -32,9 +20,10 @@
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
 
-	export let data: User[] = [];
+	export let data: any[] = [];
 	export let tableSelection: RowSelectionState = {};
 	export let maxHeight: string = 'auto';
+	export let columns: ColumnDef<any>[] = [];
 
 	$: {
 		options.update((options) => ({
@@ -42,55 +31,6 @@
 			data
 		}));
 	}
-
-	const columns: ColumnDef<User>[] = [
-		{
-			id: 'select',
-			// header: ({ table }) =>
-			// 	renderComponent(RowCheckBox, {
-			// 		checked: table.getIsAllRowsSelected(),
-			// 		indeterminate: table.getIsSomeRowsSelected(),
-			// 		onChange: table.getToggleAllRowsSelectedHandler()
-			// 	}),
-			cell: (props) =>
-				renderComponent(RowCheckBox, {
-					checked: props.row.getIsSelected(),
-					disabled: !props.row.getCanSelect(),
-					indeterminate: props.row.getIsSomeSelected(),
-					onChange: props.row.getToggleSelectedHandler()
-				})
-		},
-		{
-			id: 'id',
-			accessorKey: 'id',
-			header: 'ID',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'provider',
-			accessorKey: 'provider',
-			header: 'Provider',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'name',
-			accessorKey: 'name',
-			header: 'Name',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'email',
-			accessorKey: 'email',
-			header: 'Email',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'role',
-			accessorKey: 'role',
-			header: 'Role',
-			cell: (info) => info.getValue()
-		}
-	];
 
 	let sorting: SortingState = [];
 
@@ -109,7 +49,7 @@
 						...old.state,
 						rowSelection: tableSelection
 					}
-				} as TableOptions<User>)
+				} as TableOptions<unknown>)
 		);
 	};
 
@@ -128,7 +68,7 @@
 		}));
 	};
 
-	const options = writable<TableOptions<User>>({
+	const options = writable<TableOptions<any>>({
 		data: data,
 		columns,
 		state: {
