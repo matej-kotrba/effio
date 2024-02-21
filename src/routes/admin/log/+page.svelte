@@ -11,8 +11,10 @@
 	import type { Readable } from 'svelte/store';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 	import type { AdminLogsActions } from '@prisma/client';
+	import CustomTableTile from '~components/table/CustomTableTile.svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
 
-	const USERS_LIMIT = 20;
+	const LOG_LIMIT = 20;
 
 	type Log = {
 		id: string;
@@ -60,7 +62,14 @@
 			id: 'message',
 			accessorKey: 'message',
 			header: 'Message',
-			cell: (info) => info.getValue()
+			cell: (info) =>
+				renderComponent(CustomTableTile, {
+					originalData: info.getValue(),
+					onClick: () => onMessageClick(info.getValue()),
+					class:
+						'whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[400px]'
+				})
+			// cell: (info) => `<b>${info.getValue()}</b>`
 		}
 	];
 
@@ -72,28 +81,42 @@
 
 	let tableSelection: RowSelectionState = {};
 
+	// Dialog states
+	let open: () => void;
+	let dialogMessage: unknown = '';
+
 	async function getNewLogs(reset: boolean = false) {
-		const newUsers = await trpc($page).admin.getUsersAdmin.query({
-			limit: USERS_LIMIT,
+		const newLogs = await trpc($page).admin.getAdminLogs.query({
+			limit: LOG_LIMIT,
 			cursor: logs[logs.length - 1]?.id
 		});
 		if (reset) {
-			logs = newUsers;
+			logs = newLogs;
 		} else {
-			logs = [...logs, ...newUsers];
+			logs = [...logs, ...newLogs];
 		}
+	}
+
+	function onMessageClick(message: unknown) {
+		dialogMessage = message;
+		open();
 	}
 </script>
 
+<Dialog bind:open title="Log message">
+	<p>{dialogMessage}</p>
+</Dialog>
 <Table
 	on:last-row-intersection={() => getNewLogs(false)}
 	bind:tableSelection
 	bind:table
+	{columns}
 	data={logs.map((item) => {
 		return {
 			id: item.id,
-			name: item.name ?? '',
-			role: item.role
+			author: item.user?.name,
+			action: item.action ?? '',
+			message: item.message
 		};
 	})}
 />
