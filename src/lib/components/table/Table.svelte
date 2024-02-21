@@ -119,9 +119,9 @@
 			style="max-height: {maxHeight}"
 		>
 			<table class="w-full">
-				<thead class="">
+				<thead class="sticky top-0 z-10">
 					{#each $table.getHeaderGroups() as headerGroup, index}
-						<tr class="border-gray-300 border-solid border-[1px] bg-gray-100">
+						<tr class="outline-gray-300 outline outline-[1px] bg-gray-100">
 							{#each headerGroup.headers as header}
 								<th colSpan={header.colSpan} class="text-left">
 									{#if !header.isPlaceholder}

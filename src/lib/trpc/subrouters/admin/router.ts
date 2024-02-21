@@ -3,7 +3,7 @@ import { adminProcedure, router, logAdminAction } from "../../setup"
 import { TRPCError } from "@trpc/server"
 
 export const adminRouter = router({
-  getUsersAdmin: adminProcedure.meta({ action: "DELETE_USERS" }).input(z.object({
+  getUsersAdmin: adminProcedure.input(z.object({
     limit: z.number(),
     cursor: z.string().optional(),
     searchQuery: z.string().optional(),
@@ -52,5 +52,27 @@ export const adminRouter = router({
       }
     })
     return count
+  }),
+  getAdminLogs: adminProcedure.input(z.object({
+    limit: z.number(),
+    cursor: z.string().optional(),
+    searchQuery: z.string().optional(),
+    order: z.enum(["stars", "date"]).optional(),
+  })).query(async ({ ctx, input }) => {
+    const logs = await ctx.prisma.adminLogs.findMany({
+      cursor: input.cursor ? {
+        id: input.cursor
+      } : undefined,
+      take: input.limit,
+      skip: input.cursor ? 1 : 0,
+      include: {
+        user: {
+          select: {
+            name: true
+          }
+        }
+      },
+    })
+    return logs
   })
 })

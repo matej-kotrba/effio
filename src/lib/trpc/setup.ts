@@ -1,7 +1,7 @@
 import { TRPCError, initTRPC } from "@trpc/server"
 import type { Context } from "./context";
 import superjson from "superjson"
-import type { User } from "@prisma/client";
+import type { AdminLogsActions, User } from "@prisma/client";
 
 export const t = initTRPC.context<Context>().create(
   {
@@ -39,11 +39,15 @@ const isAdmin = t.middleware(async (opts) => {
 export const loggedInProcedure = procedure.use(isLoggedIn)
 export const adminProcedure = procedure.use(isAdmin)
 
+type AdminActionsHelper = {
+  [key in AdminLogsActions]: key;
+}
+
 type AdminLogContentObject = {
-  action: "DELETE_USERS"
+  action: AdminActionsHelper["DELETE_USERS"]
   data: { count: number, ids: string[] }
 } | {
-  action: "BLOCKED_USERS"
+  action: AdminActionsHelper["BLOCKED_USERS"]
   data: User[]
 }
 
@@ -64,8 +68,6 @@ export async function logAdminAction(ctx: Context, content: AdminLogContentObjec
   else {
     return
   }
-
-  console.log("Creating")
 
   const log = await ctx.prisma.adminLogs.create({
     data: {

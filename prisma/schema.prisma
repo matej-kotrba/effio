@@ -309,12 +309,12 @@ model TestStar {
 }
 
 model AdminLogs {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   userId    String?
-  action    String
+  action    AdminLogsActions
   message   String
-  createdAt DateTime @default(now())
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt DateTime         @default(now())
+  user      User?            @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   @@index([userId])
 }
@@ -322,6 +322,11 @@ model AdminLogs {
 enum UserRoles {
   ADMIN
   USER
+}
+
+enum AdminLogsActions {
+  DELETE_USERS
+  BLOCKED_USERS
 }
 
 enum MessageTypes {
