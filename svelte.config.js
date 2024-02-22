@@ -18,7 +18,8 @@ const config = {
 			'~use': './src/lib/use',
 			'~stores': './src/lib/stores',
 			'~helpers': './src/lib/helpers',
-			'~': './src'
+			'~': './src',
+			'@/*': './src/lib'
 		}
 	}
 };

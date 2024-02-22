@@ -3,6 +3,13 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
+			// container: {
+			// 	center: true,
+			// 	padding: '2rem',
+			// 	screens: {
+			// 		'2xl': '1400px'
+			// 	}
+			// },
 			colors: {
 				light_primary: '#6433F0',
 				light_primary_transparent: '#6433F025',
@@ -48,7 +55,41 @@ export default {
 				correct: '#5cb85c',
 				dark_correct: '#4a9d4a',
 				incorrect: '#b00020',
-				dark_incorrect: '#a0001f'
+				dark_incorrect: '#a0001f',
+
+				border: 'hsl(var(--border) / <alpha-value>)',
+				input: 'hsl(var(--input) / <alpha-value>)',
+				ring: 'hsl(var(--ring) / <alpha-value>)',
+				background: 'hsl(var(--background) / <alpha-value>)',
+				foreground: 'hsl(var(--foreground) / <alpha-value>)',
+				primary: {
+					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+					foreground: 'hsl(var(--primary-foreground) / <alpha-value>)'
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+					foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+				},
+				destructive: {
+					DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+					foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+					foreground: 'hsl(var(--accent-foreground) / <alpha-value>)'
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+					foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+					foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+				}
 			},
 			fontSize: {
 				h1: '45px',
@@ -70,7 +111,8 @@ export default {
 				light: 300
 			},
 			fontFamily: {
-				primary: ['"Poppins"', 'sans-serif']
+				primary: ['"Poppins"', 'sans-serif'],
+				sans: ['Poppins', 'sans-serif']
 			},
 			borderRadius: {
 				'4xl': '32px'
@@ -133,6 +175,7 @@ export default {
 		}
 	},
 	darkMode: 'class',
+	safelist: ['dark'],
 	plugins: [require('daisyui'), require('@tailwindcss/container-queries')],
 	daisyui: {
 		styled: true,
