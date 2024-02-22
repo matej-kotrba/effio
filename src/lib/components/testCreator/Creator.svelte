@@ -39,7 +39,7 @@
 		questionMethods
 	} from '~helpers/test/questionFunctions';
 	import { fly } from 'svelte/transition';
-	import { XL } from '~/utils/responsive';
+	import { XL } from '~utils/responsive';
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import Dialog from '~components/portals/Dialog.svelte';

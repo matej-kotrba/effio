@@ -13,12 +13,12 @@
 		SortingState,
 		TableOptions
 	} from '@tanstack/svelte-table';
-	import RowCheckBox from './RowCheckBox.svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import {
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
+	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
 
 	export let data: any[] = [];
 	export let tableSelection: RowSelectionState = {};
@@ -199,6 +199,19 @@
 										</div>
 									</td>
 								{/each}
+								<DropdownMenu.Root>
+									<DropdownMenu.Trigger>Open</DropdownMenu.Trigger>
+									<DropdownMenu.Content>
+										<DropdownMenu.Group>
+											<DropdownMenu.Label>My Account</DropdownMenu.Label>
+											<DropdownMenu.Separator />
+											<DropdownMenu.Item>Profile</DropdownMenu.Item>
+											<DropdownMenu.Item>Billing</DropdownMenu.Item>
+											<DropdownMenu.Item>Team</DropdownMenu.Item>
+											<DropdownMenu.Item>Subscription</DropdownMenu.Item>
+										</DropdownMenu.Group>
+									</DropdownMenu.Content>
+								</DropdownMenu.Root>
 							</tr>
 						{/if}
 					{/each}

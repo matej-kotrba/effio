@@ -11,7 +11,7 @@
 	import { toast } from 'svelte-french-toast';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TestCollectionSearch from '~components/page-parts/TestCollectionSearch.svelte';
-	import { createExportedFileAndMakeItDownloadable } from '~/utils/testExport';
+	import { createExportedFileAndMakeItDownloadable } from '~utils/testExport';
 	import { modalStore } from './modalStore';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
