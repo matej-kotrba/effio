@@ -119,9 +119,11 @@
 			style="max-height: {maxHeight}"
 		>
 			<table class="w-full">
-				<thead class="sticky top-0 z-10">
+				<thead
+					class="sticky top-0 z-10 w-full before:content-[''] before:inset-0 before:bg-gray-100 before:absolute isolate before:z-[-99]"
+				>
 					{#each $table.getHeaderGroups() as headerGroup, index}
-						<tr class="outline-gray-300 outline outline-[1px] bg-gray-100">
+						<tr class="outline-gray-300 outline outline-[1px] w-full">
 							{#each headerGroup.headers as header}
 								<th colSpan={header.colSpan} class="text-left">
 									{#if !header.isPlaceholder}
@@ -199,19 +201,27 @@
 										</div>
 									</td>
 								{/each}
-								<DropdownMenu.Root>
-									<DropdownMenu.Trigger>Open</DropdownMenu.Trigger>
-									<DropdownMenu.Content>
-										<DropdownMenu.Group>
-											<DropdownMenu.Label>My Account</DropdownMenu.Label>
-											<DropdownMenu.Separator />
-											<DropdownMenu.Item>Profile</DropdownMenu.Item>
-											<DropdownMenu.Item>Billing</DropdownMenu.Item>
-											<DropdownMenu.Item>Team</DropdownMenu.Item>
-											<DropdownMenu.Item>Subscription</DropdownMenu.Item>
-										</DropdownMenu.Group>
-									</DropdownMenu.Content>
-								</DropdownMenu.Root>
+								<td>
+									<DropdownMenu.Root>
+										<DropdownMenu.Trigger
+											style="display: grid; place-content: center;"
+											><iconify-icon
+												icon="mi:options-vertical"
+												class="text-3xl"
+											/></DropdownMenu.Trigger
+										>
+										<DropdownMenu.Content>
+											<DropdownMenu.Group>
+												<DropdownMenu.Label>My Account</DropdownMenu.Label>
+												<DropdownMenu.Separator />
+												<DropdownMenu.Item>Profile</DropdownMenu.Item>
+												<DropdownMenu.Item>Billing</DropdownMenu.Item>
+												<DropdownMenu.Item>Team</DropdownMenu.Item>
+												<DropdownMenu.Item>Subscription</DropdownMenu.Item>
+											</DropdownMenu.Group>
+										</DropdownMenu.Content>
+									</DropdownMenu.Root>
+								</td>
 							</tr>
 						{/if}
 					{/each}
