@@ -14,7 +14,7 @@
 	import type { ColumnDef, Table as TableType } from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
-	import type { UserRoles } from '@prisma/client';
+	import { Prisma, UserRoles } from '@prisma/client';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 
 	const USERS_LIMIT = 20;
@@ -180,6 +180,21 @@
 	bind:tableSelection
 	bind:table
 	{columns}
+	rowOptions={{
+		title: 'Actions',
+		subchoices: [
+			{
+				label: 'Change role',
+				onClick: () => {},
+				subchoices: Object.values(UserRoles).map((role) => {
+					return {
+						label: role[0].toUpperCase() + role.slice(1).toLowerCase(),
+						onClick: () => {}
+					};
+				})
+			}
+		]
+	}}
 	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
 	data={users.map((item) => {
 		return {
