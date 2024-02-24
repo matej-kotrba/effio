@@ -18,20 +18,11 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
-	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
-	import type { ActionChoice } from './TableOptionsRecursive.svelte';
-	import TableOptionsRecursive from './TableOptionsRecursive.svelte';
 
 	export let data: any[] = [];
 	export let tableSelection: RowSelectionState = {};
 	export let maxHeight: string = 'auto';
 	export let columns: ColumnDef<any>[] = [];
-	export let rowOptions:
-		| {
-				title: string;
-				subchoices: ActionChoice[];
-		  }
-		| undefined = undefined;
 
 	$: {
 		options.update((options) => ({
@@ -209,28 +200,9 @@
 										</div>
 									</td>
 								{/each}
-								{#if rowOptions}
+								{#if $$slots.options}
 									<td>
-										<DropdownMenu.Root>
-											<DropdownMenu.Trigger
-												style="display: grid; place-content: center;"
-												><iconify-icon
-													icon="mi:options-vertical"
-													class="text-3xl"
-												/></DropdownMenu.Trigger
-											>
-											<DropdownMenu.Content>
-												<DropdownMenu.Group>
-													<DropdownMenu.Label
-														>{rowOptions.title}</DropdownMenu.Label
-													>
-													<DropdownMenu.Separator />
-													<TableOptionsRecursive
-														choices={rowOptions.subchoices}
-													/>
-												</DropdownMenu.Group>
-											</DropdownMenu.Content>
-										</DropdownMenu.Root>
+										<slot name="options" />
 									</td>
 								{/if}
 							</tr>

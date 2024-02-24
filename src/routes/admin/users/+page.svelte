@@ -14,8 +14,9 @@
 	import type { ColumnDef, Table as TableType } from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
-	import { Prisma, UserRoles } from '@prisma/client';
+	import { UserRoles } from '@prisma/client';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
+	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
 
 	const USERS_LIMIT = 20;
 
@@ -180,21 +181,6 @@
 	bind:tableSelection
 	bind:table
 	{columns}
-	rowOptions={{
-		title: 'Actions',
-		subchoices: [
-			{
-				label: 'Change role',
-				onClick: () => {},
-				subchoices: Object.values(UserRoles).map((role) => {
-					return {
-						label: role[0].toUpperCase() + role.slice(1).toLowerCase(),
-						onClick: () => {}
-					};
-				})
-			}
-		]
-	}}
 	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
 	data={users.map((item) => {
 		return {
@@ -205,4 +191,32 @@
 			email: item.email || ''
 		};
 	})}
-/>
+>
+	<svelte:fragment slot="options">
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger style="display: grid; place-content: center;"
+				><iconify-icon
+					icon="mi:options-vertical"
+					class="text-3xl"
+				/></DropdownMenu.Trigger
+			>
+			<DropdownMenu.Content class="w-56">
+				<DropdownMenu.Group>
+					<DropdownMenu.Label>Actions</DropdownMenu.Label>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Sub>
+						<DropdownMenu.SubTrigger>User roles</DropdownMenu.SubTrigger>
+						<DropdownMenu.SubContent>
+							{#each Object.values(UserRoles) as role}
+								<DropdownMenu.Item
+									>{role[0].toUpperCase() +
+										role.slice(1).toLowerCase()}</DropdownMenu.Item
+								>
+							{/each}
+						</DropdownMenu.SubContent>
+					</DropdownMenu.Sub>
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	</svelte:fragment>
+</Table>
