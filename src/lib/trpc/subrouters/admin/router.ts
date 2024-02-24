@@ -74,5 +74,19 @@ export const adminRouter = router({
       },
     })
     return logs
+  }),
+  changeUserRole: adminProcedure.input(z.object({
+    userId: z.string(),
+    role: z.enum(["ADMIN", "USER"])
+  })).mutation(async ({ ctx, input }) => {
+    const user = await ctx.prisma.user.update({
+      where: {
+        id: input.userId
+      },
+      data: {
+        role: input.role
+      }
+    })
+    return user
   })
 })

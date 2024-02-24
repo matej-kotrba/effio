@@ -202,7 +202,7 @@
 								{/each}
 								{#if $$slots.options}
 									<td>
-										<slot name="options" />
+										<slot name="options" rowIndex={index} />
 									</td>
 								{/if}
 							</tr>

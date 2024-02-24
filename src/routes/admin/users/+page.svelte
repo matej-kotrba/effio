@@ -132,6 +132,32 @@
 			toast.success(`Deleted ${deletedUsers} user(s)`);
 		}
 	}
+
+	async function changeUserRole(
+		userId: string,
+		role: UserRoles,
+		initialRole: UserRoles
+	): Promise<boolean> {
+		try {
+			await trpc($page).admin.changeUserRole.mutate({
+				userId,
+				role
+			});
+			return true;
+		} catch (e) {
+			if (e instanceof TRPCClientError) {
+				createTRPCErrorNotification(e);
+			} else {
+				toast.error('Unknown error occurred');
+			}
+			const user = users.find((user) => user.id === userId);
+			if (user) {
+				user.role = initialRole;
+				users = users;
+			}
+			return false;
+		}
+	}
 </script>
 
 <div class="p-2" bind:clientHeight={groupOperationsHeight}>
@@ -192,7 +218,7 @@
 		};
 	})}
 >
-	<svelte:fragment slot="options">
+	<svelte:fragment slot="options" let:rowIndex>
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger style="display: grid; place-content: center;"
 				><iconify-icon
@@ -207,12 +233,22 @@
 					<DropdownMenu.Sub>
 						<DropdownMenu.SubTrigger>User roles</DropdownMenu.SubTrigger>
 						<DropdownMenu.SubContent>
-							{#each Object.values(UserRoles) as role}
-								<DropdownMenu.Item
-									>{role[0].toUpperCase() +
-										role.slice(1).toLowerCase()}</DropdownMenu.Item
-								>
-							{/each}
+							<DropdownMenu.RadioGroup bind:value={users[rowIndex].role}>
+								{#each Object.values(UserRoles) as role}
+									<DropdownMenu.RadioItem
+										value={role}
+										on:click={async (e) => {
+											await changeUserRole(
+												users[rowIndex].id,
+												role,
+												users[rowIndex].role
+											);
+										}}
+										>{role[0].toUpperCase() +
+											role.slice(1).toLowerCase()}</DropdownMenu.RadioItem
+									>
+								{/each}
+							</DropdownMenu.RadioGroup>
 						</DropdownMenu.SubContent>
 					</DropdownMenu.Sub>
 				</DropdownMenu.Group>
