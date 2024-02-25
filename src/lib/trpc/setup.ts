@@ -1,7 +1,7 @@
 import { TRPCError, initTRPC } from "@trpc/server"
 import type { Context } from "./context";
 import superjson from "superjson"
-import type { AdminLogsActions, User } from "@prisma/client";
+import type { AdminLogsActions, User, UserRoles } from "@prisma/client";
 
 export const t = initTRPC.context<Context>().create(
   {
@@ -49,6 +49,9 @@ type AdminLogContentObject = {
 } | {
   action: AdminActionsHelper["BLOCKED_USERS"]
   data: User[]
+} | {
+  action: AdminActionsHelper["CHANGE_USER_ROLE"]
+  data: { userId: string, role: UserRoles, previousRole: UserRoles }
 }
 
 // Admin log function
@@ -64,6 +67,9 @@ export async function logAdminAction(ctx: Context, content: AdminLogContentObjec
   }
   else if (content.action === "BLOCKED_USERS") {
     adminLogActionString = "Blocked users: " + content.data.map(user => user.name).join(", ")
+  }
+  else if (content.action === "CHANGE_USER_ROLE") {
+    adminLogActionString = `Changed user (${content.data.userId}) role from: ${content.data.previousRole} to ${content.data.role}`
   }
   else {
     return

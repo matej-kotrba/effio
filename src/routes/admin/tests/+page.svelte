@@ -18,17 +18,15 @@
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
 
-	const USERS_LIMIT = 20;
+	const TESTS_LIMIT = 20;
 
-	type User = {
+	type Test = {
 		id: string;
-		name: string;
-		role: UserRoles;
-		provider: string;
-		email: string;
+		title: string;
+		ownerName: string;
 	};
 
-	const columns: ColumnDef<User>[] = [
+	const columns: ColumnDef<Test>[] = [
 		{
 			id: 'select',
 			// header: ({ table }) =>
@@ -52,58 +50,46 @@
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'provider',
-			accessorKey: 'provider',
-			header: 'Provider',
+			id: 'title',
+			accessorKey: 'title',
+			header: 'Title',
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'name',
-			accessorKey: 'name',
-			header: 'Name',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'email',
-			accessorKey: 'email',
-			header: 'Email',
-			cell: (info) => info.getValue()
-		},
-		{
-			id: 'role',
-			accessorKey: 'role',
-			header: 'Role',
+			id: 'ownerName',
+			accessorKey: 'ownerName',
+			header: 'Owner Name',
 			cell: (info) => info.getValue()
 		}
 	];
 
-	let users: Awaited<
-		ReturnType<ReturnType<typeof trpc>['admin']['getUsersAdmin']['query']>
+	let tests: Awaited<
+		ReturnType<ReturnType<typeof trpc>['admin']['getTestsAdmin']['query']>
 	> = [];
 
-	let table: Readable<TableType<User>>;
+	let table: Readable<TableType<Test>>;
 	let groupOperationsHeight: number;
 
 	let tableSelection: RowSelectionState = {};
 
 	async function getNewUsers(reset: boolean = false) {
-		const newUsers = await trpc($page).admin.getUsersAdmin.query({
-			limit: USERS_LIMIT,
-			cursor: users[users.length - 1]?.id
+		const newTests = await trpc($page).admin.getTestsAdmin.query({
+			limit: TESTS_LIMIT,
+			cursor: tests[tests.length - 1]?.id
 		});
 		if (reset) {
-			users = newUsers;
+			tests = newTests;
 		} else {
-			users = [...users, ...newUsers];
+			tests = [...tests, ...newTests];
 		}
 	}
 
 	let isFetchingAction = false;
 
-	async function deleteUsersFromDB() {
+	async function deleteTestsFromDB() {
 		isFetchingAction = true;
 		const usersToDelete = Object.entries(tableSelection).map(([index, _]) => {
-			return { name: users[+index].name, id: users[+index].id };
+			return { name: tests[+index].title, id: tests[+index].id };
 		});
 
 		let deletedUsers = 0;
@@ -122,7 +108,7 @@
 		isFetchingAction = false;
 
 		if (deletedUsers > 0) {
-			users = users.filter((user) => {
+			tests = tests.filter((user) => {
 				return !usersToDelete.some((userToDelete) => {
 					return userToDelete.id === user.id;
 				});
@@ -153,10 +139,10 @@
 			} else {
 				toast.error('Unknown error occurred');
 			}
-			const user = users.find((user) => user.id === userId);
+			const user = tests.find((user) => user.id === userId);
 			if (user) {
 				user.role = initialRole;
-				users = users;
+				tests = tests;
 			}
 			return false;
 		}
@@ -183,7 +169,7 @@
 				<span>Are you sure you want to delete all selected users?</span>
 				<div class="flex flex-wrap gap-2 mb-2">
 					{#each Object.entries(tableSelection).map(([index, _]) => {
-						return { name: users[+index].name, id: users[+index].id };
+						return { name: tests[+index].name, id: tests[+index].id };
 					}) as user, index}
 						<span class="text-red-500">{user.name}</span>
 						<span
@@ -197,7 +183,7 @@
 				<SimpleButton
 					class="hover:text-error dark:hover:text-dark_error"
 					onClick={async () => {
-						await deleteUsersFromDB();
+						await deleteTestsFromDB();
 						dialogRef.close();
 					}}>Delete</SimpleButton
 				>
@@ -211,7 +197,7 @@
 	bind:table
 	{columns}
 	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
-	data={users.map((item) => {
+	data={tests.map((item) => {
 		return {
 			id: item.id,
 			name: item.name ?? '',
@@ -236,15 +222,15 @@
 					<DropdownMenu.Sub>
 						<DropdownMenu.SubTrigger>User roles</DropdownMenu.SubTrigger>
 						<DropdownMenu.SubContent>
-							<DropdownMenu.RadioGroup bind:value={users[rowIndex].role}>
+							<DropdownMenu.RadioGroup bind:value={tests[rowIndex].role}>
 								{#each Object.values(UserRoles) as role}
 									<DropdownMenu.RadioItem
 										value={role}
 										on:click={async (e) => {
 											await changeUserRole(
-												users[rowIndex].id,
+												tests[rowIndex].id,
 												role,
-												users[rowIndex].role
+												tests[rowIndex].role
 											);
 										}}
 										>{role[0].toUpperCase() +

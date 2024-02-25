@@ -327,6 +327,7 @@ enum UserRoles {
 enum AdminLogsActions {
   DELETE_USERS
   BLOCKED_USERS
+  CHANGE_USER_ROLE
 }
 
 enum MessageTypes {
