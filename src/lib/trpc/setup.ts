@@ -52,6 +52,9 @@ type AdminLogContentObject = {
 } | {
   action: AdminActionsHelper["CHANGE_USER_ROLE"]
   data: { userId: string, role: UserRoles, previousRole: UserRoles }
+} | {
+  action: AdminActionsHelper["DELETE_TESTS"]
+  data: { count: number, ids: string[] }
 }
 
 // Admin log function
@@ -70,6 +73,9 @@ export async function logAdminAction(ctx: Context, content: AdminLogContentObjec
   }
   else if (content.action === "CHANGE_USER_ROLE") {
     adminLogActionString = `Changed user (${content.data.userId}) role from: ${content.data.previousRole} to ${content.data.role}`
+  }
+  else if (content.action === "DELETE_TESTS") {
+    adminLogActionString = "Deleted " + content.data.count + " tests: " + content.data.ids.join(", ")
   }
   else {
     return

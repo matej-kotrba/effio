@@ -8,6 +8,9 @@
 	export { classes as class };
 </script>
 
-<button class={twMerge('', classes)} on:click={onClick} type="button"
-	>{originalData}</button
+<button
+	class={twMerge('', classes)}
+	on:click={onClick}
+	type="button"
+	title={String(originalData)}>{originalData}</button
 >

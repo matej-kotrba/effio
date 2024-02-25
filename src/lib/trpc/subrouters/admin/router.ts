@@ -45,6 +45,14 @@ export const adminRouter = router({
       } : undefined,
       take: input.limit,
       skip: input.cursor ? 1 : 0,
+      include: {
+        owner: {
+          select: {
+            name: true,
+            id: true
+          }
+        }
+      },
       where: {
         title: {
           contains: input.searchQuery ? input.searchQuery : undefined
@@ -88,7 +96,7 @@ export const adminRouter = router({
     })
 
     logAdminAction(ctx, {
-      action: "DELETE_USERS",
+      action: "DELETE_TESTS",
       data: {
         count: count,
         ids: input.testsIds

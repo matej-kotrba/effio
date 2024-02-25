@@ -17,6 +17,8 @@
 	import { UserRoles } from '@prisma/client';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
+	import { transformDate } from '~/lib/utils/date';
+	import CustomTableTile from '~components/table/CustomTableTile.svelte';
 
 	const TESTS_LIMIT = 20;
 
@@ -53,12 +55,24 @@
 			id: 'title',
 			accessorKey: 'title',
 			header: 'Title',
-			cell: (info) => info.getValue()
+			cell: (info) =>
+				renderComponent(CustomTableTile, {
+					originalData: info.getValue(),
+					onClick: () => {},
+					class:
+						'whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[250px]'
+				})
 		},
 		{
 			id: 'ownerName',
 			accessorKey: 'ownerName',
 			header: 'Owner Name',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'createdAt',
+			accessorKey: 'createdAt',
+			header: 'Created At',
 			cell: (info) => info.getValue()
 		}
 	];
@@ -118,35 +132,6 @@
 			toast.success(`Deleted ${deletedUsers} user(s)`);
 		}
 	}
-
-	async function changeUserRole(
-		userId: string,
-		role: UserRoles,
-		initialRole: UserRoles
-	): Promise<boolean> {
-		if (role === initialRole) {
-			return true;
-		}
-		try {
-			await trpc($page).admin.changeUserRole.mutate({
-				userId,
-				role
-			});
-			return true;
-		} catch (e) {
-			if (e instanceof TRPCClientError) {
-				createTRPCErrorNotification(e);
-			} else {
-				toast.error('Unknown error occurred');
-			}
-			const user = tests.find((user) => user.id === userId);
-			if (user) {
-				user.role = initialRole;
-				tests = tests;
-			}
-			return false;
-		}
-	}
 </script>
 
 <div class="p-2" bind:clientHeight={groupOperationsHeight}>
@@ -169,7 +154,7 @@
 				<span>Are you sure you want to delete all selected users?</span>
 				<div class="flex flex-wrap gap-2 mb-2">
 					{#each Object.entries(tableSelection).map(([index, _]) => {
-						return { name: tests[+index].name, id: tests[+index].id };
+						return { name: tests[+index].title, id: tests[+index].id };
 					}) as user, index}
 						<span class="text-red-500">{user.name}</span>
 						<span
@@ -200,48 +185,9 @@
 	data={tests.map((item) => {
 		return {
 			id: item.id,
-			name: item.name ?? '',
-			role: item.role,
-			provider: item.accounts.map((account) => account.provider).join(', '),
-			email: item.email || ''
+			title: item.title ?? '',
+			ownerName: item.owner.name,
+			createdAt: transformDate(item.createdAt, { time: true })
 		};
 	})}
->
-	<svelte:fragment slot="options" let:rowIndex>
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger style="display: grid; place-content: center;"
-				><iconify-icon
-					icon="mi:options-vertical"
-					class="text-3xl"
-				/></DropdownMenu.Trigger
-			>
-			<DropdownMenu.Content class="w-56">
-				<DropdownMenu.Group>
-					<DropdownMenu.Label>Actions</DropdownMenu.Label>
-					<DropdownMenu.Separator />
-					<DropdownMenu.Sub>
-						<DropdownMenu.SubTrigger>User roles</DropdownMenu.SubTrigger>
-						<DropdownMenu.SubContent>
-							<DropdownMenu.RadioGroup bind:value={tests[rowIndex].role}>
-								{#each Object.values(UserRoles) as role}
-									<DropdownMenu.RadioItem
-										value={role}
-										on:click={async (e) => {
-											await changeUserRole(
-												tests[rowIndex].id,
-												role,
-												tests[rowIndex].role
-											);
-										}}
-										>{role[0].toUpperCase() +
-											role.slice(1).toLowerCase()}</DropdownMenu.RadioItem
-									>
-								{/each}
-							</DropdownMenu.RadioGroup>
-						</DropdownMenu.SubContent>
-					</DropdownMenu.Sub>
-				</DropdownMenu.Group>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
-	</svelte:fragment>
-</Table>
+/>
