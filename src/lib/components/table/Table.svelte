@@ -23,6 +23,7 @@
 	export let tableSelection: RowSelectionState = {};
 	export let maxHeight: string = 'auto';
 	export let columns: ColumnDef<any>[] = [];
+	export let isTableDisabled: boolean = false;
 
 	$: {
 		options.update((options) => ({
@@ -34,6 +35,7 @@
 	let sorting: SortingState = [];
 
 	const onSelect = (updater: any) => {
+		if (isTableDisabled) return;
 		if (updater instanceof Function) {
 			tableSelection = updater(tableSelection);
 		} else {
@@ -53,6 +55,7 @@
 	};
 
 	const setSorting: OnChangeFn<SortingState> = (updater) => {
+		if (isTableDisabled) return;
 		if (updater instanceof Function) {
 			sorting = updater(sorting);
 		} else {
@@ -88,6 +91,8 @@
 	const dispatch = createEventDispatcher();
 
 	function onLastRowIntersection() {
+		// TODO: This is not functional on 100%
+		if (isTableDisabled) return;
 		dispatch('last-row-intersection');
 	}
 

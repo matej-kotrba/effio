@@ -94,20 +94,32 @@
 
 	let tableSelection: RowSelectionState = {};
 
+	let isResetingTableValues: boolean = false;
+
 	async function getNewUsers(
 		reset: boolean = false,
 		searchQuery?: string,
 		sorting?: ColumnSort
 	) {
 		if (reset) {
-			users = [];
+			isResetingTableValues = true;
 		}
-		const newUsers = await trpc($page).admin.getUsersAdmin.query({
-			limit: USERS_LIMIT,
-			cursor: users[users.length - 1]?.id,
-			searchQuery
-		});
-		users = [...users, ...newUsers];
+		try {
+			const newUsers = await trpc($page).admin.getUsersAdmin.query({
+				limit: USERS_LIMIT,
+				cursor: reset ? undefined : users[users.length - 1]?.id,
+				searchQuery,
+				order: sorting?.id || 'name',
+				orderBy: sorting?.desc ? 'desc' : 'asc'
+			});
+			if (reset) {
+				users = [];
+			}
+			users = [...users, ...newUsers];
+		} catch (_) {
+		} finally {
+			isResetingTableValues = false;
+		}
 	}
 
 	let isFetchingAction = false;
@@ -237,6 +249,7 @@
 	bind:tableSelection
 	bind:table
 	{columns}
+	isTableDisabled={isResetingTableValues}
 	maxHeight={`calc(100vh - ${NONAUTHENTICATED_NAV_HEIGHT}px - ${groupOperationsHeight}px - 2rem - 16px)`}
 	data={users.map((item) => {
 		return {
