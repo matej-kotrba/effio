@@ -11,12 +11,18 @@
 	import toast from 'svelte-french-toast';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification';
 	import { TRPCClientError } from '@trpc/client';
-	import type { ColumnDef, Table as TableType } from '@tanstack/svelte-table';
+	import type {
+		ColumnDef,
+		ColumnSort,
+		SortingState,
+		Table as TableType
+	} from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
 	import { UserRoles } from '@prisma/client';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
+	import SearchBar from '~components/inputs/SearchBar.svelte';
 
 	const USERS_LIMIT = 20;
 
@@ -30,7 +36,7 @@
 
 	const columns: ColumnDef<User>[] = [
 		{
-			id: 'select',
+			id: 'select' as const,
 			// header: ({ table }) =>
 			// 	renderComponent(RowCheckBox, {
 			// 		checked: table.getIsAllRowsSelected(),
@@ -46,36 +52,38 @@
 				})
 		},
 		{
-			id: 'id',
+			id: 'id' as const,
 			accessorKey: 'id',
 			header: 'ID',
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'provider',
+			id: 'provider' as const,
 			accessorKey: 'provider',
 			header: 'Provider',
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'name',
+			id: 'name' as const,
 			accessorKey: 'name',
 			header: 'Name',
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'email',
+			id: 'email' as const,
 			accessorKey: 'email',
 			header: 'Email',
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'role',
+			id: 'role' as const,
 			accessorKey: 'role',
 			header: 'Role',
 			cell: (info) => info.getValue()
 		}
 	];
+
+	let searchInputValue: string = '';
 
 	let users: Awaited<
 		ReturnType<ReturnType<typeof trpc>['admin']['getUsersAdmin']['query']>
@@ -86,16 +94,20 @@
 
 	let tableSelection: RowSelectionState = {};
 
-	async function getNewUsers(reset: boolean = false) {
+	async function getNewUsers(
+		reset: boolean = false,
+		searchQuery?: string,
+		sorting?: ColumnSort
+	) {
+		if (reset) {
+			users = [];
+		}
 		const newUsers = await trpc($page).admin.getUsersAdmin.query({
 			limit: USERS_LIMIT,
-			cursor: users[users.length - 1]?.id
+			cursor: users[users.length - 1]?.id,
+			searchQuery
 		});
-		if (reset) {
-			users = newUsers;
-		} else {
-			users = [...users, ...newUsers];
-		}
+		users = [...users, ...newUsers];
 	}
 
 	let isFetchingAction = false;
@@ -161,52 +173,67 @@
 			return false;
 		}
 	}
+
+	function onTableSortChange(e: CustomEvent<ColumnSort>) {
+		getNewUsers(true, searchInputValue, e.detail);
+	}
 </script>
 
 <div class="p-2" bind:clientHeight={groupOperationsHeight}>
-	<h3 class="font-semibold text-h6">Group operations</h3>
-	<div>
-		<TableActionButton
-			tooltip="Delete all selected users"
-			dialogTitle="User deletion"
-			backdropColorEffect="rgb(255,0,0,0.1)"
-			borderColorEffect="rgb(255,0,0)"
-			isSubmittingDialog={isFetchingAction}
-			onClickCallback={(modal) => {
-				if (Object.keys(tableSelection).length > 0) {
-					modal.showModal();
-				}
-			}}
-		>
-			<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
-			<div slot="dialog" let:modal={dialogRef}>
-				<span>Are you sure you want to delete all selected users?</span>
-				<div class="flex flex-wrap gap-2 mb-2">
-					{#each Object.entries(tableSelection).map(([index, _]) => {
-						return { name: users[+index].name, id: users[+index].id };
-					}) as user, index}
-						<span class="text-red-500">{user.name}</span>
-						<span
-							>{index !== Object.entries(tableSelection).length - 1
-								? ','
-								: ''}</span
-						>
-					{/each}
+	<div class="mb-2">
+		<h3 class="font-semibold text-h6">Group operations</h3>
+		<div>
+			<TableActionButton
+				tooltip="Delete all selected users"
+				dialogTitle="User deletion"
+				backdropColorEffect="rgb(255,0,0,0.1)"
+				borderColorEffect="rgb(255,0,0)"
+				isSubmittingDialog={isFetchingAction}
+				onClickCallback={(modal) => {
+					if (Object.keys(tableSelection).length > 0) {
+						modal.showModal();
+					}
+				}}
+			>
+				<iconify-icon icon="fluent:delete-28-filled" class="z-10 text-3xl" />
+				<div slot="dialog" let:modal={dialogRef}>
+					<span>Are you sure you want to delete all selected users?</span>
+					<div class="flex flex-wrap gap-2 mb-2">
+						{#each Object.entries(tableSelection).map(([index, _]) => {
+							return { name: users[+index].name, id: users[+index].id };
+						}) as user, index}
+							<span class="text-red-500">{user.name}</span>
+							<span
+								>{index !== Object.entries(tableSelection).length - 1
+									? ','
+									: ''}</span
+							>
+						{/each}
+					</div>
+					<SimpleButton>Cancel</SimpleButton>
+					<SimpleButton
+						class="hover:text-error dark:hover:text-dark_error"
+						onClick={async () => {
+							await deleteUsersFromDB();
+							dialogRef.close();
+						}}>Delete</SimpleButton
+					>
 				</div>
-				<SimpleButton>Cancel</SimpleButton>
-				<SimpleButton
-					class="hover:text-error dark:hover:text-dark_error"
-					onClick={async () => {
-						await deleteUsersFromDB();
-						dialogRef.close();
-					}}>Delete</SimpleButton
-				>
-			</div>
-		</TableActionButton>
+			</TableActionButton>
+		</div>
 	</div>
+	<SearchBar
+		bind:inputValue={searchInputValue}
+		searchFunction={(value) => {
+			searchInputValue = value;
+			getNewUsers(true, searchInputValue);
+		}}
+		class="w-fit"
+	/>
 </div>
 <Table
-	on:last-row-intersection={() => getNewUsers(false)}
+	on:sorting-change={onTableSortChange}
+	on:last-row-intersection={() => getNewUsers(false, searchInputValue)}
 	bind:tableSelection
 	bind:table
 	{columns}

@@ -24,7 +24,7 @@ export const adminRouter = router({
       },
       where: {
         name: {
-          contains: input.searchQuery ? input.searchQuery : undefined
+          contains: input.searchQuery
         },
       },
       orderBy: {

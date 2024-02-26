@@ -65,6 +65,8 @@
 				sorting
 			}
 		}));
+		dispatch('sorting-change', sorting);
+		console.log(sorting);
 	};
 
 	const options = writable<TableOptions<any>>({
@@ -179,6 +181,11 @@
 										</div>
 									</td>
 								{/each}
+								{#if $$slots.options}
+									<td>
+										<slot name="options" rowIndex={index} />
+									</td>
+								{/if}
 							</tr>
 						{:else}
 							<tr
