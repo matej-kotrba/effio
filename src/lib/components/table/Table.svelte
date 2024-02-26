@@ -18,6 +18,7 @@
 		createObserver,
 		type CreateObserverReturn
 	} from '~/lib/utils/observers';
+	import Skewed from '~components/loaders/Skewed.svelte';
 
 	export let data: any[] = [];
 	export let tableSelection: RowSelectionState = {};
@@ -33,6 +34,14 @@
 	}
 
 	let sorting: SortingState = [];
+
+	$: console.log(isTableDisabled);
+
+	$: {
+		if (isTableDisabled === true) {
+			tableSelection = {};
+		}
+	}
 
 	const onSelect = (updater: any) => {
 		if (isTableDisabled) return;
@@ -69,7 +78,6 @@
 			}
 		}));
 		dispatch('sorting-change', sorting);
-		console.log(sorting);
 	};
 
 	const options = writable<TableOptions<any>>({
@@ -124,6 +132,9 @@
 			class="relative overflow-y-auto border-collapse overscroll-contain"
 			style="max-height: {maxHeight}"
 		>
+			<div class="absolute z-[12] left-1/2 top-1/2">
+				<Skewed />
+			</div>
 			<table class="w-full">
 				<thead
 					class="sticky top-0 z-10 w-full before:content-[''] before:inset-0 before:bg-gray-100 before:absolute isolate before:z-[-99]"
@@ -163,14 +174,16 @@
 						</tr>
 					{/each}
 				</thead>
-				<tbody>
+				<tbody
+					class="relative before:content-[''] before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10"
+				>
 					{#each $table.getRowModel().rows as row, index}
 						{#if index === data.length - 1}
 							<tr
 								use:addIntersectionUse={{ shouldActive: true }}
-								class="border-gray-300 border-solid border-[1px] bg-slate-50 {tableSelection[
-									index
-								]
+								class="border-gray-300 border-solid border-[1px] {isTableDisabled
+									? 'bg-gray-300 text-light_text_black_60'
+									: 'bg-slate-50'} {tableSelection[index]
 									? 'bg-violet-200'
 									: ''}"
 							>
