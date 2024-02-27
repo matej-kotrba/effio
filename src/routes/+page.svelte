@@ -14,6 +14,7 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
+	import Spotlight from '~components/ui/Spotlight/Spotlight.svelte';
 
 	export let data;
 

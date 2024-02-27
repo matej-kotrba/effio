@@ -70,6 +70,7 @@
 		"superjson": "^1.13.1",
 		"svelte-cloudinary": "^1.1.1",
 		"svelte-french-toast": "1.2.0",
+		"svelte-motion": "^0.12.2",
 		"svelte-radix": "^1.0.1",
 		"sveltekit-superforms": "^1.0.0",
 		"tailwind-merge": "^1.13.1",
