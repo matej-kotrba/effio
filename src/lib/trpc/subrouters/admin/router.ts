@@ -38,7 +38,8 @@ export const adminRouter = router({
     limit: z.number(),
     cursor: z.string().optional(),
     searchQuery: z.string().optional(),
-    order: z.enum(["stars", "date"]).optional(),
+    order: z.string().optional(),
+    orderBy: z.enum(["asc", "desc"]).optional(),
   })).query(async ({ ctx, input }) => {
     const tests = await ctx.prisma.test.findMany({
       cursor: input.cursor ? {
