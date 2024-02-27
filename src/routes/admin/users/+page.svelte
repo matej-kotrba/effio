@@ -105,7 +105,6 @@
 			isResetingTableValues = true;
 		}
 		try {
-			const delay = await new Promise((resolve) => setTimeout(resolve, 3000));
 			const newUsers = await trpc($page).admin.getUsersAdmin.query({
 				limit: USERS_LIMIT,
 				cursor: reset ? undefined : users[users.length - 1]?.id,

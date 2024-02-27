@@ -132,7 +132,11 @@
 			class="relative overflow-y-auto border-collapse overscroll-contain"
 			style="max-height: {maxHeight}"
 		>
-			<div class="absolute z-[12] left-1/2 top-1/2">
+			<div
+				class="absolute z-[12] left-1/2 top-1/2 {isTableDisabled
+					? ''
+					: 'hidden'}"
+			>
 				<Skewed />
 			</div>
 			<table class="w-full">
@@ -175,7 +179,9 @@
 					{/each}
 				</thead>
 				<tbody
-					class="relative before:content-[''] before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10"
+					class="relative before:content-[''] before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10 duration-100 {isTableDisabled
+						? 'before:opacity-100'
+						: 'before:opacity-0'}"
 				>
 					{#each $table.getRowModel().rows as row, index}
 						{#if index === data.length - 1}
@@ -183,7 +189,7 @@
 								use:addIntersectionUse={{ shouldActive: true }}
 								class="border-gray-300 border-solid border-[1px] {isTableDisabled
 									? 'bg-gray-300 text-light_text_black_60'
-									: 'bg-slate-50'} {tableSelection[index]
+									: 'bg-slate-50 text-light_text_black'} {tableSelection[index]
 									? 'bg-violet-200'
 									: ''}"
 							>
@@ -211,7 +217,9 @@
 									index
 								]
 									? 'bg-violet-200'
-									: ''}"
+									: ''} {isTableDisabled
+									? 'bg-gray-300 text-light_text_black_60'
+									: 'bg-slate-50 text-light_text_black'}"
 							>
 								{#each row.getVisibleCells() as cell}
 									<td>
