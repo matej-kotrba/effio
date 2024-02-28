@@ -250,7 +250,7 @@
 			<IconButton
 				icon={action.icon}
 				buttonClasses="text-2xl"
-				tootlip={action.tooltip}
+				tooltip={action.tooltip}
 				attr={action.buttonAttr}
 				onClick={action.onClick}
 			/>

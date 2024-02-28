@@ -175,7 +175,7 @@
 								/>
 								<IconButton
 									icon="fluent:delete-28-filled"
-									tootlip="Clear all filters"
+									tooltip="Clear all filters"
 									onClick={clearAllFilters}
 									containerClasses="dropdown-top"
 									tooltipClasses="mb-2"

@@ -57,7 +57,7 @@
 				class={`border-2 border-solid w-40 px-1 py-1 my-1
 		 overflow-hidden duration-150 bg-white  rounded-md shadow-lg dark:bg-dark_light_grey
 		 overflow-ellipsis text-light_text_black dark:text-dark_text_white outline-1 outline-transparent outline
-		 focus-within:outline-primary dark:focus-within:outline-dark_primary
+		 focus-within:outline-light_primary dark:focus-within:outline-dark_primary
 		 ${
 				resultFormat
 					? questionContentFunctions['fill']['checkOptionCorrectness'](

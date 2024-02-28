@@ -122,13 +122,13 @@
 	>
 		<IconButton
 			icon="ic:round-arrow-left"
-			containerClasses="ml-auto dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white dark:bg-dark_grey"
+			class="ml-auto border-2 border-solid dropdown-top dropdown-left border-light_text_black_60 bg-light_white dark:bg-dark_grey"
 			tooltipClasses="bg-light_whiter dark:bg-dark_light_grey rounded-md"
 			onClick={scrollLeft}
 		/>
 		<IconButton
 			icon="ic:round-arrow-right"
-			containerClasses="dropdown-top dropdown-left border-2 border-solid border-light_text_black_60 bg-light_white dark:bg-dark_grey"
+			class="border-2 border-solid dropdown-top dropdown-left border-light_text_black_60 bg-light_white dark:bg-dark_grey"
 			tooltipClasses="bg-light_whiter dark:bg-dark_light_grey rounded-md"
 			onClick={scrollRight}
 		/>

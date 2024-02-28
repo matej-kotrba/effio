@@ -71,7 +71,7 @@
 				`resize-none min-h-[150px] outline-none bg-white dark:bg-dark_light_grey
 		overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 		px-2 py-4 rounded-md shadow-lg w-full dark:group-focus-within:outline-dark_primary
-     outline-1 outline-transparent outline group-focus-within:outline-primary duration-150
+     outline-1 outline-transparent outline group-focus-within:outline-light_primary duration-150
      `,
 				customStyles
 			)}

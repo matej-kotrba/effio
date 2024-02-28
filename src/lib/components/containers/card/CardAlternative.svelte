@@ -189,7 +189,7 @@
 			>
 				<IconButton
 					icon="ic:round-arrow-right"
-					containerClasses="absolute z-[2] -translate-x-1/2 translate-y-1/2 left-1/2 
+					class="absolute z-[2] -translate-x-1/2 translate-y-1/2 left-1/2 
 					bottom-1/2 border-2 border-solid border-white bg-transparent 
 					backdrop-blur-sm hover:backdrop-blur-xl hover:bg-transparent 
 					pointer-events-none opacity-0 group-hover:opacity-100 duration-150 text-white"

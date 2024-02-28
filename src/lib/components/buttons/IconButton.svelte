@@ -1,39 +1,46 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
+	import * as Tooltip from '~/lib/components/ui/tooltip/index';
+	import Button from '~components/ui/button/button.svelte';
 
 	export let icon: string;
 	export let onClick = () => {};
-	export let tootlip: string = '';
+	export let tooltip: string = '';
 	export let attr: HTMLButtonAttributes = {};
 
 	let classes = '';
 	export { classes as class };
 	export let buttonClasses = '';
 	export let tooltipClasses = '';
-	export let containerClasses = '';
 </script>
 
-<div class={twMerge('dropdown dropdown-hover rounded-full', containerClasses)}>
-	<button
-		type="button"
-		{...attr}
-		on:click={onClick}
-		class={twMerge(
-			'grid p-2 duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
-			classes
-		)}
-	>
-		<iconify-icon {icon} class={twMerge('text-3xl', buttonClasses)} />
-	</button>
-	{#if tootlip}
-		<p
+<Tooltip.Root>
+	<Tooltip.Trigger asChild let:builder>
+		<Button
+			type="button"
+			builders={[builder]}
+			variant="outline"
+			on:click={onClick}
 			class={twMerge(
-				'dropdown-content dropdown-left z-[1] menu p-2 shadow-md bg-light_white dark:bg-dark_terciary rounded-sm w-52',
-				tooltipClasses
+				'grid px-0 aspect-square duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
+				classes
 			)}
+			{...attr}
 		>
-			{tootlip}
-		</p>
-	{/if}
-</div>
+			<iconify-icon {icon} class={twMerge('text-3xl', buttonClasses)} />
+		</Button>
+	</Tooltip.Trigger>
+	<Tooltip.Content class="z-[10000] bg-light_whiter shadow-md">
+		{#if tooltip}
+			<span
+				class={twMerge(
+					'z-[1] p-2 text-light_text_black rounded-sm max-w-[13rem] text-[1rem]',
+					tooltipClasses
+				)}
+			>
+				{tooltip}
+			</span>
+		{/if}
+	</Tooltip.Content>
+</Tooltip.Root>
