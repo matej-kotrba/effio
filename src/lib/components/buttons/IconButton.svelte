@@ -15,7 +15,7 @@
 	export let tooltipClasses = '';
 </script>
 
-<Tooltip.Root>
+<Tooltip.Root openDelay={300}>
 	<Tooltip.Trigger asChild let:builder>
 		<Button
 			type="button"

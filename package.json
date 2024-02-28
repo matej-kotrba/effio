@@ -59,6 +59,7 @@
 		"chart.js": "^4.3.3",
 		"cloudinary": "^1.41.0",
 		"clsx": "^2.1.0",
+		"cmdk-sv": "^0.0.13",
 		"gift-format-generator": "^0.2.8",
 		"gift-pegjs": "^0.2.1",
 		"gsap": "^3.12.3",
