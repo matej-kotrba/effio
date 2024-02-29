@@ -174,10 +174,10 @@
 									class="flex-1 @md:px-4 max-w-[350px]"
 								/>
 								<IconButton
+									isPortal=""
 									icon="fluent:delete-28-filled"
 									tooltip="Clear all filters"
 									onClick={clearAllFilters}
-									containerClasses="dropdown-top"
 									tooltipClasses="mb-2"
 								/>
 							</div>

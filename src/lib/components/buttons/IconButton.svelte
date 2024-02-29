@@ -13,9 +13,10 @@
 	export { classes as class };
 	export let buttonClasses = '';
 	export let tooltipClasses = '';
+	export let isPortal: `${''}` | undefined = undefined;
 </script>
 
-<Tooltip.Root openDelay={300}>
+<Tooltip.Root openDelay={300} portal={''}>
 	<Tooltip.Trigger asChild let:builder>
 		<Button
 			type="button"
@@ -23,7 +24,7 @@
 			variant="outline"
 			on:click={onClick}
 			class={twMerge(
-				'grid px-0 aspect-square duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
+				'grid h-fit p-2 aspect-square duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
 				classes
 			)}
 			{...attr}
@@ -31,7 +32,7 @@
 			<iconify-icon {icon} class={twMerge('text-3xl', buttonClasses)} />
 		</Button>
 	</Tooltip.Trigger>
-	<Tooltip.Content class="z-[10000] bg-light_whiter shadow-md">
+	<Tooltip.Content class="z-[100000] bg-light_whiter shadow-md">
 		{#if tooltip}
 			<span
 				class={twMerge(

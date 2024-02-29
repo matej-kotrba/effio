@@ -6,8 +6,9 @@
 	import type { Tag } from '@prisma/client';
 
 	export let tags: Tag[] = [];
+	export let usedTags: Tag[] = [];
 
-	let usedTagsSlugs: string[] = ['Item 1', 'Item 7'];
+	let usedTagsSlugs: string[] = usedTags.map((item) => item.slug);
 
 	$: filteredTagsToAdd = tags.filter(
 		(item) => !usedTagsSlugs.includes(item.name)
