@@ -2,7 +2,6 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import * as Popover from '~/lib/components/ui/popover/index';
 	import Button from '~components/ui/button/button.svelte';
-	import AddNew from '~components/testCreator/creatorUtils/AddNew.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	type Mock = {
 		name: string;
@@ -11,7 +10,7 @@
 	};
 
 	// Create 10 mock items
-	const mock: Mock[] = [
+	let mock: Mock[] = [
 		{
 			name: 'Item 1',
 			checked: 'true',
@@ -64,21 +63,33 @@
 		}
 	];
 
-	let usedTagsIdxs: number[] = [];
+	let usedTagsSlugs: string[] = [];
 
-	let filteredTagsToAdd = mock.filter(
-		(_, index) => !usedTagsIdxs.includes(index)
+	$: filteredTagsToAdd = mock.filter(
+		(item) => !usedTagsSlugs.includes(item.name)
 	);
 
 	let open = false;
 
 	function filterTagsToAdd(searchQuery: string) {
-		const availableTags = mock.filter((_, index) => {
-			return !usedTagsIdxs.includes(index);
+		const availableTags = mock.filter((item) => {
+			return !usedTagsSlugs.includes(item.name);
 		});
 		filteredTagsToAdd = availableTags.filter((tag) => {
 			return tag.name.toLowerCase().includes(searchQuery.toLowerCase());
 		});
+	}
+
+	function handleOnInput(
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		filterTagsToAdd((e.target as HTMLInputElement).value);
+	}
+
+	function onAddTagClick(tag: Mock) {
+		usedTagsSlugs = [...usedTagsSlugs, tag.name];
 	}
 </script>
 
@@ -118,13 +129,18 @@
 					type="text"
 					placeholder="Cool tag..."
 					class="outline-none text-body2"
-					on:change={(e) => filterTagsToAdd(e.target.value)}
+					on:input={(e) => handleOnInput(e)}
 				/>
 			</div>
 			<Separator w="100%" h="1px" />
 			<div class="flex flex-col p-1 max-h-[250px] overflow-y-auto">
+				{#if filteredTagsToAdd.length === 0}
+					<p class="text-center text-body2">No tags found</p>
+				{/if}
 				{#each filteredTagsToAdd as item}
 					<button
+						type="button"
+						on:click={() => onAddTagClick(item)}
 						class="px-2 py-1 pl-6 text-left rounded-md text-body2 hover:bg-gray-100"
 						>{item.name}</button
 					>
