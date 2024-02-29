@@ -25,6 +25,7 @@
 	import IconButton from '~components/buttons/IconButton.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
+	import TagSelectionComponent from '~components/containers/tag/TagSelectionComponent.svelte';
 
 	export let testType: TestType;
 	export let testData:
@@ -64,15 +65,15 @@
 		}
 	}
 
-	function onTagSearch(value: string) {
-		visibleTags = tags.filter((tag) =>
-			tag.name.toLowerCase().includes(value.toLowerCase())
-		);
-	}
+	// function onTagSearch(value: string) {
+	// 	visibleTags = tags.filter((tag) =>
+	// 		tag.name.toLowerCase().includes(value.toLowerCase())
+	// 	);
+	// }
 
-	function clearAllFilters() {
-		$testObject.tagIds = [];
-	}
+	// function clearAllFilters() {
+	// 	$testObject.tagIds = [];
+	// }
 
 	//TODO: Maybe move that when the modal is opened
 	if (browser) {
@@ -157,18 +158,16 @@
 				{/if}
 			</div>
 			<div>
-				<Dialog
+				<!-- <Dialog
 					bind:open={openTagModal}
 					title="Tag Selection"
 					formClasses="max-w-[750px]"
 				>
 					<div class="grid grid-cols-5 @container">
 						<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
-							<!-- <span class="text-body1">Recently Used</span> -->
 							<div
 								class="flex items-center justify-center col-span-5 flex-col @md:flex-row"
 							>
-								<!-- <span>All tags</span> -->
 								<SearchBar
 									searchFunction={onTagSearch}
 									class="flex-1 @md:px-4 max-w-[350px]"
@@ -218,7 +217,20 @@
 					class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
 				>
 					Tag Selection
-				</button>
+				</button> -->
+				<TagSelectionComponent
+					{tags}
+					usedTags={testData?.tags.map((item) => {
+						return {
+							id: item.tag.id,
+							slug: item.tag.slug,
+							name: item.tag.name,
+							color: item.tag.color,
+							createdAt: item.tag.createdAt,
+							updatedAt: item.tag.updatedAt
+						};
+					}) || []}
+				/>
 				<GroupSelection testId={testData?.id} />
 			</div>
 		</div>

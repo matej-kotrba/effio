@@ -16,7 +16,7 @@
 	export let isPortal: `${''}` | undefined = undefined;
 </script>
 
-<Tooltip.Root openDelay={300} portal={''}>
+<Tooltip.Root openDelay={300} portal={isPortal}>
 	<Tooltip.Trigger asChild let:builder>
 		<Button
 			type="button"
