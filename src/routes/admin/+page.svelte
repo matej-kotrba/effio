@@ -63,7 +63,7 @@
 		}
 	];
 
-	let usedTagsSlugs: string[] = [];
+	let usedTagsSlugs: string[] = ['Item 1', 'Item 7'];
 
 	$: filteredTagsToAdd = mock.filter(
 		(item) => !usedTagsSlugs.includes(item.name)
@@ -91,11 +91,16 @@
 	function onAddTagClick(tag: Mock) {
 		usedTagsSlugs = [...usedTagsSlugs, tag.name];
 	}
+
+	function onRemoveTagClick(tag: Mock | undefined) {
+		if (tag === undefined) return;
+		usedTagsSlugs = usedTagsSlugs.filter((item) => item !== tag.name);
+	}
 </script>
 
 <Popover.Root bind:open let:ids>
 	<Popover.Trigger asChild let:builder>
-		<div class="w-[600px] p-2 m-2 bg-red-300 rounded-md">
+		<div class="w-[600px] shadow-md p-2 m-2 bg-light_whiter rounded-sm">
 			<div class="flex justify-between">
 				<p class="mb-1">Tag selection</p>
 				<Button
@@ -107,13 +112,27 @@
 				>
 			</div>
 			<div class="flex flex-wrap gap-2">
-				{#each mock.filter((item) => item['checked']) as item, i}
-					<div
-						class="flex items-center gap-2 p-1 pr-4 bg-gray-300 rounded-full shadow-md whitespace-nowrap"
-					>
-						<IconButton tooltip="Remove" icon="ic:round-close" />
-						<span style="color: {item.color}">{item.name}</span>
-					</div>
+				{#each usedTagsSlugs.map((item) => {
+					return mock.find((tag) => tag.name === item);
+				}) as item, i}
+					{#if item !== undefined}
+						<div
+							class="relative flex items-center gap-2 p-1 pr-4 bg-white rounded-md shadow-sm whitespace-nowrap"
+						>
+							<div
+								class="absolute top-0 right-0 w-1 h-full rounded-r-md"
+								style="background-color: {item.color};"
+							/>
+							<IconButton
+								tooltip="Remove"
+								icon="ic:round-close"
+								class="rounded-lg"
+								buttonClasses="text-xl"
+								onClick={() => onRemoveTagClick(item)}
+							/>
+							<span>{item.name}</span>
+						</div>
+					{/if}
 				{/each}
 			</div>
 		</div>
