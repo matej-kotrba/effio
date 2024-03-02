@@ -19,7 +19,7 @@
 	{transitionConfig}
 	{sideOffset}
 	class={cn(
-		'z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground',
+		'overflow-hidden rounded-md px-3 py-1.5 text-xs z-[100000] bg-white dark:bg-dark_primary_light shadow-md text-light_text_black dark:text-dark_text_white text-[1rem]',
 		className
 	)}
 	{...$$restProps}

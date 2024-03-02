@@ -9,6 +9,7 @@
 		MARK_LIMIT_MAX_MARK_COUNT
 	} from '~schemas/testValidation';
 	import RemoveButton from './RemoveButton.svelte';
+	import * as Tooltip from '~components/ui/tooltip';
 
 	type Mark = {
 		name: string;
@@ -66,14 +67,22 @@
 
 <div class="p-2 rounded-md shadow-sm bg-light_whiter dark:bg-dark_grey">
 	<div class="flex items-center gap-2">
-		<div class="z-10 gap-2 dropdown dropdown-hover dropdown-top">
+		<Tooltip.Root openDelay={300}>
+			<Tooltip.Trigger>
+				<span>Enable marking?</span>
+			</Tooltip.Trigger>
+			<Tooltip.Content>
+				<p>Mark system enables being marked by the outcome of the test</p>
+			</Tooltip.Content>
+		</Tooltip.Root>
+		<!-- <div class="z-10 gap-2 dropdown dropdown-hover dropdown-top">
 			<span>Enable marking?</span>
 			<p
 				class="dropdown-content z-[1] menu p-2 shadow bg-base-100 dark:bg-dark_grey rounded-box w-52"
 			>
 				Mark system enables being marked by the outcome of the test
 			</p>
-		</div>
+		</div> -->
 		<input
 			type="checkbox"
 			class="checkbox checkbox-primary dark:checkbox-accent"

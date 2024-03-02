@@ -141,7 +141,7 @@
 			</div>
 			<table class="w-full">
 				<thead
-					class="sticky top-0 z-10 w-full before:content-[''] before:inset-0 before:bg-gray-100 before:absolute isolate before:z-[-99]"
+					class="sticky top-0 z-10 w-full before:constent-[''] before:pointer-events-none before:inset-0 before:bg-gray-100 before:absolute isolate before:z-[-99]"
 				>
 					{#each $table.getHeaderGroups() as headerGroup, index}
 						<tr class="outline-gray-300 outline outline-[1px] w-full">
@@ -179,7 +179,7 @@
 					{/each}
 				</thead>
 				<tbody
-					class="relative before:content-[''] before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10 duration-100 {isTableDisabled
+					class="relative before:content-[''] before:pointer-events-none before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10 duration-100 {isTableDisabled
 						? 'before:opacity-100'
 						: 'before:opacity-0'}"
 				>

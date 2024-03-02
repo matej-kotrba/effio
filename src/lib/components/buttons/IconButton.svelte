@@ -32,11 +32,11 @@
 			<iconify-icon {icon} class={twMerge('text-3xl', buttonClasses)} />
 		</Button>
 	</Tooltip.Trigger>
-	<Tooltip.Content class="z-[100000] bg-light_whiter shadow-md">
+	<Tooltip.Content>
 		{#if tooltip}
 			<span
 				class={twMerge(
-					'z-[1] p-2 text-light_text_black rounded-sm max-w-[13rem] text-[1rem]',
+					'z-[1] p-2 rounded-sm max-w-[13rem] text-[1rem]',
 					tooltipClasses
 				)}
 			>

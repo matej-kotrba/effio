@@ -56,7 +56,9 @@
 		{@const usedTags = usedTagsSlugs.map((item) => {
 			return tags.find((tag) => tag.slug === item);
 		})}
-		<div class="w-[600px] shadow-md p-2 m-2 bg-light_whiter rounded-sm">
+		<div
+			class="w-[600px] shadow-md p-2 m-2 bg-light_whiter dark:bg-dark_grey rounded-sm"
+		>
 			<div class="flex justify-between mb-1">
 				<div>
 					<span>Tag selection</span>
@@ -64,7 +66,9 @@
 						class="ml-2 {usedTagsSlugs.length < MAX_TAG_COUNT
 							? 'text-light_primary dark:text-dark_primary'
 							: 'text-error dark:text-dark_error'}">{usedTagsSlugs.length}</span
-					><span class="text-light_text_black_40">/{MAX_TAG_COUNT}</span>
+					><span class="text-light_text_black_40 dark:text-dark_text_white_40"
+						>/{MAX_TAG_COUNT}</span
+					>
 				</div>
 				<Button
 					builders={[builder]}
@@ -83,7 +87,7 @@
 				{#each usedTags as item, i}
 					{#if item !== undefined}
 						<div
-							class="relative flex items-center gap-2 p-1 pr-4 bg-white rounded-md shadow-sm whitespace-nowrap"
+							class="relative flex items-center gap-2 p-1 pr-4 bg-white rounded-md shadow-sm dark:bg-dark_light_grey whitespace-nowrap"
 						>
 							<div
 								class="absolute top-0 right-0 w-1 h-full rounded-r-md"
@@ -113,7 +117,7 @@
 				<input
 					type="text"
 					placeholder="Cool tag..."
-					class="outline-none text-body2"
+					class="bg-transparent outline-none text-body2"
 					on:input={(e) => handleOnInput(e)}
 				/>
 			</div>
@@ -127,7 +131,7 @@
 						type="button"
 						on:click={() => onAddTagClick(item)}
 						style="--tag-color: {item.color};"
-						class="px-2 py-1 pl-6 text-left rounded-md text-body2 hover:bg-gray-100 relative before:content-[''] before:w-1 before:h-4/5
+						class="px-2 py-1 pl-6 text-left rounded-md text-body2 hover:bg-gray-100 dark:hover:bg-zinc-800 relative before:content-[''] before:w-1 before:h-4/5
 						 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:rounded-l-md before:bg-[var(--tag-color)]"
 						>{item.name}</button
 					>
