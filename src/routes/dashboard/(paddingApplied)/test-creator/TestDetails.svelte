@@ -65,17 +65,16 @@
 		}
 	}
 
-	// function onTagSearch(value: string) {
-	// 	visibleTags = tags.filter((tag) =>
-	// 		tag.name.toLowerCase().includes(value.toLowerCase())
-	// 	);
-	// }
+	function onTagSelectionChange(e: CustomEvent<string[]>) {
+		const newTags = e.detail
+			.map((item) => {
+				const tag = tags.find((tag) => tag.slug === item);
+				return tag?.id || undefined;
+			})
+			.filter((item) => item !== undefined) as string[];
+		$testObject.tagIds = newTags;
+	}
 
-	// function clearAllFilters() {
-	// 	$testObject.tagIds = [];
-	// }
-
-	//TODO: Maybe move that when the modal is opened
 	if (browser) {
 		getTags();
 	}
@@ -219,16 +218,10 @@
 					Tag Selection
 				</button> -->
 				<TagSelectionComponent
+					on:tagsChanged={onTagSelectionChange}
 					{tags}
-					usedTags={testData?.tags.map((item) => {
-						return {
-							id: item.tag.id,
-							slug: item.tag.slug,
-							name: item.tag.name,
-							color: item.tag.color,
-							createdAt: item.tag.createdAt,
-							updatedAt: item.tag.updatedAt
-						};
+					usedTagsSlugs={testData?.tags.map((item) => {
+						return item.tag.slug;
 					}) || []}
 				/>
 				<GroupSelection testId={testData?.id} />

@@ -4,24 +4,28 @@
 	import Button from '~components/ui/button/button.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import type { Tag } from '@prisma/client';
+	import toast from 'svelte-french-toast';
+	import { createEventDispatcher } from 'svelte';
 
 	export let tags: Tag[] = [];
-	export let usedTags: Tag[] = [];
-
-	let usedTagsSlugs: string[] = usedTags.map((item) => item.slug);
+	export let usedTagsSlugs: string[] = [];
+	export let MAX_TAG_COUNT = 5;
 
 	$: filteredTagsToAdd = tags.filter(
-		(item) => !usedTagsSlugs.includes(item.name)
+		(item) => !usedTagsSlugs.includes(item.slug)
 	);
+
+	const dispatch = createEventDispatcher();
+	$: dispatch('tagsChanged', usedTagsSlugs);
 
 	let open = false;
 
 	function filterTagsToAdd(searchQuery: string) {
 		const availableTags = tags.filter((item) => {
-			return !usedTagsSlugs.includes(item.name);
+			return !usedTagsSlugs.includes(item.slug);
 		});
 		filteredTagsToAdd = availableTags.filter((tag) => {
-			return tag.name.toLowerCase().includes(searchQuery.toLowerCase());
+			return tag.slug.includes(searchQuery.toLowerCase());
 		});
 	}
 
@@ -34,20 +38,34 @@
 	}
 
 	function onAddTagClick(tag: Tag) {
-		usedTagsSlugs = [...usedTagsSlugs, tag.name];
+		if (usedTagsSlugs.length >= MAX_TAG_COUNT) {
+			toast.error(`You can't add more than ${MAX_TAG_COUNT} tags`);
+			return;
+		}
+		usedTagsSlugs = [...usedTagsSlugs, tag.slug];
 	}
 
 	function onRemoveTagClick(tag: Tag | undefined) {
 		if (tag === undefined) return;
-		usedTagsSlugs = usedTagsSlugs.filter((item) => item !== tag.name);
+		usedTagsSlugs = usedTagsSlugs.filter((item) => item !== tag.slug);
 	}
 </script>
 
 <Popover.Root bind:open let:ids>
 	<Popover.Trigger asChild let:builder>
+		{@const usedTags = usedTagsSlugs.map((item) => {
+			return tags.find((tag) => tag.slug === item);
+		})}
 		<div class="w-[600px] shadow-md p-2 m-2 bg-light_whiter rounded-sm">
-			<div class="flex justify-between">
-				<p class="mb-1">Tag selection</p>
+			<div class="flex justify-between mb-1">
+				<div>
+					<span>Tag selection</span>
+					<span
+						class="ml-2 {usedTagsSlugs.length < MAX_TAG_COUNT
+							? 'text-light_primary dark:text-dark_primary'
+							: 'text-error dark:text-dark_error'}">{usedTagsSlugs.length}</span
+					><span class="text-light_text_black_40">/{MAX_TAG_COUNT}</span>
+				</div>
 				<Button
 					builders={[builder]}
 					variant="outline"
@@ -57,9 +75,12 @@
 				>
 			</div>
 			<div class="flex flex-wrap gap-2">
-				{#each usedTagsSlugs.map((item) => {
-					return tags.find((tag) => tag.name === item);
-				}) as item, i}
+				{#if usedTags.length === 0}
+					<span class="text-light_text_black_40 dark:text-dark_text_white_40"
+						>No tag added yet!</span
+					>
+				{/if}
+				{#each usedTags as item, i}
 					{#if item !== undefined}
 						<div
 							class="relative flex items-center gap-2 p-1 pr-4 bg-white rounded-md shadow-sm whitespace-nowrap"
@@ -72,10 +93,10 @@
 								tooltip="Remove"
 								icon="ic:round-close"
 								class="rounded-lg"
-								buttonClasses="text-xl"
+								buttonClasses="text-sm"
 								onClick={() => onRemoveTagClick(item)}
 							/>
-							<span>{item.name}</span>
+							<span class="text-semiBody1">{item.name}</span>
 						</div>
 					{/if}
 				{/each}
@@ -105,7 +126,9 @@
 					<button
 						type="button"
 						on:click={() => onAddTagClick(item)}
-						class="px-2 py-1 pl-6 text-left rounded-md text-body2 hover:bg-gray-100"
+						style="--tag-color: {item.color};"
+						class="px-2 py-1 pl-6 text-left rounded-md text-body2 hover:bg-gray-100 relative before:content-[''] before:w-1 before:h-4/5
+						 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:rounded-l-md before:bg-[var(--tag-color)]"
 						>{item.name}</button
 					>
 				{/each}
