@@ -10,6 +10,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
+	import * as Tooltip from '~components/ui/tooltip';
 
 	export let indexParent: number;
 
@@ -98,25 +99,33 @@
 						</CommentEnhance>
 					</div>
 					<!-- use:dropdown={'Mark this as a correct answer'} -->
-					<button
-						type="button"
-						data-tip="Mark this as a correct answer"
-						class={`px-2 grid tooltip tooltip-left place-content-center rounded-r-md`}
-						style={`${
-							q.id === content.correctAnswerId
-								? `background-color: var(--success); color: var(${
-										isDarkMode ? '--dark_black' : '--light-white'
-								  });`
-								: `background-color: var(${
-										isDarkMode ? '--dark_black' : '--light-white'
-								  }); color: var(${
-										isDarkMode ? '--dark-text-white' : '--success'
-								  });`
-						}}`}
-						on:click={() => (content['correctAnswerId'] = q.id)}
-					>
-						<Icon icon="charm:tick" class="text-3xl" />
-					</button>
+					<Tooltip.Root openDelay={300}>
+						<Tooltip.Trigger>
+							<button
+								type="button"
+								class={`px-2 h-full grid place-content-center rounded-r-md`}
+								style={`${
+									q.id === content.correctAnswerId
+										? `background-color: var(--success); color: var(${
+												isDarkMode ? '--dark_black' : '--light-white'
+										  });`
+										: `background-color: var(${
+												isDarkMode ? '--dark_black' : '--light-white'
+										  }); color: var(${
+												isDarkMode ? '--dark-text-white' : '--success'
+										  });`
+								}}`}
+								on:click={() => (content['correctAnswerId'] = q.id)}
+							>
+								<Icon icon="charm:tick" class="text-3xl" />
+							</button>
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							<span>
+								{'Delete answer'}
+							</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
 				</div>
 				<p
 					class={`text-body2 text-error dark:text-dark_error ${
