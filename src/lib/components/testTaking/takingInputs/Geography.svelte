@@ -9,7 +9,7 @@
 		LONGITUDE_MIN,
 		latitudeSchema,
 		longitudeSchema
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import type { TestObject } from '~stores/testObject';
 	import 'leaflet/dist/leaflet.css';
 	import { intersect } from '~use/intersectionObserver';

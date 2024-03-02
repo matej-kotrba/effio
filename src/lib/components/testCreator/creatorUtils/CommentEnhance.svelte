@@ -7,7 +7,7 @@
 		RESPONSE_MAX,
 		RESPONSE_MIN,
 		responseSchema
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import { clickOutside } from '~use/clickOutside';
 
 	export let asnwerPath: Answer<unknown>;

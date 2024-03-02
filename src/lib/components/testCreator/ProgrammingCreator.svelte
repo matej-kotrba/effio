@@ -11,7 +11,7 @@
 		programmingDescriptionSchema,
 		programmingHintSchema,
 		titleSchema
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import { getTestObject } from '~stores/testObject';
 	import InputOutputSetter from './programmingCreator/InputOutputSetter.svelte';
 	import { SOURCES, dndzone } from 'svelte-dnd-action';

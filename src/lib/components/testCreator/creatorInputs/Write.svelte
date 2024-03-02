@@ -8,7 +8,7 @@
 		WRITE_AMSWER_MAX,
 		WRITE_ANSWER_MIN,
 		writeAnswerSchema
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';

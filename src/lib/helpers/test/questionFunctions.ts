@@ -1,7 +1,7 @@
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
-import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema, bitmapLocationSchema } from "~schemas/textInput"
+import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema, bitmapLocationSchema } from "~schemas/testValidation"
 
 type QuestionMethods = {
   [Key in keyof QuestionTypeMap]: {

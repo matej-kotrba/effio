@@ -24,7 +24,7 @@
 		GEOGRAPHY_TOLERANCE_DEFAULT,
 		GEOGRAPHY_ZOOM_MIN,
 		GEOGRAPHY_ZOOM_MAX
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';

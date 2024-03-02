@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import type { TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, titleSchema } from "~schemas/textInput"
+import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, MAX_TEST_TAGS, titleSchema } from "~schemas/testValidation"
 import { enviromentFetch } from "../fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../../trpc/client";
@@ -243,16 +243,17 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
   }
 
   if (inputsToValidate.tagIds !== undefined) {
-    for (const i in inputsToValidate.tagIds) {
-      const parsedTagId = z.string().safeParse(inputsToValidate.tagIds[i])
-      if (parsedTagId.success === false) {
-        isError = true
-        if (result.errors.tagIds === undefined) {
-          result.errors.tagIds = []
+    if (inputsToValidate.tagIds.length > MAX_TEST_TAGS)
+      for (const i in inputsToValidate.tagIds) {
+        const parsedTagId = z.string().safeParse(inputsToValidate.tagIds[i])
+        if (parsedTagId.success === false) {
+          isError = true
+          if (result.errors.tagIds === undefined) {
+            result.errors.tagIds = []
+          }
+          result.errors.tagIds[i] = parsedTagId.error.errors[0].message
         }
-        result.errors.tagIds[i] = parsedTagId.error.errors[0].message
       }
-    }
   }
 
   // Check if error is true and message is not set, if so we set message to "Some inputs are incorrect", on client then navigate to them

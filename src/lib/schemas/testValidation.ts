@@ -16,7 +16,6 @@ export const RESPONSE_MAX = 255
 export const WRITE_ANSWER_MIN = 1
 export const WRITE_AMSWER_MAX = 30
 
-
 // MARKS AND ITS LIMITS
 export const MARK_MIN = 1
 export const MARK_MAX = 15
@@ -62,6 +61,8 @@ export const PROGRAMMING_DESCRIPTION_MAX = 1024
 export const PROGRAMMING_TEST_MIN = 1
 export const PROGRAMMING_TEST_MAX = 255
 
+// OTHER
+export const MAX_TEST_TAGS = 5
 
 // SCHEMAS
 export const answerSchema = z.string().min(ANSWER_MIN, `Answer has to be at least ${ANSWER_MIN} character long.`).max(ANSWER_MAX, `Answer can be max ${ANSWER_MAX} characters long.`)

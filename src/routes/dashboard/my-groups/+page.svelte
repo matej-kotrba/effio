@@ -12,7 +12,7 @@
 		GROUP_NAME_MIN,
 		groupDescriptionSchema,
 		groupNameSchema
-	} from '~schemas/textInput.js';
+	} from '~schemas/testValidation.js';
 	import { joinCodeSchema, JOIN_CODE_LENGTH } from '~schemas/inviteCode';
 	import { superForm } from 'sveltekit-superforms/client';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';

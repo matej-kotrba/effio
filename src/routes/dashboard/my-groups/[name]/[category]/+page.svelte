@@ -10,7 +10,7 @@
 		CHAT_INPUT_MAX,
 		CHAT_INPUT_MIN,
 		chatInputSchema
-	} from '~schemas/textInput.js';
+	} from '~schemas/testValidation.js';
 	import Drawer from '~components/collapsibles/Drawer.svelte';
 	import TestImageCard from '~components/containers/card/TestImageCard.svelte';
 	import { applicationStates } from '~stores/applicationStates';

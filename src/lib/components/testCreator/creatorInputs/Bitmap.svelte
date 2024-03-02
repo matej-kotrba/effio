@@ -12,7 +12,7 @@
 		GEOGRAPHY_TOLERANCE_DEFAULT,
 		BITMAP_ZOOM_MIN,
 		BITMAP_ZOOM_MAX
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';

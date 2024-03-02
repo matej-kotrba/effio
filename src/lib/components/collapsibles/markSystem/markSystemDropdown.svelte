@@ -2,7 +2,7 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Collapsible from '../Collapsible.svelte';
 	import { applicationStates } from '~stores/applicationStates';
-	import { MARK_LIMIT_MAX } from '~schemas/textInput';
+	import { MARK_LIMIT_MAX } from '~schemas/testValidation';
 
 	export let markSystem: MarkSystemJSON['marks'];
 </script>

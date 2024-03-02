@@ -7,7 +7,7 @@
 		LIMIT_OPTIONS,
 		markSchema,
 		MARK_LIMIT_MAX_MARK_COUNT
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import RemoveButton from './RemoveButton.svelte';
 
 	type Mark = {

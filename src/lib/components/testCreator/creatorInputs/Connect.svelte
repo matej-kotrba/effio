@@ -5,7 +5,7 @@
 	import toast from 'svelte-french-toast';
 	import { fly } from 'svelte/transition';
 	import { getTestObject } from '~stores/testObject';
-	import { answerSchema } from '~schemas/textInput';
+	import { answerSchema } from '~schemas/testValidation';
 	import RemoveButton from '../creatorUtils/RemoveButton.svelte';
 	import CommentEnhance from '../creatorUtils/CommentEnhance.svelte';
 

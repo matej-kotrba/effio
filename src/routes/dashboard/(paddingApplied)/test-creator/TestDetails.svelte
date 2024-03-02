@@ -9,7 +9,7 @@
 		TITLE_MIN,
 		descriptionSchema,
 		titleSchema
-	} from '~schemas/textInput';
+	} from '~schemas/testValidation';
 	import { getTestObject } from '~stores/testObject';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import GroupSelection from '~components/testCreator/creatorUtils/GroupSelection.svelte';
