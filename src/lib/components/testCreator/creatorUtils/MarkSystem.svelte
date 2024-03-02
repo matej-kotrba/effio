@@ -94,11 +94,11 @@
 			* Mark with limit 0% is the fallback mark which will be applied when user
 			has 0 and more points.
 		</p>
-		<div class="flex flex-col gap-1 max-w-[500px]">
+		<div class="flex flex-col gap-1 max-w-[600px]">
 			{#each marks as mark, index}
 				<div class="flex gap-1">
-					<div class="grid w-full grid-cols-5 gap-1">
-						<div class="flex flex-col w-full col-span-2">
+					<div class="grid w-full gap-1 grid__container">
+						<div class="flex flex-col w-full">
 							<TextInputSimple
 								title={'Mark ' + (index + 1)}
 								titleName={'Mark ' + (index + 1)}
@@ -121,7 +121,7 @@
 								}}
 							/>
 						</div>
-						<div class="flex flex-col w-full col-span-3">
+						<div class="flex flex-col w-full">
 							<div class="flex items-center h-full gap-1">
 								<select
 									class="w-full max-w-xs bg-white shadow-md dark:bg-dark_light_grey select"
@@ -156,15 +156,27 @@
 								</select>
 							</div>
 						</div>
-						<div class="grid grid-cols-5 col-span-5 mx-2">
-							<div class="col-span-2">
+						{#if index !== marks.length - 1}
+							<RemoveButton
+								deleteQuestion={() =>
+									(marks = marks.filter((_, idx) => idx !== index))}
+								questionLength={marks.length}
+								questionLimit={2}
+								tooltipText="Delete mark"
+								class="w-12 my-2 ml-1 rounded-md max-h-16 aspect-square"
+							/>
+						{:else}
+							<div />
+						{/if}
+						<div class="grid grid-cols-2 col-span-2 mx-2">
+							<div class="col-span-1">
 								{#if $testObject.errors.markSystem?.marks[index]?.name}
 									<p class="text-xs text-error dark:text-dark_error">
 										{$testObject.errors.markSystem?.marks[index]?.name}
 									</p>
 								{/if}
 							</div>
-							<div class="col-span-3">
+							<div class="col-span-1">
 								{#if $testObject.errors.markSystem?.marks[index]?.limit}
 									<p class="text-xs text-error dark:text-dark_error">
 										{$testObject.errors.markSystem?.marks[index]?.limit}
@@ -173,16 +185,6 @@
 							</div>
 						</div>
 					</div>
-					{#if index !== marks.length - 1}
-						<RemoveButton
-							deleteQuestion={() =>
-								(marks = marks.filter((_, idx) => idx !== index))}
-							questionLength={marks.length}
-							questionLimit={2}
-							tooltipText="Delete mark"
-							class="w-12 my-2 ml-1 rounded-md max-h-16 aspect-square"
-						/>
-					{/if}
 				</div>
 			{/each}
 			<button
@@ -197,7 +199,7 @@
 					}
 				}}
 				disabled={marks.length >= MARK_LIMIT_MAX_MARK_COUNT}
-				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md disabled:bg-gray-500 dark:disabled:bg-gray-700 bg-light_secondary dark:bg-dark_secondary hover:bg-light_terciary dark:hover:bg-dark_terciary"
+				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md disabled:bg-gray-500 dark:disabled:bg-gray-700 bg-light_secondary dark:bg-dark_primary hover:bg-light_terciary dark:hover:bg-dark_terciary"
 				>Add</button
 			>
 		</div>
@@ -212,4 +214,7 @@
 </div>
 
 <style>
+	.grid__container {
+		grid-template-columns: 1fr 1fr 50px;
+	}
 </style>
