@@ -74,6 +74,9 @@ dependencies:
   monaco-editor:
     specifier: ^0.44.0
     version: 0.44.0
+  paneforge:
+    specifier: ^0.0.2
+    version: 0.0.2(svelte@4.2.3)
   pusher:
     specifier: ^5.2.0
     version: 5.2.0
@@ -2374,6 +2377,15 @@ packages:
     dependencies:
       p-limit: 3.1.0
     dev: true
+
+  /paneforge@0.0.2(svelte@4.2.3):
+    resolution: {integrity: sha512-1xNMq+uslstqum4D8CzzkPGqnTWUlevjYtMjUhuEOiuz7E0fJHFuM8ogk8+LJnVbAg3hMJJ/9Mu4A1KaxK38oQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      nanoid: 5.0.6
+      svelte: 4.2.3
+    dev: false
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}

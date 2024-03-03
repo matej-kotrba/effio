@@ -123,13 +123,15 @@
 					</div>
 				</div>
 				<div>
-					<span
-						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-						>Is test randomly suhffled:</span
-					>
-					<span class="font-bold text-h6"
-						>{isRandomShuffled ? 'Yes' : 'No'}</span
-					>
+					{#if testContent.type !== 'PROGRAMMING'}
+						<span
+							class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
+							>Is test randomly suhffled:</span
+						>
+						<span class="font-bold text-h6"
+							>{isRandomShuffled ? 'Yes' : 'No'}</span
+						>
+					{/if}
 				</div>
 				<div>
 					<span
