@@ -373,7 +373,6 @@
 		>
 			<TestDetails
 				bind:openPreview={openPreviewModal}
-				sectionTransitionDuration={SECTION_TRANSITION_DURATION}
 				{testType}
 				bind:testImageFile
 			>

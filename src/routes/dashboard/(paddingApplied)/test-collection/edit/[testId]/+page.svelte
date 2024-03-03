@@ -3,10 +3,9 @@
 	import Creator from '~components/testCreator/Creator.svelte';
 	import { getTestObject } from '~stores/testObject.js';
 	import { initializeTestToTestStore } from '~helpers/test/test.js';
-	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Space from '~components/separators/Space.svelte';
 	import { goto } from '$app/navigation';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import type { toast as Toast } from 'svelte-french-toast';
 	import ScreenCover from '~components/loaders/ScreenCover.svelte';
 	import { TRPCClientError } from '@trpc/client';
@@ -15,10 +14,14 @@
 	import TestDetails from '../../../test-creator/TestDetails.svelte';
 	import Toggle from '~components/inputs/Toggle.svelte';
 	import FlexConfirm from '~components/buttons/FlexConfirm.svelte';
+	import { fly } from 'svelte/transition';
 
 	export let data;
 
 	const testObject = getTestObject();
+
+	let activeTab: 'details' | 'creator' = 'details';
+	const TAB_FLY_DURATION = 300;
 
 	const toast: typeof Toast = getContext('toast');
 
@@ -72,66 +75,10 @@
 				}
 			}
 		});
+	}
 
-		// const result = isTestValidAndSetErrorsToTestObject({
-		// 	title: $testObject.title,
-		// 	questions: $testObject.questions,
-		// 	description: $testObject.description,
-		// 	markSystem: $testObject.markSystem
-		// });
-
-		// if (result['isError']) {
-		// 	$testObject.errors = result['store']['errors'];
-		// 	return;
-		// }
-
-		// const serverResult = await isValidInputServerAndSetErrorsToTestObject({
-		// 	title: $testObject.title,
-		// 	description: $testObject.description,
-		// 	questions: $testObject.questions,
-		// 	markSystem: $testObject.markSystem
-		// });
-
-		// if (serverResult.isError === true) {
-		// 	$testObject.errors = result['store']['errors'];
-		// 	return;
-		// }
-
-		// let data;
-		// try {
-		// 	data = await trpc($page).protected.updateTest.mutate({
-		// 		testGroupId: $testObject.id as string,
-		// 		title: $testObject.title,
-		// 		description: $testObject.description,
-		// 		isPublished: $testObject.published as boolean,
-		// 		questionContent: JSON.stringify($testObject.questions),
-		// 		markSystem: $testObject.markSystem?.marks
-		// 			? {
-		// 					marks: $testObject.markSystem.marks.map((item) => {
-		// 						return {
-		// 							name: item.name,
-		// 							// Checked in the isTestValid
-		// 							limit: item.limit as number
-		// 						};
-		// 					})
-		// 			  }
-		// 			: undefined,
-		// 		includedInGroups: $testObject.includedInGroups
-		// 	});
-		// } catch (e) {
-		// 	if (e instanceof TRPCClientError) {
-		// 		toast['error'](
-		// 			e.message || 'An error occurred while updating the test'
-		// 		);
-		// 	}
-		// 	return;
-		// } finally {
-		// 	isSubmitting = false;
-		// }
-		// if (data['success']) {
-		// 	toast['success']('Test updated successfully');
-		// 	goto('/dashboard/test-collection');
-		// }
+	function changeActiveTab(tab: typeof activeTab) {
+		activeTab = tab;
 	}
 </script>
 
@@ -152,44 +99,54 @@
 		subtitle="Here you can edit your previously created test"
 	/>
 </div>
-
-<!-- <div
-	class="sticky top-0 left-0 z-20 flex items-center justify-end w-screen gap-3 p-2 ml-auto rounded-bl-lg md:w-fit backdrop-blur-xl"
->
-	<Toggle
-		title="Is Published"
-		isChecked={$testObject.published}
-		class="items-center justify-end"
-		on:toggle={(e) => ($testObject.published = e.detail)}
-	/>
-	<BasicButton
-		title="Update test"
-		buttonAttributes={{
-			disabled: isSubmitting
-		}}
-		onClick={postEditedTest}
-	/>
-</div> -->
-<div class="max-w-[1000px] mb-4">
-	<Toggle
-		title="Is Published"
-		isChecked={$testObject.published}
-		class="items-center justify-end"
-		on:toggle={(e) => ($testObject.published = e.detail)}
-	/>
+<div class="flex p-1 mb-4 rounded-lg bg-light_grey w-fit">
+	<button
+		on:click={() => changeActiveTab('details')}
+		type="button"
+		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'details'
+			? 'bg-light_whiter border-light_text_black_20 text-light_text_black'
+			: 'bg-transparent border-transparent text-light_text_black_60'}"
+		>Details</button
+	>
+	<button
+		on:click={() => changeActiveTab('creator')}
+		type="button"
+		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'creator'
+			? 'bg-light_whiter border-light_text_black_20 text-light_text_black'
+			: 'bg-transparent border-transparent text-light_text_black_60'}"
+		>Creator</button
+	>
 </div>
-<TestDetails
-	testType={data.testData.type}
-	testData={data.testData}
-	bind:testImageFile
-/>
-<Space gap={10} />
-{#if data.testData.type === 'REGULAR'}
-	<Creator inputTemplates={data.questionTemplates} />
-{:else if data.testData.type === 'PROGRAMMING'}
-	<Space gap={10} />
-	<ProgrammingCreator
-		programmingTemplate={data.programmingTemplate}
-		createNewQuestion={false}
-	/>
+{#if activeTab === 'details'}
+	<div
+		in:fly={{ x: -200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
+		out:fly={{ x: -200, duration: TAB_FLY_DURATION }}
+	>
+		<Toggle
+			title="Is Published"
+			isChecked={$testObject.published}
+			class="items-center justify-end"
+			on:toggle={(e) => ($testObject.published = e.detail)}
+		/>
+		<TestDetails
+			testType={data.testData.type}
+			testData={data.testData}
+			bind:testImageFile
+		/>
+	</div>
+{:else if activeTab === 'creator'}
+	<div
+		in:fly={{ x: 200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
+		out:fly={{ x: 200, duration: TAB_FLY_DURATION }}
+	>
+		{#if data.testData.type === 'REGULAR'}
+			<Creator inputTemplates={data.questionTemplates} />
+		{:else if data.testData.type === 'PROGRAMMING'}
+			<ProgrammingCreator
+				programmingTemplate={data.programmingTemplate}
+				createNewQuestion={false}
+			/>
+		{/if}
+	</div>
 {/if}
+<Space gap={50} />

@@ -58,7 +58,7 @@
 		for={titleName}
 		class="label_decoration absolute text-body2 sm:text-body1 -translate-y-1/2 left-2 text-light_text_black_60 dark:text-dark_text_white_60 top-1/2 pointer-events-none
 		{inputValue
-			? 'text-body3 sm:text-body2 text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-primary dark:peer-focus-within:text-dark_primary'
+			? 'text-body3 sm:text-body2 text-[var(--light-text-black-80)] left-4 top-[0px] peer-focus-within:text-light_primary dark:peer-focus-within:text-dark_primary'
 			: ''}">{title}</label
 	>
 </div>

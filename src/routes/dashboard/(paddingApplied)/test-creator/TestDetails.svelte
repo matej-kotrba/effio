@@ -74,7 +74,7 @@
 	}
 </script>
 
-<div class="max-w-[1000px] flex flex-col w-full gap-4">
+<div class="flex flex-col w-full gap-4">
 	<Dialog
 		title="Test preview"
 		bind:open={openPreview}
@@ -136,30 +136,28 @@
 		/>
 	</div>
 	<div class="z-[20]">
-		<div class="flex flex-col @xl:items-center @xl:flex-row gap-2 @xl:gap-0">
-			<div class="flex items-center gap-2 mr-auto">
-				{#if testType === 'REGULAR'}
-					<label for="random-questions" class="text-body1 @xl:text-body1"
-						>Randomize question order</label
-					>
-					<input
-						type="checkbox"
-						name="random-questions"
-						class="checkbox checkbox-primary dark:checkbox-accent"
-						bind:checked={$testObject.randomizeQuestionOrder}
-					/>
-				{/if}
-			</div>
-			<div>
-				<TagSelectionComponent
-					on:tagsChanged={onTagSelectionChange}
-					{tags}
-					usedTagsSlugs={testData?.tags.map((item) => {
-						return item.tag.slug;
-					}) || []}
+		<div class="flex items-center gap-2 mr-auto">
+			{#if testType === 'REGULAR'}
+				<label for="random-questions" class="text-body1 @xl:text-body1"
+					>Randomize question order</label
+				>
+				<input
+					type="checkbox"
+					name="random-questions"
+					class="checkbox checkbox-primary dark:checkbox-accent"
+					bind:checked={$testObject.randomizeQuestionOrder}
 				/>
-				<GroupSelection testId={testData?.id} />
-			</div>
+			{/if}
+		</div>
+		<div>
+			<TagSelectionComponent
+				on:tagsChanged={onTagSelectionChange}
+				{tags}
+				usedTagsSlugs={testData?.tags.map((item) => {
+					return item.tag.slug;
+				}) || []}
+			/>
+			<GroupSelection testId={testData?.id} />
 		</div>
 	</div>
 	{#if testType !== 'PROGRAMMING'}

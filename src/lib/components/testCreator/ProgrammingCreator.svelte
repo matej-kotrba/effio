@@ -121,7 +121,7 @@
 	}
 </script>
 
-<div class="max-w-[1000px] mb-12">
+<div class="mb-12">
 	<ErrorEnhance error={$testObject.questions[INDEX_OF_QUESTION].errors.title}>
 		<TextInputSimple
 			inputProperties={{ placeholder: 'Program a cute seal' }}
