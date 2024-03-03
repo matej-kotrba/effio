@@ -20,7 +20,9 @@
 	{...$$restProps}
 	on:click={onClick}
 	class={cn(
-		'fixed bottom-5 right-5 rounded-full bg-light_white border-2 border-solid border-light_text_black_20 shadow-md p-6 grid place-content-center z-[100]',
+		`group fixed bottom-5 right-5 rounded-full bg-light_terciary dark:bg-dark_secondary border-2 border-solid border-light_text_black_20
+		 shadow-md p-6 grid place-content-center z-[100] hover:bg-light_white dark:hover:bg-dark_light_grey duration-100
+		 dark:border-dark_text_white_20`,
 		classes
 	)}
 >

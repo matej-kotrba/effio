@@ -139,8 +139,11 @@
 	<ScreenCover />
 {/if}
 
-<FlexConfirm onClick={() => {}}>
-	<iconify-icon icon="charm:tick" class="text-3xl" />
+<FlexConfirm onClick={postEditedTest}>
+	<iconify-icon
+		icon="charm:tick"
+		class="text-3xl text-white duration-150 group-hover:text-light_text_black dark:group-hover:text-dark_text_white"
+	/>
 </FlexConfirm>
 
 <div class="block">

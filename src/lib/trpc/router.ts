@@ -80,11 +80,11 @@ export const appRouter = router({
         }
       },
       {
-        createdAt: "desc"
+        updatedAt: "desc"
       }
     ] as const : [
       {
-        createdAt: "desc"
+        updatedAt: "desc"
       },
       {
         stars: {
