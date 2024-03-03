@@ -14,6 +14,7 @@
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 	import TestDetails from '../../../test-creator/TestDetails.svelte';
 	import Toggle from '~components/inputs/Toggle.svelte';
+	import FlexConfirm from '~components/buttons/FlexConfirm.svelte';
 
 	export let data;
 
@@ -138,6 +139,10 @@
 	<ScreenCover />
 {/if}
 
+<FlexConfirm onClick={() => {}}>
+	<iconify-icon icon="charm:tick" class="text-3xl" />
+</FlexConfirm>
+
 <div class="block">
 	<DashboardTitle
 		title="Test Editor"
@@ -145,7 +150,7 @@
 	/>
 </div>
 
-<div
+<!-- <div
 	class="sticky top-0 left-0 z-20 flex items-center justify-end w-screen gap-3 p-2 ml-auto rounded-bl-lg md:w-fit backdrop-blur-xl"
 >
 	<Toggle
@@ -161,10 +166,16 @@
 		}}
 		onClick={postEditedTest}
 	/>
+</div> -->
+<div class="max-w-[1000px] mb-4">
+	<Toggle
+		title="Is Published"
+		isChecked={$testObject.published}
+		class="items-center justify-end"
+		on:toggle={(e) => ($testObject.published = e.detail)}
+	/>
 </div>
-
 <TestDetails
-	sectionTransitionDuration={0}
 	testType={data.testData.type}
 	testData={data.testData}
 	bind:testImageFile

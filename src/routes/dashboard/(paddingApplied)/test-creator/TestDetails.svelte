@@ -17,12 +17,9 @@
 	import { initializeTestToTestStore } from '~helpers/test/test';
 	import type { Tag, TestType } from '@prisma/client';
 	import Dialog from '~components/portals/Dialog.svelte';
-	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import { trpc } from '~/lib/trpc/client';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
-	import TagContainer from './Tag.svelte';
-	import IconButton from '~components/buttons/IconButton.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
 	import TagSelectionComponent from '~components/containers/tag/TagSelectionComponent.svelte';
@@ -43,9 +40,6 @@
 	}
 
 	export let testImageFile: File | undefined = undefined;
-
-	let modal: HTMLDialogElement;
-	let openTagModal: () => void;
 
 	let tags: Tag[] = [];
 	let visibleTags = tags;
@@ -145,7 +139,7 @@
 		<div class="flex flex-col @xl:items-center @xl:flex-row gap-2 @xl:gap-0">
 			<div class="flex items-center gap-2 mr-auto">
 				{#if testType === 'REGULAR'}
-					<label for="random-questions" class="text-body2 @xl:text-body1"
+					<label for="random-questions" class="text-body1 @xl:text-body1"
 						>Randomize question order</label
 					>
 					<input
@@ -157,66 +151,6 @@
 				{/if}
 			</div>
 			<div>
-				<!-- <Dialog
-					bind:open={openTagModal}
-					title="Tag Selection"
-					formClasses="max-w-[750px]"
-				>
-					<div class="grid grid-cols-5 @container">
-						<div class="grid items-center grid-cols-5 col-span-5 gap-2 mb-2">
-							<div
-								class="flex items-center justify-center col-span-5 flex-col @md:flex-row"
-							>
-								<SearchBar
-									searchFunction={onTagSearch}
-									class="flex-1 @md:px-4 max-w-[350px]"
-								/>
-								<IconButton
-									isPortal=""
-									icon="fluent:delete-28-filled"
-									tooltip="Clear all filters"
-									onClick={clearAllFilters}
-									tooltipClasses="mb-2"
-								/>
-							</div>
-						</div>
-						<div class="flex flex-col col-span-1 gap-1" />
-						<div
-							class="grid @xs:grid-cols-2 @sm:grid-cols-3 @md:grid-cols-4 @lg:grid-col-4 @2xl:grid-cols-5 col-span-5 gap-1 max-h-[200px] px-2 overflow-y-auto pt-2 overscroll-contain"
-						>
-							{#if visibleTags.length === 0}
-								<div class="col-span-5">
-									<h6 class="text-center">No tag like that exists.</h6>
-									<iconify-icon
-										icon="solar:mask-sad-linear"
-										class="grid place-content-center text-8xl text-light_text_black_20 dark:text-dark_text_white_20"
-									/>
-								</div>
-							{/if}
-							{#each visibleTags as tag}
-								<TagContainer
-									{tag}
-									isSelected={$testObject.tagIds.includes(tag.id)}
-									onSelect={(tag) => {
-										if ($testObject.tagIds.includes(tag.id)) {
-											$testObject.tagIds = $testObject.tagIds.filter(
-												(id) => id !== tag.id
-											);
-										} else {
-											$testObject.tagIds = [...$testObject.tagIds, tag.id];
-										}
-									}}
-								/>
-							{/each}
-						</div>
-					</div>
-				</Dialog>
-				<button
-					on:click={openTagModal}
-					class="m-1 btn dark:bg-dark_light_grey dark:text-white dark:border-dark_light_grey"
-				>
-					Tag Selection
-				</button> -->
 				<TagSelectionComponent
 					on:tagsChanged={onTagSelectionChange}
 					{tags}
