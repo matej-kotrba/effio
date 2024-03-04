@@ -17,6 +17,7 @@
 	import { tweened } from 'svelte/motion';
 	import { get } from 'svelte/store';
 	import { circIn } from 'svelte/easing';
+	import Worker from './sandbox-worker?worker';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -68,25 +69,26 @@
 
 	let testsConsoleLogs: string[][] = [];
 
-	let sandbox: Sandbox | undefined = undefined;
-	$: {
-		if (Sandbox?.prototype) {
-			const oldConsoleLog = console.log;
-			console.log = (...args: any[]) => {
-				args.forEach((arg) => {
-					if (typeof arg === 'object' || typeof arg === 'function') {
-						testsConsoleLogs[testsConsoleLogs.length - 1].push(
-							JSON.stringify(arg)
-						);
-					} else {
-						testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
-					}
-				});
-			};
-			sandbox = new Sandbox();
-			console.log = oldConsoleLog;
-		}
-	}
+	let worker: Worker;
+	// let sandbox: Sandbox | undefined = undefined;
+	// $: {
+	// 	if (Sandbox?.prototype) {
+	// 		const oldConsoleLog = console.log;
+	// 		console.log = (...args: any[]) => {
+	// 			args.forEach((arg) => {
+	// 				if (typeof arg === 'object' || typeof arg === 'function') {
+	// 					testsConsoleLogs[testsConsoleLogs.length - 1].push(
+	// 						JSON.stringify(arg)
+	// 					);
+	// 				} else {
+	// 					testsConsoleLogs[testsConsoleLogs.length - 1].push(arg);
+	// 				}
+	// 			});
+	// 		};
+	// 		sandbox = new Sandbox();
+	// 		console.log = oldConsoleLog;
+	// 	}
+	// }
 
 	let codeEditorContainer: HTMLDivElement;
 	let codeEditor: editor.IStandaloneCodeEditor;
@@ -103,53 +105,73 @@
 		easing: circIn
 	});
 
+	let isProccessing = false;
+
+	// TODO: Finish this
 	canRunAgainDelay.subscribe((value) => {
-		console.log(value);
+		// console.log(value);
 	});
 
 	async function compileCode() {
 		if (get(canRunAgainDelay) > 0) return;
 		if (!!result) return;
-		if (!sandbox) return;
+		// if (!sandbox) return;
 		const code = codeEditor.getValue();
 
-		testsConsoleLogs = [];
-		for (const i in content.tests) {
-			const item = content.tests[i];
-			testsConsoleLogs[i] = [];
+		isProccessing = true;
+		worker.postMessage({
+			code: code,
+			tests: content.tests
+		});
 
-			try {
-				// sandbox.context.options.prototypeReplacements?.set(
-				// 	console.log.prototype,
-				// 	(args: any[]) => {
-				// 		args.forEach((arg) => {
-				// 			if (typeof arg === 'object' || typeof arg === 'function') {
-				// 				testsConsoleLogs[i].push(JSON.stringify(arg));
-				// 			} else {
-				// 				testsConsoleLogs[i].push(arg);
-				// 			}
-				// 		});
-				// 	}
-				// );
-
-				const exec = sandbox.compile(code);
-				const scriptResult = exec({ data: JSON.parse(item.input) }).run();
-				const output = JSON.parse(item.output);
-				if (isEqual(scriptResult, output)) {
-					testsInfo[i] = {
-						result: JSON.stringify(scriptResult),
-						passed: true
-					};
-				} else {
-					testsInfo[i] = {
-						result: JSON.stringify(scriptResult),
-						passed: false
-					};
+		setTimeout(async () => {
+			if (isProccessing === true) {
+				isProccessing = false;
+				toast.error('Your ran into a problem');
+				if (worker && Worker) {
+					console.log('Reinitialized worker');
+					worker.terminate();
+					worker = new Worker();
+					worker.addEventListener('message', onWorkerMessage);
 				}
-			} catch (e) {
-				console.log(e);
 			}
-		}
+		}, 1000);
+		testsConsoleLogs = [];
+		// for (const i in content.tests) {
+		// 	const item = content.tests[i];
+		// 	testsConsoleLogs[i] = [];
+
+		// 	try {
+		// 		// sandbox.context.options.prototypeReplacements?.set(
+		// 		// 	console.log.prototype,
+		// 		// 	(args: any[]) => {
+		// 		// 		args.forEach((arg) => {
+		// 		// 			if (typeof arg === 'object' || typeof arg === 'function') {
+		// 		// 				testsConsoleLogs[i].push(JSON.stringify(arg));
+		// 		// 			} else {
+		// 		// 				testsConsoleLogs[i].push(arg);
+		// 		// 			}
+		// 		// 		});
+		// 		// 	}
+		// 		// );
+		// 		// const exec = sandbox.compile(code);
+		// 		// const scriptResult = exec({ data: JSON.parse(item.input) }).run();
+		// 		// const output = JSON.parse(item.output);
+		// 		// if (isEqual(scriptResult, output)) {
+		// 		// 	testsInfo[i] = {
+		// 		// 		result: JSON.stringify(scriptResult),
+		// 		// 		passed: true
+		// 		// 	};
+		// 		// } else {
+		// 		// 	testsInfo[i] = {
+		// 		// 		result: JSON.stringify(scriptResult),
+		// 		// 		passed: false
+		// 		// 	};
+		// 		// }
+		// 	} catch (e) {
+		// 		console.log(e);
+		// 	}
+		// }
 
 		if (testsInfo.every((test) => test.passed)) {
 			activateConfetti = false;
@@ -161,6 +183,30 @@
 		// Disabling the run button for a while
 		canRunAgainDelay.set(CAN_RUN_AGAIN_DELAY_DURATION, { duration: 0 });
 		canRunAgainDelay.set(0);
+	}
+
+	async function onWorkerMessage(
+		e: MessageEvent<{
+			passed: boolean;
+			result: string;
+			logs: string[];
+			index: number;
+		}>
+	) {
+		isProccessing = false;
+		console.log(e);
+		testsConsoleLogs[e.data.index] = e.data.logs;
+		testsInfo[e.data.index] = {
+			passed: e.data.passed,
+			result: e.data.result
+		};
+
+		if (testsInfo.every((test) => test.passed)) {
+			activateConfetti = false;
+			toast.success('You got it!\nAll tests are passing.');
+			await tick();
+			activateConfetti = true;
+		}
 	}
 
 	async function submitTest() {
@@ -180,6 +226,9 @@
 
 	onMount(async () => {
 		monaco = await import('monaco-editor');
+
+		worker = new Worker();
+		worker.addEventListener('message', onWorkerMessage);
 
 		await Promise.all([
 			import('monaco-editor/esm/vs/language/typescript/ts.worker?worker')
