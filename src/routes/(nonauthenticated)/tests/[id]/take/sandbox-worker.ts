@@ -1,4 +1,5 @@
 import Sandbox from '@nyariv/sandboxjs';
+import { isEqual } from 'lodash';
 
 addEventListener('message', async (event) => {
   const code = event.data.code;
@@ -26,7 +27,7 @@ addEventListener('message', async (event) => {
       const exec = sandbox.compile(code);
       const scriptResult = exec({ data: JSON.parse(item.input) }).run();
       const output = JSON.parse(item.output);
-      if (scriptResult === output) {
+      if (isEqual(scriptResult, output)) {
         postMessage({
           passed: true,
           result: scriptResult,

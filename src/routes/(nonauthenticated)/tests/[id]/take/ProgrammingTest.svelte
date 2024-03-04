@@ -107,11 +107,6 @@
 
 	let isProccessing = false;
 
-	// TODO: Finish this
-	canRunAgainDelay.subscribe((value) => {
-		// console.log(value);
-	});
-
 	async function compileCode() {
 		if (get(canRunAgainDelay) > 0) return;
 		if (!!result) return;
@@ -173,13 +168,6 @@
 		// 	}
 		// }
 
-		if (testsInfo.every((test) => test.passed)) {
-			activateConfetti = false;
-			toast.success('You got it!\nAll tests are passing.');
-			await tick();
-			activateConfetti = true;
-		}
-
 		// Disabling the run button for a while
 		canRunAgainDelay.set(CAN_RUN_AGAIN_DELAY_DURATION, { duration: 0 });
 		canRunAgainDelay.set(0);
@@ -194,7 +182,6 @@
 		}>
 	) {
 		isProccessing = false;
-		console.log(e);
 		testsConsoleLogs[e.data.index] = e.data.logs;
 		testsInfo[e.data.index] = {
 			passed: e.data.passed,
