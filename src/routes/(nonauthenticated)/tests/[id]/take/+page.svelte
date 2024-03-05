@@ -10,6 +10,7 @@
 	import type { Prisma, TestRecord } from '@prisma/client';
 	import RegularTest from './RegularTest.svelte';
 	import ProgrammingTest from './ProgrammingTest.svelte';
+	import NewProgrammingTest from './NewProgrammingTest.svelte';
 
 	export let data;
 
@@ -83,7 +84,7 @@
 		</div>
 	{:else if data.testContent.type === 'PROGRAMMING'}
 		<div class="mx-auto max-w-[1400px]">
-			<ProgrammingTest
+			<NewProgrammingTest
 				questionIndex={0}
 				{data}
 				{isSubmitting}
