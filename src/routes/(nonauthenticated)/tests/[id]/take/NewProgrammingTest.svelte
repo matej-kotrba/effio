@@ -218,7 +218,11 @@
 						</h3>
 						<p use:handwrite>{content.description}</p>
 						<Space gap={10} />
-						<Separator w={'100%'} h="1px" />
+						<Separator
+							w={'100%'}
+							h="1px"
+							class="bg-light_text_black_60 dark:bg-dark_text_white_60"
+						/>
 						<Space gap={10} />
 						<Hints hints={content.hints} />
 					</div>
@@ -278,8 +282,80 @@
 					class="bg-light_text_black_60"
 				/>
 				<Resizable.Pane defaultSize={50}>
-					<div class="flex items-center justify-center h-full p-6">
-						<span class="font-semibold">Three</span>
+					<div class="relative h-full max-h-full">
+						<span class="font-semibold text-h6">Tests</span>
+						<Separator w={'100%'} h="1px" />
+						<div class="grid grid-cols-6 mt-2 @container h-full max-h-full">
+							<div
+								class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
+							>
+								{#each content['tests'] as { input, output }, index}
+									<button
+										type="button"
+										class="w-full btn dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white"
+										on:click={() => (selectedTestIndex = index)}
+									>
+										{index + 1}. {input}
+									</button>
+								{/each}
+							</div>
+							<div
+								class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
+							>
+								<div class="col-span-3">
+									<span class="font-semibold">{selectedTestIndex + 1}.</span>
+									<div>
+										<span>Input: </span><span class="font-semibold"
+											>{content['tests'][selectedTestIndex].input}</span
+										>
+									</div>
+									<div>
+										<span>Output: </span><span class={`font-semibold`}
+											>{testsInfo[selectedTestIndex]
+												? testsInfo[selectedTestIndex].result
+												: ''}</span
+										>
+									</div>
+									<div>
+										<span>Result: </span><span
+											class={`font-semibold ${
+												testsInfo[selectedTestIndex] &&
+												testsInfo[selectedTestIndex].passed
+													? 'text-success'
+													: 'text-error dark:text-dark_error'
+											}`}
+											>{testsInfo[selectedTestIndex]
+												? testsInfo[selectedTestIndex].passed
+													? 'Passed'
+													: 'Failed'
+												: ''}</span
+										>
+									</div>
+									<div>
+										<span>Expected Output: </span><span class="font-semibold"
+											>{content['tests'][selectedTestIndex].output}</span
+										>
+									</div>
+								</div>
+								<div
+									class="relative grid col-span-2 gap-1"
+									style="grid-template-rows: auto 1fr;"
+								>
+									<div>
+										<span>Logs</span>
+										<Separator w="100%" h="1px" />
+									</div>
+									<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
+									<div class="flex flex-col h-[200px] overflow-y-auto">
+										{#if testsConsoleLogs[selectedTestIndex]}
+											{#each testsConsoleLogs[selectedTestIndex] as log}
+												<span class="text-xs">{log}</span>
+											{/each}
+										{/if}
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</Resizable.Pane>
 			</Resizable.PaneGroup>
