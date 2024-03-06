@@ -15,6 +15,8 @@
 	import Separator from '~components/separators/Separator.svelte';
 	import Hints from './Hints.svelte';
 	import { handwrite } from '~use/handwrite';
+	import BasicButton from '~components/buttons/BasicButton.svelte';
+	import Confetti from 'svelte-confetti';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -155,7 +157,6 @@
 	}
 
 	function repaintEditor() {
-		console.log('asdasd');
 		codeEditor.layout();
 	}
 
@@ -199,6 +200,25 @@
 		codeEditor?.dispose();
 	});
 </script>
+
+{#if browser}
+	{#if activateConfetti}
+		<div
+			style="position: fixed; top: -50px; left: 0; height: 100vh; width: 100vw; display: flex; justify-content: center; overflow: hidden;"
+		>
+			{#each Array(2) as _, index}
+				<Confetti
+					x={[-5, 5]}
+					y={[0, 0.1]}
+					delay={[100 + index * 2000, 2000 + index * 2000]}
+					duration={3000}
+					amount={300}
+					fallDistance="100vh"
+				/>
+			{/each}
+		</div>
+	{/if}
+{/if}
 
 <div
 	class="relative"
@@ -273,7 +293,7 @@
 						{/if}
 						<div
 							bind:this={codeEditorContainer}
-							class="h-full max-w-full overflow-hidden rounded-md"
+							class="h-full max-w-full overflow-hidden"
 						/>
 					</div>
 				</Resizable.Pane>
@@ -282,83 +302,166 @@
 					class="bg-light_text_black_60"
 				/>
 				<Resizable.Pane defaultSize={50}>
-					<div class="relative h-full max-h-full">
-						<span class="font-semibold text-h6">Tests</span>
-						<Separator w={'100%'} h="1px" />
-						<div class="grid grid-cols-6 mt-2 @container h-full max-h-full">
+					<div
+						class="relative grid h-full max-h-full gap-1 p-2 overflow-hidden grid__auto-rows"
+					>
+						<div class="flex gap-1">
 							<div
-								class="max-h-[300px] flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1 overflow-y-auto"
+								class="relative run-button"
+								style={`--cover-percentage: ${
+									($canRunAgainDelay / CAN_RUN_AGAIN_DELAY_DURATION) * 100
+								}%;`}
 							>
-								{#each content['tests'] as { input, output }, index}
-									<button
-										type="button"
-										class="w-full btn dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white"
-										on:click={() => (selectedTestIndex = index)}
-									>
-										{index + 1}. {input}
-									</button>
-								{/each}
+								<BasicButton
+									title="Run"
+									onClick={compileCode}
+									buttonAttributes={{
+										disabled: $canRunAgainDelay > 0 || !!result
+									}}
+								>
+									<iconify-icon icon="raphael:run" class="text-2xl" />
+								</BasicButton>
 							</div>
+							<BasicButton
+								title="Submit"
+								onClick={submitTest}
+								buttonAttributes={{
+									disabled:
+										!!result || testsInfo.length === 0
+											? true
+											: testsInfo.some((test) => test.passed === false)
+								}}
+							/>
+						</div>
+						<div
+							class="relative flex flex-col h-full max-h-full gap-1 overflow-hidden grid__auto-rows_2"
+						>
+							<span class="font-semibold text-h6">Tests</span>
+							<Separator w={'100%'} h="1px" />
 							<div
-								class="grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
+								class="relative grid grid-cols-6 mt-2 @container h-full max-h-full overflow-hidden"
 							>
-								<div class="col-span-3">
-									<span class="font-semibold">{selectedTestIndex + 1}.</span>
-									<div>
-										<span>Input: </span><span class="font-semibold"
-											>{content['tests'][selectedTestIndex].input}</span
+								<div
+									class="relative h-full max-h-full overflow-y-auto flex flex-col @2xl:col-span-2 @6xl:col-span-1 gap-1"
+								>
+									{#each content['tests'] as { input, output }, index}
+										<button
+											type="button"
+											style="--pin-color: {testsInfo[index]
+												? testsInfo[index].passed
+													? 'var(--success)'
+													: 'var(--error)'
+												: 'var(--warning)'}"
+											class="relative w-full btn dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white
+											after:content-[''] after:w-4 after:aspect-square after:rounded-full after:left-1 after:top-1 after:absolute after:bg-[var(--pin-color)]"
+											on:click={() => (selectedTestIndex = index)}
 										>
-									</div>
-									<div>
-										<span>Output: </span><span class={`font-semibold`}
-											>{testsInfo[selectedTestIndex]
-												? testsInfo[selectedTestIndex].result
-												: ''}</span
-										>
-									</div>
-									<div>
-										<span>Result: </span><span
-											class={`font-semibold ${
-												testsInfo[selectedTestIndex] &&
-												testsInfo[selectedTestIndex].passed
-													? 'text-success'
-													: 'text-error dark:text-dark_error'
-											}`}
-											>{testsInfo[selectedTestIndex]
-												? testsInfo[selectedTestIndex].passed
-													? 'Passed'
-													: 'Failed'
-												: ''}</span
-										>
-									</div>
-									<div>
-										<span>Expected Output: </span><span class="font-semibold"
-											>{content['tests'][selectedTestIndex].output}</span
-										>
-									</div>
+											{index + 1}. {input}
+										</button>
+									{/each}
 								</div>
 								<div
-									class="relative grid col-span-2 gap-1"
-									style="grid-template-rows: auto 1fr;"
+									class="@container/inner grid grid-cols-5 col-span-4 @6xl:col-span-5 gap-2 pl-2 max-h-full h-full"
 								>
-									<div>
-										<span>Logs</span>
-										<Separator w="100%" h="1px" />
-									</div>
-									<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
-									<div class="flex flex-col h-[200px] overflow-y-auto">
-										{#if testsConsoleLogs[selectedTestIndex]}
-											{#each testsConsoleLogs[selectedTestIndex] as log}
-												<span class="text-xs">{log}</span>
-											{/each}
+									<div class="col-span-5 @xl/inner:col-span-3">
+										<span
+											class="font-semibold {testsInfo[selectedTestIndex]
+												? testsInfo[selectedTestIndex].passed
+													? 'text-success'
+													: 'text-error dark:text-dark_error'
+												: ''}"
+											>{selectedTestIndex + 1}. {testsInfo[selectedTestIndex]
+												? testsInfo[selectedTestIndex].passed
+													? 'Passing'
+													: 'Failing'
+												: 'Not submited'}</span
+										>
+										<div class="flex items-center gap-1">
+											<span>Expected: </span><span class="font-semibold"
+												>{content['tests'][selectedTestIndex].input}</span
+											><iconify-icon icon="flowbite:arrow-right-outline" /><span
+												class="font-semibold"
+												>{content['tests'][selectedTestIndex].output}</span
+											>
+										</div>
+										{#if testsInfo[selectedTestIndex]}
+											<div>
+												<span>Outcome: </span>
+												<div
+													class={`font-semibold gap-1 inline-flex items-center ${
+														testsInfo[selectedTestIndex] &&
+														testsInfo[selectedTestIndex].passed
+															? 'text-success'
+															: 'text-error dark:text-dark_error'
+													}`}
+												>
+													<span class="font-semibold"
+														>{content['tests'][selectedTestIndex].input}</span
+													><iconify-icon
+														icon="flowbite:arrow-right-outline"
+													/><span class="font-semibold"
+														>{testsInfo[selectedTestIndex].result}</span
+													>
+													<!-- <span
+														>{testsInfo[selectedTestIndex].passed
+															? 'Passed'
+															: 'Failed'}</span
+													> -->
+												</div>
+											</div>
 										{/if}
+									</div>
+									<div
+										class="relative grid col-span-5 @xl/inner:col-span-2 gap-1 overflow-y-auto"
+										style="grid-template-rows: auto 1fr;"
+									>
+										<div>
+											<span>Logs</span>
+											<Separator w="100%" h="1px" />
+										</div>
+										<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
+										<div class="flex flex-col overflow-y-auto">
+											{#if testsConsoleLogs[selectedTestIndex]}
+												{#each testsConsoleLogs[selectedTestIndex] as log}
+													<span class="text-xs">{log}</span>
+												{/each}
+											{/if}
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</Resizable.Pane>
+					</div></Resizable.Pane
+				>
 			</Resizable.PaneGroup>
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
 </div>
+
+<style>
+	.grid__auto-rows {
+		grid-template-rows: auto 1fr;
+	}
+	.grid__auto-rows_2 {
+		grid-template-rows: auto auto 1fr;
+	}
+
+	.run-button::after {
+		content: '';
+		inset: 0;
+		background-color: var(--light-grey);
+		border-radius: 6px;
+		position: absolute;
+		pointer-events: none;
+		opacity: 1;
+		mask-image: linear-gradient(
+			to top,
+			white calc(var(--cover-percentage)),
+			transparent calc(var(--cover-percentage))
+		);
+	}
+
+	:global(.dark) .run-button::after {
+		background-color: var(--dark_light_grey);
+	}
+</style>
