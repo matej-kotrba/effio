@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
@@ -283,7 +284,7 @@ model GroupSubcategoryMessage {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   title              String?
-  content            String?          @db.TinyText
+  content            String?          @db.Text()
   testId             String?
   groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
   sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
