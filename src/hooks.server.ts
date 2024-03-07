@@ -50,11 +50,10 @@ const handleAuth: Handle = SvelteKitAuth({
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   adapter: prismaAdapter,
-  debug: true,
   providers: [
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET }),
+    GitHub({ clientId: GITHUB_ID, clientSecret: GITHUB_SECRET, }),
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
