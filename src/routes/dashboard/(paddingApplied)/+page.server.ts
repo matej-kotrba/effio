@@ -1,7 +1,6 @@
 import type { Session } from '@auth/core/types.js';
 import { redirect } from '@sveltejs/kit'
 import prisma from '~/lib/prisma';
-import { trpcServer } from '~helpers/trpcServer.js';
 
 type TestCreationActivity = {
   count: bigint;
@@ -69,51 +68,51 @@ export const load = async (e) => {
   const id = (await locals.getSession() as Session & { user: { id: string } })?.user?.id as string
 
   if (id) {
-    const resultPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
+    const resultPromise: Promise<TestCreationActivity[]> = prisma.$queryRawUnsafe(`
     SELECT 
     COUNT(id) as "count",
-    LEFT(createdAt, 7) as "period"
-    FROM Test 
-    WHERE ownerId = ${id}
-    GROUP BY LEFT(createdAt, 7)
-    ORDER BY LEFT(createdAt, 7) ASC   
-    `;
+    LEFT("createdAt"::text, 7) as "period"
+    FROM "Test" 
+    WHERE "ownerId" = $1
+    GROUP BY LEFT("createdAt"::text, 7)
+    ORDER BY LEFT("createdAt"::text, 7) ASC   
+    `, id);
 
-    const resultTestsTakenPromise: Promise<TestCreationActivity[]> = prisma.$queryRaw`
+    const resultTestsTakenPromise: Promise<TestCreationActivity[]> = prisma.$queryRawUnsafe(`
     SELECT 
     COUNT(id) as "count",
-    LEFT(createdAt, 7) as "period"
-    FROM TestRecord
-    WHERE userId = ${id}
-    GROUP BY LEFT(createdAt, 7)
-    ORDER BY LEFT(createdAt, 7) ASC   
-    `;
+    LEFT("createdAt"::text, 7) as "period"
+    FROM "TestRecord"
+    WHERE "userId" = $1
+    GROUP BY LEFT("createdAt"::text, 7)
+    ORDER BY LEFT("createdAt"::text, 7) ASC   
+    `, id);
 
-    const testAvaragePromise: Promise<TestAvarageData[]> = prisma.$queryRaw`
+    const testAvaragePromise: Promise<TestAvarageData[]> = prisma.$queryRawUnsafe(`
       SELECT
         COUNT(DISTINCT tr.id) as "count",
         SUM(q.points) as "maxPoints",
-        SUM(qr.userPoints) as "userPoints"
-      FROM User user
-      JOIN TestRecord tr ON user.id = tr.userId
-      JOIN QuestionRecord qr ON tr.id = qr.testRecordId
-      JOIN Question q ON qr.questionId = q.id
-      WHERE user.id = ${id}
-    `
+        SUM(qr."userPoints") as "userPoints"
+      FROM "User"
+      JOIN "TestRecord" tr ON "User".id = tr."userId"
+      JOIN "QuestionRecord" qr ON tr.id = qr."testRecordId"
+      JOIN "Question" q ON qr."questionId" = q.id
+      WHERE "User".id = $1
+    `, id)
 
-    const tagsTookTestFromPromise = prisma.$queryRaw`
+    const tagsTookTestFromPromise = await prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT tst.id) as "count",
+        COUNT(DISTINCT "tst".id) as "count",
         tag.name as "name"
-      FROM Test tst
-      JOIN TagOnTests tot ON tst.id = tot.testId
-      JOIN Tag tag ON tot.tagId = tag.id
-      JOIN TestVersion t ON tst.id = t.testId
-      JOIN TestRecord tr ON t.id = tr.testId
-      WHERE tr.userId = ${id}
+      FROM "Test" tst
+      JOIN "TagOnTests" tot ON "tst".id = tot."testId"
+      JOIN "Tag" tag ON tot."tagId" = tag.id
+      JOIN "TestVersion" t ON "tst".id = t."testId"
+      JOIN "TestRecord" tr ON t.id = tr."testId"
+      WHERE tr."userId" = $1
       GROUP BY tag.id
       ORDER BY tag.name ASC
-    `
+    `, id)
 
     const getRecentCompletedTestsPromise = prisma.testRecord.findMany({
       where: {
@@ -155,21 +154,20 @@ export const load = async (e) => {
         createdAt: "desc"
       }
     })
-
-    const receivedStarsInLastMonthPromise = prisma.$queryRaw`
+    const receivedStarsInLastMonthPromise = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT st.id) as "count"
-      FROM TestStar st
-      JOIN Test tst ON tst.id = st.testId
-      WHERE tst.ownerId = ${id} AND LEFT(st.createdAt, 4) * 12 * 30 + RIGHT(LEFT(st.createdAt, 7), 2) * 30 + RIGHT(LEFT(st.createdAt, 10), 2) <= LEFT(NOW(), 4) * 12 * 30 + RIGHT(LEFT(NOW(), 7), 2) * 30 + RIGHT(LEFT(NOW(), 10), 2)
-    `
+        COUNT(DISTINCT "st".id) as "count"
+      FROM "TestStar" st
+      JOIN "Test" tst ON "tst".id = "st"."testId"
+      WHERE "tst"."ownerId" = $1 AND LEFT(st."createdAt"::text, 4)::int * 12 * 30 + RIGHT(LEFT(st."createdAt":: text, 7), 2):: int * 30 + RIGHT(LEFT(st."createdAt":: text, 10), 2):: int <= LEFT(NOW()::text, 4):: int * 12 * 30 + RIGHT(LEFT(NOW()::text, 7), 2):: int * 30 + RIGHT(LEFT(NOW()::text, 10), 2):: int
+    `, id)
 
-    const gaveStarsInLastMonthPromise = prisma.$queryRaw`
+    const gaveStarsInLastMonthPromise = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT st.id) as "count"
-      FROM TestStar st
-      WHERE st.userId = ${id} AND LEFT(st.createdAt, 4) * 12 * 30 + RIGHT(LEFT(st.createdAt, 7), 2) * 30 + RIGHT(LEFT(st.createdAt, 10), 2) <= LEFT(NOW(), 4) * 12 * 30 + RIGHT(LEFT(NOW(), 7), 2) * 30 + RIGHT(LEFT(NOW(), 10), 2)
-    `
+        COUNT(DISTINCT "st".id) as "count"
+      FROM "TestStar" st
+      WHERE "st"."userId" = $1 AND LEFT("st"."createdAt"::text, 4)::int * 12 * 30 + RIGHT(LEFT("st"."createdAt"::text, 7), 2)::int * 30 + RIGHT(LEFT(st."createdAt"::text, 10), 2)::int <= LEFT(NOW()::text, 4)::int * 12 * 30 + RIGHT(LEFT(NOW()::text, 7), 2)::int * 30 + RIGHT(LEFT(NOW()::text, 10), 2)::int
+    `, id)
 
     const [result, resultTestsTaken, testAvarage, tagsTookTestFrom, getRecentCompletedTests, receivedStarsInLastMonth, gaveStarsInLastMonth] = await Promise.all([resultPromise, resultTestsTakenPromise, testAvaragePromise, tagsTookTestFromPromise, getRecentCompletedTestsPromise, receivedStarsInLastMonthPromise, gaveStarsInLastMonthPromise])
 
