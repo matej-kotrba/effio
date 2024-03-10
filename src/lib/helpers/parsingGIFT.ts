@@ -18,18 +18,18 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
         console.log(hasMoreCorrectAnswers)
         // Has more correct asnwers -> True/False
         if (hasMoreCorrectAnswers === 0 || hasMoreCorrectAnswers >= 2) {
-          const template = questionTemplates.find(item => item.slug === "true/false")
+          const template = questionTemplates.find(item => item.slug === "trueFalse")
           if (!template) throw new Error("Template not found")
 
           return {
             id: crypto.randomUUID(),
-            questionType: "true/false",
+            questionType: "trueFalse",
             questionTypeId: template.id,
             title: question.title,
             errors: {},
             displayType: template.name,
             content: {
-              type: "true/false",
+              type: "trueFalse",
               answers: question.choices.map((item, index) => {
 
                 let resultText = item.text.text
@@ -88,11 +88,12 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
         const template = questionTemplates.find(item => item.slug === "connect")
         if (!template) throw new Error("Template not found")
 
-        const matchedPairs = Object.fromEntries(question.matchPairs.map(item => {
+        const matchedPairs = Object.fromEntries(question.matchPairs.map((item, index) => {
           return [crypto.randomUUID(), {
-            answer: item.subanswer
+            displayId: index,
+            answer: item.subanswer,
           }]
-        }))
+        })) satisfies ConnectQuestion["matchedAnswers"]
 
         return {
           id: crypto.randomUUID(),

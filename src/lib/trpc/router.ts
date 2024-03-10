@@ -14,10 +14,6 @@ const questionTemplateSchema = z.object({
   createdAt: z.date(),
   name: z.string(),
   slug: z.string(),
-  properties: z.object({
-    inputType: z.string().optional(),
-    question: z.array(z.string()).optional(),
-  }).and(z.record(z.unknown()))
 })
 
 export type QuestionTemplate = z.infer<typeof questionTemplateSchema>

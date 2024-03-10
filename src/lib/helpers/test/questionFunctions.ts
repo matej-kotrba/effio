@@ -3,17 +3,17 @@ import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
 import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema, bitmapLocationSchema } from "~schemas/testValidation"
 
-type QuestionMethods = {
+type QuestionConstants = {
   [Key in keyof QuestionTypeMap]: {
     icon: string
   }
 }
 
-export const questionMethods: QuestionMethods = {
+export const questionConstants: QuestionConstants = {
   "pickOne": {
     icon: "fa-solid:hand-point-right"
   },
-  "true/false": {
+  "trueFalse": {
     icon: "tabler:checkbox"
   },
   "connect": {
@@ -192,10 +192,10 @@ export const questionContentFunctions: QuestionContentTransformation = {
       }
     }
   },
-  "true/false": {
+  "trueFalse": {
     "createNew": () => {
       return {
-        type: 'true/false',
+        type: 'trueFalse',
         answers: [
           {
             id: 0,
@@ -314,7 +314,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
             answer: item.answer,
             matchedAnswerIndex: undefined
           }
-        })
+        }),
       }
     },
     "checkAnswerPresence": (question: ConnectQuestion): boolean => {

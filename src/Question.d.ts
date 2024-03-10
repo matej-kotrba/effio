@@ -2,13 +2,13 @@
 // Apart from these two properties you can add any other properties you want for functionality of the question
 
 type PickOneQuestion = {
-  type: 'pickOne';
+  type: "pickOne";
   answers: Answer[];
   correctAnswerId: number | undefined;
 };
 
 type TrueFalseQuestion = {
-  type: 'true/false';
+  type: "trueFalse";
   answers: (Answer & {
     isTrue: boolean;
   })[];
@@ -122,12 +122,12 @@ type Answer<T = string> = {
 }
 
 type QuestionTypeMap = {
-  'true/false': TrueFalseQuestion;
-  'pickOne': PickOneQuestion;
-  'connect': ConnectQuestion;
-  'write': WriteQuestion;
-  'fill': FillQuestion;
-  'geography': GeographyQuestion;
+  "pickOne": PickOneQuestion;
+  "trueFalse": TrueFalseQuestion;
+  "connect": ConnectQuestion;
+  "write": WriteQuestion;
+  "fill": FillQuestion;
+  "geography": GeographyQuestion;
   "image": ImageQuestion;
   "programming": ProgrammingQuestion;
   "bitmap": BitmapQuestion

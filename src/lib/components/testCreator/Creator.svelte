@@ -36,7 +36,7 @@
 	import toast from 'svelte-french-toast';
 	import {
 		QUESTION_LIMIT,
-		questionMethods
+		questionConstants
 	} from '~helpers/test/questionFunctions';
 	import { fly } from 'svelte/transition';
 	import { XL } from '~utils/responsive';
@@ -45,7 +45,6 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	// Variable which stores all the inputs and display them in the dropdown (usually fetch this from the database)
 	export let inputTemplates: QuestionTemplate[] = [];
-
 	const testObject = getTestObject();
 
 	// Dropdown state
@@ -174,8 +173,8 @@
 		}
 	}
 	function getIcon(index: string) {
-		if (Object.keys(questionMethods).includes(index)) {
-			return questionMethods[index as keyof typeof questionMethods].icon;
+		if (Object.keys(questionConstants).includes(index)) {
+			return questionConstants[index as keyof typeof questionConstants].icon;
 		}
 	}
 </script>
@@ -205,7 +204,12 @@
 				class="h-full max-w-[340px]"
 			>
 				<CreatorInputSidebar
-					inputs={inputTemplates}
+					inputs={inputTemplates.map((item) => {
+						return {
+							name: item.name,
+							icon: questionConstants[item.slug].icon
+						};
+					})}
 					class="self-start"
 					on:drop={onInputDrop}
 				/>

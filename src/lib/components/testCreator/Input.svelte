@@ -127,7 +127,7 @@ will be used in the test creator -->
 			<div class="p-2 content">
 				{#if $testObject['questions'][index]['questionType'] === 'pickOne'}
 					<PickOneInput on:questionDetails indexParent={index} />
-				{:else if $testObject['questions'][index]['questionType'] === 'true/false'}
+				{:else if $testObject['questions'][index]['questionType'] === 'trueFalse'}
 					<TrueFalseInput on:questionDetails indexParent={index} />
 				{:else if $testObject['questions'][index]['questionType'] === 'connect'}
 					<Connect on:questionDetails indexParent={index} />

@@ -1,8 +1,9 @@
+import { QuestionTypeSlug } from "@prisma/client";
 import { generateGIFT, type GIFTQuestion } from "gift-format-generator";
 import type { TestFullType } from "~/Prisma";
 
 export function createExportedFileAndMakeItDownloadable(test: TestFullType) {
-  const allowedTypes = ['pickOne', 'true/false', 'connect', 'write'] as const;
+  const allowedTypes: QuestionTypeSlug[] = ['pickOne', 'trueFalse', 'connect', 'write'] as const;
   const data = test.testVersions[0]['questions'].filter(question => allowedTypes.includes(question.type.slug)).map((question) => {
     let questionType;
     let content: GIFTQuestion['answers'];
@@ -20,7 +21,7 @@ export function createExportedFileAndMakeItDownloadable(test: TestFullType) {
         });
         break;
       }
-      case 'true/false': {
+      case 'trueFalse': {
         questionType = 'MC' as const;
 
         const questionContent = question['content'] as TrueFalseQuestion;

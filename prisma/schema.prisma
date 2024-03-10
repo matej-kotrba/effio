@@ -75,13 +75,12 @@ model Template {
 }
 
 model QuestionType {
-  id         String            @id @default(uuid())
-  name       String            @unique
-  slug       String            @unique
-  createdAt  DateTime          @default(now())
-  properties Json
-  type       QuestionType_type @default(REGULAR)
-  questions  Question[]
+  id        String            @id @default(uuid())
+  name      String            @unique
+  slug      QuestionTypeSlug  @unique
+  createdAt DateTime          @default(now())
+  type      QuestionType_type @default(REGULAR)
+  questions Question[]
 }
 
 model Test {
@@ -322,6 +321,18 @@ model AdminLogs {
 enum UserRoles {
   ADMIN
   USER
+}
+
+enum QuestionTypeSlug {
+  pickOne
+  trueFalse
+  connect
+  write
+  fill
+  geography
+  image
+  programming
+  bitmap
 }
 
 enum AdminLogsActions {

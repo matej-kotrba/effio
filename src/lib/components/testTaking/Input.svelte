@@ -102,12 +102,12 @@
 					? typedResultFormat
 					: null}
 			/>
-		{:else if testObject['questions'][questionIndex]['questionType'] === 'true/false'}
+		{:else if testObject['questions'][questionIndex]['questionType'] === 'trueFalse'}
 			<TrueFalse
 				{questionIndex}
 				{testObject}
 				resultFormat={resultFormat &&
-				resultFormat['userAnswer']['type'] === 'true/false'
+				resultFormat['userAnswer']['type'] === 'trueFalse'
 					? typedResultFormat
 					: null}
 			/>
