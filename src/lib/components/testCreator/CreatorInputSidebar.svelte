@@ -14,6 +14,7 @@
 	let classes = '';
 
 	let asideWidth: number;
+	let asidePaddingTop: number = 0;
 
 	let asideElement: HTMLElement;
 
@@ -39,6 +40,13 @@
 		localStorage?.setItem('creatorInputDragTipVisible', 'false');
 	}
 
+	function setSidebarPosition() {
+		const bounding = asideElement.getBoundingClientRect();
+		let height =
+			Math.min(bounding.bottom, window.innerHeight) - Math.max(bounding.top, 0);
+		asidePaddingTop = (window.innerHeight - height) / 2;
+	}
+
 	onMount(() => {
 		if (localStorage?.getItem('creatorInputDragTipVisible') === 'false') {
 			isTipVisible = false;
@@ -52,14 +60,21 @@
 				dispatch('drop', { input: inputs[i] });
 			});
 		}
+
+		window.addEventListener('scroll', setSidebarPosition);
+		window.addEventListener('resize', setSidebarPosition);
+
+		return () => {
+			window.removeEventListener('scroll', setSidebarPosition);
+			window.removeEventListener('resize', setSidebarPosition);
+		};
 	});
 </script>
 
 <svelte:window on:mousemove={onMouseMove} />
 <aside
-	class="sticky top-0 left-0 w-full parent z-10 max-h-[100vh] overflow-y-auto"
-	style="--blur-x: 0px;
-		--blur-y: 0px;"
+	class="sticky left-0 w-full parent z-10 max-h-[100vh] overflow-y-auto"
+	style="--blur-x: 0px; --blur-y: 0px; top: {asidePaddingTop}px;"
 	bind:clientWidth={asideWidth}
 	bind:this={asideElement}
 >
