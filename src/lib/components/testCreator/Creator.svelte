@@ -14,6 +14,8 @@
 			errors: {}
 		};
 
+		console.log(input);
+
 		const questionType = input.slug as QuestionClient['questionType'];
 
 		newQuestionData.content =
@@ -206,6 +208,7 @@
 				<CreatorInputSidebar
 					inputs={inputTemplates.map((item) => {
 						return {
+							...item,
 							name: item.name,
 							icon: questionConstants[item.slug].icon
 						};

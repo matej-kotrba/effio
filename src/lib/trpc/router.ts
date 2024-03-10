@@ -6,14 +6,16 @@ import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 import { groupInvitesRouter } from "./subrouters/groupInvite";
 import { adminRouter } from "./subrouters/admin/router"
-import type { QuestionType } from "@prisma/client"
+import { QuestionTypeSlug, type QuestionType } from "@prisma/client"
+
+type QuestionSlugs = keyof typeof QuestionTypeSlug
 
 // Schema of template question type
 const questionTemplateSchema = z.object({
   id: z.string(),
   createdAt: z.date(),
   name: z.string(),
-  slug: z.string(),
+  slug: z.enum<QuestionSlugs, [QuestionSlugs, ...QuestionSlugs[]]>(Object.keys(QuestionTypeSlug) as [QuestionSlugs, ...QuestionTypeSlug[]]),
 })
 
 export type QuestionTemplate = z.infer<typeof questionTemplateSchema>

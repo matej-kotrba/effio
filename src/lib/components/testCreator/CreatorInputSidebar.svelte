@@ -57,7 +57,7 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 <aside
-	class="sticky top-[10%] left-0 w-full parent z-10"
+	class="sticky top-0 left-0 w-full parent z-10 max-h-[100vh] overflow-y-auto"
 	style="--blur-x: 0px;
 		--blur-y: 0px;"
 	bind:clientWidth={asideWidth}
@@ -114,9 +114,11 @@
 					<!-- class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none dark:bg-dark_quaternary hover:text-light_primary dark:hover:text-dark_primary hover:bg-slate-100 dark:hover:bg-dark_terciary shadow-light_text_black_40 aspect-square place-content-center border-light_primary dark:border-dark_primary" -->
 					<iconify-icon
 						icon={input.icon}
-						class="text-3xl text-light_text_black_80 dark:text-dark_text_white_80"
+						class="mx-auto text-3xl text-light_text_black_80 dark:text-dark_text_white_80"
 					/>
-					{input.name}
+					<span class="text-center">
+						{input.name}
+					</span>
 				</div>
 			</div>
 		{/each}
