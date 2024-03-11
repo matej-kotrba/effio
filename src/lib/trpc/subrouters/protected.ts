@@ -3,6 +3,7 @@ import { loggedInProcedure, router } from "../setup"
 import type { Prisma, TagOnTests, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 import { questionContentFunctions } from "~helpers/test/questionFunctions"
+import { ratelimit } from "~/lib/server/redis/redis"
 
 export const protectedRouter = router({
   saveTest: loggedInProcedure.input(z.object({
@@ -31,6 +32,15 @@ export const protectedRouter = router({
         success: false
       }
     }
+
+    const { success, reset } = await ratelimit.testCreation.limit(
+      ctx.userId
+    )
+
+    if (!success) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are creating tests too fast, please wait ${reset} and try again.` })
+    }
+
     const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
     const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
 
