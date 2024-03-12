@@ -122,7 +122,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     let response;
     const questions = props.data.questions
 
-    const imageQuestionsPromises: (ReturnType<NonNullable<typeof questionContentFunctions["image"]["onActionWithDB"]>> | undefined)[] = []
+    const imageQuestionsPromises: (ReturnType<NonNullable<typeof questionContentFunctions[keyof QuestionTypeMap]["onActionWithDB"]>> | undefined)[] = []
     for (const i in questions) {
       const questionTypeFunctionCall = questionContentFunctions[questions[i].questionType].onActionWithDB
       if (questionTypeFunctionCall) {

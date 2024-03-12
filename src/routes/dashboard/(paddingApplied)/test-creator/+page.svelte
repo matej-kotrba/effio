@@ -16,7 +16,6 @@
 	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import { transformParsedJSONIntoEffioObject } from '~helpers/parsingGIFT.js';
 	import toast from 'svelte-french-toast';
-
 	import ProgressNavigation from '~components/navigation/ProgressNavigation.svelte';
 	import ProgrammingCreator from '~components/testCreator/ProgrammingCreator.svelte';
 	import TestDetails from './TestDetails.svelte';
@@ -28,6 +27,7 @@
 	import { TRPCClientError } from '@trpc/client';
 	import { applicationStates } from '~stores/applicationStates';
 	import Dialog from '~components/portals/Dialog.svelte';
+	import * as Alert from '~components/ui/alert';
 
 	export let data;
 
@@ -73,6 +73,8 @@
 
 	let testImageFile: File | undefined = undefined;
 
+	let rateLimitError = '';
+
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean,
 		testImageFile?: File
@@ -107,7 +109,12 @@
 				},
 				onErrorSaveToDB(e) {
 					if (e instanceof TRPCClientError) {
-						createTRPCErrorNotification(e);
+						if (e.data.code === 'TOO_MANY_REQUESTS') {
+							rateLimitError = e.message;
+						} else {
+							rateLimitError = '';
+						}
+						if (e) createTRPCErrorNotification(e);
 					}
 					isSubmitting = false;
 				}
@@ -376,6 +383,13 @@
 				{testType}
 				bind:testImageFile
 			>
+				{#if rateLimitError !== ''}
+					<Alert.Root variant="destructive">
+						<iconify-icon icon="ph:warning" class="text-2xl" />
+						<Alert.Title>Rate limit!</Alert.Title>
+						<Alert.Description>{rateLimitError}</Alert.Description>
+					</Alert.Root>
+				{/if}
 				<div class="flex justify-center gap-6 my-4">
 					{#if testType !== 'PROGRAMMING'}
 						<BasicButton

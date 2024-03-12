@@ -11,7 +11,7 @@ export const ratelimit = {
   testCreation: new Ratelimit({
     redis,
     prefix: "ratelimit:create",
-    limiter: Ratelimit.slidingWindow(1, "60s")
+    limiter: Ratelimit.slidingWindow(1, "30s")
   }),
   testDeletion: new Ratelimit({
     redis,

@@ -33,13 +33,16 @@ export const protectedRouter = router({
       }
     }
 
-    const { success, reset } = await ratelimit.testCreation.limit(
-      ctx.userId
-    )
+    try {
+      const { success, reset } = await ratelimit.testCreation.limit(
+        ctx.userId
+      )
 
-    if (!success) {
-      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are creating tests too fast, please wait ${reset} and try again.` })
+      if (!success) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are creating tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
+      }
     }
+    catch { 0 }
 
     const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
     const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
