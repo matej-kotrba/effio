@@ -164,6 +164,17 @@ export const protectedRouter = router({
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
 
+    try {
+      const { success, reset } = await ratelimit.testUpdate.limit(
+        ctx.userId
+      )
+
+      if (!success) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are updating tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
+      }
+    }
+    catch { 0 }
+
     const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.testGroupId,
@@ -344,6 +355,16 @@ export const protectedRouter = router({
   deleteTest: loggedInProcedure.input(z.object({
     testGroupId: z.string(),
   })).mutation(async ({ ctx, input }) => {
+    try {
+      const { success, reset } = await ratelimit.testDeletion.limit(
+        ctx.userId
+      )
+
+      if (!success) {
+        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are deleting tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
+      }
+    }
+    catch { 0 }
     try {
       const test = await ctx.prisma.test.findUnique({
         where: {
