@@ -355,16 +355,20 @@ export const protectedRouter = router({
   deleteTest: loggedInProcedure.input(z.object({
     testGroupId: z.string(),
   })).mutation(async ({ ctx, input }) => {
+    let rateLimitSuccess = true
+    let rateLimitReset = 0
     try {
       const { success, reset } = await ratelimit.testDeletion.limit(
         ctx.userId
       )
-
-      if (!success) {
-        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are deleting tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
-      }
+      rateLimitSuccess = success
+      rateLimitReset = reset
     }
     catch { 0 }
+
+    if (!rateLimitSuccess) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are deleting tests too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
+    }
     try {
       const test = await ctx.prisma.test.findUnique({
         where: {

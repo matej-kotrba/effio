@@ -17,6 +17,8 @@
 	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import Carousel from '~components/containers/Carousel.svelte';
 	import { enviromentFetch } from '~helpers/fetch';
+	import { TRPCClientError } from '@trpc/client';
+	import { createTRPCErrorNotification } from '~utils/notification';
 
 	export let data;
 
@@ -125,28 +127,36 @@
 			on:click={async () => {
 				if ($modalStore.modalDeleteInfo?.id === undefined) return;
 				isDeletingTest = true;
-				const response = await trpc($page).protected.deleteTest.mutate({
-					testGroupId: $modalStore.modalDeleteInfo.id
-				});
-				isDeletingTest = false;
-				if (!response['success']) {
-					if (response['message']) {
-						toast.error(response['message']);
+				try {
+					const response = await trpc($page).protected.deleteTest.mutate({
+						testGroupId: $modalStore.modalDeleteInfo.id
+					});
+					isDeletingTest = false;
+					if (!response['success']) {
+						if (response['message']) {
+							toast.error(response['message']);
+						}
 					}
-				}
-				if (response['success']) {
-					getRecentTests();
-					//TODO: Intentionally not refetching test collection, becuase if working properly it should not need to refetch
-					if (response['test']) filterTestsFilter([response['test']['id']]);
-					if (response['test']?.imageUrl) {
-						enviromentFetch({
-							path: 'cloudinary/deleteImage',
-							method: 'POST',
-							body: JSON.stringify({
-								imageUrl: response['test'].imageUrl
-							})
-						});
+					if (response['success']) {
+						getRecentTests();
+						//TODO: Intentionally not refetching test collection, becuase if working properly it should not need to refetch
+						if (response['test']) filterTestsFilter([response['test']['id']]);
+						if (response['test']?.imageUrl) {
+							enviromentFetch({
+								path: 'cloudinary/deleteImage',
+								method: 'POST',
+								body: JSON.stringify({
+									imageUrl: response['test'].imageUrl
+								})
+							});
+						}
 					}
+				} catch (e) {
+					if (e instanceof TRPCClientError) {
+						createTRPCErrorNotification(e);
+					}
+				} finally {
+					isDeletingTest = false;
 				}
 			}}>Delete</button
 		>
