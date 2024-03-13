@@ -33,16 +33,20 @@ export const protectedRouter = router({
       }
     }
 
+    let rateLimitSuccess = true
+    let rateLimitReset = 0
     try {
       const { success, reset } = await ratelimit.testCreation.limit(
         ctx.userId
       )
-
-      if (!success) {
-        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are creating tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
-      }
+      rateLimitSuccess = success
+      rateLimitReset = reset
     }
     catch { 0 }
+
+    if (!rateLimitSuccess) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are creating tests too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
+    }
 
     const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
     const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
@@ -164,16 +168,20 @@ export const protectedRouter = router({
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
 
+    let rateLimitSuccess = true
+    let rateLimitReset = 0
     try {
       const { success, reset } = await ratelimit.testUpdate.limit(
         ctx.userId
       )
-
-      if (!success) {
-        throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are updating tests too fast, please wait ${(reset - Date.now()) / 1000}s and try again.` })
-      }
+      rateLimitSuccess = success
+      rateLimitReset = reset
     }
     catch { 0 }
+
+    if (!rateLimitSuccess) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are updating tests too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
+    }
 
     const test = await ctx.prisma.test.findUnique({
       where: {
@@ -432,6 +440,20 @@ export const protectedRouter = router({
     testGroupId: z.string(),
     decrement: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
+    let rateLimitSuccess = true
+    let rateLimitReset = 0
+    try {
+      const { success, reset } = await ratelimit.testStar.limit(
+        ctx.userId
+      )
+      rateLimitSuccess = success
+      rateLimitReset = reset
+    }
+    catch { 0 }
+
+    if (!rateLimitSuccess) {
+      throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are staring tests too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
+    }
     const test = await ctx.prisma.test.findUnique({
       where: {
         id: input.testGroupId

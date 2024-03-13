@@ -13,6 +13,8 @@
 	import Carousel, {
 		type IdCardAlternativeProps
 	} from '~components/containers/Carousel.svelte';
+	import { createTRPCErrorNotification } from '~utils/notification';
+	import { TRPCClientError } from '@trpc/client';
 
 	type TestContentRaw = NonNullable<
 		Awaited<ReturnType<ReturnType<typeof trpc>['getTestById']['query']>>
@@ -55,9 +57,12 @@
 				await trpc($page).protected.starTest.mutate({
 					testGroupId: testContent.id
 				});
-			} catch {
+			} catch (e) {
 				testContent._count.stars -= 1;
 				isStarred = false;
+				if (e instanceof TRPCClientError) {
+					createTRPCErrorNotification(e);
+				}
 			} finally {
 				isSubmittingStar = false;
 			}
@@ -70,9 +75,12 @@
 					testGroupId: testContent.id,
 					decrement: true
 				});
-			} catch {
+			} catch (e) {
 				testContent._count.stars += 1;
 				isStarred = true;
+				if (e instanceof TRPCClientError) {
+					createTRPCErrorNotification(e);
+				}
 			} finally {
 				isSubmittingStar = false;
 			}

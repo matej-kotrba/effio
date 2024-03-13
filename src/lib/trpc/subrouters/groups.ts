@@ -2,6 +2,8 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
+import { MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
+import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 
 function tranformString(text: string) {
   let transformedText = ""
@@ -31,6 +33,8 @@ export const groupsRouter = router({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const slug = transformStringIntoSlug(input.name, ctx.user!.name!)
 
+    trpcCheckForRateLimit("groupCreation", ctx.userId, "creating groups")
+
     const existingPost = await ctx.prisma.group.findUnique({
       where: {
         slug: slug
@@ -39,6 +43,16 @@ export const groupsRouter = router({
 
     if (existingPost) {
       throw new TRPCError({ code: "CONFLICT", message: "Group with same owner and name already exists." })
+    }
+
+    const userGroupsCount = await ctx.prisma.group.count({
+      where: {
+        ownerId: ctx.userId
+      }
+    })
+
+    if (userGroupsCount >= MAX_GROUP_OWNER_COUNT) {
+      throw new TRPCError({ code: "FORBIDDEN", message: `You can't have more than ${MAX_GROUP_OWNER_COUNT} groups` })
     }
 
     const newGroup = await ctx.prisma.group.create({

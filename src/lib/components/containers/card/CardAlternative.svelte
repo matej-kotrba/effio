@@ -31,6 +31,8 @@
 	import { onImageLoad } from '~use/onImageLoad';
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client';
+	import { TRPCClientError } from '@trpc/client';
+	import { createTRPCErrorNotification } from '~utils/notification';
 
 	let isIconFallback = false;
 	let isImageFallback = false;
@@ -63,9 +65,12 @@
 				await trpc($page).protected.starTest.mutate({
 					testGroupId: data.id
 				});
-			} catch {
+			} catch (e) {
 				data.stars -= 1;
 				isStarred = false;
+				if (e instanceof TRPCClientError) {
+					createTRPCErrorNotification(e);
+				}
 			} finally {
 				isSubmittingStar = false;
 			}
@@ -78,9 +83,12 @@
 					testGroupId: data.id,
 					decrement: true
 				});
-			} catch {
+			} catch (e) {
 				data.stars += 1;
 				isStarred = true;
+				if (e instanceof TRPCClientError) {
+					createTRPCErrorNotification(e);
+				}
 			} finally {
 				isSubmittingStar = false;
 			}
