@@ -48,6 +48,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
     - [ ] Showing relevant information and overall better design
 - [x] Caching and security
     - [x] Redis rate limitting
+- [ ] Adding AI implementation
 
 ## Main goals
 - [x] Develop web application for creating, exporting and importing online tests in GIFT format
