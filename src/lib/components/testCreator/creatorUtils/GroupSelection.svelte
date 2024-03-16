@@ -86,6 +86,17 @@
 				<span class="loading loading-bars loading-lg" />
 			</div>
 		{:else}
+			{#if groups.length === 0}
+				<div class="flex flex-col items-center gap-1">
+					<iconify-icon
+						icon="solar:mask-sad-linear"
+						class="text-xl text-light_text_black_40 dark:text-dark_text_white_40"
+					/>
+					<p class="text-light_text_black_60 dark:text-dark_text_white_60">
+						No groups to add tests to!
+					</p>
+				</div>
+			{/if}
 			{#each groups as group, index}
 				{#if group['groupsSubcategories'].length > 0}
 					<Collapsible

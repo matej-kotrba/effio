@@ -90,9 +90,9 @@ export const load = async (e) => {
 
     const testAvaragePromise: Promise<TestAvarageData[]> = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT tr.id) as "count",
-        SUM(q.points) as "maxPoints",
-        SUM(qr."userPoints") as "userPoints"
+        COUNT(DISTINCT tr.id)::int as "count",
+        SUM(q.points)::float as "maxPoints",
+        SUM(qr."userPoints")::float as "userPoints"
       FROM "User"
       JOIN "TestRecord" tr ON "User".id = tr."userId"
       JOIN "QuestionRecord" qr ON tr.id = qr."testRecordId"
@@ -100,9 +100,9 @@ export const load = async (e) => {
       WHERE "User".id = $1
     `, id)
 
-    const tagsTookTestFromPromise = await prisma.$queryRawUnsafe(`
+    const tagsTookTestFromPromise = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT "tst".id) as "count",
+        COUNT(DISTINCT "tst".id)::int as "count",
         tag.name as "name"
       FROM "Test" tst
       JOIN "TagOnTests" tot ON "tst".id = tot."testId"
@@ -156,7 +156,7 @@ export const load = async (e) => {
     })
     const receivedStarsInLastMonthPromise = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT "st".id) as "count"
+        COUNT(DISTINCT "st".id)::int as "count"
       FROM "TestStar" st
       JOIN "Test" tst ON "tst".id = "st"."testId"
       WHERE "tst"."ownerId" = $1 AND LEFT(st."createdAt"::text, 4)::int * 12 * 30 + RIGHT(LEFT(st."createdAt":: text, 7), 2):: int * 30 + RIGHT(LEFT(st."createdAt":: text, 10), 2):: int <= LEFT(NOW()::text, 4):: int * 12 * 30 + RIGHT(LEFT(NOW()::text, 7), 2):: int * 30 + RIGHT(LEFT(NOW()::text, 10), 2):: int
@@ -164,7 +164,7 @@ export const load = async (e) => {
 
     const gaveStarsInLastMonthPromise = prisma.$queryRawUnsafe(`
       SELECT
-        COUNT(DISTINCT "st".id) as "count"
+        COUNT(DISTINCT "st".id)::int as "count"
       FROM "TestStar" st
       WHERE "st"."userId" = $1 AND LEFT("st"."createdAt"::text, 4)::int * 12 * 30 + RIGHT(LEFT("st"."createdAt"::text, 7), 2)::int * 30 + RIGHT(LEFT(st."createdAt"::text, 10), 2)::int <= LEFT(NOW()::text, 4)::int * 12 * 30 + RIGHT(LEFT(NOW()::text, 7), 2)::int * 30 + RIGHT(LEFT(NOW()::text, 10), 2)::int
     `, id)

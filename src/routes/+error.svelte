@@ -16,11 +16,13 @@
 					location.href = '/';
 				}
 			}}
-			class="btn btn-outline"
+			class="btn btn-outline dark:text-white dark:border-white"
 		>
 			<iconify-icon icon="vaadin:arrow-backward" class="text-3xl" />
 		</button>
-		<a href="/" class="btn btn-outline"> Back to homepage </a>
+		<a href="/" class="btn btn-outline dark:text-white dark:border-white">
+			Back to homepage
+		</a>
 	</div>
 </div>
 

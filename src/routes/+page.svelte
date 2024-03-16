@@ -459,7 +459,7 @@
 </header>
 
 <main class="">
-	<div class="container mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
+	<div class="mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
 		<!-- About us section -->
 		<section class="grid-layout__about-us">
 			<div class="p-4 image">

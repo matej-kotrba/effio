@@ -99,21 +99,21 @@
 		subtitle="Here you can edit your previously created test"
 	/>
 </div>
-<div class="flex p-1 mb-4 rounded-lg bg-light_grey w-fit">
+<div class="flex p-1 mb-4 rounded-lg bg-light_grey dark:bg-dark_grey w-fit">
 	<button
 		on:click={() => changeActiveTab('details')}
 		type="button"
 		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'details'
-			? 'bg-light_whiter border-light_text_black_20 text-light_text_black'
-			: 'bg-transparent border-transparent text-light_text_black_60'}"
+			? 'bg-light_whiter dark:bg-dark_light_grey border-light_text_black_20 dark:border-dark_text_white text-light_text_black dark:text-dark_text_white'
+			: 'bg-transparent border-transparent text-light_text_black_60 dark:text-dark_text_white_60'}"
 		>Details</button
 	>
 	<button
 		on:click={() => changeActiveTab('creator')}
 		type="button"
 		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'creator'
-			? 'bg-light_whiter border-light_text_black_20 text-light_text_black'
-			: 'bg-transparent border-transparent text-light_text_black_60'}"
+			? 'bg-light_whiter dark:bg-dark_light_grey border-light_text_black_20 dark:border-dark_text_white text-light_text_black dark:text-dark_text_white'
+			: 'bg-transparent border-transparent text-light_text_black_60 dark:text-dark_text_white_60'}"
 		>Creator</button
 	>
 </div>
@@ -125,7 +125,7 @@
 		<Toggle
 			title="Is Published"
 			isChecked={$testObject.published}
-			class="items-center justify-end"
+			class="items-center justify-end mb-2"
 			on:toggle={(e) => ($testObject.published = e.detail)}
 		/>
 		<TestDetails
