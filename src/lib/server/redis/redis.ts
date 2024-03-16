@@ -34,23 +34,31 @@ export const ratelimit = {
     prefix: "ratelimit:group:create",
     limiter: Ratelimit.slidingWindow(1, "20s")
   }),
+  groupUpdate: new Ratelimit({
+    redis,
+    prefix: "ratelimit:group:update",
+    limiter: Ratelimit.slidingWindow(4, "10s")
+  }),
+  groupDeletion: new Ratelimit({
+    redis,
+    prefix: "ratelimit:group:delete",
+    limiter: Ratelimit.slidingWindow(2, "10s")
+  }),
 }
 
-export async function trpcCheckForRateLimit(rateLimit: keyof typeof ratelimit, userId: string, stringToFill: string) {
-  // Neblokují se groupy i když by měli, tak se na to musím podívat
+export async function trpcCheckForRateLimit(rateLimit: keyof typeof ratelimit, userId: string, stringToFill: string): Promise<TRPCError | void> {
   let rateLimitSuccess = true
   let rateLimitReset = 0
   try {
     const { success, reset } = await ratelimit[rateLimit].limit(
       userId
     )
-    console.log(success)
     rateLimitSuccess = success
     rateLimitReset = reset
   }
   catch { 0 }
 
   if (!rateLimitSuccess) {
-    throw new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are ${stringToFill} too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
+    return new TRPCError({ code: "TOO_MANY_REQUESTS", "message": `Hold up there pal!\n You are ${stringToFill} too fast, please wait ${(rateLimitReset - Date.now()) / 1000}s and try again.` })
   }
 }

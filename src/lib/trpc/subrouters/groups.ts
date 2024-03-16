@@ -33,7 +33,10 @@ export const groupsRouter = router({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const slug = transformStringIntoSlug(input.name, ctx.user!.name!)
 
-    trpcCheckForRateLimit("groupCreation", ctx.userId, "creating groups")
+    const result = await trpcCheckForRateLimit("groupCreation", ctx.userId, "creating groups")
+    if (result) {
+      throw result
+    }
 
     const existingPost = await ctx.prisma.group.findUnique({
       where: {
@@ -86,6 +89,11 @@ export const groupsRouter = router({
     name: z.string().optional(),
     description: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("groupUpdate", ctx.userId, "updating groups")
+    if (result) {
+      throw result
+    }
+
     const group = await ctx.prisma.group.update({
       where: {
         id: input.id
@@ -107,6 +115,10 @@ export const groupsRouter = router({
   deleteGroup: loggedInProcedure.input(z.object({
     id: z.string(),
   })).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("groupDeletion", ctx.userId, "deleting groups")
+    if (result) {
+      throw result
+    }
     const deletedGroup = await ctx.prisma.group.delete({
       where: {
         id: input.id
