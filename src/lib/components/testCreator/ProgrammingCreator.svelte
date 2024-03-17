@@ -17,6 +17,7 @@
 	import { SOURCES, dndzone } from 'svelte-dnd-action';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import type { QuestionTemplate } from '~/lib/trpc/router';
+	import { flip } from 'svelte/animate';
 
 	export let programmingTemplate: QuestionTemplate;
 	export let createNewQuestion: boolean = false;
@@ -167,7 +168,9 @@
 				<iconify-icon icon="ic:round-plus" class="text-3xl" />
 			</button>
 		</div>
-		<p class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60">
+		<p
+			class="mb-4 text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
+		>
 			* If users run out of ideas your hints might help them
 		</p>
 		<div
@@ -183,7 +186,8 @@
 				],
 				dropTargetStyle: {
 					outline: '2px dashed var(--light-primary)'
-				}
+				},
+				morphDisabled: true
 			}}
 			on:finalize={onOrderChange}
 			on:consider={onOrderConsideration}
@@ -212,16 +216,21 @@
 									class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
 								/>
 							</button>
-							<div class="relative">
-								<TextInputSimple
-									inputProperties={{ placeholder: 'Hint', value: hint.text }}
+							<div class="relative flex items-stretch">
+								<TextAreaInput
+									inputProperties={{
+										placeholder: 'Hint',
+										value: hint.text,
+										rows: 1
+									}}
 									title={``}
 									titleName={'hint'}
 									validationSchema={programmingHintSchema}
 									min={PROGRAMMING_TEST_MIN}
 									max={PROGRAMMING_TEST_MAX}
-									displayOutside={false}
-									class="max-w-[600px] w-[100vw] min-w-[240px] text-body2"
+									doesLimit={true}
+									doesAutoScale={true}
+									customStyles="max-w-[600px] w-[100vw] min-w-[240px] text-body2 duration-0 min-h-[auto]"
 									on:error={(event) => {
 										if (content['errors']['hints'] === undefined) {
 											content['errors']['hints'] = [];
@@ -233,7 +242,7 @@
 								<button
 									type="button"
 									on:click={() => deleteHint(hint.id)}
-									class="absolute bottom-0 right-0 grid translate-y-1/2 rounded-full shadow-md bg-light_whiter dark:bg-dark_light_grey place-content-center group z-[2]"
+									class="grid h-full btn btn-outline place-content-center group dark:border-dark_text_white"
 								>
 									<iconify-icon
 										icon="fluent:delete-28-filled"

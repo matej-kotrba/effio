@@ -291,7 +291,7 @@
 	</div>
 </Dialog>
 
-<div class="flex gap-2">
+<div class="flex items-center gap-2">
 	<h5 class="text-h5">Tests</h5>
 	<button
 		type="button"
@@ -302,10 +302,10 @@
 		<iconify-icon icon="ic:round-plus" class="text-3xl" />
 	</button>
 </div>
-<span class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
-	>* For sake of your task you should create as many test with as many edge
-	cases as possible</span
->
+<p class="text-body2 text-light_text_black_60 dark:text-dark_text_white_60">
+	* For sake of your task you should create as many test with as many edge cases
+	as possible
+</p>
 <div class="@container">
 	<h6>{title}</h6>
 	<div

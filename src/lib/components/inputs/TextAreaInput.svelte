@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import Limit from '~components/informatic/Limit.svelte';
 	import { getContext } from 'svelte';
 	import type { ZodSchema } from 'zod';
@@ -15,6 +15,7 @@
 	export let min: number | undefined = undefined;
 	export let max: number | undefined = undefined;
 	export let doesLimit: boolean = false;
+	export let doesAutoScale: boolean = false;
 
 	export let inputValue: HTMLTextAreaElement['value'] = '';
 
@@ -39,6 +40,28 @@
 	function dispatchInputChange() {
 		dispatch('inputChange', inputRef.value);
 	}
+
+	function onAutoScaleInput() {
+		inputRef.style.height = 'auto';
+		inputRef.style.height = inputRef.scrollHeight + 'px';
+	}
+
+	function onKeydown(
+		e: KeyboardEvent & {
+			currentTarget: EventTarget & HTMLTextAreaElement;
+		}
+	) {
+		if (e.key === 'Enter') {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	}
+
+	onMount(() => {
+		if (doesAutoScale) {
+			onAutoScaleInput();
+		}
+	});
 </script>
 
 <div
@@ -61,7 +84,13 @@
 		<textarea
 			bind:value={inputValue}
 			bind:this={inputRef}
-			on:input={dispatchInputChange}
+			on:input={() => {
+				dispatchInputChange();
+				if (doesAutoScale) {
+					onAutoScaleInput();
+				}
+			}}
+			on:keydown={onKeydown}
 			on:focusout={validateInput}
 			name={titleName}
 			id={titleName}
@@ -69,7 +98,7 @@
 			maxlength={doesLimit ? max : undefined}
 			class={twMerge(
 				`resize-none min-h-[150px] outline-none bg-white dark:bg-dark_light_grey
-		overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
+		overflow-ellipsis text-light_text_black dark:text-dark_text_white
 		px-2 py-4 rounded-md shadow-lg w-full dark:group-focus-within:outline-dark_primary
      outline-1 outline-transparent outline group-focus-within:outline-light_primary duration-150
      `,

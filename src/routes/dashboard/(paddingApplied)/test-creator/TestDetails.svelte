@@ -33,11 +33,11 @@
 
 	const testObject = getTestObject();
 
-	$: {
-		if (testData) {
-			initializeTestToTestStore(testObject, testData);
-		}
-	}
+	// $: {
+	// 	if (testData) {
+	// 		initializeTestToTestStore(testObject, testData);
+	// 	}
+	// }
 
 	export let testImageFile: File | undefined = undefined;
 
