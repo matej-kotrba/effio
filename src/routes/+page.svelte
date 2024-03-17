@@ -4,7 +4,7 @@
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import { draw } from 'svelte/transition';
+	import { draw, fly } from 'svelte/transition';
 	import { cubicIn } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
 	import Counter from '~components/informatic/Counter.svelte';
@@ -406,7 +406,7 @@
 									>Available question types:</span
 								>
 								<Counter
-									count={7}
+									count={9}
 									class="bg-transparent shadow-none dark:bg-transparent"
 									numberClasses="text-h1"
 									color="white"
@@ -432,24 +432,18 @@
 						class="flex items-end w-full h-full p-2 2xl:p-4 aspect-video rounded-xl animate-fly_x_reversed"
 						style="background-color: #6433f050; backdrop-filter: blur(14px);"
 					>
-						<div class="flex flex-col justify-end gap-1 h-fit">
-							<div>
-								<h5 class="font-semibold text-white text-h6 md:text-h5">
-									Explore what the communnity has created!
-								</h5>
-							</div>
-							<!-- <Separator
-								color="var(--dark-text-white-40)"
-								w={'80%'}
-								h={'2px'}
-							/> -->
-							<a
-								href={'/community'}
-								class={`py-4 font-normal text-center normal-case rounded-lg text-body1 2xl:text-h6 bg-light_primary
-								 text-light_white dark:text-dark_text_white border-4 border-solid border-light_primary hover:bg-light_white hover:text-light_primary duration-150`}
+						<div
+							class="grid w-full h-full font-extrabold tracking-widest text-center text-white place-content-center text-h4"
+						>
+							<span class="pros__text-appear" style="--delay: 900ms;"
+								>SMART</span
 							>
-								Visit community place
-							</a>
+							<span class="pros__text-appear" style="--delay: 1350ms;"
+								>FAST</span
+							>
+							<span class="pros__text-appear" style="--delay: 1800ms;"
+								>RELIABLE</span
+							>
 						</div>
 					</div>
 				</div>
@@ -846,6 +840,23 @@
 
 	.hero__section_dark {
 		background: linear-gradient(180deg, #1c065c 0%, #0092ca 100%);
+	}
+
+	.pros__text-appear {
+		opacity: 0;
+		transform: translateY(-100%);
+		animation: textAppear 1s var(--delay) forwards ease;
+	}
+
+	@keyframes textAppear {
+		from {
+			opacity: 0;
+			transform: translateY(-100%);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 
 	/* About us section */
