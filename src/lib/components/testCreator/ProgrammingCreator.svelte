@@ -205,9 +205,9 @@
 							? content['errors'].hints[index]
 							: undefined}
 					>
-						<div class="flex items-center">
+						<div class="flex">
 							<button
-								class="grid h-full place-content-center"
+								class="grid self-center h-full place-content-center"
 								on:mousedown={startDrag}
 								on:touchstart={startDrag}
 							>
@@ -216,7 +216,7 @@
 									class="text-3xl rotate-90 text-light_text_black dark:text-dark_text_white_80"
 								/>
 							</button>
-							<div class="relative flex items-stretch">
+							<div class="relative flex gap-1">
 								<TextAreaInput
 									inputProperties={{
 										placeholder: 'Hint',
@@ -242,11 +242,11 @@
 								<button
 									type="button"
 									on:click={() => deleteHint(hint.id)}
-									class="grid h-full btn btn-outline place-content-center group dark:border-dark_text_white"
+									class="grid h-full px-1 btn btn-outline place-content-center group dark:border-dark_text_white_40 border-light_text_black_40"
 								>
 									<iconify-icon
 										icon="fluent:delete-28-filled"
-										class="p-1 text-2xl duration-100 group-hover:text-error dark:group-hover:text-dark_error"
+										class="p-1 text-2xl duration-100 dark:text-dark_text_white group-hover:text-error dark:group-hover:text-dark_error"
 									/>
 								</button>
 							</div>

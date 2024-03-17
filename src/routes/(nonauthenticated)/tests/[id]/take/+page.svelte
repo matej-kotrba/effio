@@ -9,7 +9,6 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	import type { Prisma, TestRecord } from '@prisma/client';
 	import RegularTest from './RegularTest.svelte';
-	import ProgrammingTest from './ProgrammingTest.svelte';
 	import NewProgrammingTest from './NewProgrammingTest.svelte';
 
 	export let data;
