@@ -306,7 +306,7 @@
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
-		class="container relative px-2 mx-auto min-h-[800px] xl:h-screen xl:max-h-screen xl:grid md:px-6 landing-section grid__container"
+		class="container relative px-1 mx-auto min-h-[800px] xl:h-screen xl:max-h-screen xl:grid landing-section grid__container"
 	>
 		<Navbar includeSeparator={false} user={data.session} />
 		<div
@@ -453,7 +453,7 @@
 </header>
 
 <main class="">
-	<div class="mx-auto md:px-0 lg:px-0 xl:px-20" id="content">
+	<div class="container px-1 mx-auto" id="content">
 		<!-- About us section -->
 		<section class="grid-layout__about-us">
 			<div class="p-4 image">
@@ -656,6 +656,7 @@
 				<LineConnectorWithTitle
 					title="Test creator"
 					lineColor={'var(--success)'}
+					icon="mdi:generator-portable"
 				>
 					<h2
 						class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-success"
@@ -765,22 +766,125 @@
 						</div>
 					</slot>
 				</GridLayout>
-				<div
-					class="absolute right-0 translate-y-[-35%] xs:translate-y-[-30%] sm:translate-y-[-40%] 2xl:-translate-y-1/2 pointer-events-none top-full"
+			</div>
+		</section>
+		<section id="section3" class="grid">
+			<!-- style={`grid-template-columns: ${BAR_SECTIONS['SECTION2']} 1fr;`} -->
+			<div />
+			<div class="relative">
+				<LineConnectorWithTitle
+					title="Programming"
+					lineColor={'var(--warning)'}
+					icon="solar:programming-linear"
 				>
-					<img
-						src="/imgs/svgs/homepage/programming-test.png"
-						alt="Community place"
-						class="max-w-[500px] mx-auto w-full xs:w-auto drop-effect"
-						use:intersect
-						on:intersect={(e) => {
-							e.currentTarget.classList.add('active');
-						}}
-						on:unintersect={(e) => {
-							e.currentTarget.classList.remove('active');
-						}}
-					/>
-				</div>
+					<h2
+						class="font-bold text-h5 xs:text-h4 sm:text-h3 md:text-h2 lg:text-h1 text-warning"
+					>
+						<span
+							class="font-normal text-light_text_black dark:text-dark_text_white text-body1"
+							>The</span
+						>
+						Programming UI
+					</h2>
+					<p
+						class="text-body2 md:text-body1 text-light_text_black dark:text-dark_text_white"
+					>
+						Create programming assignments, be able to try them in VS Code
+						integrated editor with compilation included
+					</p>
+				</LineConnectorWithTitle>
+				<GridLayout>
+					<slot slot="a">
+						<div class="flex flex-col justify-between h-full">
+							<h3
+								class="mb-auto font-medium text-light_text_black dark:text-dark_text_white"
+							>
+								<span class="font-semibold text-h6 md:text-h4"
+									>Create tests</span
+								>
+								<span class="text-body1 md:text-h6 dark:text-dark_text_white"
+									>using several question types, add comments, marking system
+									and customize behaviour of the test</span
+								>
+							</h3>
+							<Space gap={10} />
+							<div>
+								<svg
+									class="highlight_effect"
+									viewBox="0 0 200 200"
+									xmlns="http://www.w3.org/2000/svg"
+									style="transition-delay: 100ms;"
+									use:intersect
+									on:intersect={(e) => {
+										e.currentTarget.classList.add('active');
+									}}
+									on:unintersect={(e) => {
+										e.currentTarget.classList.remove('active');
+									}}
+								>
+									<path
+										class="fill-light_primary dark:fill-dark_primary"
+										d="M43.1,-49.3C57.5,-39.2,72.1,-27.3,70.5,-15.5C68.9,-3.8,51.1,7.7,41.5,23.6C31.9,39.5,30.5,59.7,19.3,72.2C8,84.6,-13.1,89.3,-28.3,81.9C-43.4,74.5,-52.7,55.1,-57.9,37.6C-63.1,20,-64.4,4.2,-62.4,-11.7C-60.4,-27.6,-55.2,-43.6,-44.3,-54.3C-33.4,-65,-16.7,-70.4,-1.2,-69C14.3,-67.5,28.6,-59.4,43.1,-49.3Z"
+										transform="translate(100 90)"
+									/>
+								</svg>
+								<img
+									src="/imgs/online_test.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+								<Space gap={36} />
+								<CallToAction
+									text={'Visit'}
+									center="right"
+									link={'/dashboard/test-creator'}
+								>
+									<iconify-icon
+										icon="material-symbols:arrow-right-alt-rounded"
+									/>
+								</CallToAction>
+							</div>
+						</div>
+					</slot>
+					<slot slot="b">
+						<div class="grid grid-cols-6">
+							<div class="col-span-3">
+								<h3
+									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
+								>
+									<b>Import</b> and <b>export</b> your tests in GIFT format compatible
+									with other platforms.
+								</h3>
+							</div>
+							<div class="relative col-span-3">
+								<img
+									src="/imgs/svgs/homepage/transfer.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto w-full xs:w-auto"
+								/>
+							</div>
+						</div>
+					</slot>
+					<slot slot="c">
+						<div class="grid grid-cols-6 gap-2">
+							<div class="relative col-span-3">
+								<img
+									src="/imgs/svgs/homepage/programming.svg"
+									alt="Community place"
+									class="max-w-[300px] mx-auto object-contain w-full"
+								/>
+							</div>
+							<div class="col-span-3">
+								<h3
+									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
+								>
+									Make your own <b>programming</b> assignments and try others in
+									VS Code integrated editor
+								</h3>
+							</div>
+						</div>
+					</slot>
+				</GridLayout>
 			</div>
 		</section>
 		<!-- <section id="section3" class="relative">
