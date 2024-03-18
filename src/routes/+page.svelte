@@ -4,7 +4,7 @@
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import { draw } from 'svelte/transition';
+	import { draw, fade, fly } from 'svelte/transition';
 	import { cubicIn } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
 	import Counter from '~components/informatic/Counter.svelte';
@@ -14,12 +14,12 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
-	import { M, Motion } from 'svelte-motion';
 	import { handwrite } from '~use/handwrite';
 
 	export let data;
 
 	let displayUnderline = false;
+	let displayMore = false;
 
 	const codeLines = [
 		['Create your own programming assignments,', false],
@@ -39,6 +39,16 @@
 				scrub: 1
 			},
 			y: 200
+		});
+
+		gsap.to('#programming__mockup', {
+			scrollTrigger: {
+				trigger: '#section3',
+				start: 'top center',
+				end: 'bottom center',
+				scrub: 1
+			},
+			y: 0
 		});
 	});
 
@@ -802,7 +812,7 @@
 						integrated editor with compilation included
 					</p>
 				</LineConnectorWithTitle>
-				<div class="mockup-code">
+				<div class="-translate-y-[80%] mockup-code" id="programming__mockup">
 					{#each codeLines as line, index}
 						<pre
 							data-prefix={index + 1}
@@ -828,6 +838,35 @@
 						></pre> -->
 				</div>
 			</div>
+		</section>
+		<Space gap={200} />
+		<section
+			id="section4"
+			use:intersect
+			on:intersect={() => (displayMore = true)}
+			on:unintersect={() => (displayMore = false)}
+		>
+			{#if displayMore}
+				<div
+					class="flex justify-center gap-1 font-extrabold text-center text-h1"
+				>
+					{#each 'And so much more...' as letter, index (letter + index)}
+						<div
+							in:fly|global={{
+								duration: 550,
+								delay: index * 150,
+								x: 100
+							}}
+						>
+							{#if letter === ' '}
+								<span class="opacity-0 pointer-events-none">|</span>
+							{:else}
+								{letter}
+							{/if}
+						</div>
+					{/each}
+				</div>
+			{/if}
 		</section>
 		<!-- <section id="section3" class="relative">
 			<Space gap={300} />
