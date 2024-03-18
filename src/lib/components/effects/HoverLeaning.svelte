@@ -116,4 +116,11 @@
 		z-index: -1;
 		pointer-events: none;
 	}
+	:global(.dark) .lean::before {
+		background-image: radial-gradient(
+			circle at var(--x, 0) var(--y, 0),
+			var(--dark-secondary) -60%,
+			transparent 10rem
+		);
+	}
 </style>

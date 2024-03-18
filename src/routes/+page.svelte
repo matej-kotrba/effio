@@ -4,7 +4,7 @@
 	import CallToAction from '../lib/components/buttons/CallToAction.svelte';
 	import Footer from '../lib/components/page-parts/Footer.svelte';
 	import LineConnectorWithTitle from '../lib/components/layouts/LineConnectorsWithTitle.svelte';
-	import { draw, fly } from 'svelte/transition';
+	import { draw } from 'svelte/transition';
 	import { cubicIn } from 'svelte/easing';
 	import { intersect } from '~use/intersectionObserver';
 	import Counter from '~components/informatic/Counter.svelte';
@@ -14,10 +14,19 @@
 	import gsap from 'gsap/dist/gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { onMount } from 'svelte';
+	import { M, Motion } from 'svelte-motion';
+	import { handwrite } from '~use/handwrite';
 
 	export let data;
 
 	let displayUnderline = false;
+
+	const codeLines = [
+		['Create your own programming assignments,', false],
+		['test cases and add hints the participants!', false],
+		['', false],
+		['Try out others tasks in VS Code integrated editor.', false]
+	];
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
@@ -793,98 +802,31 @@
 						integrated editor with compilation included
 					</p>
 				</LineConnectorWithTitle>
-				<GridLayout>
-					<slot slot="a">
-						<div class="flex flex-col justify-between h-full">
-							<h3
-								class="mb-auto font-medium text-light_text_black dark:text-dark_text_white"
-							>
-								<span class="font-semibold text-h6 md:text-h4"
-									>Create tests</span
-								>
-								<span class="text-body1 md:text-h6 dark:text-dark_text_white"
-									>using several question types, add comments, marking system
-									and customize behaviour of the test</span
-								>
-							</h3>
-							<Space gap={10} />
-							<div>
-								<svg
-									class="highlight_effect"
-									viewBox="0 0 200 200"
-									xmlns="http://www.w3.org/2000/svg"
-									style="transition-delay: 100ms;"
-									use:intersect
-									on:intersect={(e) => {
-										e.currentTarget.classList.add('active');
-									}}
-									on:unintersect={(e) => {
-										e.currentTarget.classList.remove('active');
-									}}
-								>
-									<path
-										class="fill-light_primary dark:fill-dark_primary"
-										d="M43.1,-49.3C57.5,-39.2,72.1,-27.3,70.5,-15.5C68.9,-3.8,51.1,7.7,41.5,23.6C31.9,39.5,30.5,59.7,19.3,72.2C8,84.6,-13.1,89.3,-28.3,81.9C-43.4,74.5,-52.7,55.1,-57.9,37.6C-63.1,20,-64.4,4.2,-62.4,-11.7C-60.4,-27.6,-55.2,-43.6,-44.3,-54.3C-33.4,-65,-16.7,-70.4,-1.2,-69C14.3,-67.5,28.6,-59.4,43.1,-49.3Z"
-										transform="translate(100 90)"
-									/>
-								</svg>
-								<img
-									src="/imgs/online_test.svg"
-									alt="Community place"
-									class="max-w-[300px] mx-auto w-full xs:w-auto"
-								/>
-								<Space gap={36} />
-								<CallToAction
-									text={'Visit'}
-									center="right"
-									link={'/dashboard/test-creator'}
-								>
-									<iconify-icon
-										icon="material-symbols:arrow-right-alt-rounded"
-									/>
-								</CallToAction>
-							</div>
-						</div>
-					</slot>
-					<slot slot="b">
-						<div class="grid grid-cols-6">
-							<div class="col-span-3">
-								<h3
-									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
-								>
-									<b>Import</b> and <b>export</b> your tests in GIFT format compatible
-									with other platforms.
-								</h3>
-							</div>
-							<div class="relative col-span-3">
-								<img
-									src="/imgs/svgs/homepage/transfer.svg"
-									alt="Community place"
-									class="max-w-[300px] mx-auto w-full xs:w-auto"
-								/>
-							</div>
-						</div>
-					</slot>
-					<slot slot="c">
-						<div class="grid grid-cols-6 gap-2">
-							<div class="relative col-span-3">
-								<img
-									src="/imgs/svgs/homepage/programming.svg"
-									alt="Community place"
-									class="max-w-[300px] mx-auto object-contain w-full"
-								/>
-							</div>
-							<div class="col-span-3">
-								<h3
-									class="max-w-full text-light_text_black text-body1 md:text-h5 dark:text-dark_text_white"
-								>
-									Make your own <b>programming</b> assignments and try others in
-									VS Code integrated editor
-								</h3>
-							</div>
-						</div>
-					</slot>
-				</GridLayout>
+				<div class="mockup-code">
+					{#each codeLines as line, index}
+						<pre
+							data-prefix={index + 1}
+							class={`${
+								index === 0 ? 'bg-warning text-warning-content' : ''
+							}`}><code
+								use:intersect
+								on:intersect={() => (line[1] = true)}
+								on:unintersect={() => (line[1] = false)}
+								use:handwrite={{ enabled: !!line[1], delay: index * 500 }}
+								>{line[0]}</code
+							></pre>
+					{/each}
+					<!-- <pre data-prefix="1"><code use:intersect
+							>Create your own programming assignments,</code
+						></pre>
+					<pre data-prefix="2"><code
+							>test cases and add hints the participants!</code
+						></pre>
+					<pre data-prefix="3"><code /></pre>
+					<pre data-prefix="4"><code
+							>Try out others tasks in VS Code integrated editor.</code
+						></pre> -->
+				</div>
 			</div>
 		</section>
 		<!-- <section id="section3" class="relative">

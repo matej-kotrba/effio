@@ -37,18 +37,18 @@
 
 	export let questionIndex: number;
 
-	export let submitError: string;
-	export let isSubmitting: boolean;
+	// export let submitError: string;
+	// export let isSubmitting: boolean;
 	export let openDialog: () => void;
 	export let result: QuestionServerCheckResponse<QuestionContent>[] | null;
-	export let returnedTestRecord:
-		| (TestRecord &
-				Prisma.TestRecordGetPayload<{
-					include: {
-						questionRecords: true;
-					};
-				}>)
-		| undefined = undefined;
+	// export let returnedTestRecord:
+	// 	| (TestRecord &
+	// 			Prisma.TestRecordGetPayload<{
+	// 				include: {
+	// 					questionRecords: true;
+	// 				};
+	// 			}>)
+	// 	| undefined = undefined;
 
 	const testObject = getTestObject();
 
