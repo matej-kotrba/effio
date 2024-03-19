@@ -14,8 +14,6 @@
 			errors: {}
 		};
 
-		console.log(input);
-
 		const questionType = input.slug as QuestionClient['questionType'];
 
 		newQuestionData.content =
