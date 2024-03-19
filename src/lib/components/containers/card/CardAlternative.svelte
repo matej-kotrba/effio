@@ -248,11 +248,14 @@
 				</div>
 			{/if}
 			{#if data.tags}
-				<div
-					class="flex gap-1 p-1 pb-0 mx-auto mt-auto overflow-x-auto max-h-10 scroll-snap justify-self-end"
-				>
+				<div class="flex w-full gap-1 p-1 pb-0 mx-auto mt-auto max-h-10">
 					{#each data.tags as tag}
-						<TagContainer {tag} />
+						<TagContainer
+							{tag}
+							class="flex-0"
+							isToggable={true}
+							toggledClasses="flex-1"
+						/>
 					{/each}
 				</div>
 			{/if}
