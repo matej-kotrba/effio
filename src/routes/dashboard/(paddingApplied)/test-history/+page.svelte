@@ -123,7 +123,7 @@
 					>
 						<iconify-icon
 							icon="iconamoon:arrow-left-2-light"
-							class="grid text-3xl place-content-center"
+							class="grid text-3xl place-content-center dark:text-dark_text_white_60"
 						/>
 					</button>
 					{#each Array(Math.ceil(count / RECODS_PER_PAGE)) as _, index}
@@ -154,7 +154,7 @@
 						<iconify-icon
 							icon="iconamoon:arrow-left-2-light"
 							rotate="180deg"
-							class="grid text-3xl place-content-center"
+							class="grid text-3xl place-content-center dark:text-dark_text_white_60"
 						/>
 					</button>
 					{#if Math.ceil(count / RECODS_PER_PAGE) - currentPage > 4}

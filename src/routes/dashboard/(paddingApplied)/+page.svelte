@@ -427,7 +427,7 @@
 </script>
 
 {#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
-	<h3 class="font-semibold text-h4">Recently took tests</h3>
+	<h3 class="font-semibold text-h4">Recently taken tests</h3>
 	<Carousel
 		data={data.recentlyCompletedTests.map((item) => {
 			return {

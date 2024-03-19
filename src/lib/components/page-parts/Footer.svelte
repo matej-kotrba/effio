@@ -16,7 +16,7 @@
 		>
 			<div class="flex flex-col justify-center w-max">
 				<h5 class="font-semibold text-center text-light_whiter text-h5">
-					Do you find Effio usefull?
+					Do you find Effio useful?
 				</h5>
 				<span class="text-center text-dark_text_white_80 text-body2"
 					>Leave a star on GitHub</span

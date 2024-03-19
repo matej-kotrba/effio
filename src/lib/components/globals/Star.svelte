@@ -9,7 +9,7 @@
 <iconify-icon
 	icon="ic:round-star"
 	class={twMerge(
-		'text-xl text-yellow-300 duration-100 stroke-2 stroke-light_text_black dark:stroke-dark_text_white_20',
+		'text-xl text-yellow-300 duration-100 stroke-2 stroke-light_text_black dark:stroke-dark_text_white_40',
 		classes
 	)}
 />
