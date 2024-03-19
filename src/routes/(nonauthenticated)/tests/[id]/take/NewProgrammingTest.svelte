@@ -76,6 +76,7 @@
 	let selectedTestIndex: number = 0;
 	let testsInfo: { result: string; passed: boolean }[] = [];
 
+	let testsCheckedCount = 0;
 	let activateConfetti: boolean = false;
 
 	const CAN_RUN_AGAIN_DELAY_DURATION = 3000;
@@ -88,6 +89,7 @@
 	let isProccessing = false;
 
 	async function compileCode() {
+		testsCheckedCount = 0;
 		if (get(canRunAgainDelay) > 0) return;
 		if (!!result) return;
 		// if (!sandbox) return;
@@ -110,7 +112,7 @@
 					worker.addEventListener('message', onWorkerMessage);
 				}
 			}
-		}, 1000);
+		}, 2000);
 		testsConsoleLogs = [];
 
 		// Disabling the run button for a while
@@ -133,7 +135,11 @@
 			result: e.data.result
 		};
 
-		if (testsInfo.every((test) => test.passed)) {
+		testsCheckedCount++;
+		if (
+			testsCheckedCount === testsInfo.length &&
+			testsInfo.every((test) => test.passed)
+		) {
 			activateConfetti = false;
 			toast.success('You got it!\nAll tests are passing.');
 			await tick();
@@ -331,13 +337,13 @@
 					class="bg-light_text_black_60"
 				/>
 				<Resizable.Pane defaultSize={50}>
-					<div
-						class="relative grid h-full max-h-full gap-1 p-2 overflow-hidden grid__auto-rows"
-					>
+					<div class="relative h-full max-h-full p-2 overflow-hidden">
 						<div
-							class="relative mt-2 @container h-full max-h-full overflow-hidden"
+							class="relative mt-2 @container h-full max-h-full overflow-y-auto"
 						>
-							<div class="relative flex gap-1 overflow-x-auto flex-nowrap">
+							<div
+								class="sticky top-0 z-10 flex gap-1 overflow-x-auto flex-nowrap bg-light_white dark:bg-dark_black"
+							>
 								{#each content['tests'] as _, index}
 									<button
 										type="button"
@@ -347,9 +353,10 @@
 												: 'var(--error)'
 											: 'var(--warning)'}"
 										class={`relative px-8 btn dark:bg-dark_light_grey dark:border-dark_light_grey dark:text-dark_text_white overflow-hidden
-											after:content-[''] after:w-full after:h-1 after:left-0 after:top-0 after:absolute after:bg-[var(--pin-color)] ${
+											after:content-[''] after:w-full after:h-1 after:left-0 after:top-0 after:absolute after:bg-[var(--pin-color)]
+											dark:hover:bg-dark_grey ${
 												selectedTestIndex === index
-													? 'dark:bg-dark_secondary bg-light_terciary text-white'
+													? 'dark:!bg-dark_secondary !bg-light_terciary text-white'
 													: ''
 											}`}
 										on:click={() => (selectedTestIndex = index)}
@@ -358,52 +365,79 @@
 									</button>
 								{/each}
 							</div>
-							<div
-								class="relative grid col-span-4 gap-1 overflow-y-auto"
-								style="grid-template-rows: auto 1fr;"
-							>
-								<div>
-									<span>Logs</span>
-									<Separator w="100%" h="1px" />
-								</div>
-								<!-- Temporary solution, CSS won't be able to work with dynamic values well here -->
-								<div class="flex flex-col overflow-y-auto">
-									{#if testsConsoleLogs[selectedTestIndex]}
-										{#each testsConsoleLogs[selectedTestIndex] as log}
-											<span class="text-xs">{log}</span>
-										{/each}
-									{/if}
-								</div>
-							</div>
 
-							<div
-								class="@container/inner grid grid-cols-5 gap-2 pl-2 max-h-full h-full"
-							>
+							<div class="@container/inner grid grid-cols-5 gap-2 pl-2">
 								<div class="col-span-5 @xl/inner:col-span-3">
 									<span
-										class="font-semibold {testsInfo[selectedTestIndex]
+										class="badge dark:badge-neutral font-semibold {testsInfo[
+											selectedTestIndex
+										]
 											? testsInfo[selectedTestIndex].passed
 												? 'text-success'
 												: 'text-error dark:text-dark_error'
 											: ''}"
-										>{selectedTestIndex + 1}. {testsInfo[selectedTestIndex]
+										>{testsInfo[selectedTestIndex]
 											? testsInfo[selectedTestIndex].passed
 												? 'Passing'
 												: 'Failing'
 											: 'Not submited'}</span
 									>
+									{#if testsConsoleLogs.length > 0}
+										<div
+											class="relative grid col-span-4 gap-1 overflow-y-auto"
+											style="grid-template-rows: auto 1fr;"
+										>
+											<span>Logs: </span>
+											<div class="flex flex-col overflow-y-auto">
+												{#if testsConsoleLogs[selectedTestIndex]}
+													{#each testsConsoleLogs[selectedTestIndex] as log}
+														<span class="text-sm">{log}</span>
+													{/each}
+												{/if}
+											</div>
+										</div>
+									{/if}
 									<div>
 										<span>Expected: </span>
-										<pre class="font-semibold text-semiBody1">{content['tests'][
-												selectedTestIndex
-											].input}</pre>
+										<div class="flex flex-col items-center gap-1 w-fit">
+											<pre
+												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey w-fit">{content[
+													'tests'
+												][selectedTestIndex].input}</pre>
+											<iconify-icon icon="flowbite:arrow-down-outline" />
+											<pre
+												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey w-fit">{content[
+													'tests'
+												][selectedTestIndex].output}</pre>
+										</div>
 									</div>
-									<pre class="font-semibold text-semiBody1">{content['tests'][
-											selectedTestIndex
-										].output}</pre>
+
 									{#if testsInfo[selectedTestIndex]}
 										<div>
 											<span>Outcome: </span>
+											<div class="flex flex-col items-center gap-1 w-fit">
+												<pre
+													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey w-fit ${
+														testsInfo[selectedTestIndex] &&
+														testsInfo[selectedTestIndex].passed
+															? 'text-success'
+															: 'text-error dark:text-dark_error'
+													}`}>{content['tests'][selectedTestIndex].input}</pre>
+												<iconify-icon icon="flowbite:arrow-down-outline" />
+												<pre
+													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey w-fit ${
+														testsInfo[selectedTestIndex] &&
+														testsInfo[selectedTestIndex].passed
+															? 'text-success'
+															: 'text-error dark:text-dark_error'
+													}`}>{JSON.stringify(
+														testsInfo[selectedTestIndex].result,
+														null,
+														4
+													)}</pre>
+											</div>
+										</div>
+										<!-- <div>
 											<div
 												class={`font-semibold gap-1 inline-flex items-center ${
 													testsInfo[selectedTestIndex] &&
@@ -418,14 +452,14 @@
 													icon="flowbite:arrow-right-outline"
 												/><span class="font-semibold"
 													>{testsInfo[selectedTestIndex].result}</span
-												>
-												<!-- <span
+												> -->
+										<!-- <span
 														>{testsInfo[selectedTestIndex].passed
 															? 'Passed'
 															: 'Failed'}</span
 													> -->
-											</div>
-										</div>
+										<!-- </div>
+										</div> -->
 									{/if}
 								</div>
 							</div>
