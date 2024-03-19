@@ -846,27 +846,33 @@
 			on:intersect={() => (displayMore = true)}
 			on:unintersect={() => (displayMore = false)}
 		>
-			{#if displayMore}
-				<div
-					class="flex justify-center gap-1 font-extrabold text-center text-h1"
-				>
-					{#each 'And so much more...' as letter, index (letter + index)}
-						<div
-							in:fly|global={{
-								duration: 550,
-								delay: index * 150,
-								x: 100
-							}}
-						>
-							{#if letter === ' '}
-								<span class="opacity-0 pointer-events-none">|</span>
-							{:else}
-								{letter}
-							{/if}
-						</div>
-					{/each}
-				</div>
-			{/if}
+			<div class="mx-auto w-fit">
+				{#if displayMore}
+					<div
+						class="flex justify-center gap-1 font-extrabold text-center text-h1"
+					>
+						{#each 'And so much more...' as letter, index (letter + index)}
+							<div
+								in:fly|global={{
+									duration: 550,
+									delay: index * 150,
+									x: 100
+								}}
+							>
+								{#if letter === ' '}
+									<span class="opacity-0 pointer-events-none">|</span>
+								{:else}
+									{letter}
+								{/if}
+							</div>
+						{/each}
+					</div>
+					<div
+						class="h-2 more-underline bg-warning"
+						style="--duration: {550 + 'And so much more...'.length * 150}ms;"
+					/>
+				{/if}
+			</div>
 		</section>
 		<!-- <section id="section3" class="relative">
 			<Space gap={300} />
@@ -1019,5 +1025,20 @@
 		to {
 			scale: 1.05;
 		}
+	}
+
+	@keyframes more_underline {
+		from {
+			width: 0;
+		}
+		to {
+			width: 100%;
+		}
+	}
+
+	.more-underline {
+		width: 0;
+		animation: more_underline var(--duration) forwards
+			cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}
 </style>

@@ -26,7 +26,7 @@
 				class="grid h-full duration-100 rounded-l-lg group place-content-center hover:bg-light_grey dark:hover:bg-dark_light_grey"
 				disabled={hintIndex === 0}
 				on:click={() => {
-					if (hintIndex > 0) {
+					if (isHintShowed && hintIndex > 0) {
 						hintIndex--;
 					}
 				}}
@@ -54,7 +54,7 @@
 				class="grid h-full duration-100 rounded-r-lg group place-content-center hover:bg-light_grey dark:hover:bg-dark_light_grey"
 				disabled={hintIndex === hints.length - 1}
 				on:click={() => {
-					if (hintIndex < hints.length - 1) {
+					if (isHintShowed && hintIndex < hints.length - 1) {
 						hintIndex++;
 					}
 				}}

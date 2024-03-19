@@ -245,6 +245,7 @@
 						/>
 						<Space gap={10} />
 						<Hints hints={content.hints} />
+						<Space gap={10} />
 					</div>
 					{#if result}
 						<Space gap={20} />

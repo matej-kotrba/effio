@@ -9,7 +9,7 @@
 
 <footer class="relative bg-light_terciary dark:bg-dark_terciary">
 	<div
-		class="container relative flex flex-col items-start justify-between gap-10 px-10 py-20 mx-auto md:flex-row"
+		class="container relative flex flex-col items-start justify-between gap-10 px-10 pt-20 mx-auto md:flex-row"
 	>
 		<div
 			class="flex flex-col items-center gap-4 mx-auto md:flex-row md:items-start md:mx-0"
@@ -74,8 +74,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="w-full p-2 text-center">
-		<h6>Created with by</h6>
+	<div class="w-full px-2 py-4 text-center text-light_whiter">
+		<h6>Created with <span class="text-h3">🦭</span> by</h6>
 		<div
 			class="flex justify-center gap-1 overflow-hidden font-bold text-center text-h4"
 			use:intersect

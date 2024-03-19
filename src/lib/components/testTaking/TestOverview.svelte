@@ -141,22 +141,24 @@
 						>
 					{/if}
 				</div>
-				<div>
-					<span
-						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-						>Test tags:</span
-					><br />
-					<div class="flex flex-wrap w-full gap-1">
-						{#each testContent.tags as tag}
-							<TagContainer
-								color={tag.tag.color}
-								title={tag.tag.name}
-								isActive={false}
-								isDisabled={true}
-							/>
-						{/each}
+				{#if testContent.tags.length > 0}
+					<div>
+						<span
+							class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
+							>Test tags:</span
+						><br />
+						<div class="flex flex-wrap w-full gap-1">
+							{#each testContent.tags as tag}
+								<TagContainer
+									color={tag.tag.color}
+									title={tag.tag.name}
+									isActive={false}
+									isDisabled={true}
+								/>
+							{/each}
+						</div>
 					</div>
-				</div>
+				{/if}
 			</div>
 			<Space gap={30} />
 			<a href={testLink}>
