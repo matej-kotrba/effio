@@ -40,7 +40,7 @@
 
 	let canStarTest = testContent.ownerId !== $page.data.session?.user?.id;
 	let isSubmittingStar = false;
-	let isStarred = testContent.stars.length > 0;
+	let isStarred = testContent.stars?.length > 0;
 
 	async function starTest() {
 		if (

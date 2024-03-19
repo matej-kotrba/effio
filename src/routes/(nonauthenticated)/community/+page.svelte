@@ -3,11 +3,10 @@
 	import { page } from '$app/stores';
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import Space from '~components/separators/Space.svelte';
-	import CardMinimalizedSkeleton from '~components/containers/card/CardMinimalizedSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import TagContainer from '~components/containers/tag/TagContainer.svelte';
 	import { onMount, tick } from 'svelte';
-	import type { Tag, TestType } from '@prisma/client';
+	import type { Tag } from '@prisma/client';
 	import type { TestFullType } from '~/Prisma.js';
 	import {
 		createObserver,
@@ -83,7 +82,7 @@
 					type: item.type,
 					ownerId: item.ownerId,
 					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag),
-					isStarred: item.stars.length > 0
+					isStarred: item.stars?.length > 0
 				} satisfies IdCardAlternativeProps;
 			});
 		} else {

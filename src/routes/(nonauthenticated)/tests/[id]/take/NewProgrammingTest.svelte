@@ -401,12 +401,12 @@
 										<span>Expected: </span>
 										<div class="flex flex-col items-center gap-1 w-fit">
 											<pre
-												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey w-fit">{content[
+												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey dark:bg-dark_light_grey w-fit">{content[
 													'tests'
 												][selectedTestIndex].input}</pre>
 											<iconify-icon icon="flowbite:arrow-down-outline" />
 											<pre
-												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey w-fit">{content[
+												class="p-2 font-semibold rounded-lg text-semiBody1 bg-light_grey dark:bg-dark_light_grey w-fit">{content[
 													'tests'
 												][selectedTestIndex].output}</pre>
 										</div>
@@ -417,7 +417,7 @@
 											<span>Outcome: </span>
 											<div class="flex flex-col items-center gap-1 w-fit">
 												<pre
-													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey w-fit ${
+													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey dark:bg-dark_light_grey w-fit ${
 														testsInfo[selectedTestIndex] &&
 														testsInfo[selectedTestIndex].passed
 															? 'text-success'
@@ -425,7 +425,7 @@
 													}`}>{content['tests'][selectedTestIndex].input}</pre>
 												<iconify-icon icon="flowbite:arrow-down-outline" />
 												<pre
-													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey w-fit ${
+													class={`font-semibold gap-1 inline-flex items-center p-2 rounded-lg text-semiBody1 bg-light_grey dark:bg-dark_light_grey w-fit ${
 														testsInfo[selectedTestIndex] &&
 														testsInfo[selectedTestIndex].passed
 															? 'text-success'
