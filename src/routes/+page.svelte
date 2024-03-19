@@ -812,13 +812,16 @@
 						integrated editor with compilation included
 					</p>
 				</LineConnectorWithTitle>
-				<div class="-translate-y-[80%] mockup-code" id="programming__mockup">
+				<div
+					class="-translate-y-[40%] md:-translate-y-[80%] mockup-code !min-w-0 !max-w-[98vw] !overflow-x-hidden hidden xs:block"
+					id="programming__mockup"
+				>
 					{#each codeLines as line, index}
 						<pre
 							data-prefix={index + 1}
 							class={`${
 								index === 0 ? 'bg-warning text-warning-content' : ''
-							}`}><code
+							} text-body3 md:text-body2`}><code
 								use:intersect
 								on:intersect={() => (line[1] = true)}
 								on:unintersect={() => (line[1] = false)}
@@ -849,7 +852,7 @@
 			<div class="mx-auto w-fit">
 				{#if displayMore}
 					<div
-						class="flex justify-center gap-1 font-extrabold text-center text-h1"
+						class="flex justify-center gap-1 overflow-hidden font-extrabold text-center text-h5 md:text-h3 lg:text-h1"
 					>
 						{#each 'And so much more...' as letter, index (letter + index)}
 							<div

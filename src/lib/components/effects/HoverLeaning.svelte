@@ -72,7 +72,7 @@
 	<div
 		class={`${
 			noStyles === false
-				? 'overflow-hidden outline-8 outline lean bg-light_white outline-light_terciary dark:outline-dark_secondary dark:bg-dark_terciary'
+				? 'overflow-hidden border-8 lean bg-light_white border-light_terciary dark:border-dark_secondary dark:bg-dark_terciary'
 				: 'h-full'
 		}`}
 		style={`--x: 0; --y: 0; transform-style: ${
