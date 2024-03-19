@@ -1,17 +1,7 @@
 <script lang="ts">
 	import type { LatLngBoundsExpression, Marker } from 'leaflet';
 	import { onDestroy, onMount } from 'svelte';
-	import type { MiddlewareLocation } from '~components/testCreator/creatorInputs/Geography.svelte';
-	import {
-		BITMAP_ZOOM_MIN,
-		BITMAP_ZOOM_MAX,
-		LATITUDE_MAX,
-		LATITUDE_MIN,
-		LONGITUDE_MAX,
-		LONGITUDE_MIN,
-		latitudeSchema,
-		longitudeSchema
-	} from '~schemas/testValidation';
+	import { BITMAP_ZOOM_MIN, BITMAP_ZOOM_MAX } from '~schemas/testValidation';
 	import type { TestObject } from '~stores/testObject';
 	import 'leaflet/dist/leaflet.css';
 	import { intersect } from '~use/intersectionObserver';
@@ -73,7 +63,7 @@
 	let resultMarker: Marker;
 	let resultToleranceCircle: L.Circle;
 	$: {
-		if (resultFormat && leaflet) {
+		if (resultFormat && leaflet && map) {
 			resultMarker = leaflet
 				.marker(resultFormat.correctAnswer.answerPoint.location)
 				.addTo(map);
