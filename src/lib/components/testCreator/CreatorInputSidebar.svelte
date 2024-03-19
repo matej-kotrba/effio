@@ -73,7 +73,7 @@
 
 <svelte:window on:mousemove={onMouseMove} />
 <aside
-	class="sticky left-0 w-full parent z-10 max-h-[100vh] overflow-y-auto"
+	class="sticky left-0 w-full parent z-10 max-h-[100vh]"
 	style="--blur-x: 0px; --blur-y: 0px; top: {asidePaddingTop}px;"
 	bind:clientWidth={asideWidth}
 	bind:this={asideElement}
@@ -109,34 +109,36 @@
 			/>
 		</div>
 	</div>
-	<div class="grid gap-2 p-2 grid__container {classes}">
-		{#each inputs as input, index (index)}
-			<div class="item-box">
-				<!-- class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500" -->
-				<!-- on:mousedown={() => onDragEvent(true, index)} -->
+	<div class="max-h-screen overflow-y-auto">
+		<div class="grid gap-2 p-2 grid__container {classes}">
+			{#each inputs as input, index (index)}
+				<div class="item-box">
+					<!-- class="relative grid w-full rounded-md shadow-md cursor-pointer select-none aspect-square place-content-center bg-slate-500" -->
+					<!-- on:mousedown={() => onDragEvent(true, index)} -->
 
-				<div
-					role="listitem"
-					class="grid w-full h-full duration-150 place-content-center bg-light_white dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey"
-					bind:this={inputReferences[index]}
-					draggable="true"
-					on:dragstart={(e) => {
-						if (e?.dataTransfer) {
-							e.dataTransfer.effectAllowed = 'move';
-						}
-					}}
-				>
-					<!-- class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none dark:bg-dark_quaternary hover:text-light_primary dark:hover:text-dark_primary hover:bg-slate-100 dark:hover:bg-dark_terciary shadow-light_text_black_40 aspect-square place-content-center border-light_primary dark:border-dark_primary" -->
-					<iconify-icon
-						icon={input.icon}
-						class="mx-auto text-3xl text-light_text_black_80 dark:text-dark_text_white_80"
-					/>
-					<span class="text-center">
-						{input.name}
-					</span>
+					<div
+						role="listitem"
+						class="grid w-full h-full duration-150 place-content-center bg-light_white dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey"
+						bind:this={inputReferences[index]}
+						draggable="true"
+						on:dragstart={(e) => {
+							if (e?.dataTransfer) {
+								e.dataTransfer.effectAllowed = 'move';
+							}
+						}}
+					>
+						<!-- class="absolute top-0 left-0 grid w-full duration-100 bg-white border-2 border-solid rounded-md shadow-md cursor-pointer select-none dark:bg-dark_quaternary hover:text-light_primary dark:hover:text-dark_primary hover:bg-slate-100 dark:hover:bg-dark_terciary shadow-light_text_black_40 aspect-square place-content-center border-light_primary dark:border-dark_primary" -->
+						<iconify-icon
+							icon={input.icon}
+							class="mx-auto text-3xl text-light_text_black_80 dark:text-dark_text_white_80"
+						/>
+						<span class="text-center">
+							{input.name}
+						</span>
+					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 </aside>
 
