@@ -19,12 +19,13 @@
 	} from '@tanstack/svelte-table';
 	import type { Readable } from 'svelte/store';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
-	import { UserRoles } from '@prisma/client';
+	import type { UserRoles } from '@prisma/client';
 	import RowCheckBox from '~components/table/RowCheckBox.svelte';
 	import * as DropdownMenu from '~/lib/components/ui/dropdown-menu';
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 
 	const USERS_LIMIT = 20;
+	const roles: UserRoles[] = ['ADMIN', 'USER'];
 
 	type User = {
 		id: string;
@@ -277,7 +278,7 @@
 						<DropdownMenu.SubTrigger>User roles</DropdownMenu.SubTrigger>
 						<DropdownMenu.SubContent>
 							<DropdownMenu.RadioGroup bind:value={users[rowIndex].role}>
-								{#each Object.values(UserRoles) as role}
+								{#each roles as role}
 									<DropdownMenu.RadioItem
 										value={role}
 										on:click={async (e) => {
