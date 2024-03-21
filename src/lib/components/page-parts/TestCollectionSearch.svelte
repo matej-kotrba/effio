@@ -170,9 +170,7 @@
 <Space />
 <div class="@container max-w-[1400px]">
 	{#if isInitialFetch}
-		<div
-			class="grid gap-2 gap-y-4 @6xl:grid-cols-5 @4xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
-		>
+		<div class="grid__container">
 			<CardSkeleton />
 			<CardSkeleton />
 			<CardSkeleton />
@@ -193,9 +191,7 @@
 			>
 		</div>
 	{:else}
-		<div
-			class="grid gap-2 gap-y-4 @6xl:grid-cols-5 @4xl:grid-cols-4 @2xl:grid-cols-3 @md:grid-cols-2 grid-cols-1"
-		>
+		<div class="grid__container">
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
 					<CardAlternative
@@ -222,3 +218,17 @@
 	{/if}
 </div>
 <Space />
+
+<style>
+	.grid__container {
+		display: grid;
+		gap: 12px;
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+		place-content: center;
+	}
+	@media screen and (min-width: 768px) {
+		.grid__container {
+			place-content: start;
+		}
+	}
+</style>
