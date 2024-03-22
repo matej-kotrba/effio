@@ -1,7 +1,7 @@
 import { ALLOWED_IMAGE_TYPES, IMAGE_QUESTION_TYPE_PICTURE_SIZE_IN_MB } from "~helpers/constants"
 import { enviromentFetch } from "~helpers/fetch"
 import { validateCode } from "~helpers/validateCode"
-import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema, bitmapLocationSchema } from "~schemas/testValidation"
+import { answerSchema, GEOGRAPHY_TOLERANCE_DEFAULT, geographyToleranceSchema, geographyLocationSchema, programmingDescriptionSchema, programmingTestInputSchema, programmingTestOutputSchema, programmingHintSchema, BITMAP_ZOOM_MIN, bitmapToleranceSchema, bitmapLocationSchema, BITMAP_TOLERANCE_DEFAULT } from "~schemas/testValidation"
 
 type QuestionConstants = {
   [Key in keyof QuestionTypeMap]: {
@@ -699,7 +699,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return {
         type: "bitmap",
         zoom: BITMAP_ZOOM_MIN,
-        tolerence: GEOGRAPHY_TOLERANCE_DEFAULT,
+        tolerence: BITMAP_TOLERANCE_DEFAULT,
         answerPoint: {
           location: [0, 0]
         }
