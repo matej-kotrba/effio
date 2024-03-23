@@ -114,8 +114,10 @@
 			image.src = content.imageUrl;
 			image.onload = () => {
 				bitmapImage = image;
+				console.log(leaflet, content.imageUrl);
 
 				if (leaflet && content.imageUrl) {
+					console.log(leaflet);
 					map = leaflet
 						.map(mapEl, {
 							crs: leaflet.CRS.Simple

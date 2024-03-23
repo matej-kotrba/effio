@@ -9,7 +9,10 @@
 		geographyToleranceSchema,
 		GEOGRAPHY_TOLERANCE_DEFAULT,
 		BITMAP_ZOOM_MIN,
-		BITMAP_ZOOM_MAX
+		BITMAP_ZOOM_MAX,
+		BITMAP_TOLERANCE_MIN,
+		BITMAP_TOLERANCE_MAX,
+		BITMAP_TOLERANCE_DEFAULT
 	} from '~schemas/testValidation';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -88,8 +91,7 @@
 
 	$: {
 		if (typeof content.tolerence === 'string' && content.tolerence !== '') {
-			content.tolerence =
-				Number(content.tolerence) ?? GEOGRAPHY_TOLERANCE_DEFAULT;
+			content.tolerence = Number(content.tolerence) ?? BITMAP_TOLERANCE_DEFAULT;
 		}
 	}
 
@@ -120,7 +122,7 @@
 					] as LatLngBoundsExpression;
 
 					currentImageSizes = [image.width, image.height];
-
+					leafletMap.setView;
 					currentImageLayer = leaflet
 						.imageOverlay(uploadedImageUrl, bounds)
 						.addTo(leafletMap);
@@ -135,8 +137,7 @@
 					]);
 
 					leafletMap.fitBounds(bounds);
-
-					checkAndSetLocation(answerMarker.getLatLng());
+					checkAndSetLocation({ lat: image.height / 2, lng: image.width / 2 });
 				}
 			};
 		}
@@ -230,8 +231,8 @@
 				<span class="text-body2">Answer Tolerance</span>
 				<input
 					type="range"
-					min={GEOGRAPHY_TOLERANCE_MIN}
-					max={GEOGRAPHY_TOLERANCE_MAX}
+					min={BITMAP_TOLERANCE_MIN}
+					max={BITMAP_TOLERANCE_MAX}
 					bind:value={content.tolerence}
 					class="range range-sm range-primary dark:range-accent"
 				/>
@@ -273,6 +274,13 @@
 	</Collapsible>
 	<!-- Display the map -->
 	<div class="w-full h-[300px] relative">
+		{#if !uploadedImageUrl && !content.imageUrl}
+			<div
+				class="absolute inset-0 grid bg-light_grey_dark dark:bg-dark_light_grey place-content-center z-[100]"
+			>
+				<p>No image provided</p>
+			</div>
+		{/if}
 		<div bind:this={mapEl} class="absolute inset-0 z-[10]" />
 	</div>
 </form>

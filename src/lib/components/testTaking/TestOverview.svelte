@@ -217,7 +217,7 @@
 								{#each markSystem as mark, index}
 									{@const prevValue =
 										index === 0 ? 100 : (markSystem[index - 1].limit || 0) - 1}
-									<tr class="hover">
+									<tr class="hover dark:hover:!bg-dark_light_grey">
 										<td class="font-semibold">{prevValue}% - {mark.limit}%</td>
 										<td class="font-semibold">{mark.name}</td>
 									</tr>
