@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { TestObject } from '~stores/testObject';
 	import Comment from '../Comment.svelte';
+	import { onMount } from 'svelte';
 
 	export let questionIndex: number;
 	export let resultFormat: QuestionServerCheckResponse<ImageQuestion> | null =
@@ -10,6 +11,8 @@
 	$: content = testObject.questions[questionIndex].content as ImageQuestion;
 
 	let selectedInput: number | undefined = undefined;
+
+	let uploadedImageUrl: string | null = null;
 
 	// Update the store based on the selection
 	$: (testObject.questions[questionIndex]['content'] as ImageQuestion)[
@@ -31,10 +34,20 @@
 			);
 		}
 	}
+
+	onMount(() => {
+		if (content.imageFile instanceof File) {
+			const reader = new FileReader();
+			reader.readAsDataURL(content.imageFile);
+			reader.onload = () => {
+				uploadedImageUrl = reader.result as string;
+			};
+		}
+	});
 </script>
 
 <div class="w-full overflow-hidden max-h-[450px] rounded-xl mb-2 shadow-md">
-	<img src={content.imageUrl} alt="" class="object-cover" />
+	<img src={uploadedImageUrl ?? content.imageUrl} alt="" class="object-cover" />
 </div>
 <div class="flex flex-col gap-2">
 	{#each content['answers'] as { answer, id }, index}

@@ -4,6 +4,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Circle, LatLngBoundsExpression, Marker } from 'leaflet';
 	import {
+		GEOGRAPHY_TOLERANCE_MIN,
+		GEOGRAPHY_TOLERANCE_MAX,
 		geographyToleranceSchema,
 		GEOGRAPHY_TOLERANCE_DEFAULT,
 		BITMAP_ZOOM_MIN,
