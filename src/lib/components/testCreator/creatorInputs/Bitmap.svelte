@@ -4,8 +4,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Circle, LatLngBoundsExpression, Marker } from 'leaflet';
 	import {
-		latitudeSchema,
-		longitudeSchema,
 		GEOGRAPHY_TOLERANCE_MIN,
 		GEOGRAPHY_TOLERANCE_MAX,
 		geographyToleranceSchema,
@@ -16,7 +14,6 @@
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
-	import type { MiddlewareLocation } from './Geography.svelte';
 	import ImageImportV2, {
 		setImageUpload
 	} from '~components/inputs/ImageImportV2.svelte';

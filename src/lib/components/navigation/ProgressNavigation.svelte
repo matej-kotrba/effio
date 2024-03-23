@@ -55,9 +55,7 @@
 			class:disabled={part?.buttonProps?.disabled}
 			class:completed={part?.buttonProps?.completed}
 			class={`text-body2 md:text-body1 px-2 py-1 rounded-t-md duration-150 ${
-				activeCount - 1 === index
-					? 'bg-light_grey_dark dark:bg-dark_light_grey'
-					: ''
+				activeCount - 1 === index ? 'bg-light_grey dark:bg-dark_light_grey' : ''
 			}`}
 			on:click={(event) => {
 				setToActive(event, index + 1);

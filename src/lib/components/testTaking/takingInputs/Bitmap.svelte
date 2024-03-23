@@ -13,6 +13,8 @@
 
 	$: content = testObject.questions[questionIndex].content as BitmapQuestion;
 
+	let uploadedImageUrl: string | null = null;
+
 	let mapEl: HTMLDivElement;
 
 	let leaflet: typeof import('leaflet');
@@ -99,6 +101,14 @@
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
+		if (content.imageFile instanceof File) {
+			const reader = new FileReader();
+			reader.readAsDataURL(content.imageFile);
+			reader.onload = () => {
+				uploadedImageUrl = reader.result as string;
+			};
+		}
+
 		if (content.imageUrl) {
 			const image = new Image();
 			image.src = content.imageUrl;
@@ -146,7 +156,10 @@
 						[image.height, image.width]
 					] as LatLngBoundsExpression;
 
-					leaflet.imageOverlay(content.imageUrl, bounds).addTo(map);
+					console.log(uploadedImageUrl, content.imageUrl);
+					leaflet
+						.imageOverlay(uploadedImageUrl ?? content.imageUrl, bounds)
+						.addTo(map);
 
 					map.setMaxBounds([
 						[0, 0],
