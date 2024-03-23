@@ -66,6 +66,7 @@
 			(file, resultUrl) => {
 				content.imageFile = file;
 				uploadedImageUrl = resultUrl;
+				setImageToMap(uploadedImageUrl);
 			}
 		);
 	}
@@ -105,41 +106,45 @@
 	let currentImageURL: string | undefined = undefined;
 	let currentImageSizes: [number, number] | undefined = undefined;
 
-	$: {
-		if (uploadedImageUrl && currentImageURL !== uploadedImageUrl) {
-			const image = new Image();
-			image.src = uploadedImageUrl;
-			image.onload = () => {
-				if (currentImageLayer) {
-					currentImageLayer.remove();
-				}
-				if (uploadedImageUrl && leaflet) {
-					const bounds = [
-						[0, 0],
-						[image.height, image.width]
-					] as LatLngBoundsExpression;
+	function setImageToMap(imageUrl: string, resetMarker: boolean = true) {
+		const image = new Image();
+		image.src = imageUrl;
+		image.onload = () => {
+			if (currentImageLayer) {
+				currentImageLayer.remove();
+			}
+			if (imageUrl && leaflet) {
+				const bounds = [
+					[0, 0],
+					[image.height, image.width]
+				] as LatLngBoundsExpression;
 
-					currentImageSizes = [image.width, image.height];
-					leafletMap.setView;
-					currentImageLayer = leaflet
-						.imageOverlay(uploadedImageUrl, bounds)
-						.addTo(leafletMap);
-					currentImageURL = uploadedImageUrl;
+				currentImageSizes = [image.width, image.height];
+				currentImageLayer = leaflet
+					.imageOverlay(imageUrl, bounds)
+					.addTo(leafletMap);
+				currentImageURL = imageUrl;
 
-					// answerMarker.setLatLng([image.height / 2, image.width / 2]);
-					// content.answerPoint.location = [image.height / 2, image.width / 2];
+				// answerMarker.setLatLng([image.height / 2, image.width / 2]);
+				// content.answerPoint.location = [image.height / 2, image.width / 2];
 
-					leafletMap.setMaxBounds([
-						[0, 0],
-						[image.height, image.width]
-					]);
+				leafletMap.setMaxBounds([
+					[0, 0],
+					[image.height, image.width]
+				]);
 
-					leafletMap.fitBounds(bounds);
+				leafletMap.fitBounds(bounds);
+				if (resetMarker) {
 					checkAndSetLocation({ lat: image.height / 2, lng: image.width / 2 });
 				}
-			};
-		}
+			}
+		};
 	}
+
+	// $: {
+	// 	if (uploadedImageUrl && currentImageURL !== uploadedImageUrl) {
+	// 	}
+	// }
 
 	onMount(async () => {
 		leaflet = await import('leaflet');
@@ -206,6 +211,7 @@
 			reader.readAsDataURL(content.imageFile);
 			reader.onload = () => {
 				uploadedImageUrl = reader.result as string;
+				setImageToMap(uploadedImageUrl, false);
 			};
 		}
 	});

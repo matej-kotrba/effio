@@ -22,6 +22,7 @@
 	let toleranceCircle: L.Circle;
 
 	let bitmapImage: HTMLImageElement;
+	let uploadedImageUrl: string | null = null;
 
 	function checkAndSetLocation(location: { lat: number; lng: number }) {
 		if (!bitmapImage) return;
@@ -83,6 +84,72 @@
 		}
 	}
 
+	function assignImageToMap(imageUrl: string) {
+		const image = new Image();
+		image.src = imageUrl;
+		image.onload = () => {
+			bitmapImage = image;
+
+			if (leaflet && imageUrl) {
+				map = leaflet
+					.map(mapEl, {
+						crs: leaflet.CRS.Simple
+					})
+					.setView([image.height / 2, image.width / 2], content.zoom);
+
+				map.setMinZoom(BITMAP_ZOOM_MIN);
+				map.setMaxZoom(BITMAP_ZOOM_MAX);
+				map.setZoom(content.zoom);
+
+				answerMarker = leaflet
+					.marker(content.answerPoint.location, {
+						draggable: true
+					})
+					.addTo(map)
+					.bindTooltip('Answer position');
+
+				answerMarker.on('dragend', (e) => {
+					const location = e.target.getLatLng() as {
+						lat: number;
+						lng: number;
+					};
+
+					checkAndSetLocation(location);
+				});
+
+				toleranceCircle = leaflet
+					.circle(answerMarker.getLatLng(), {
+						radius: content.tolerence,
+						color: '#6433f0',
+						fillColor: '#6433f035',
+						fillOpacity: 0.5
+					})
+					.addTo(map);
+
+				const bounds = [
+					[0, 0],
+					[image.height, image.width]
+				] as LatLngBoundsExpression;
+
+				leaflet.imageOverlay(imageUrl, bounds).addTo(map);
+
+				map.setMaxBounds([
+					[0, 0],
+					[image.height, image.width]
+				]);
+
+				map.fitBounds(bounds);
+
+				checkAndSetLocation(
+					leaflet.latLng({
+						lat: image.height / 2,
+						lng: image.width / 2
+					})
+				);
+			}
+		};
+	}
+
 	onMount(async () => {
 		leaflet = await import('leaflet');
 
@@ -99,72 +166,17 @@
 
 		leaflet.Marker.prototype.options.icon = DefaultIcon;
 
-		if (content.imageUrl) {
-			const image = new Image();
-			image.src = content.imageUrl;
-			image.onload = () => {
-				bitmapImage = image;
-				console.log(leaflet, content.imageUrl);
-
-				if (leaflet && content.imageUrl) {
-					console.log(leaflet);
-					map = leaflet
-						.map(mapEl, {
-							crs: leaflet.CRS.Simple
-						})
-						.setView([image.height / 2, image.width / 2], content.zoom);
-
-					map.setMinZoom(BITMAP_ZOOM_MIN);
-					map.setMaxZoom(BITMAP_ZOOM_MAX);
-					map.setZoom(content.zoom);
-
-					answerMarker = leaflet
-						.marker(content.answerPoint.location, {
-							draggable: true
-						})
-						.addTo(map)
-						.bindTooltip('Answer position');
-
-					answerMarker.on('dragend', (e) => {
-						const location = e.target.getLatLng() as {
-							lat: number;
-							lng: number;
-						};
-
-						checkAndSetLocation(location);
-					});
-
-					toleranceCircle = leaflet
-						.circle(answerMarker.getLatLng(), {
-							radius: content.tolerence,
-							color: '#6433f0',
-							fillColor: '#6433f035',
-							fillOpacity: 0.5
-						})
-						.addTo(map);
-
-					const bounds = [
-						[0, 0],
-						[image.height, image.width]
-					] as LatLngBoundsExpression;
-
-					leaflet.imageOverlay(content.imageUrl, bounds).addTo(map);
-
-					map.setMaxBounds([
-						[0, 0],
-						[image.height, image.width]
-					]);
-
-					map.fitBounds(bounds);
-
-					checkAndSetLocation(
-						leaflet.latLng({
-							lat: image.height / 2,
-							lng: image.width / 2
-						})
-					);
-				}
-			};
+		if (content.imageFile || content.imageUrl) {
+			if (content.imageFile instanceof File) {
+				const reader = new FileReader();
+				reader.readAsDataURL(content.imageFile);
+				reader.onload = () => {
+					uploadedImageUrl = reader.result as string;
+					assignImageToMap(uploadedImageUrl);
+				};
+			} else if (content.imageUrl) {
+				assignImageToMap(content.imageUrl);
+			}
 		}
 	});
 
