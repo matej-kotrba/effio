@@ -6,6 +6,7 @@
 	import { fly } from 'svelte/transition';
 	import DarkModeToggle from '~components/globals/DarkModeToggle.svelte';
 	import DashboardSidebarWrapper from '~components/navigation/dashboard/DashboardSidebarWrapper.svelte';
+	import Breadcrumbs from '~components/navigation/Breadcrumbs.svelte';
 
 	export let data;
 
@@ -94,7 +95,8 @@
 			</button>
 
 			<!-- Upper part navigation -->
-			<div class="max-w-[70vw] md:max-w-[50vw] mr-auto text-sm breadcrumbs">
+			<Breadcrumbs class="mr-auto" />
+			<!-- <div class="max-w-[70vw] md:max-w-[50vw] mr-auto text-sm breadcrumbs">
 				<ul>
 					{#each pathname as segment, index}
 						{@const routeSegment = route
@@ -126,7 +128,7 @@
 						{/if}
 					{/each}
 				</ul>
-			</div>
+			</div> -->
 
 			<!-- Dark mode and account for large screens -->
 			<div class="items-center hidden gap-4 xs:flex">
