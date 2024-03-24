@@ -28,6 +28,8 @@
 			tokenPath += '/' + t;
 			t = t.charAt(0).toUpperCase() + t.slice(1);
 			t = t.replace('-', ' ');
+			console.log(tokenPath);
+			console.log(menu.map((item) => item.link).includes(tokenPath));
 			return { label: t, href: tokenPath };
 		});
 
