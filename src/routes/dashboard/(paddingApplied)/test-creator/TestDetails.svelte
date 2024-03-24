@@ -47,8 +47,6 @@
 
 	const defaultMarkSystemData = get(testObject)?.markSystem;
 
-	export let openPreview: () => void = () => {};
-
 	async function getTags() {
 		if (gotTags === true) return;
 		const tagsResponse = await trpc($page).getTagss.query();
@@ -75,23 +73,6 @@
 </script>
 
 <div class="flex flex-col w-full gap-4">
-	<Dialog
-		title="Test preview"
-		bind:open={openPreview}
-		formClasses="h-[min(800px,95vh)] p-2"
-	>
-		<div class="h-[calc(100%-1em)] overflow-y-auto overscroll-contain w-full">
-			{#if testType === 'REGULAR'}
-				{#each $testObject['questions'] as _, index}
-					<Input
-						questionIndex={index}
-						testObject={structuredClone(get(testObject))}
-						showOrderNumber={false}
-					/>
-				{/each}
-			{/if}
-		</div>
-	</Dialog>
 	<ErrorEnhance error={$testObject.errors.title}>
 		<TextInput
 			displayOutside={true}

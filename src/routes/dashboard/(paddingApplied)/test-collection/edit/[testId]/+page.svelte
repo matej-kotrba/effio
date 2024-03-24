@@ -15,13 +15,18 @@
 	import Toggle from '~components/inputs/Toggle.svelte';
 	import FlexConfirm from '~components/buttons/FlexConfirm.svelte';
 	import { fly } from 'svelte/transition';
+	import Tabs from '~components/navigation/Tabs.svelte';
+	import Input from '~components/testTaking/Input.svelte';
+	import { get } from 'svelte/store';
+	import Separator from '~components/separators/Separator.svelte';
 
 	export let data;
 
 	const testObject = getTestObject();
 
-	let activeTab: 'details' | 'creator' = 'details';
+	let activeTab: 'details' | 'creator' | 'preview' = 'details';
 	const TAB_FLY_DURATION = 300;
+	let animateDirection: -1 | 1 = 1;
 
 	const toast: typeof Toast = getContext('toast');
 
@@ -77,7 +82,8 @@
 		});
 	}
 
-	function changeActiveTab(tab: typeof activeTab) {
+	function changeActiveTab(tab: typeof activeTab, direction: -1 | 1) {
+		animateDirection = direction;
 		activeTab = tab;
 	}
 </script>
@@ -99,24 +105,39 @@
 		subtitle="Here you can edit your previously created test"
 	/>
 </div>
-<div class="flex p-1 mb-4 rounded-lg bg-light_grey dark:bg-dark_grey w-fit">
-	<button
-		on:click={() => changeActiveTab('details')}
-		type="button"
-		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'details'
-			? 'bg-light_whiter dark:bg-dark_light_grey border-light_text_black_20 dark:border-dark_text_white text-light_text_black dark:text-dark_text_white'
-			: 'bg-transparent border-transparent text-light_text_black_60 dark:text-dark_text_white_60'}"
-		>Details</button
-	>
-	<button
-		on:click={() => changeActiveTab('creator')}
-		type="button"
-		class="px-16 border-[1px] border-solid rounded-lg {activeTab === 'creator'
-			? 'bg-light_whiter dark:bg-dark_light_grey border-light_text_black_20 dark:border-dark_text_white text-light_text_black dark:text-dark_text_white'
-			: 'bg-transparent border-transparent text-light_text_black_60 dark:text-dark_text_white_60'}"
-		>Creator</button
-	>
-</div>
+<Tabs
+	tabs={data.testData.type === 'REGULAR'
+		? [
+				{
+					title: 'Details',
+					slug: 'details',
+					onTabSelect: (direction) => changeActiveTab('details', direction)
+				},
+				{
+					title: 'Creator',
+					slug: 'creator',
+					onTabSelect: (direction) => changeActiveTab('creator', direction)
+				},
+				{
+					title: 'Preview',
+					slug: 'preview',
+					onTabSelect: (direction) => changeActiveTab('preview', direction)
+				}
+		  ]
+		: [
+				{
+					title: 'Details',
+					slug: 'details',
+					onTabSelect: (direction) => changeActiveTab('details', direction)
+				},
+				{
+					title: 'Creator',
+					slug: 'creator',
+					onTabSelect: (direction) => changeActiveTab('creator', direction)
+				}
+		  ]}
+	activeTabSlug={activeTab}
+/>
 {#if activeTab === 'details'}
 	<div
 		in:fly={{ x: -200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
@@ -136,8 +157,12 @@
 	</div>
 {:else if activeTab === 'creator'}
 	<div
-		in:fly={{ x: 200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
-		out:fly={{ x: 200, duration: TAB_FLY_DURATION }}
+		in:fly={{
+			x: 200 * animateDirection,
+			duration: TAB_FLY_DURATION,
+			delay: TAB_FLY_DURATION
+		}}
+		out:fly={{ x: 200 * -animateDirection, duration: TAB_FLY_DURATION }}
 	>
 		{#if data.testData.type === 'REGULAR'}
 			<Creator inputTemplates={data.questionTemplates} />
@@ -147,6 +172,25 @@
 				createNewQuestion={false}
 			/>
 		{/if}
+	</div>
+{:else if activeTab === 'preview'}
+	<div
+		in:fly={{ x: 200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
+		out:fly={{ x: 200, duration: TAB_FLY_DURATION }}
+	>
+		<div class="max-w-[650px]">
+			{#if data['testData']['type'] === 'REGULAR'}
+				<h3 class="text-h4">Your test preview</h3>
+				<Separator w="100%" h="1px" class="mb-4" />
+				{#each $testObject['questions'] as _, index}
+					<Input
+						questionIndex={index}
+						testObject={structuredClone(get(testObject))}
+						showOrderNumber={false}
+					/>
+				{/each}
+			{/if}
+		</div>
 	</div>
 {/if}
 <Space gap={50} />

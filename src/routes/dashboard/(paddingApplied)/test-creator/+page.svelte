@@ -28,6 +28,9 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import * as Alert from '~components/ui/alert';
+	import Tabs from '~components/navigation/Tabs.svelte';
+	import Input from '~components/testTaking/Input.svelte';
+	import { get } from 'svelte/store';
 
 	export let data;
 
@@ -36,7 +39,6 @@
 	const SECTION_TRANSITION_DURATION = 400;
 
 	let finishModalOpen: () => void;
-	let openPreviewModal: () => void;
 
 	initializeNewTestToTestStore(testObject, {
 		title: '',
@@ -46,8 +48,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -74,6 +76,8 @@
 	let testImageFile: File | undefined = undefined;
 
 	let rateLimitError = '';
+
+	let activeTab: 'details' | 'preview' = 'details';
 
 	async function checkTestOnClientAndServerAndPostTestToDB(
 		isPublished: boolean,
@@ -193,6 +197,10 @@
 		testCreationProgress.detailsDone = false;
 		testType = type;
 		templatesActive = undefined;
+	}
+
+	function changeActiveTab(tab: typeof activeTab, direction: -1 | 1) {
+		activeTab = tab;
 	}
 
 	$: canUserContinue = () => {
@@ -388,92 +396,142 @@
 				duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
 			}}
 		>
-			<TestDetails
-				bind:openPreview={openPreviewModal}
-				{testType}
-				bind:testImageFile
-			>
-				{#if rateLimitError !== ''}
-					<Alert.Root variant="destructive">
-						<iconify-icon icon="ph:warning" class="text-2xl" />
-						<Alert.Title>Rate limit!</Alert.Title>
-						<Alert.Description>{rateLimitError}</Alert.Description>
-					</Alert.Root>
-				{/if}
-				<div class="flex justify-center gap-6 my-4">
-					{#if testType !== 'PROGRAMMING'}
-						<BasicButton
-							onClick={() => openPreviewModal()}
-							title={'Preview'}
-							class={'bg-white text-light_primary hover:text-white hover:bg-light_primary'}
-						/>
-					{/if}
-					<BasicButton
-						onClick={() => {
-							const result = isTestValidAndSetErrorsToTestObject({
-								title: $testObject.title,
-								description: $testObject.description,
-								questions: $testObject.questions,
-								markSystem: $testObject.markSystem
-							});
-
-							if (result['isError']) {
-								$testObject.errors = result['store']['errors'];
-								return;
-							}
-							finishModalOpen();
-						}}
-						title={'Finish'}
-					/>
-				</div>
-				<Dialog
-					bind:open={finishModalOpen}
-					{isSubmitting}
-					isSuccessOpen={isSuccess}
-					title="Finishing your test"
+			{#if testType === 'REGULAR'}
+				<Tabs
+					tabs={[
+						{
+							title: 'Details',
+							slug: 'details',
+							onTabSelect: (direction) => changeActiveTab('details', direction)
+						},
+						{
+							title: 'Preview',
+							slug: 'preview',
+							onTabSelect: (direction) => changeActiveTab('preview', direction)
+						}
+					]}
+					activeTabSlug={activeTab}
+				/>
+			{/if}
+			{#if activeTab === 'details'}
+				<div
+					in:fly={{
+						x: -300,
+						duration: SECTION_TRANSITION_DURATION,
+						delay: SECTION_TRANSITION_DURATION
+					}}
+					out:fly={{
+						x: -300,
+						duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
+					}}
 				>
-					<Separator
-						w={'80%'}
-						h={'1px'}
-						color={$applicationStates['darkMode']
-							? 'var(--dark-text-white-20)'
-							: 'var(--light-text-black-20)'}
-					/>
-					<p class="py-4 text-center text-body1">
-						Your test named <span class="block font-semibold"
-							>{$testObject['title']}</span
-						><Space gap={20} /> with a description:
-						<span class="block font-semibold">{$testObject['description']}</span
-						><br />
-						<Separator
-							w={'50%'}
-							h={'1px'}
-							color={$applicationStates['darkMode']
-								? 'var(--dark-text-white-20)'
-								: 'var(--light-text-black-20)'}
-						/>
-						should be
-					</p>
-					<div class="flex justify-center gap-3">
-						<button
-							type="button"
-							disabled={isSubmitting}
-							class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
-							on:click={() =>
-								checkTestOnClientAndServerAndPostTestToDB(false, testImageFile)}
-							>Saved as draft</button
+					<TestDetails {testType} bind:testImageFile>
+						{#if rateLimitError !== ''}
+							<Alert.Root variant="destructive">
+								<iconify-icon icon="ph:warning" class="text-2xl" />
+								<Alert.Title>Rate limit!</Alert.Title>
+								<Alert.Description>{rateLimitError}</Alert.Description>
+							</Alert.Root>
+						{/if}
+						<div class="flex justify-center gap-6 my-4">
+							<BasicButton
+								onClick={() => {
+									const result = isTestValidAndSetErrorsToTestObject({
+										title: $testObject.title,
+										description: $testObject.description,
+										questions: $testObject.questions,
+										markSystem: $testObject.markSystem
+									});
+
+									if (result['isError']) {
+										$testObject.errors = result['store']['errors'];
+										return;
+									}
+									finishModalOpen();
+								}}
+								title={'Finish'}
+							/>
+						</div>
+						<Dialog
+							bind:open={finishModalOpen}
+							{isSubmitting}
+							isSuccessOpen={isSuccess}
+							title="Finishing your test"
 						>
-						<button
-							type="button"
-							disabled={isSubmitting}
-							class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
-							on:click={() =>
-								checkTestOnClientAndServerAndPostTestToDB(true, testImageFile)}
-							>Published</button
-						>
+							<Separator
+								w={'80%'}
+								h={'1px'}
+								color={$applicationStates['darkMode']
+									? 'var(--dark-text-white-20)'
+									: 'var(--light-text-black-20)'}
+							/>
+							<p class="py-4 text-center text-body1">
+								Your test named <span class="block font-semibold"
+									>{$testObject['title']}</span
+								><Space gap={20} /> with a description:
+								<span class="block font-semibold"
+									>{$testObject['description']}</span
+								><br />
+								<Separator
+									w={'50%'}
+									h={'1px'}
+									color={$applicationStates['darkMode']
+										? 'var(--dark-text-white-20)'
+										: 'var(--light-text-black-20)'}
+								/>
+								should be
+							</p>
+							<div class="flex justify-center gap-3">
+								<button
+									type="button"
+									disabled={isSubmitting}
+									class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
+									on:click={() =>
+										checkTestOnClientAndServerAndPostTestToDB(
+											false,
+											testImageFile
+										)}>Saved as draft</button
+								>
+								<button
+									type="button"
+									disabled={isSubmitting}
+									class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
+									on:click={() =>
+										checkTestOnClientAndServerAndPostTestToDB(
+											true,
+											testImageFile
+										)}>Published</button
+								>
+							</div>
+						</Dialog></TestDetails
+					>
+				</div>
+			{:else if activeTab === 'preview'}
+				<div
+					in:fly={{
+						x: 300,
+						duration: SECTION_TRANSITION_DURATION,
+						delay: SECTION_TRANSITION_DURATION
+					}}
+					out:fly={{
+						x: 300,
+						duration: $navigating === null ? SECTION_TRANSITION_DURATION : 0
+					}}
+				>
+					<div class="max-w-[650px]">
+						{#if testType === 'REGULAR'}
+							<h3 class="text-h4">Your test preview</h3>
+							<Separator w="100%" h="1px" class="mb-4" />
+							{#each $testObject['questions'] as _, index}
+								<Input
+									questionIndex={index}
+									testObject={structuredClone(get(testObject))}
+									showOrderNumber={false}
+								/>
+							{/each}
+						{/if}
 					</div>
-				</Dialog></TestDetails
-			>
+				</div>{/if}
 		</div>
 	{/if}
 </div>
