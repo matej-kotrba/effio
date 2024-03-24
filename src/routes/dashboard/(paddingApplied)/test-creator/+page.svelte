@@ -142,6 +142,26 @@
 		}
 	}
 
+	type Locations = {
+		[Key in keyof typeof testCreationProgress]: Key extends `${infer T}Done`
+			? T
+			: Key;
+	}[keyof typeof testCreationProgress];
+
+	function changeLocation(location: Locations) {
+		if (location === 'template') {
+			testCreationProgress.templateDone = false;
+			testCreationProgress.constructingDone = false;
+			testCreationProgress.detailsDone = false;
+		} else if (location === 'constructing') {
+			if (testCreationProgress.templateDone === false) return;
+			testCreationProgress.templateDone = true;
+			testCreationProgress.constructingDone = false;
+			testCreationProgress.detailsDone = false;
+		}
+		window.scrollTo(0, 0);
+	}
+
 	async function onNavigationButtonClick() {
 		if (canUserContinue() === false) return;
 
@@ -163,6 +183,7 @@
 			}
 			testCreationProgress.constructingDone = true;
 		}
+		window.scrollTo(0, 0);
 	}
 
 	function onTestTypeChangeClick(type: TestType) {
@@ -219,27 +240,16 @@
 			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.templateDone}
 		>
-			<button
-				type="button"
-				on:click={() => {
-					testCreationProgress.templateDone = false;
-					testCreationProgress.constructingDone = false;
-					testCreationProgress.detailsDone = false;
-				}}>Picking a template</button
+			<button type="button" on:click={() => changeLocation('template')}
+				>Picking a template</button
 			>
 		</li>
 		<li
 			class="text-light_text_black dark:text-dark_text_white text-body2"
 			class:done={testCreationProgress.constructingDone}
 		>
-			<button
-				type="button"
-				on:click={() => {
-					if (testCreationProgress.templateDone === false) return;
-					testCreationProgress.templateDone = true;
-					testCreationProgress.constructingDone = false;
-					testCreationProgress.detailsDone = false;
-				}}>Constructing a test</button
+			<button type="button" on:click={() => changeLocation('constructing')}
+				>Constructing a test</button
 			>
 		</li>
 		<li

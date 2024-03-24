@@ -61,6 +61,8 @@
 			});
 		}
 
+		window.scroll();
+
 		window.addEventListener('scroll', setSidebarPosition);
 		window.addEventListener('resize', setSidebarPosition);
 
