@@ -5,7 +5,7 @@ import { appRouter } from "~/lib/trpc/router";
 
 // TODO: Can be client, no .server needed
 export const load: ServerLoad = async (request) => {
-  const id = request.params.id
+  const id = request.params.testId
   console.log(id)
   if (!id) throw redirect(307, "/dashboard")
 

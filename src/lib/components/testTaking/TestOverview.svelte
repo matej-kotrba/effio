@@ -2,7 +2,7 @@
 	import { initializeTestToTestStore } from '~helpers/test/test';
 	import Space from '~components/separators/Space.svelte';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
-	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte';
+	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[testId]/+page.svelte';
 	import { getTestObject } from '~stores/testObject';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 	import Star from '~components/globals/Star.svelte';

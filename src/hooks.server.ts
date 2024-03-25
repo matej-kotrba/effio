@@ -15,7 +15,7 @@ import type { AdapterUser } from "@auth/core/adapters";
 const handleTRPCContext: Handle = createTRPCHandle({
   router: appRouter,
   createContext: createContext,
-  responseMeta(opts) {
+  responseMeta() {
     // if (opts.paths?.includes("getTags")) {
     //   return {
     //     headers: {
@@ -73,7 +73,7 @@ const handleAuth: Handle = SvelteKitAuth({
       }
       return newSession as UpdatedSession;
     },
-    signIn: async ({ account }) => {
+    signIn: async () => {
       return Promise.resolve(true)
     }
   },

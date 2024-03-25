@@ -6,7 +6,7 @@ import { enviromentFetch } from "../fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../../trpc/client";
 import type { Prisma, TestRecord } from "@prisma/client";
-import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[id]/+page.svelte";
+import { checkMarkSystem } from "~/routes/dashboard/(paddingApplied)/test-history/records/[testId]/+page.svelte";
 import { browser } from "$app/environment";
 import { get, type Writable } from "svelte/store";
 import { QUESTION_LIMIT, questionContentFunctions } from "./questionFunctions";

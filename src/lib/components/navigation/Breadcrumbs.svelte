@@ -12,14 +12,31 @@
 	const allowedLinkSymbol = ':*:';
 	let allowedLinks: string[] = [];
 
+	const dynamicReplaces: Record<`[${string}]`, string> = {
+		'[testId]': 'Test'
+	};
+
 	const modules: Record<string, () => unknown> = import.meta.glob(
 		'/**/+page.svelte',
 		{ eager: true }
 	);
-	let menu: Array<{ link: string; title: string }> = [];
-	let crumbs: Array<{ label: string; href: string } | undefined> = [];
+	let menu: Array<{
+		link: string;
+		title: string;
+		dynamiclyEditedPath: Record<number, string>;
+	}> = [];
+	let crumbs: Array<
+		| {
+				label: string;
+				href: string;
+				dynamiclyEditedPath: Record<number, string>;
+		  }
+		| undefined
+	> = [];
 
 	$: pathname = $page.url.pathname;
+
+	$: console.log(menu);
 
 	$: {
 		// Remove zero-length tokens.
@@ -33,6 +50,7 @@
 			if (!checkLinkValidity(tokenPath, allowedLinks)) {
 				return undefined;
 			}
+
 			return { label: t, href: tokenPath };
 		});
 
@@ -65,7 +83,6 @@
 				if (alSplit[i] === allowedLinkSymbol) continue;
 				if (alSplit[i] !== linkSplit[i]) return false;
 			}
-			console.log('a');
 			return true;
 		});
 	}
@@ -89,9 +106,20 @@
 
 			generateAllowedLink(pathSanitized);
 
+			const dynamiclyEditedPaths: (typeof menu)[number]['dynamiclyEditedPath'] =
+				{};
+
 			// for dynamic paths -> needs more triaging
-			if (pathSanitized.includes('[')) {
-				pathSanitized = pathSanitized.replaceAll('[', '').replaceAll(']', '');
+			const segments = pathSanitized.replace('/src/routes/', '/').split('/');
+
+			for (let i = 0; i < segments.length; i++) {
+				if (
+					segments[i][0] === '[' &&
+					segments[i][segments[i].length - 1] === ']'
+				) {
+					dynamiclyEditedPaths[i] =
+						dynamicReplaces[segments[i] as `[${string}]`];
+				}
 			}
 
 			menu = [
@@ -100,7 +128,8 @@
 					title: pathSanitized
 						? pathSanitized.substring(pathSanitized.lastIndexOf('/') + 1)
 						: 'home',
-					link: pathSanitized ? pathSanitized : '/'
+					link: pathSanitized ? pathSanitized : '/',
+					dynamiclyEditedPath: dynamiclyEditedPaths
 				}
 			];
 		}
