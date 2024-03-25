@@ -10,29 +10,29 @@
 	export { className as class };
 
 	const allowedLinkSymbol = ':*:';
-	const allowedLinks: string[] = [];
+	let allowedLinks: string[] = [];
 
 	const modules: Record<string, () => unknown> = import.meta.glob(
 		'/**/+page.svelte',
 		{ eager: true }
 	);
 	let menu: Array<{ link: string; title: string }> = [];
-	let crumbs: Array<{ label: string; href: string }> = [];
+	let crumbs: Array<{ label: string; href: string } | undefined> = [];
 
 	$: pathname = $page.url.pathname;
 
 	$: {
 		// Remove zero-length tokens.
 		const tokens = pathname.split('/').filter((t) => t !== '');
-
 		// Create { label, href } pairs for each token.
 		let tokenPath = '';
 		crumbs = tokens.map((t) => {
 			tokenPath += '/' + t;
 			t = t.charAt(0).toUpperCase() + t.slice(1);
 			t = t.replace('-', ' ');
-			// console.log(tokenPath);
-			// console.log(menu.map((item) => item.link).includes(tokenPath));
+			if (!checkLinkValidity(tokenPath, allowedLinks)) {
+				return undefined;
+			}
 			return { label: t, href: tokenPath };
 		});
 
@@ -51,24 +51,38 @@
 				`/${allowedLinkSymbol}` +
 				al.substring(endIndex + 1, al.length);
 		}
-		allowedLinks.push(al);
+		al = al.replace('/src/routes', '');
+
+		allowedLinks = [...allowedLinks, al];
 	}
 
-	function checkLinkValidity(link: string): boolean {
-		// Nejspíše bude nutná rekurze, budou se muset procházet veškeré přístupné cesty,
-		// ty poté budou muset procházet a dokazovat že splňují podmínky, pokud žádná
-		// podmínky nesplní tak je cesta zakázaná a nebude zobrazena
+	function checkLinkValidity(link: string, validLinks: string[]): boolean {
+		let linkSplit = link.split('/');
+		return validLinks.some((al) => {
+			let alSplit = al.split('/');
+			if (alSplit.length !== linkSplit.length) return false;
+			for (let i = 0; i < alSplit.length; i++) {
+				if (alSplit[i] === allowedLinkSymbol) continue;
+				if (alSplit[i] !== linkSplit[i]) return false;
+			}
+			console.log('a');
+			return true;
+		});
 	}
 
 	onMount(() => {
 		for (let path in modules) {
 			let pathSanitized = path.replace('.svelte', '').replace('./', '/');
-
 			// for group layouts
-			if (pathSanitized.includes('/(')) {
-				pathSanitized = pathSanitized.substring(
-					pathSanitized.indexOf(')/') + 1
-				);
+			// if (pathSanitized.includes('/(')) {
+			// 	pathSanitized = pathSanitized.substring(
+			// 		pathSanitized.indexOf(')/') + 1
+			// 	);
+			// }
+			while (pathSanitized.includes('/(') && pathSanitized.includes(')')) {
+				pathSanitized =
+					pathSanitized.substring(0, pathSanitized.indexOf('/(')) +
+					pathSanitized.substring(pathSanitized.indexOf(')') + 1);
 			}
 
 			pathSanitized = pathSanitized.replace('/+page', '');
@@ -96,11 +110,13 @@
 <div {...$$props} class={twMerge('text-sm breadcrumbs', className)}>
 	<ul>
 		{#each crumbs as crumb}
-			<li>
-				<a href={crumb.href}>
-					{crumb.label}
-				</a>
-			</li>
+			{#if crumb}
+				<li>
+					<a href={crumb.href}>
+						{crumb.label}
+					</a>
+				</li>
+			{/if}
 		{/each}
 	</ul>
 </div>
