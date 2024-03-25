@@ -29,21 +29,21 @@
 		| {
 				label: string;
 				href: string;
-				dynamiclyEditedPath: Record<number, string>;
 		  }
 		| undefined
 	> = [];
 
 	$: pathname = $page.url.pathname;
 
-	$: console.log(menu);
+	// $: console.log(menu);
 
 	$: {
 		// Remove zero-length tokens.
 		const tokens = pathname.split('/').filter((t) => t !== '');
-		// Create { label, href } pairs for each token.
+
 		let tokenPath = '';
 		crumbs = tokens.map((t) => {
+			// Finding if there is any dynamic segment
 			tokenPath += '/' + t;
 			t = t.charAt(0).toUpperCase() + t.slice(1);
 			t = t.replace('-', ' ');
@@ -53,6 +53,41 @@
 
 			return { label: t, href: tokenPath };
 		});
+
+		const splittedPath = tokenPath.split('/');
+		const temp = menu.find((item) => {
+			const itemSplit = item.link.split('/');
+			for (let i = 0; i < splittedPath.length; i++) {
+				if (itemSplit[i] === allowedLinkSymbol) continue;
+				if (itemSplit[i] !== splittedPath[i]) return false;
+			}
+			return true;
+		});
+
+		// Create { label, href } pairs for each token.
+		tokenPath = '';
+		const tempKeys = Object.keys(temp?.dynamiclyEditedPath || {});
+		crumbs = tokens.map((t, index) => {
+			// Finding if there is any dynamic segment
+			tokenPath += '/' + t;
+			t = t.charAt(0).toUpperCase() + t.slice(1);
+			t = t.replace('-', ' ');
+			if (!checkLinkValidity(tokenPath, allowedLinks)) {
+				return undefined;
+			}
+			let customLabel = '';
+			if (temp && tempKeys.includes((index + 1).toString())) {
+				customLabel = temp.dynamiclyEditedPath[index + 1];
+			}
+
+			return { label: customLabel || t, href: tokenPath };
+		});
+
+		// if (temp)
+		// 	for (let replacament of Object.entries(temp?.dynamiclyEditedPath)) {
+		// 		const [key, value] = replacament;
+		// 		crumbs[key].label = value;
+		// 	}
 
 		// Add a way to get home too.
 		crumbs.unshift({ label: 'Home', href: '/' });
@@ -106,11 +141,12 @@
 
 			generateAllowedLink(pathSanitized);
 
+			pathSanitized = pathSanitized.replace('/src/routes', '');
 			const dynamiclyEditedPaths: (typeof menu)[number]['dynamiclyEditedPath'] =
 				{};
 
 			// for dynamic paths -> needs more triaging
-			const segments = pathSanitized.replace('/src/routes/', '/').split('/');
+			const segments = pathSanitized.split('/');
 
 			for (let i = 0; i < segments.length; i++) {
 				if (
@@ -120,6 +156,15 @@
 					dynamiclyEditedPaths[i] =
 						dynamicReplaces[segments[i] as `[${string}]`];
 				}
+			}
+
+			while (pathSanitized.includes('[') && pathSanitized.includes(']')) {
+				let startIndex = pathSanitized.indexOf('[');
+				let endIndex = pathSanitized.indexOf(']');
+				pathSanitized =
+					pathSanitized.substring(0, startIndex) +
+					allowedLinkSymbol +
+					pathSanitized.substring(endIndex + 1, pathSanitized.length);
 			}
 
 			menu = [
