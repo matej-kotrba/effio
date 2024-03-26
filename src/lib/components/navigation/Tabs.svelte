@@ -20,7 +20,9 @@
 	}
 </script>
 
-<div class="flex p-1 mb-4 rounded-lg bg-light_grey dark:bg-dark_grey w-fit">
+<div
+	class="flex flex-wrap p-1 mb-4 rounded-lg bg-light_grey dark:bg-dark_grey w-fit"
+>
 	{#each tabs as tab}
 		<button
 			on:click={() => changeActiveTab(tab)}

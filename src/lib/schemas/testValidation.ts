@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { DB_STRING_REGEX } from "~helpers/constants"
+import { DB_STRING_MESSAGE, DB_STRING_REGEX } from "~helpers/constants"
 
 // GENERAL ANSWER
 export const ANSWER_MIN = 1
@@ -93,3 +93,4 @@ export const programmingTestSchema = z.object<{
   output: programmingTestOutputSchema
 })
 export const programmingHintSchema = z.string().min(PROGRAMMING_TEST_MIN, `Input has to be at least ${PROGRAMMING_TEST_MIN} character long.`).max(PROGRAMMING_TEST_MAX, `Input can be max ${PROGRAMMING_TEST_MAX} characters long.`)
+export const testInputRegexSchema = z.string().regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })

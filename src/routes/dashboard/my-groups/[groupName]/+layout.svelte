@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 	import IconButtonExpandable from '~components/buttons/IconButtonExpandable.svelte';
 	import { AUTHENTICATED_NAV_HEIGHT } from '../../+layout.svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
 
 	let scrollFromTop = 0;
 
@@ -10,12 +11,21 @@
 			: AUTHENTICATED_NAV_HEIGHT - scrollFromTop;
 
 	export let data;
+
+	let newChannelDialog: HTMLDialogElement;
+
+	function openNewChannelDialog() {
+		newChannelDialog.showModal();
+	}
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
+<Dialog bind:modal={newChannelDialog} title="New channel"
+	>New channel name</Dialog
+>
 <div class="relative h-full grid__container">
 	<aside
-		class="sticky top-0 left-0 p-2"
+		class="sticky top-0 left-0 p-2 overflow-y-auto"
 		style={`max-height: calc(100vh - ${asideLimit}px); min-height: calc(100vh - ${asideLimit}px);`}
 	>
 		<div
@@ -33,6 +43,14 @@
 					</IconButtonExpandable>
 				</a>
 			{/each}
+			<IconButtonExpandable
+				onClick={openNewChannelDialog}
+				shouldExpand={false}
+				fullText={''}
+				containerClasses="mt-auto"
+			>
+				<iconify-icon slot="title" icon="uil:plus" class="text-3xl" />
+			</IconButtonExpandable>
 		</div>
 	</aside>
 	<!-- <div class="relative w-full">

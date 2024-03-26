@@ -29,10 +29,11 @@
 	export let modal: HTMLDialogElement | undefined = undefined;
 </script>
 
+<!-- Přidat tady div který bude fungovat jako pozadí -->
 <dialog
 	bind:this={modal}
 	class={twMerge(
-		`w-full bg-transparent animate-fade duration-150 p-0`,
+		`w-full bg-transparent animate-fade duration-150 p-0 backdrop:blur-lg`,
 		classes
 	)}
 >

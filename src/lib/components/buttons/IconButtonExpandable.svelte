@@ -4,12 +4,18 @@
 	export let width: `${number}px` | `${number}rem` | `${number}%` = '3rem';
 	export let shouldExpand = true;
 	export let fullText: string;
+	export let onClick: () => void = () => {};
 
 	let classes = '';
 	export { classes as class };
+	export let containerClasses = '';
 </script>
 
-<button type="button" class="relative z-0 isolate group">
+<button
+	type="button"
+	on:click={onClick}
+	class={twMerge(`relative z-0 isolate group`, containerClasses)}
+>
 	<div
 		style={`width: ${width}; height: ${width};`}
 		class={twMerge(

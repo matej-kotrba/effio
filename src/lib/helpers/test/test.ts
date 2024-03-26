@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import type { TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, MAX_TEST_TAGS, titleSchema } from "~schemas/testValidation"
+import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, MAX_TEST_TAGS, testInputRegexSchema, titleSchema } from "~schemas/testValidation"
 import { enviromentFetch } from "../fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../../trpc/client";
@@ -151,12 +151,18 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
   }
 
   const titleParse = titleSchema.safeParse(title)
+  const titleRegexParse = testInputRegexSchema.safeParse(title)
 
   if (title !== undefined && !titleParse.success) {
     result.errors.title = titleParse.error.errors[0].message
     isError = true
   } else {
     result.errors.title = ""
+  }
+
+  if (result.errors.title === "" && !titleRegexParse.success) {
+    result.errors.title = titleRegexParse.error.errors[0].message
+    isError = true
   }
 
   const descriptionParse = descriptionSchema.safeParse(description)
