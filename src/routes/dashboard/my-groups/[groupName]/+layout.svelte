@@ -16,7 +16,7 @@
 <div class="relative h-full grid__container">
 	<aside
 		class="sticky top-0 left-0 p-2"
-		style={`max-height: calc(100vh - ${asideLimit}px);`}
+		style={`max-height: calc(100vh - ${asideLimit}px); min-height: calc(100vh - ${asideLimit}px);`}
 	>
 		<div
 			class="flex flex-col items-center w-full h-full gap-2 py-2 border border-solid rounded-md dark:bg-dark_grey bg-light_whiter border-light_text_black_10 dark:border-dark_text_white_10"

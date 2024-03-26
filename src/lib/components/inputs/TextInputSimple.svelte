@@ -17,6 +17,12 @@
 	export let trailing: string = '';
 	export let displayOutside: boolean = false;
 	export let displayTitle: boolean = true;
+	export let validator:
+		| {
+				query: RegExp;
+				message: string;
+		  }
+		| undefined = undefined;
 
 	let classes = '';
 	export { classes as class };
@@ -40,6 +46,14 @@
 			result = validationSchema?.safeParse(inputRef.valueAsNumber);
 		} else {
 			result = validationSchema?.safeParse(inputValue);
+		}
+		if (validator && result?.success === true) {
+			if (!validator.query.test(inputValue)) {
+				result = {
+					success: false,
+					error: { errors: [{ message: validator.message }] }
+				};
+			}
 		}
 		if (!result?.success) {
 			dispatch('error', result?.error.errors[0].message);

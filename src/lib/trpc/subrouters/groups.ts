@@ -2,7 +2,7 @@ import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
 import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
-import { MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
+import { DB_STRING_REGEX, MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
 import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 
 function tranformString(text: string) {
@@ -26,7 +26,7 @@ function transformStringIntoSlug(text: string, username: string) {
 
 export const groupsRouter = router({
   createGroup: loggedInProcedure.input(z.object({
-    name: z.string(),
+    name: z.string().regex(DB_STRING_REGEX),
     description: z.string().optional(),
     imageUrl: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
@@ -86,7 +86,7 @@ export const groupsRouter = router({
   }),
   updateGroup: loggedInProcedure.input(z.object({
     id: z.string(),
-    name: z.string().optional(),
+    name: z.string().regex(DB_STRING_REGEX).optional(),
     description: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
     const result = await trpcCheckForRateLimit("groupUpdate", ctx.userId, "updating groups")

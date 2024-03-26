@@ -23,6 +23,7 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
 	import TagSelectionComponent from '~components/containers/tag/TagSelectionComponent.svelte';
+	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
 
 	export let testType: TestType;
 	export let testData:
@@ -75,6 +76,7 @@
 <div class="flex flex-col w-full gap-4">
 	<ErrorEnhance error={$testObject.errors.title}>
 		<TextInput
+			validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
 			displayOutside={true}
 			title="What will be the name of your test?"
 			titleName="name"

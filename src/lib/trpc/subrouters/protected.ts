@@ -4,10 +4,11 @@ import type { Prisma, TagOnTests, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 import { questionContentFunctions } from "~helpers/test/questionFunctions"
 import { ratelimit, trpcCheckForRateLimit } from "~/lib/server/redis/redis"
+import { DB_STRING_REGEX } from "~helpers/constants"
 
 export const protectedRouter = router({
   saveTest: loggedInProcedure.input(z.object({
-    title: z.string(),
+    title: z.string().regex(DB_STRING_REGEX),
     description: z.string(),
     questionContent: z.string(),
     markSystem: z.object({
@@ -142,7 +143,7 @@ export const protectedRouter = router({
   }),
   updateTest: loggedInProcedure.input(z.object({
     testGroupId: z.string(),
-    title: z.string(),
+    title: z.string().regex(DB_STRING_REGEX),
     description: z.string(),
     questionContent: z.string(),
     isPublished: z.boolean(),
