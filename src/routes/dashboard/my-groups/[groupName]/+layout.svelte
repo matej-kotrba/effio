@@ -1,14 +1,25 @@
 <script>
-	import { page } from '$app/stores';
 	import IconButtonExpandable from '~components/buttons/IconButtonExpandable.svelte';
+	import { AUTHENTICATED_NAV_HEIGHT } from '../../+layout.svelte';
+
+	let scrollFromTop = 0;
+
+	$: asideLimit =
+		scrollFromTop >= AUTHENTICATED_NAV_HEIGHT
+			? 0
+			: AUTHENTICATED_NAV_HEIGHT - scrollFromTop;
 
 	export let data;
 </script>
 
+<svelte:window bind:scrollY={scrollFromTop} />
 <div class="relative h-full grid__container">
-	<aside class="p-2">
+	<aside
+		class="sticky top-0 left-0 p-2"
+		style={`max-height: calc(100vh - ${asideLimit}px);`}
+	>
 		<div
-			class="flex flex-col items-center w-full h-full gap-2 py-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey"
+			class="flex flex-col items-center w-full h-full gap-2 py-2 border border-solid rounded-md dark:bg-dark_grey bg-light_whiter border-light_text_black_10 dark:border-dark_text_white_10"
 		>
 			<a href="/dashboard/my-groups/{data.group.slug}">
 				<IconButtonExpandable shouldExpand={true} fullText={'Home'}>

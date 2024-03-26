@@ -25,7 +25,7 @@
 			 lg:max-w-[260px] md:block fixed md:sticky top-0 duration-150 {isSidebarShown
 		? 'left-0'
 		: 'left-[-100vw] xs:left-[-210px]'} md:left-0 z-[10] min-h-[100svh] max-h-[100svh]
-			  border-r-2 border-solid border-light_text_black_20"
+			  border-r-2 border-solid border-light_text_black_10"
 >
 	<!-- Closes sidebar (for low width screens) -->
 	<div class="flex justify-end md:hidden">

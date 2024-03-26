@@ -1,10 +1,11 @@
+<script lang="ts" context="module">
+	export const AUTHENTICATED_NAV_HEIGHT = 70;
+</script>
+
 <script lang="ts">
 	import { applicationStates } from '~stores/applicationStates';
-	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
 	import { signOut } from '@auth/sveltekit/client';
 	import { fly } from 'svelte/transition';
-	import DarkModeToggle from '~components/globals/DarkModeToggle.svelte';
 	import DashboardSidebarWrapper from '~components/navigation/dashboard/DashboardSidebarWrapper.svelte';
 	import Breadcrumbs from '~components/navigation/Breadcrumbs.svelte';
 
@@ -12,33 +13,6 @@
 
 	let isSidebarShown = false;
 	let setIsSidebarShown: (value: boolean) => void;
-
-	function getBreadcrumbsPath(index: number) {
-		const parts = $page['url']['pathname']
-			.split('/')
-			.filter((item) => item !== '');
-
-		let resultedPath = '';
-		for (let i = 0; i <= index; i++) {
-			resultedPath += '/' + parts[i];
-		}
-		return resultedPath;
-	}
-
-	const routeNameChanges: {
-		[key: string]: string;
-	} = {
-		name: 'Group',
-		category: 'Group channel',
-		test: 'Test',
-		testId: 'Test'
-	};
-
-	$: pathname = $page['url']['pathname']
-		.split('/')
-		.filter((item) => item !== '');
-
-	$: route = $page['route']['id']?.split('/').filter((item) => item !== '');
 </script>
 
 <DashboardSidebarWrapper
@@ -81,7 +55,8 @@
 	<!-- Upper navbar -->
 	<div class="nav__flex__container max-w-[100vw]">
 		<nav
-			class="flex items-center max-w-[100vw] gap-2 px-4 py-2 border-b-2 border-light_text_black_20"
+			style={`height: ${AUTHENTICATED_NAV_HEIGHT}px;`}
+			class="flex items-center max-w-[100vw] gap-2 px-4 py-2 border-b-2 border-light_text_black_10"
 		>
 			<!-- Hamburger menu -->
 			<button
