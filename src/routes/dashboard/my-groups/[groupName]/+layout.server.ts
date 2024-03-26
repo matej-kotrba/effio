@@ -11,7 +11,7 @@ export const load = async (event) => {
 
   const groupFullData = await (await trpcServer(event)).groups.getGroupByName({
     id: id,
-    name: event.params.name,
+    name: event.params.groupName,
     includeOwner: true,
     includeSubcategories: true,
   })

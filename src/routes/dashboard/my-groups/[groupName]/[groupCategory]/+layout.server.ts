@@ -2,7 +2,7 @@ import { redirect, type ServerLoad } from "@sveltejs/kit";
 import type { trpc } from "~/lib/trpc/client";
 
 export const load: ServerLoad = async ({ params, parent }) => {
-  const category = params.category
+  const category = params.groupCategory
 
   const { group } = await parent() as {
     group: Awaited<

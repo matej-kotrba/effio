@@ -13,7 +13,9 @@
 	let allowedLinks: string[] = [];
 
 	const dynamicReplaces: Record<`[${string}]`, string> = {
-		'[testId]': 'Test'
+		'[testId]': 'Test',
+		'[groupName]': 'Group',
+		'[groupCategory]': 'Channel'
 	};
 
 	const modules: Record<string, () => unknown> = import.meta.glob(
@@ -83,12 +85,6 @@
 			return { label: customLabel || t, href: tokenPath };
 		});
 
-		// if (temp)
-		// 	for (let replacament of Object.entries(temp?.dynamiclyEditedPath)) {
-		// 		const [key, value] = replacament;
-		// 		crumbs[key].label = value;
-		// 	}
-
 		// Add a way to get home too.
 		crumbs.unshift({ label: 'Home', href: '/' });
 	}
@@ -125,12 +121,7 @@
 	onMount(() => {
 		for (let path in modules) {
 			let pathSanitized = path.replace('.svelte', '').replace('./', '/');
-			// for group layouts
-			// if (pathSanitized.includes('/(')) {
-			// 	pathSanitized = pathSanitized.substring(
-			// 		pathSanitized.indexOf(')/') + 1
-			// 	);
-			// }
+
 			while (pathSanitized.includes('/(') && pathSanitized.includes(')')) {
 				pathSanitized =
 					pathSanitized.substring(0, pathSanitized.indexOf('/(')) +
@@ -186,7 +177,10 @@
 		{#each crumbs as crumb}
 			{#if crumb}
 				<li>
-					<a href={crumb.href}>
+					<a
+						href={crumb.href}
+						class="duration-100 hover:text-light_primary dark:text-dark_primary"
+					>
 						{crumb.label}
 					</a>
 				</li>
