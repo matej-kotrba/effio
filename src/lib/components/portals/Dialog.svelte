@@ -1,9 +1,8 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
-	import { fade } from 'svelte/transition';
 	import { twMerge } from 'tailwind-merge';
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
+	import { clickOutside } from '~use/clickOutside';
 
 	export let title: string = '';
 	export let titleClasses: string = '';
@@ -12,7 +11,10 @@
 	export { classes as class };
 	export let formClasses: string = '';
 
-	export const open = () => modal?.showModal();
+	export const open = () => {
+		modal?.showModal();
+		isOpen = true;
+	};
 	export const close = () => {
 		if (!modal) return;
 		modal.animate([{ opacity: 1 }, { opacity: 0 }], {
@@ -22,23 +24,36 @@
 			if (!modal) return;
 			modal.close();
 		};
+		isOpen = false;
 	};
 	export let isSuccessOpen = false;
 	export let isSubmitting = false;
 
 	export let modal: HTMLDialogElement | undefined = undefined;
+
+	let isOpen = false;
 </script>
 
-<!-- Přidat tady div který bude fungovat jako pozadí -->
+<div
+	class="fixed top-0 left-0 w-screen h-screen duration-200 bg-light_text_black_20 cover z-[10000000000] backdrop-blur-sm {isOpen
+		? 'opacity-100 pointer-events-auto'
+		: 'opacity-0 pointer-events-none'}"
+/>
 <dialog
 	bind:this={modal}
 	class={twMerge(
-		`w-full bg-transparent animate-fade duration-150 p-0 backdrop:blur-lg`,
+		`w-full bg-transparent animate-fade duration-150 p-0`,
 		classes
 	)}
 >
 	<form
 		method="dialog"
+		use:clickOutside
+		on:clickoutside={() => {
+			if (isOpen) {
+				close();
+			}
+		}}
 		class={twMerge(
 			`overscroll-contains relative mx-auto p-4 max-w-[500px] shadow-md rounded-lg w-full min-w-[200px] bg-light_whiter dark:bg-dark_grey text-light_text_black dark:text-dark_text_white`,
 			formClasses

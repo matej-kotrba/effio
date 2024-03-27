@@ -17,13 +17,15 @@
 
 	let newChannelDialog: HTMLDialogElement;
 
-	function openNewChannelDialog() {
-		newChannelDialog.showModal();
-	}
+	let openNewChannelDialog: () => void;
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
-<Dialog bind:modal={newChannelDialog} title="New channel">
+<Dialog
+	bind:modal={newChannelDialog}
+	bind:open={openNewChannelDialog}
+	title="New channel"
+>
 	<form action="">
 		<TextInputSimple
 			title="Channel name"
@@ -32,11 +34,11 @@
 			validationSchema={titleSchema}
 			validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
 			displayOutside={true}
-			on:error={(event) =>
+		/>
+		<!-- on:error={(event) =>
 				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
 					event.detail)}
-			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
-		/>
+			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']} -->
 	</form>
 </Dialog>
 <div class="relative h-full grid__container">
