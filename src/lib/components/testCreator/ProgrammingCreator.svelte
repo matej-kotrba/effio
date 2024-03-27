@@ -125,7 +125,7 @@
 <div class="mb-12">
 	<ErrorEnhance error={$testObject.questions[INDEX_OF_QUESTION].errors.title}>
 		<TextInputSimple
-			inputProperties={{ placeholder: 'Program a cute seal' }}
+			inputProperties={{ placeholder: 'Program a function...' }}
 			title="Code name"
 			titleName="codeName"
 			validationSchema={titleSchema}
@@ -140,7 +140,7 @@
 	<ErrorEnhance error={content.errors.description}>
 		<TextAreaInput
 			inputProperties={{
-				placeholder: 'This code should create a really nice seal ...'
+				placeholder: 'The task is to create...'
 			}}
 			title="Describe what the code should do"
 			titleName="description"

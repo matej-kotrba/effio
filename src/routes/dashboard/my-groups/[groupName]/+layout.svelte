@@ -2,6 +2,9 @@
 	import IconButtonExpandable from '~components/buttons/IconButtonExpandable.svelte';
 	import { AUTHENTICATED_NAV_HEIGHT } from '../../+layout.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
+	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import { titleSchema } from '~schemas/testValidation';
+	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
 
 	let scrollFromTop = 0;
 
@@ -20,9 +23,22 @@
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
-<Dialog bind:modal={newChannelDialog} title="New channel"
-	>New channel name</Dialog
->
+<Dialog bind:modal={newChannelDialog} title="New channel">
+	<form action="">
+		<TextInputSimple
+			title="Channel name"
+			titleName="channelname"
+			inputProperties={{ placeholder: 'Program a function...' }}
+			validationSchema={titleSchema}
+			validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+			displayOutside={true}
+			on:error={(event) =>
+				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
+					event.detail)}
+			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
+		/>
+	</form>
+</Dialog>
 <div class="relative h-full grid__container">
 	<aside
 		class="sticky top-0 left-0 p-2 overflow-y-auto"
