@@ -34,6 +34,10 @@ export const GROUP_NAME_MIN = 5
 export const GROUP_DESCRIPTION_MAX = 255
 export const GROUP_DESCRIPTION_MIN = 0
 
+// GROUP CHANNELS
+export const CHANNEL_NAME_MAX = 25
+export const CHANNEL_NAME_MIN = 1
+
 // CHAT INPUT SPECIFIC
 export const CHAT_INPUT_MAX = 255
 export const CHAT_INPUT_MIN = 1
@@ -94,3 +98,4 @@ export const programmingTestSchema = z.object<{
 })
 export const programmingHintSchema = z.string().min(PROGRAMMING_TEST_MIN, `Input has to be at least ${PROGRAMMING_TEST_MIN} character long.`).max(PROGRAMMING_TEST_MAX, `Input can be max ${PROGRAMMING_TEST_MAX} characters long.`)
 export const testInputRegexSchema = z.string().regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })
+export const channelNameSchema = z.string().min(CHANNEL_NAME_MIN).max(CHANNEL_NAME_MAX).regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })

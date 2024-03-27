@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { groupDescriptionSchema, groupNameSchema } from "~schemas/testValidation";
+import { channelNameSchema, groupDescriptionSchema, groupNameSchema } from "~schemas/testValidation";
 import { joinCodeSchema } from "~schemas/inviteCode";
 
 export const createGroupSchema = z.object({
@@ -10,4 +10,9 @@ export const createGroupSchema = z.object({
 
 export const joinGroupSchema = z.object({
   code: joinCodeSchema
+})
+
+export const channelCreateSchema = z.object({
+  id: z.string(),
+  name: channelNameSchema
 })

@@ -4,7 +4,10 @@
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import { titleSchema } from '~schemas/testValidation';
+	import { channelCreateSchema } from '../schemas';
 	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import { superForm } from 'sveltekit-superforms/client';
 
 	let scrollFromTop = 0;
 
@@ -14,10 +17,21 @@
 			: AUTHENTICATED_NAV_HEIGHT - scrollFromTop;
 
 	export let data;
+	console.log(data);
 
 	let newChannelDialog: HTMLDialogElement;
 
 	let openNewChannelDialog: () => void;
+
+	// const {
+	// 	form: formCreate,
+	// 	errors: errorsCreate,
+	// 	enhance: enhanceCreate,
+	// 	submitting: submittingCreate
+	// } = superForm(data, {
+	// 	resetForm: true,
+	// 	validators: channelCreateSchema
+	// });
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
@@ -26,20 +40,39 @@
 	bind:open={openNewChannelDialog}
 	title="New channel"
 >
-	<form action="">
-		<TextInputSimple
-			title="Channel name"
-			titleName="channelname"
-			inputProperties={{ placeholder: 'Program a function...' }}
-			validationSchema={titleSchema}
-			validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
-			displayOutside={true}
-		/>
-		<!-- on:error={(event) =>
+	<!-- <form
+		method="POST"
+		action="?/createGroup"
+		use:enhanceCreate={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Group created successfully!');
+					closeCreateDialog();
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result['data'] ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			}
+		}}
+	>
+		<input type="hidden" name="groupId" value={data.group.id} />
+		<ErrorEnhance error={$testObject.questions[INDEX_OF_QUESTION].errors.title}>
+			<TextInputSimple
+				title="Channel name"
+				titleName="channelname"
+				inputProperties={{ placeholder: 'Channel name...' }}
+				validationSchema={titleSchema}
+				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+				displayOutside={true}
+			/>
+		</ErrorEnhance>
+		on:error={(event) =>
 				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
 					event.detail)}
-			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']} -->
-	</form>
+			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']}
+	</form> -->
 </Dialog>
 <div class="relative h-full grid__container">
 	<aside

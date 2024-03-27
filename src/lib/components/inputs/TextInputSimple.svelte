@@ -94,7 +94,7 @@
 
 <div class={twMerge('', containerClasses)}>
 	{#if displayOutside === true && displayTitle === true}
-		<div class="flex items-center justify-between px-1">
+		<div class="flex items-center justify-between">
 			<label
 				for={titleName}
 				class={`text-xs duration-150 text-body3 sm:text-body2 ${

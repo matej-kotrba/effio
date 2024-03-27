@@ -4,6 +4,8 @@ import { TRPCError } from "@trpc/server"
 import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
 import { DB_STRING_REGEX, MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
 import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
+import { channelCreateSchema } from "~/routes/dashboard/my-groups/schemas"
+import { channelNameSchema } from "~schemas/testValidation"
 
 function tranformString(text: string) {
   let transformedText = ""
@@ -527,5 +529,49 @@ export const groupsRouter = router({
       success: true,
       group: group
     }
+  }),
+
+  createChannel: loggedInProcedure.input(z.object({
+    groupId: z.string(),
+    channel: z.object({
+      name: channelNameSchema
+    })
+  })).mutation(async ({ ctx, input }) => {
+    const groupPromise = ctx.prisma.group.findUnique({
+      where: {
+        id: input.groupId
+      }
+    })
+
+    const groupOwnerPromise = ctx.prisma.group.findUnique({
+      where: {
+        id: input.groupId,
+        ownerId: ctx.userId
+      }
+    })
+
+    const [group, groupOwner] = await Promise.all([groupPromise, groupOwnerPromise])
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
+    }
+
+    if (!groupOwner) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create channels in this group" })
+    }
+
+    const channel = await ctx.prisma.groupSubcategory.create({
+      data: {
+        name: input.channel.name,
+        slug: tranformString(input.channel.name),
+        group: {
+          connect: {
+            id: input.groupId
+          }
+        }
+      }
+    })
+
+    return channel
   })
 })
