@@ -1,20 +1,15 @@
-import { fail, ServerLoad } from '@sveltejs/kit'
+import { fail } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms/server'
 import { channelCreateSchema } from '../schemas.js'
 import { trpcServer } from '~helpers/trpcServer.js'
 import { TRPCError } from '@trpc/server'
-
-export const load: ServerLoad = async (event) => {
-  const createChannelForm = await superValidate(channelCreateSchema)
-
-  return { createChannelForm }
-}
 
 export const actions = {
   createChannel: async (event) => {
     const formData = await event.request.formData()
     const form = await superValidate(formData, channelCreateSchema)
 
+    console.log(form.data)
     if (!form.valid) {
       return fail(400, { form })
     }

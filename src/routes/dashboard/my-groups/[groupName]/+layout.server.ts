@@ -1,5 +1,7 @@
 import { redirect } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms/server";
 import { trpcServer } from "~helpers/trpcServer";
+import { channelCreateSchema } from "../schemas.js";
 
 // TODO: Can be client, no .server needed
 export const load = async (event) => {
@@ -20,7 +22,10 @@ export const load = async (event) => {
     throw redirect(301, "/dashboard/my-groups")
   }
 
+  const createChannelForm = await superValidate(channelCreateSchema)
+
   return {
     group: groupFullData,
+    createChannelForm
   }
 }
