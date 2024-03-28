@@ -51,6 +51,8 @@
 
 <div>
 	<!-- <ScrollToTop /> -->
-	<Toaster containerStyle={'z-index: 1000; text-align: center;'} />
+	<Toaster
+		containerStyle={'z-index: 10000000000000000000000000000; text-align: center;'}
+	/>
 	<slot />
 </div>

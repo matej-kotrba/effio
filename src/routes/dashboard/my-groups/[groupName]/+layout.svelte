@@ -3,7 +3,7 @@
 	import { AUTHENTICATED_NAV_HEIGHT } from '../../+layout.svelte';
 	import Dialog from '~components/portals/Dialog.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
-	import { titleSchema } from '~schemas/testValidation';
+	import { channelNameSchema, titleSchema } from '~schemas/testValidation';
 	import { channelCreateSchema } from '../schemas';
 	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
@@ -67,7 +67,7 @@
 				title="Channel name"
 				titleName="name"
 				inputProperties={{ placeholder: 'Channel name...' }}
-				validationSchema={titleSchema}
+				validationSchema={channelNameSchema}
 				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
 				displayOutside={true}
 				bind:inputValue={$formCreate.name}

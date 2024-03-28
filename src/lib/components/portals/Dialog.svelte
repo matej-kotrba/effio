@@ -35,7 +35,7 @@
 </script>
 
 <div
-	class="fixed top-0 left-0 w-screen h-screen duration-200 bg-light_text_black_20 cover z-[10000000000] backdrop-blur-sm {isOpen
+	class="fixed top-0 left-0 w-screen h-screen duration-200 bg-light_text_black_20 cover z-[1000000] backdrop-blur-sm {isOpen
 		? 'opacity-100 pointer-events-auto'
 		: 'opacity-0 pointer-events-none'}"
 />

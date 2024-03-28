@@ -266,6 +266,7 @@ model GroupSubcategory {
   updatedAt   DateTime                  @updatedAt
   groupId     String
   group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  type        GroupSubcategoryType      @default(CHAT)
   tests       GroupSubcategoryOnTests[]
   testRecords TestRecord[]
   messages    GroupSubcategoryMessage[]
@@ -355,4 +356,9 @@ enum TestType {
 enum QuestionType_type {
   REGULAR
   PROGRAMMING
+}
+
+enum GroupSubcategoryType {
+  CHAT
+  ANNOUCEMENT
 }

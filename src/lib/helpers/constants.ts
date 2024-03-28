@@ -10,5 +10,5 @@ export const MAX_GROUP_OWNER_COUNT = 10
 
 // Validation regex
 // Database string regex validation
-export const DB_STRING_REGEX = /^[a-zA-Z0-9,?!\-.:\u00C0-\u024F]+$/
+export const DB_STRING_REGEX = /^[a-zA-Z0-9 ,?!\-.:\u00C0-\u024F]+$/
 export const DB_STRING_MESSAGE = 'Only letters, numbers, and ,?!-.: are allowed'
