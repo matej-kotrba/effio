@@ -1,3 +1,4 @@
+import { GroupSubcategoryType } from "@prisma/client"
 import { z } from "zod"
 import { DB_STRING_MESSAGE, DB_STRING_REGEX } from "~helpers/constants"
 
@@ -99,3 +100,5 @@ export const programmingTestSchema = z.object<{
 export const programmingHintSchema = z.string().min(PROGRAMMING_TEST_MIN, `Input has to be at least ${PROGRAMMING_TEST_MIN} character long.`).max(PROGRAMMING_TEST_MAX, `Input can be max ${PROGRAMMING_TEST_MAX} characters long.`)
 export const testInputRegexSchema = z.string().regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })
 export const channelNameSchema = z.string().min(CHANNEL_NAME_MIN, "Channel name has to be atleast 1 character long").max(CHANNEL_NAME_MAX, "Channel name has to be below 25 characters").regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })
+type GroupSubcategoryUnion = keyof typeof GroupSubcategoryType
+export const channelTypeSchema = z.enum<GroupSubcategoryUnion, [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]]>(Object.values(GroupSubcategoryType) as [GroupSubcategoryUnion, ...GroupSubcategoryType[]]) 

@@ -12,6 +12,7 @@
 	import TypeRadioGroup, {
 		type Choice
 	} from '~components/inputs/TypeRadioGroup.svelte';
+	import { GroupSubcategoryType } from '@prisma/client';
 
 	let scrollFromTop = 0;
 
@@ -27,12 +28,14 @@
 		{
 			icon: 'material-symbols:chat',
 			title: 'Chat',
+			value: GroupSubcategoryType.CHAT,
 			description:
 				'Channel open for everyone to chat, owner can share files and tests'
 		},
 		{
 			icon: 'mdi:announcement',
 			title: 'Announcement',
+			value: GroupSubcategoryType.ANNOUCEMENT,
 			description: 'Channel for announcements, only owner can post here'
 		}
 	];
@@ -52,7 +55,6 @@
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
-<TypeRadioGroup choices={newChannelChoices} />
 <Dialog
 	bind:modal={newChannelDialog}
 	bind:open={openNewChannelDialog}
@@ -77,6 +79,12 @@
 		}}
 	>
 		<input type="hidden" name="id" value={data.group.id} />
+		<TypeRadioGroup
+			choices={newChannelChoices}
+			inputGroupName={'newChannelType'}
+			class="my-2"
+			bind:selectedRadio={$formCreate.newChannelType}
+		/>
 		<ErrorEnhance
 			error={$errorsCreate.name ? $errorsCreate.name[0] : undefined}
 		>
@@ -98,7 +106,7 @@
 </Dialog>
 <div class="relative h-full grid__container">
 	<aside
-		class="sticky top-0 left-0 p-2 overflow-y-auto"
+		class="sticky top-0 left-0 p-2 z-[1000]"
 		style={`max-height: calc(100vh - ${asideLimit}px); min-height: calc(100vh - ${asideLimit}px);`}
 	>
 		<div

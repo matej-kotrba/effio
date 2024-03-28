@@ -14,7 +14,7 @@
 <button
 	type="button"
 	on:click={onClick}
-	class={twMerge(`relative z-0 isolate group`, containerClasses)}
+	class={twMerge(`relative isolate group`, containerClasses)}
 >
 	<div
 		style={`width: ${width}; height: ${width};`}
@@ -31,7 +31,7 @@
 				class="w-0 group-hover:w-fit overflow-hidden absolute flex items-center h-full px-0
 				 group-hover:px-4 whitespace-nowrap bg-light_whiter dark:bg-dark_light_grey
 				 rounded-r-2xl text-body2 z-[-10] left-[10%] group-hover:left-[90%] duration-100
-				 border border-light_text_black_10 dark:border-dark_white_10"
+				 border group-hover:border-light_text_black_10 group-hover:dark:border-dark_text_white_10"
 			>
 				{fullText}
 			</div>

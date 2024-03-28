@@ -8,6 +8,7 @@ export const actions = {
   createChannel: async (event) => {
     const formData = await event.request.formData()
     const form = await superValidate(formData, channelCreateSchema)
+    console.log("asdasd", form.data)
 
     return fail(400, { form })
     console.log(form.data)
