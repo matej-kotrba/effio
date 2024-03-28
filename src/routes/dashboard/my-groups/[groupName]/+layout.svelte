@@ -12,7 +12,7 @@
 	import TypeRadioGroup, {
 		type Choice
 	} from '~components/inputs/TypeRadioGroup.svelte';
-	import { GroupSubcategoryType } from '@prisma/client';
+	import { GROUP_SUBCATEGORY_TYPES } from '~helpers/constants';
 
 	let scrollFromTop = 0;
 
@@ -28,14 +28,14 @@
 		{
 			icon: 'material-symbols:chat',
 			title: 'Chat',
-			value: GroupSubcategoryType.CHAT,
+			value: GROUP_SUBCATEGORY_TYPES.CHAT,
 			description:
 				'Channel open for everyone to chat, owner can share files and tests'
 		},
 		{
 			icon: 'mdi:announcement',
 			title: 'Announcement',
-			value: GroupSubcategoryType.ANNOUCEMENT,
+			value: GROUP_SUBCATEGORY_TYPES.ANNOUCEMENT,
 			description: 'Channel for announcements, only owner can post here'
 		}
 	];
