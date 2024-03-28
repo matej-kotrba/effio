@@ -9,7 +9,8 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			$lib: path.resolve("./src/lib")
+			$lib: path.resolve("./src/lib"),
+			".prisma/client/index-browser": "./node_modules/.prisma/client/index-browser.js"
 		}
 	}
 });
