@@ -50,7 +50,7 @@ export const actions = {
       const arrayBuffer = await image.arrayBuffer()
       const buffer = new Uint8Array(arrayBuffer)
       uploadStream = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream({ allowed_formats: ["png", "jpg", "jpeg", "webp"], folder: "tests" }, (error, result) => {
+        cloudinary.uploader.upload_stream({ allowed_formats: ["png", "jpg", "jpeg", "webp"], folder: "groups" }, (error, result) => {
           if (error) {
             return reject(error)
           }
@@ -62,12 +62,11 @@ export const actions = {
     else if (image !== undefined) {
       return fail(400, { form, error: "Image is not a file" })
     }
-
     try {
       await (await trpcServer(event)).groups.createGroup({
         name: form.data.name,
         description: form.data.description,
-        imageUrl: uploadStream?.url,
+        imageUrl: uploadStream.secure_url ? uploadStream.secure_url : uploadStream.url,
       })
     }
     catch (e) {
