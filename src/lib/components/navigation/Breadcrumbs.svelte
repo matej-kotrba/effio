@@ -179,7 +179,7 @@
 				<li>
 					<a
 						href={crumb.href}
-						class="duration-100 hover:text-light_primary dark:text-dark_primary"
+						class="hover:text-light_primary dark:hover:text-dark_primary"
 					>
 						{crumb.label}
 					</a>

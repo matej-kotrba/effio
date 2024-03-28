@@ -9,6 +9,9 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import toast from 'svelte-french-toast';
+	import TypeRadioGroup, {
+		type Choice
+	} from '~components/inputs/TypeRadioGroup.svelte';
 
 	let scrollFromTop = 0;
 
@@ -20,6 +23,19 @@
 	export let data;
 
 	let newChannelDialog: HTMLDialogElement;
+	const newChannelChoices: Choice[] = [
+		{
+			icon: 'material-symbols:chat',
+			title: 'Chat',
+			description:
+				'Channel open for everyone to chat, owner can share files and tests'
+		},
+		{
+			icon: 'mdi:announcement',
+			title: 'Announcement',
+			description: 'Channel for announcements, only owner can post here'
+		}
+	];
 
 	let openNewChannelDialog: () => void;
 	let closeNewChannelDialog: () => void;
@@ -36,6 +52,7 @@
 </script>
 
 <svelte:window bind:scrollY={scrollFromTop} />
+<TypeRadioGroup choices={newChannelChoices} />
 <Dialog
 	bind:modal={newChannelDialog}
 	bind:open={openNewChannelDialog}
