@@ -32,8 +32,8 @@
 			<iconify-icon {icon} class={twMerge('text-3xl', buttonClasses)} />
 		</Button>
 	</Tooltip.Trigger>
-	<Tooltip.Content>
-		{#if tooltip}
+	{#if tooltip}
+		<Tooltip.Content>
 			<span
 				class={twMerge(
 					'z-[1] p-2 rounded-sm max-w-[13rem] text-[1rem]',
@@ -42,6 +42,6 @@
 			>
 				{tooltip}
 			</span>
-		{/if}
-	</Tooltip.Content>
+		</Tooltip.Content>
+	{/if}
 </Tooltip.Root>

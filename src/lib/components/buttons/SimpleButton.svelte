@@ -1,9 +1,20 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
+	import type { ButtonProps } from 'bits-ui';
+
+	type Variants = 'highlight' | 'filled' | 'ghost';
+	type DesignType = 'primary' | 'basic';
 
 	export let onClick: () => void = () => {};
-	export let variant: 'highlight' | 'filled' | 'ghost' = 'highlight';
-	export let type: 'primary' | 'basic' = 'basic';
+	export let variant: Variants = 'highlight';
+	export let designType: DesignType = 'basic';
+
+	type $$Props = ButtonProps & {
+		onClick?: () => void;
+		variant?: Variants;
+		designType?: DesignType;
+		class?: string;
+	};
 
 	let styles = '';
 	$: {
@@ -12,7 +23,7 @@
 				styles =
 					'relative px-4 py-2 font-normal \
 					duration-200 rounded-md ';
-				switch (type) {
+				switch (designType) {
 					case 'primary': {
 						styles +=
 							'bg-light_grey dark:bg-dark_grey hover:bg-gray-200 dark:hover:bg-dark_light_grey\
@@ -28,7 +39,7 @@
 				break;
 			case 'filled':
 				styles = 'relative px-4 py-2 rounded-md duration-200 ';
-				switch (type) {
+				switch (designType) {
 					case 'primary': {
 						styles +=
 							'bg-light_primary text-light_white font-semibold hover:bg-light_primary_dark\
@@ -44,7 +55,7 @@
 				break;
 			case 'ghost':
 				styles = 'relative px-4 py-2 rounded-md bg-transparent  duration-200 ';
-				switch (type) {
+				switch (designType) {
 					case 'primary': {
 						styles +=
 							'hover:bg-light_primary dark:hover:bg-dark_primary hover:text-light_white dark:hover:text-white';
@@ -63,6 +74,11 @@
 	export { classes as class };
 </script>
 
-<button type="button" on:click={onClick} class={twMerge(styles, classes)}>
+<button
+	type="button"
+	on:click={onClick}
+	class={twMerge(styles, classes)}
+	{...$$restProps}
+>
 	<slot />
 </button>

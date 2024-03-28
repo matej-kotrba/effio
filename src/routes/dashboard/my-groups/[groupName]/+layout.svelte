@@ -99,12 +99,20 @@
 				bind:inputValue={$formCreate.name}
 			/>
 		</ErrorEnhance>
-		<!-- on:error={(event) =>
-				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
-					event.detail)}
-			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']} -->
-		<SimpleButton variant="ghost">Cancel</SimpleButton>
-		<SimpleButton variant="filled" type="primary">Create Channel</SimpleButton>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeNewChannelDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={$formCreate['name'].length === 0 ||
+					!!$errorsCreate.id?.length ||
+					!!$errorsCreate.name?.length ||
+					!!$errorsCreate.newChannelType?.length}>Create Channel</SimpleButton
+			>
+		</div>
 	</form>
 </Dialog>
 <div class="relative h-full grid__container">
@@ -113,7 +121,7 @@
 		style={`max-height: calc(100vh - ${asideLimit}px); min-height: calc(100vh - ${asideLimit}px);`}
 	>
 		<div
-			class="flex flex-col items-center w-full h-full gap-2 py-2 border border-solid rounded-md dark:bg-dark_grey bg-light_whiter border-light_text_black_10 dark:border-dark_text_white_10"
+			class="flex flex-col items-center w-full h-full gap-2 py-2 bg-transparent rounded-md"
 		>
 			<a href="/dashboard/my-groups/{data.group.slug}">
 				<IconButtonExpandable shouldExpand={true} fullText={'Home'}>

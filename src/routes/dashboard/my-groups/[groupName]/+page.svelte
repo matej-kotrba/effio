@@ -9,10 +9,15 @@
 	import Space from '~components/separators/Space.svelte';
 	import { createTRPCErrorNotification } from '~/lib/utils/notification';
 	import { TRPCClientError } from '@trpc/client';
+	import ImageImportV2, {
+		setImageUpload
+	} from '~components/inputs/ImageImportV2.svelte';
+	import { ALLOWED_IMAGE_TYPES } from '~helpers/constants';
 
 	export let data;
 
 	let openDialog: () => void;
+	let openSettingsDialog: () => void;
 
 	function onOpenInvite() {
 		openDialog();
@@ -44,6 +49,26 @@
 			if (e instanceof TRPCClientError) createTRPCErrorNotification(e);
 		}
 	}
+
+	// Udělat image uploader, možná se podívat na nějaký package abych to nemusel opět využít,
+	// jinak to dodělat a poté také přidat rename a delete skupiny
+
+	// function onImageUpload(
+	// 	e: Event & {
+	// 		currentTarget: EventTarget & HTMLInputElement;
+	// 	}
+	// ) {
+	// 	setImageUpload(
+	// 		e,
+	// 		ALLOWED_IMAGE_TYPES,
+	// 		maxImageSizeInMB,
+	// 		(file, resultUrl) => {
+	// 			content.imageFile = file;
+	// 			uploadedImageUrl = resultUrl;
+	// 			setImageToMap(uploadedImageUrl);
+	// 		}
+	// 	);
+	// }
 </script>
 
 <Dialog bind:open={openDialog} title={'Group invitation code'}>
@@ -81,6 +106,9 @@
 		</li>
 	</ul>
 </Dialog>
+<Dialog title="Group settings" bind:open={openSettingsDialog}>
+	<!-- <ImageImportV2 allowedImageTypes={ALLOWED_IMAGE_TYPES} uploadedImageUrl={""} /> -->
+</Dialog>
 
 <div class="p-4">
 	<div class="flex justify-between">
@@ -94,9 +122,12 @@
 			</p>
 		</div>
 		{#if data.session?.user?.id === data.group.ownerId}
-			<div>
+			<div class="flex gap-2">
 				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
-				<IconButton icon="fluent:settings-24-filled" onClick={() => {}} />
+				<IconButton
+					icon="fluent:settings-24-filled"
+					onClick={openSettingsDialog}
+				/>
 			</div>
 		{:else}
 			<div>

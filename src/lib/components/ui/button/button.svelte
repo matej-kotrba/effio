@@ -17,7 +17,7 @@
 	{builders}
 	class={cn(
 		buttonVariants({ variant, size, className }),
-		'dark:bg-dark_light_grey dark:border-dark_primary_dark dark:hover:bg-dark_primary_dark'
+		'dark:bg-dark_light_grey dark:border-dark_terciary dark:hover:bg-dark_terciary'
 	)}
 	type="button"
 	{...$$restProps}

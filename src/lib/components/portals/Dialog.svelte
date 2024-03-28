@@ -3,6 +3,9 @@
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
 	import { clickOutside } from '~use/clickOutside';
+	import { Dialog } from 'bits-ui';
+	import { fade } from 'svelte/transition';
+	import Portal from '~components/containers/Portal.svelte';
 
 	export let title: string = '';
 	export let titleClasses: string = '';
@@ -34,11 +37,14 @@
 	let isOpen = false;
 </script>
 
-<div
-	class="fixed top-0 left-0 w-screen h-screen duration-200 bg-light_text_black_20 cover z-[1000000] backdrop-blur-sm {isOpen
-		? 'opacity-100 pointer-events-auto'
-		: 'opacity-0 pointer-events-none'}"
-/>
+<Portal>
+	<div
+		class="fixed top-0 left-0 w-screen h-screen duration-200 bg-light_text_black_20 cover z-[1000000] backdrop-blur-sm {isOpen
+			? 'opacity-100 pointer-events-auto'
+			: 'opacity-0 pointer-events-none'}"
+	/>
+</Portal>
+
 <dialog
 	bind:this={modal}
 	class={twMerge(
