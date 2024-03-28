@@ -659,7 +659,7 @@
 								<CallToAction center="right" text="Log in" link="/login" />
 								<!-- <button
 									on:click={() => {}}
-									class="text-white btn bg-light_primary dark:bg-dark_primary hover:bg-light_primary_dark dark:hover:bg-dark_primary_light"
+									class="text-white btn bg-light_primary dark:bg-dark_primary hover:bg-light_primary_dark dark:hover:bg-dark_primary_dark"
 									type="button">Log In</button
 								> -->
 							</div>

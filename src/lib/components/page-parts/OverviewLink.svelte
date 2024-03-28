@@ -23,7 +23,7 @@
 					{title}
 				</h3>
 			</div>
-			<div class="p-2 bg-image bg-light_terciary dark:bg-dark_primary_light">
+			<div class="p-2 bg-image bg-light_terciary dark:bg-dark_primary_dark">
 				<img
 					src={bgImage}
 					alt=""

@@ -50,7 +50,7 @@ export const actions = {
       const arrayBuffer = await image.arrayBuffer()
       const buffer = new Uint8Array(arrayBuffer)
       uploadStream = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream({ allowed_formats: ["png", "jpg", "jpeg", "webp"], folder: "groups" }, (error, result) => {
+        cloudinary.uploader.upload_stream({ allowed_formats: ALLOWED_IMAGE_TYPES, folder: "groups" }, (error, result) => {
           if (error) {
             return reject(error)
           }

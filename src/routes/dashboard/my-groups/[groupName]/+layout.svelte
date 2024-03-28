@@ -13,6 +13,7 @@
 		type Choice
 	} from '~components/inputs/TypeRadioGroup.svelte';
 	import { GROUP_SUBCATEGORY_TYPES } from '~helpers/constants';
+	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 
 	let scrollFromTop = 0;
 
@@ -102,6 +103,8 @@
 				($testObject.questions[INDEX_OF_QUESTION]['errors']['title'] =
 					event.detail)}
 			bind:inputValue={$testObject.questions[INDEX_OF_QUESTION]['title']} -->
+		<SimpleButton variant="ghost">Cancel</SimpleButton>
+		<SimpleButton variant="filled" type="primary">Create Channel</SimpleButton>
 	</form>
 </Dialog>
 <div class="relative h-full grid__container">

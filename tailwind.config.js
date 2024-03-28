@@ -31,7 +31,7 @@ export default {
 				light_star: '#fef9c3',
 
 				dark_primary: '#0092CA',
-				dark_primary_light: '#393E46',
+				dark_primary_dark: '#1b668e',
 				dark_secondary: '#395182',
 				dark_terciary: '#393E46',
 				dark_quaternary: '#222831',

@@ -495,7 +495,7 @@
 								<button
 									type="button"
 									disabled={isSubmitting}
-									class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_light"
+									class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_dark"
 									on:click={() =>
 										checkTestOnClientAndServerAndPostTestToDB(
 											true,
