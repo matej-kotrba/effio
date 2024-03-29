@@ -22,12 +22,15 @@
 	} from '~helpers/constants';
 	import type { Choice } from '~components/inputs/TypeRadioGroup.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { channelCreateSchema } from '../schemas.js';
+	import { channelCreateSchema, updateGroupSchema } from '../schemas.js';
 	import TypeRadioGroup from '~components/inputs/TypeRadioGroup.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
-	import { channelNameSchema } from '~schemas/testValidation.js';
+	import {
+		channelNameSchema,
+		groupNameSchema
+	} from '~schemas/testValidation.js';
 	import Channel from './Channel.svelte';
 	import ChannelAddNew from './ChannelAddNew.svelte';
 
@@ -64,8 +67,20 @@
 		validators: channelCreateSchema
 	});
 
+	const {
+		form: formUpdateGroup,
+		errors: errorsUpdateGroup,
+		enhance: enhanceUpdateGroup,
+		submitting: submittingUpdateGroup,
+		reset: resetUpdateGroup
+	} = superForm(data.updateGroupForm, {
+		resetForm: true,
+		validators: updateGroupSchema
+	});
+
 	let openDialog: () => void;
 	let openSettingsDialog: () => void;
+	let closeSettingsDialog: () => void;
 
 	let fileInputRef: HTMLInputElement;
 	let uploadedImageUrl: string = '';
@@ -132,7 +147,7 @@
 		use:enhanceCreate={{
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
-					toast.success('Group created successfully!');
+					toast.success('Channel created successfully!');
 					closeNewChannelDialog();
 				} else if (result['type'] === 'failure') {
 					console.log(result);
@@ -217,19 +232,62 @@
 <Dialog
 	title="Group settings"
 	bind:open={openSettingsDialog}
+	bind:close={closeSettingsDialog}
 	onDialogClose={() => {
 		// Reseting the form on closing the dialog
 		uploadedImageUrl = '';
 		fileInputRef.value = '';
 	}}
 >
-	<ImageImportV2
-		bind:fileInput={fileInputRef}
-		inputId={'group'}
-		allowedImageTypes={ALLOWED_IMAGE_TYPES}
-		uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
-		{onImageUpload}
-	/>
+	<form
+		method="POST"
+		action="?/updateGroup"
+		enctype="multipart/form-data"
+		use:enhanceCreate={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Group updated successfully!');
+					closeSettingsDialog();
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result['data'] && result['data']['error']
+							? result['data']['error']
+							: 'Error ocurred'
+					);
+				}
+			}
+		}}
+	>
+		<input type="hidden" name="id" value={data.group.id} />
+		<ErrorEnhance
+			error={$errorsUpdateGroup.name ? $errorsUpdateGroup.name[0] : undefined}
+		>
+			<TextInputSimple
+				title="Group name"
+				titleName="name"
+				inputProperties={{ placeholder: 'Group name...' }}
+				validationSchema={groupNameSchema}
+				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+				displayOutside={true}
+				bind:inputValue={$formCreate.name}
+			/>
+		</ErrorEnhance>
+		<input type="file" name="image-upload-group" />
+		<!-- <ImageImportV2
+			bind:fileInput={fileInputRef}
+			inputId={'group'}
+			allowedImageTypes={ALLOWED_IMAGE_TYPES}
+			uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
+			{onImageUpload}
+		/> -->
+		<SimpleButton variant="ghost" onClick={closeSettingsDialog}
+			>Cancel</SimpleButton
+		>
+		<SimpleButton variant="filled" designType="primary" type="submit"
+			>Update Group</SimpleButton
+		>
+	</form>
 </Dialog>
 
 <div class="p-4">

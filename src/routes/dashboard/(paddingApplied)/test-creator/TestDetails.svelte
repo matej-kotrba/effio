@@ -113,9 +113,10 @@
 			</ErrorEnhance>
 		</div>
 		<ImageImport
-			title="Test photo"
+			title="Test image"
 			bind:exportedFile={testImageFile}
 			defualtImage={testData?.imageUrl}
+			class="w-[156px]"
 		/>
 	</div>
 	<div class="z-[20]">

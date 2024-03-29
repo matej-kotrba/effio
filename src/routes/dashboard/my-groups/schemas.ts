@@ -8,6 +8,13 @@ export const createGroupSchema = z.object({
   image: z.string().optional()
 })
 
+export const updateGroupSchema = z.object({
+  id: z.string(),
+  name: groupNameSchema,
+  description: groupDescriptionSchema,
+  "image-upload-group": z.string().optional()
+})
+
 export const joinGroupSchema = z.object({
   code: joinCodeSchema
 })

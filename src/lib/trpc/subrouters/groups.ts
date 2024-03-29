@@ -90,6 +90,7 @@ export const groupsRouter = router({
     id: z.string(),
     name: z.string().regex(DB_STRING_REGEX).optional(),
     description: z.string().optional(),
+    imageUrl: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
     const result = await trpcCheckForRateLimit("groupUpdate", ctx.userId, "updating groups")
     if (result) {
@@ -98,11 +99,13 @@ export const groupsRouter = router({
 
     const group = await ctx.prisma.group.update({
       where: {
-        id: input.id
+        id: input.id,
+        ownerId: ctx.userId
       },
       data: {
         name: input.name,
         description: input.description,
+        imageUrl: input.imageUrl,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         slug: input?.name ? transformStringIntoSlug(input.name, ctx.user!.name!) : undefined,
       }

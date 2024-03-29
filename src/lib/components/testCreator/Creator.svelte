@@ -182,7 +182,10 @@
 <div
 	class="relative bg-light_white dark:bg-dark_black roudned-md text-light_text_black dark:text-dark_text_white"
 >
-	<div class="grid__container" class:empty={$testObject.questions.length === 0}>
+	<div
+		class="gap-2 grid__container"
+		class:empty={$testObject.questions.length === 0}
+	>
 		<!-- <div
 			style={`position: ${
 				$testObject.questions.length > 0 &&
@@ -342,7 +345,7 @@
 									<div bind:this={activators[0]}>
 										<CreatorInputDropdownActivator
 											isVisible={displayedActivatorId === 0}
-											class="h-1"
+											class="h-1 mb-1"
 										/>
 									</div>
 								{:else}

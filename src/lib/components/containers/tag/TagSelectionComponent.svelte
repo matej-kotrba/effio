@@ -57,7 +57,7 @@
 			return tags.find((tag) => tag.slug === item);
 		})}
 		<div
-			class="w-full p-2 m-2 rounded-sm shadow-md bg-light_whiter dark:bg-dark_grey"
+			class="w-full p-2 my-2 rounded-md shadow-md bg-light_whiter dark:bg-dark_grey"
 		>
 			<div class="flex justify-between mb-1">
 				<div>

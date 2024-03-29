@@ -156,14 +156,15 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
   if (title !== undefined && !titleParse.success) {
     result.errors.title = titleParse.error.errors[0].message
     isError = true
+
+    if (result.errors.title === "" && !titleRegexParse.success) {
+      result.errors.title = titleRegexParse.error.errors[0].message
+      isError = true
+    }
   } else {
     result.errors.title = ""
   }
 
-  if (result.errors.title === "" && !titleRegexParse.success) {
-    result.errors.title = titleRegexParse.error.errors[0].message
-    isError = true
-  }
 
   const descriptionParse = descriptionSchema.safeParse(description)
 

@@ -58,7 +58,7 @@
 </script>
 
 <div
-	class="relative grid w-full border-2 border-black border-dashed aspect-video place-content-center"
+	class="relative grid w-full border-2 border-dashed border-light_text_black dark:border-dark_text_white aspect-video place-content-center"
 >
 	<input
 		bind:this={fileInput}

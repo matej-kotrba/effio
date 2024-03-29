@@ -79,7 +79,7 @@
 			: 'var(--light-text-black-20)'}
 	/>
 	<div
-		class="flex items-center gap-2 text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
+		class="flex items-center gap-2 mt-2 text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
 	>
 		<button
 			type="button"
