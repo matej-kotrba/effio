@@ -90,7 +90,7 @@
 		/>
 	</div>
 	{#if isAdded}
-		<p class="text-sm">
+		<p class="mb-2 text-sm">
 			* Mark with limit 0% is the fallback mark which will be applied when user
 			has 0 and more points.
 		</p>
@@ -102,6 +102,7 @@
 							<TextInputSimple
 								title={'Mark ' + (index + 1)}
 								titleName={'Mark ' + (index + 1)}
+								class="py-3 pt-6"
 								validationSchema={markSchema}
 								bind:inputValue={mark.name}
 								min={MARK_MIN}
@@ -122,9 +123,9 @@
 							/>
 						</div>
 						<div class="flex flex-col w-full">
-							<div class="flex items-center h-full gap-1">
+							<div class="flex items-center h-full gap-1 py-1">
 								<select
-									class="w-full max-w-xs bg-white shadow-md dark:bg-dark_light_grey select"
+									class="w-full h-full max-w-xs bg-white shadow-md dark:bg-dark_light_grey select"
 									bind:value={mark.limitInPercent}
 									disabled={index === marks.length - 1}
 									on:change={(e) => {
@@ -199,7 +200,7 @@
 					}
 				}}
 				disabled={marks.length >= MARK_LIMIT_MAX_MARK_COUNT}
-				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md disabled:bg-gray-500 dark:disabled:bg-gray-700 bg-light_secondary dark:bg-dark_primary hover:bg-light_terciary dark:hover:bg-dark_terciary"
+				class="py-2 mt-2 font-semibold text-white uppercase duration-100 rounded-md disabled:bg-gray-500 dark:disabled:bg-gray-700 bg-light_secondary dark:bg-dark_primary hover:bg-light_terciary dark:hover:bg-dark_primary_dark"
 				>Add</button
 			>
 		</div>

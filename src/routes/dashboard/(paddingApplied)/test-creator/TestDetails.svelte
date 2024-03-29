@@ -24,6 +24,7 @@
 	import { get } from 'svelte/store';
 	import TagSelectionComponent from '~components/containers/tag/TagSelectionComponent.svelte';
 	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
+	import Space from '~components/separators/Space.svelte';
 
 	export let testType: TestType;
 	export let testData:
@@ -73,7 +74,7 @@
 	}
 </script>
 
-<div class="flex flex-col w-full gap-4">
+<div class="flex flex-col w-full gap-2">
 	<ErrorEnhance error={$testObject.errors.title}>
 		<TextInput
 			validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
@@ -93,7 +94,7 @@
 		/>
 	</ErrorEnhance>
 
-	<div class="flex flex-col gap-4 md:flex-row">
+	<div class="flex flex-col gap-x-4 md:flex-row">
 		<div class="w-full">
 			<ErrorEnhance error={$testObject.errors.description}>
 				<TextAreaInput
@@ -141,6 +142,7 @@
 					return item.tag.slug;
 				}) || []}
 			/>
+			<Space gap={8} />
 			<GroupSelection testId={testData?.id} />
 		</div>
 	</div>

@@ -26,6 +26,7 @@
 
 	let classes = '';
 	export { classes as class };
+	export let titleClasses = '';
 
 	export let containerClasses: string = '';
 
@@ -97,11 +98,14 @@
 		<div class="flex items-center justify-between">
 			<label
 				for={titleName}
-				class={`text-xs duration-150 text-body3 sm:text-body2 ${
-					isFocused
-						? 'text-light_primary dark:text-dark_primary'
-						: 'text-light_text_black dark:text-dark_text_white'
-				}`}>{title}</label
+				class={twMerge(
+					`text-xs duration-150 text-body3 sm:text-body2 ${
+						isFocused
+							? 'text-light_primary dark:text-dark_primary'
+							: 'text-light_text_black dark:text-dark_text_white'
+					}`,
+					titleClasses
+				)}>{title}</label
 			>
 			{#if min !== undefined && max !== undefined && displayOutside === true}
 				<Limit current={inputValue.length} {min} {max} class="text-xs" />
@@ -114,8 +118,10 @@
 		{#if displayOutside === false && displayTitle === true}
 			<label
 				for={titleName}
-				class="absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary"
-				>{title}</label
+				class={twMerge(
+					'absolute z-10 text-xs duration-150 top-1 left-1 sm:top-2 sm:left-2 text-light_text_black dark:text-dark_text_white text-body3 sm:text-body2 group-focus-within:text-light_primary dark:group-focus-within:text-dark_primary',
+					titleClasses
+				)}>{title}</label
 			>
 		{/if}
 		<div class="relative">
@@ -150,7 +156,8 @@
 						} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
 			px-2 py-4 rounded-md shadow-lg w-full dark:placeholder:text-dark_text_white_40
-			outline-1 outline-transparent outline group-focus-within:outline-light_primary dark:group-focus-within:outline-dark_primary input-specific-transition
+			outline-1 outline-transparent outline group-focus-within:outline-light_primary
+			 dark:group-focus-within:outline-dark_primary input-specific-transition
 				
 			`,
 						classes

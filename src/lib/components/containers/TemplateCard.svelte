@@ -31,4 +31,8 @@
 		display: grid;
 		grid-template-rows: auto 1fr;
 	}
+
+	:global(.dark) .shadow-primary {
+		--tw-shadow-color: var(--dark-primary-transparent) !important;
+	}
 </style>
