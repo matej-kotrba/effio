@@ -48,8 +48,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -279,7 +279,7 @@
 		>
 	{:else}
 		<span in:fade={{ duration: 200, delay: 200 }} out:fade={{ duration: 200 }}
-			>Details</span
+			>Finishing your test</span
 		>
 	{/if}
 </h3>
@@ -449,6 +449,8 @@
 									}
 									finishModalOpen();
 								}}
+								class="px-12 py-4 mr-auto"
+								titleClasses="md:text-h5"
 								title={'Finish'}
 							/>
 						</div>

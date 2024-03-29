@@ -8,6 +8,7 @@
 	export let buttonAttributes: HTMLButtonAttributes = {};
 	export { classes as class };
 	let classes = '';
+	export let titleClasses: string = '';
 </script>
 
 <button
@@ -31,7 +32,7 @@
 	{#if isLoading}
 		<span class="loading loading-spinner" />
 	{/if}
-	<span class="text-body3 md:text-body2">
+	<span class={twMerge('text-body3 md:text-body2', titleClasses)}>
 		{title}
 	</span>
 	<slot /></button
