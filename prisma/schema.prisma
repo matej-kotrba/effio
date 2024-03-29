@@ -267,6 +267,7 @@ model GroupSubcategory {
   groupId     String
   group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   type        GroupSubcategoryType      @default(CHAT)
+  image       String?
   tests       GroupSubcategoryOnTests[]
   testRecords TestRecord[]
   messages    GroupSubcategoryMessage[]

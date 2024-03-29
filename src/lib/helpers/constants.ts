@@ -21,3 +21,12 @@ export const GROUP_SUBCATEGORY_TYPES: { [Key in GroupSubcategoryType]: Key } = {
   CHAT: "CHAT",
   ANNOUCEMENT: "ANNOUCEMENT"
 }
+
+type GroupSubcategoryIconType = {
+  [key in GroupSubcategoryType]: string
+}
+
+export const groupSubcategoryIcons: GroupSubcategoryIconType = {
+  CHAT: 'material-symbols:chat',
+  ANNOUCEMENT: 'mdi:announcement'
+}

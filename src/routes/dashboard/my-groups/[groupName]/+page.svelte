@@ -12,9 +12,56 @@
 	import ImageImportV2, {
 		setImageUpload
 	} from '~components/inputs/ImageImportV2.svelte';
-	import { ALLOWED_IMAGE_TYPES } from '~helpers/constants';
+	import {
+		ALLOWED_IMAGE_TYPES,
+		DB_STRING_MESSAGE,
+		DB_STRING_REGEX,
+		GROUP_SUBCATEGORY_TYPES,
+		groupSubcategoryIcons
+	} from '~helpers/constants';
+	import type { Choice } from '~components/inputs/TypeRadioGroup.svelte';
+	import { superForm } from 'sveltekit-superforms/client';
+	import { channelCreateSchema } from '../schemas.js';
+	import TypeRadioGroup from '~components/inputs/TypeRadioGroup.svelte';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import SimpleButton from '~components/buttons/SimpleButton.svelte';
+	import { channelNameSchema } from '~schemas/testValidation.js';
+	import Channel from './Channel.svelte';
+	import ChannelAddNew from './ChannelAddNew.svelte';
 
 	export let data;
+
+	let newChannelDialog: HTMLDialogElement;
+	const newChannelChoices: Choice[] = [
+		{
+			icon: groupSubcategoryIcons.CHAT,
+			title: 'Chat',
+			value: GROUP_SUBCATEGORY_TYPES.CHAT,
+			description:
+				'Channel open for everyone to chat, owner can share files and tests'
+		},
+		{
+			icon: groupSubcategoryIcons.ANNOUCEMENT,
+			title: 'Announcement',
+			value: GROUP_SUBCATEGORY_TYPES.ANNOUCEMENT,
+			description: 'Channel for announcements, only owner can post here'
+		}
+	];
+
+	let openNewChannelDialog: () => void;
+	let closeNewChannelDialog: () => void;
+
+	const {
+		form: formCreate,
+		errors: errorsCreate,
+		enhance: enhanceCreate,
+		submitting: submittingCreate,
+		reset: resetCreate
+	} = superForm(data.createChannelForm, {
+		resetForm: true,
+		validators: channelCreateSchema
+	});
 
 	let openDialog: () => void;
 	let openSettingsDialog: () => void;
@@ -50,9 +97,6 @@
 		}
 	}
 
-	// Udělat image uploader, možná se podívat na nějaký package abych to nemusel opět využít,
-	// jinak to dodělat a poté také přidat rename a delete skupiny
-
 	// function onImageUpload(
 	// 	e: Event & {
 	// 		currentTarget: EventTarget & HTMLInputElement;
@@ -71,6 +115,68 @@
 	// }
 </script>
 
+<Dialog
+	bind:modal={newChannelDialog}
+	bind:open={openNewChannelDialog}
+	bind:close={closeNewChannelDialog}
+	onDialogClose={() => {
+		resetCreate();
+	}}
+	title="New channel"
+>
+	<form
+		method="POST"
+		action="?/createChannel"
+		use:enhanceCreate={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Group created successfully!');
+					closeNewChannelDialog();
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result['data'] ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			}
+		}}
+	>
+		<input type="hidden" name="id" value={data.group.id} />
+		<TypeRadioGroup
+			choices={newChannelChoices}
+			inputGroupName={'newChannelType'}
+			class="my-2"
+			bind:selectedRadio={$formCreate.newChannelType}
+		/>
+		<ErrorEnhance
+			error={$errorsCreate.name ? $errorsCreate.name[0] : undefined}
+		>
+			<TextInputSimple
+				title="Channel name"
+				titleName="name"
+				inputProperties={{ placeholder: 'Channel name...' }}
+				validationSchema={channelNameSchema}
+				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+				displayOutside={true}
+				bind:inputValue={$formCreate.name}
+			/>
+		</ErrorEnhance>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeNewChannelDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={$formCreate['name'].length === 0 ||
+					!!$errorsCreate.id?.length ||
+					!!$errorsCreate.name?.length ||
+					!!$errorsCreate.newChannelType?.length}>Create Channel</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
 <Dialog bind:open={openDialog} title={'Group invitation code'}>
 	<h6 class="mt-4 font-bold text-center uppercase text-h5">Here's your code</h6>
 	<div class="flex items-center justify-center gap-1">
@@ -135,7 +241,18 @@
 			</div>
 		{/if}
 	</div>
-	<div class="grid grid-cols-2 gap-4 mt-12">
+	<div class="channel-grid__container">
+		{#each data.group.groupsSubcategories as channel}
+			<Channel
+				name={channel.name}
+				type={channel.type}
+				imageUrl={channel.image ||
+					'https://res.cloudinary.com/dhuqo6dub/image/upload/v1711648049/groups/gvdu1ojq304p3z8nqlib.jpg'}
+			/>
+		{/each}
+		<ChannelAddNew onClick={openNewChannelDialog} />
+	</div>
+	<!-- <div class="grid grid-cols-2 gap-4 mt-12">
 		<div>
 			<h4 class="text-h5">Quick navigation</h4>
 			<Separator w={'100%'} h={'2px'} />
@@ -207,25 +324,15 @@
 				</div>
 			</div>
 		{/if}
-	</div>
-
-	<!-- <section class="p-2 rounded-md shadow-md bg-light_grey dark:bg-dark_grey">
-			<div class="flex items-center justify-between">
-				<h4 class="font-semibold text-h4">Admin part</h4>
-				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
-			</div>
-			<div>
-				<a
-					href="/dashboard/my-groups/{data.group.slug}/admin-test-overview"
-					class="p-2 rounded-md w-[200px] grid place-content-center shadow-md aspect-square bg-light_whiter dark:bg-dark_terciary"
-				>
-					<h5>Test overview</h5>
-				</a>
-			</div>
-		</section> -->
+	</div> -->
 </div>
 
 <style>
+	.channel-grid__container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		gap: 0.5rem;
+	}
 	.grid-leader__container {
 		grid-template-columns: auto 1fr;
 		grid-auto-rows: auto;

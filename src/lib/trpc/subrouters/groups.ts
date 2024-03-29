@@ -531,21 +531,16 @@ export const groupsRouter = router({
     }
   }),
 
-  createChannel: loggedInProcedure.input(z.object({
-    groupId: z.string(),
-    channel: z.object({
-      name: channelNameSchema
-    })
-  })).mutation(async ({ ctx, input }) => {
+  createChannel: loggedInProcedure.input(channelCreateSchema).mutation(async ({ ctx, input }) => {
     const groupPromise = ctx.prisma.group.findUnique({
       where: {
-        id: input.groupId
+        id: input.id
       }
     })
 
     const groupOwnerPromise = ctx.prisma.group.findUnique({
       where: {
-        id: input.groupId,
+        id: input.id,
         ownerId: ctx.userId
       }
     })
@@ -562,11 +557,12 @@ export const groupsRouter = router({
 
     const channel = await ctx.prisma.groupSubcategory.create({
       data: {
-        name: input.channel.name,
-        slug: tranformString(input.channel.name),
+        name: input.name,
+        slug: tranformString(input.name),
+        type: input.newChannelType,
         group: {
           connect: {
-            id: input.groupId
+            id: input.id
           }
         }
       }

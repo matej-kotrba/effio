@@ -3,8 +3,6 @@
 	import SuccessKeyframe from '~components/effects/SuccessKeyframe.svelte';
 	import Skewed from '~components/loaders/Skewed.svelte';
 	import { clickOutside } from '~use/clickOutside';
-	import { Dialog } from 'bits-ui';
-	import { fade } from 'svelte/transition';
 	import Portal from '~components/containers/Portal.svelte';
 
 	export let title: string = '';
@@ -32,6 +30,12 @@
 	export let isSuccessOpen = false;
 	export let isSubmitting = false;
 
+	export let onDialogClose: (
+		e: Event & {
+			currentTarget: EventTarget & HTMLDialogElement;
+		}
+	) => void = () => {};
+
 	export let modal: HTMLDialogElement | undefined = undefined;
 
 	let isOpen = false;
@@ -47,6 +51,7 @@
 
 <dialog
 	bind:this={modal}
+	on:close={onDialogClose}
 	class={twMerge(
 		`w-full bg-transparent animate-fade duration-150 p-0`,
 		classes
@@ -72,6 +77,7 @@
 			}).onfinish = () => {
 				if (!modal) return;
 				modal.close();
+				isOpen = false;
 			};
 		}}
 	>
