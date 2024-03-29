@@ -10,6 +10,16 @@
 	export let imageUrl: string | null;
 
 	let isImageFallback = imageUrl === null;
+
+	$: word = name.split(' ').map((word) => {
+		return word[0];
+	});
+	$: displayedWord =
+		word.length === 1
+			? name.slice(0, 3)
+			: word.length > 5
+			? word.slice(0, 5).join('')
+			: word.join('');
 </script>
 
 <button
@@ -25,11 +35,18 @@
 	<div
 		class="relative object-cover mx-auto overflow-hidden rounded-lg w-fit aspect-square"
 	>
-		<div class="bg-red-500 w-[70px] h-full grid place-content-center">
-			{name.split(' ').map((word) => {
-				return word[0];
-			})}
-		</div>
+		{#if true}
+			<div
+				class="fallback w-[70px] h-full grid place-content-center"
+				style={`--color: ${
+					displayedWord.split('').reduce((count, letter) => {
+						return letter.charCodeAt(0) * 5 + count;
+					}, 0) % 360
+				};`}
+			>
+				{displayedWord}
+			</div>
+		{/if}
 		<!-- <img
 			src={imageUrl}
 			role="presentation"
@@ -45,3 +62,9 @@
 		{name}
 	</p>
 </button>
+
+<style>
+	.fallback {
+		background-color: hsl(var(--color), 100%, 50%);
+	}
+</style>
