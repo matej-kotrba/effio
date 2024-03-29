@@ -17,6 +17,7 @@
 		DB_STRING_MESSAGE,
 		DB_STRING_REGEX,
 		GROUP_SUBCATEGORY_TYPES,
+		IMAGE_IMPORT_SIZE_IN_MB,
 		groupSubcategoryIcons
 	} from '~helpers/constants';
 	import type { Choice } from '~components/inputs/TypeRadioGroup.svelte';
@@ -66,12 +67,15 @@
 	let openDialog: () => void;
 	let openSettingsDialog: () => void;
 
+	let fileInputRef: HTMLInputElement;
+	let uploadedImageUrl: string = '';
+
+	let code: string = '';
+
 	function onOpenInvite() {
 		openDialog();
 		getOrCreateInviteCode();
 	}
-
-	let code: string = '';
 
 	async function getOrCreateInviteCode() {
 		if (code) return;
@@ -97,22 +101,20 @@
 		}
 	}
 
-	// function onImageUpload(
-	// 	e: Event & {
-	// 		currentTarget: EventTarget & HTMLInputElement;
-	// 	}
-	// ) {
-	// 	setImageUpload(
-	// 		e,
-	// 		ALLOWED_IMAGE_TYPES,
-	// 		maxImageSizeInMB,
-	// 		(file, resultUrl) => {
-	// 			content.imageFile = file;
-	// 			uploadedImageUrl = resultUrl;
-	// 			setImageToMap(uploadedImageUrl);
-	// 		}
-	// 	);
-	// }
+	function onImageUpload(
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		}
+	) {
+		setImageUpload(
+			e,
+			ALLOWED_IMAGE_TYPES,
+			IMAGE_IMPORT_SIZE_IN_MB,
+			(file, resultUrl) => {
+				uploadedImageUrl = resultUrl;
+			}
+		);
+	}
 </script>
 
 <Dialog
@@ -212,8 +214,22 @@
 		</li>
 	</ul>
 </Dialog>
-<Dialog title="Group settings" bind:open={openSettingsDialog}>
-	<!-- <ImageImportV2 allowedImageTypes={ALLOWED_IMAGE_TYPES} uploadedImageUrl={""} /> -->
+<Dialog
+	title="Group settings"
+	bind:open={openSettingsDialog}
+	onDialogClose={() => {
+		// Reseting the form on closing the dialog
+		uploadedImageUrl = '';
+		fileInputRef.value = '';
+	}}
+>
+	<ImageImportV2
+		bind:fileInput={fileInputRef}
+		inputId={'group'}
+		allowedImageTypes={ALLOWED_IMAGE_TYPES}
+		uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
+		{onImageUpload}
+	/>
 </Dialog>
 
 <div class="p-4">
@@ -246,8 +262,8 @@
 			<Channel
 				name={channel.name}
 				type={channel.type}
-				imageUrl={channel.image ||
-					'https://res.cloudinary.com/dhuqo6dub/image/upload/v1711648049/groups/gvdu1ojq304p3z8nqlib.jpg'}
+				imageUrl={channel.image}
+				redirectLink={`${$page.url.href}/${channel.slug}`}
 			/>
 		{/each}
 		<ChannelAddNew onClick={openNewChannelDialog} />

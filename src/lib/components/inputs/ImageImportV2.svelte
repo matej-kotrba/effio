@@ -8,7 +8,7 @@
 		},
 		allowedTypes: string[],
 		maxImageSizeInMB: number,
-		onFileLoad: (file: File, resultUrl: string) => void
+		onFileLoad?: (file: File, resultUrl: string) => void
 	) {
 		if (!e.currentTarget.files) return;
 		const file = e.currentTarget.files[0];
@@ -42,7 +42,7 @@
 		reader.readAsDataURL(file);
 
 		reader.onload = () => {
-			onFileLoad(file, reader.result as string);
+			if (onFileLoad) onFileLoad(file, reader.result as string);
 		};
 	}
 </script>
@@ -54,12 +54,14 @@
 		e: Event & { currentTarget: EventTarget & HTMLInputElement }
 	) => void;
 	export let inputId: number | string;
+	export let fileInput: HTMLInputElement | null = null;
 </script>
 
 <div
 	class="relative grid w-full border-2 border-black border-dashed aspect-video place-content-center"
 >
 	<input
+		bind:this={fileInput}
 		type="file"
 		name="image-upload-{inputId}"
 		id="image-upload-{inputId}"
