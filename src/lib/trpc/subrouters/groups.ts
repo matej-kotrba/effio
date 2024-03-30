@@ -29,7 +29,6 @@ function transformStringIntoSlug(text: string, username: string) {
 export const groupsRouter = router({
   createGroup: loggedInProcedure.input(z.object({
     name: z.string().regex(DB_STRING_REGEX),
-    description: z.string().optional(),
     imageUrl: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -63,7 +62,6 @@ export const groupsRouter = router({
     const newGroup = await ctx.prisma.group.create({
       data: {
         name: input.name,
-        description: input.description,
         imageUrl: input.imageUrl,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ownerId: ctx.user!.id!,
@@ -89,7 +87,6 @@ export const groupsRouter = router({
   updateGroup: loggedInProcedure.input(z.object({
     id: z.string(),
     name: z.string().regex(DB_STRING_REGEX).optional(),
-    description: z.string().optional(),
     imageUrl: z.string().optional(),
   })).mutation(async ({ ctx, input }) => {
     const result = await trpcCheckForRateLimit("groupUpdate", ctx.userId, "updating groups")
@@ -97,6 +94,7 @@ export const groupsRouter = router({
       throw result
     }
 
+    // Intentionally not updating slug so the connection for anyone using it wont fail
     const group = await ctx.prisma.group.update({
       where: {
         id: input.id,
@@ -104,10 +102,8 @@ export const groupsRouter = router({
       },
       data: {
         name: input.name,
-        description: input.description,
         imageUrl: input.imageUrl,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        slug: input?.name ? transformStringIntoSlug(input.name, ctx.user!.name!) : undefined,
+        // slug: input?.name ? transformStringIntoSlug(input.name, ctx.user!.name!) : undefined,
       }
     })
 

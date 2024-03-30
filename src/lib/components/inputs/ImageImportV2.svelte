@@ -55,6 +55,14 @@
 	) => void;
 	export let inputId: number | string;
 	export let fileInput: HTMLInputElement | null = null;
+	export let onReset: (() => void) | undefined = undefined;
+
+	function onResetButtonClick() {
+		if (fileInput) {
+			fileInput.value = '';
+		}
+		if (onReset) onReset();
+	}
 </script>
 
 <div
@@ -69,6 +77,15 @@
 		class="absolute w-full h-full opacity-0 cursor-pointer"
 		on:change={onImageUpload}
 	/>
+	{#if onReset}
+		<button
+			type="button"
+			class="absolute z-10 grid text-2xl text-white duration-100 right-1 top-1 drop-shadow-sm hover:text-light_grey_dark hover:rotate-180 place-content-center"
+			on:click={onResetButtonClick}
+		>
+			<iconify-icon icon="fluent:arrow-sync-16-regular" />
+		</button>
+	{/if}
 	<div
 		class="absolute w-full h-full overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-md pointer-events-none left-1/2 top-1/2"
 	>

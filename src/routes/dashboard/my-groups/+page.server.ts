@@ -65,7 +65,6 @@ export const actions = {
     try {
       await (await trpcServer(event)).groups.createGroup({
         name: form.data.name,
-        description: form.data.description,
         imageUrl: uploadStream.secure_url ? uploadStream.secure_url : uploadStream.url,
       })
     }

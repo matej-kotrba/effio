@@ -10,7 +10,6 @@
 		GROUP_DESCRIPTION_MIN,
 		GROUP_NAME_MAX,
 		GROUP_NAME_MIN,
-		groupDescriptionSchema,
 		groupNameSchema
 	} from '~schemas/testValidation.js';
 	import { joinCodeSchema, JOIN_CODE_LENGTH } from '~schemas/inviteCode';
@@ -85,23 +84,6 @@
 			</ErrorEnhance>
 			<div class="flex items-start gap-2 h-fit">
 				<ImageImport title="Group photo" />
-				<div class="w-full">
-					<ErrorEnhance
-						error={$errors.description ? $errors.description[0] : undefined}
-					>
-						<TextAreaInput
-							title="Group description"
-							titleName="description"
-							validationSchema={groupDescriptionSchema}
-							doesLimit
-							min={GROUP_DESCRIPTION_MIN}
-							max={GROUP_DESCRIPTION_MAX}
-							customStyles={'min-h-[100px] text-body2'}
-							inputProperties={{ placeholder: 'Optional' }}
-							bind:inputValue={$form.description}
-						/>
-					</ErrorEnhance>
-				</div>
 			</div>
 			<Space gap={16} />
 			<BasicButton

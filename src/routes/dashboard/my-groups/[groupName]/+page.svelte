@@ -78,6 +78,8 @@
 		validators: updateGroupSchema
 	});
 
+	let isInvalidating = true;
+
 	let openDialog: () => void;
 	let openSettingsDialog: () => void;
 	let closeSettingsDialog: () => void;
@@ -133,6 +135,7 @@
 </script>
 
 <Dialog
+	isSubmitting={$submittingCreate}
 	bind:modal={newChannelDialog}
 	bind:open={openNewChannelDialog}
 	bind:close={closeNewChannelDialog}
@@ -230,6 +233,7 @@
 	</ul>
 </Dialog>
 <Dialog
+	isSubmitting={$submittingUpdateGroup}
 	title="Group settings"
 	bind:open={openSettingsDialog}
 	bind:close={closeSettingsDialog}
@@ -237,13 +241,14 @@
 		// Reseting the form on closing the dialog
 		uploadedImageUrl = '';
 		fileInputRef.value = '';
+		resetUpdateGroup();
 	}}
 >
 	<form
 		method="POST"
 		action="?/updateGroup"
 		enctype="multipart/form-data"
-		use:enhanceCreate={{
+		use:enhanceUpdateGroup={{
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
 					toast.success('Group updated successfully!');
@@ -256,6 +261,9 @@
 							: 'Error ocurred'
 					);
 				}
+			},
+			onUpdated: ({}) => {
+				console.log('b');
 			}
 		}}
 	>
@@ -270,37 +278,38 @@
 				validationSchema={groupNameSchema}
 				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
 				displayOutside={true}
-				bind:inputValue={$formCreate.name}
+				bind:inputValue={$formUpdateGroup.name}
 			/>
 		</ErrorEnhance>
-		<input type="file" name="image-upload-group" />
-		<!-- <ImageImportV2
+		<ImageImportV2
 			bind:fileInput={fileInputRef}
 			inputId={'group'}
 			allowedImageTypes={ALLOWED_IMAGE_TYPES}
 			uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
+			onReset={() => {
+				uploadedImageUrl = '';
+			}}
 			{onImageUpload}
-		/> -->
-		<SimpleButton variant="ghost" onClick={closeSettingsDialog}
-			>Cancel</SimpleButton
-		>
-		<SimpleButton variant="filled" designType="primary" type="submit"
-			>Update Group</SimpleButton
-		>
+		/>
+		<div class="flex justify-end gap-2 mt-2">
+			<SimpleButton variant="ghost" onClick={closeSettingsDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton variant="filled" designType="primary" type="submit"
+				>Update Group</SimpleButton
+			>
+		</div>
 	</form>
 </Dialog>
 
 <div class="p-4">
 	<div class="flex justify-between">
-		<div>
+		<di class="mb-4">
 			<h3 class="text-h3">
 				<span class="font-thin">Welcome to</span>
 				<span class="font-semibold">{data.group.name}</span>
 			</h3>
-			<p class="text-body1">
-				{data.group.description}
-			</p>
-		</div>
+		</di>
 		{#if data.session?.user?.id === data.group.ownerId}
 			<div class="flex gap-2">
 				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />

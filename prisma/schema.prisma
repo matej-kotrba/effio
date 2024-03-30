@@ -238,7 +238,6 @@ model Group {
   slug                String             @unique
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
-  description         String?            @db.Text
   ownerId             String
   imageUrl            String             @default("")
   users               GroupOnUsers[]

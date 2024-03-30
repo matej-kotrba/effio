@@ -28,6 +28,14 @@ export const POST = async (event) => {
   let uploadStream: any;
 
   if (image instanceof File) {
+    if (image.size === 0 || image.name === "") {
+      return json({
+        error: "Image is empty"
+      }, {
+        status: 400
+      })
+    }
+
     if (image.size > IMAGE_IMPORT_SIZE_IN_MB * 1024 * 1024) {
       return json({
         error: `Image is larger than ${IMAGE_IMPORT_SIZE_IN_MB}MB`
