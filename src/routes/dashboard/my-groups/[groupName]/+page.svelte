@@ -39,6 +39,7 @@
 	import ChannelAddNew from './ChannelAddNew.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
 	import * as Popover from '~/lib/components/ui/popover/index';
+	import User from './User.svelte';
 
 	export let data;
 
@@ -418,6 +419,9 @@
 			</div>
 		{/if}
 	</div>
+	<h4 class="text-h5">Channels</h4>
+	<Separator w="100%" h="1px" />
+	<Space gap={16} />
 	<div class="channel-grid__container">
 		{#each data.group.groupsSubcategories as channel}
 			<Channel
@@ -429,23 +433,16 @@
 		{/each}
 		<ChannelAddNew onClick={openNewChannelDialog} />
 	</div>
+	<Space gap={16} />
+	<h4 class="text-h5">Users</h4>
+	<Separator w="100%" h="1px" />
+	<Space gap={16} />
+	<div class="user-grid__container">
+		{#each data.group.users as groupOnUser}
+			<User {groupOnUser} />
+		{/each}
+	</div>
 	<!-- <div class="grid grid-cols-2 gap-4 mt-12">
-		<div>
-			<h4 class="text-h5">Quick navigation</h4>
-			<Separator w={'100%'} h={'2px'} />
-			<Space gap={10} />
-			<div class="flex flex-col gap-1">
-				{#each data['group']['groupsSubcategories'] as channel}
-					<a
-						href="{$page.url.href}/{channel.slug}"
-						class="w-full px-4 py-2 border-2 border-solid border-light_text_black_80 rounded-2xl max-w-[24rem]
-						hover:bg-light_grey duration-100 dark:hover:bg-dark_light_grey dark:border-dark_text_white_80"
-					>
-						{channel.name}
-					</a>
-				{/each}
-			</div>
-		</div>
 		<div>
 			<h4 class="text-h5">Users</h4>
 			<Separator w={'100%'} h={'2px'} />
@@ -510,6 +507,13 @@
 		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 		gap: 0.5rem;
 	}
+
+	.user-grid__container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 0.5rem;
+	}
+
 	.grid-leader__container {
 		grid-template-columns: auto 1fr;
 		grid-auto-rows: auto;

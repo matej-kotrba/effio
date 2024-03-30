@@ -263,6 +263,7 @@ export const groupsRouter = router({
               select: {
                 name: true,
                 image: true,
+                email: true,
               }
             }
           },
