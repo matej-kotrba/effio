@@ -33,6 +33,7 @@
 	} from '~schemas/testValidation.js';
 	import Channel from './Channel.svelte';
 	import ChannelAddNew from './ChannelAddNew.svelte';
+	import Invalidating from '~components/portals/Invalidating.svelte';
 
 	export let data;
 
@@ -78,7 +79,7 @@
 		validators: updateGroupSchema
 	});
 
-	let isInvalidating = true;
+	let isInvalidating = false;
 
 	let openDialog: () => void;
 	let openSettingsDialog: () => void;
@@ -152,12 +153,16 @@
 				if (result['status'] === 200) {
 					toast.success('Channel created successfully!');
 					closeNewChannelDialog();
+					isInvalidating = true;
 				} else if (result['type'] === 'failure') {
 					console.log(result);
 					toast.error(
 						result['data'] ? result['data']['error'] : 'Error ocurred'
 					);
 				}
+			},
+			onUpdated: () => {
+				isInvalidating = false;
 			}
 		}}
 	>
@@ -253,6 +258,7 @@
 				if (result['status'] === 200) {
 					toast.success('Group updated successfully!');
 					closeSettingsDialog();
+					isInvalidating = true;
 				} else if (result['type'] === 'failure') {
 					console.log(result);
 					toast.error(
@@ -262,8 +268,8 @@
 					);
 				}
 			},
-			onUpdated: ({}) => {
-				console.log('b');
+			onUpdated: () => {
+				isInvalidating = false;
 			}
 		}}
 	>
@@ -301,7 +307,7 @@
 		</div>
 	</form>
 </Dialog>
-
+<Invalidating invalidating={isInvalidating} />
 <div class="p-4">
 	<div class="flex justify-between">
 		<di class="mb-4">
