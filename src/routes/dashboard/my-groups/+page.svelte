@@ -18,6 +18,8 @@
 	import { createGroupSchema, joinGroupSchema } from './schemas';
 	import toast from 'svelte-french-toast';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
+	import Invalidating from '~components/portals/Invalidating.svelte';
+	import DisableFormBlocking from '~components/navigation/DisableFormBlocking.svelte';
 
 	export let data;
 
@@ -38,8 +40,12 @@
 
 	let closeCreateDialog: () => void = () => {};
 	let closeJoinDialog: () => void = () => {};
+
+	let isInvalidating = false;
 </script>
 
+<DisableFormBlocking />
+<Invalidating invalidating={isInvalidating} />
 <div class="px-4 pt-6 md:px-8 xl:px-16">
 	<DashboardTitle
 		title="My Groups"
@@ -61,12 +67,15 @@
 					if (result['status'] === 200) {
 						toast.success('Group created successfully!');
 						closeCreateDialog();
+						isInvalidating = true;
 					} else if (result['type'] === 'failure') {
-						console.log(result);
 						toast.error(
 							result['data'] ? result['data']['error'] : 'Error ocurred'
 						);
 					}
+				},
+				onUpdated: () => {
+					isInvalidating = false;
 				}
 			}}
 			action="?/createGroup"

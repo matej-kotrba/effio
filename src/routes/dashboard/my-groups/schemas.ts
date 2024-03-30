@@ -13,6 +13,11 @@ export const updateGroupSchema = z.object({
   "image-upload-group": z.string().optional()
 })
 
+export const deleteGroupSchema = z.object({
+  id: z.string(),
+  validation_name: groupNameSchema
+})
+
 export const joinGroupSchema = z.object({
   code: joinCodeSchema
 })

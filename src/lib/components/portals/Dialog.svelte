@@ -49,6 +49,7 @@
 	/>
 </Portal>
 
+<svelte:window on:keydown={(e) => e.key === 'Escape' && close()} />
 <dialog
 	bind:this={modal}
 	on:close={onDialogClose}

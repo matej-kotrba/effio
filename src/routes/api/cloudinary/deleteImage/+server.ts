@@ -1,9 +1,14 @@
-import { error } from '@sveltejs/kit'
+import { error, json } from '@sveltejs/kit'
 import { deleteImageFromCloudinary } from '~/lib/server/cloudinary/utils.js'
 import { checkRequestOrigin } from '~/lib/server/utils/endpoints.js'
 
 export const POST = async (event) => {
-  checkRequestOrigin(event)
+  try {
+    checkRequestOrigin(event)
+  }
+  catch (e) {
+    return json("You are not allowed to delete images")
+  }
   const { request } = event
 
   const data = await request.json()

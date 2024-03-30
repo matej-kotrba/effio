@@ -22,7 +22,11 @@
 	} from '~helpers/constants';
 	import type { Choice } from '~components/inputs/TypeRadioGroup.svelte';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { channelCreateSchema, updateGroupSchema } from '../schemas.js';
+	import {
+		channelCreateSchema,
+		deleteGroupSchema,
+		updateGroupSchema
+	} from '../schemas.js';
 	import TypeRadioGroup from '~components/inputs/TypeRadioGroup.svelte';
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
@@ -34,6 +38,8 @@
 	import Channel from './Channel.svelte';
 	import ChannelAddNew from './ChannelAddNew.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
+	import * as Popover from '~/lib/components/ui/popover/index';
+	import DisableFormBlocking from '~components/navigation/DisableFormBlocking.svelte';
 
 	export let data;
 
@@ -77,6 +83,17 @@
 	} = superForm(data.updateGroupForm, {
 		resetForm: true,
 		validators: updateGroupSchema
+	});
+
+	const {
+		form: formDeleteGroup,
+		errors: errorsDeleteGroup,
+		enhance: enhanceDeleteGroup,
+		submitting: submittingDeleteGroup,
+		reset: resetDeleteGroup
+	} = superForm(data.deleteGroupForm, {
+		resetForm: true,
+		validators: deleteGroupSchema
 	});
 
 	let isInvalidating = false;
@@ -197,7 +214,8 @@
 				disabled={$formCreate['name'].length === 0 ||
 					!!$errorsCreate.id?.length ||
 					!!$errorsCreate.name?.length ||
-					!!$errorsCreate.newChannelType?.length}>Create Channel</SimpleButton
+					!!$errorsCreate.newChannelType?.length ||
+					isInvalidating}>Create Channel</SimpleButton
 			>
 		</div>
 	</form>
@@ -249,65 +267,127 @@
 		resetUpdateGroup();
 	}}
 >
-	<form
-		method="POST"
-		action="?/updateGroup"
-		enctype="multipart/form-data"
-		use:enhanceUpdateGroup={{
-			onResult: ({ result }) => {
-				if (result['status'] === 200) {
-					toast.success('Group updated successfully!');
-					closeSettingsDialog();
-					isInvalidating = true;
-				} else if (result['type'] === 'failure') {
-					console.log(result);
-					toast.error(
-						result['data'] && result['data']['error']
-							? result['data']['error']
-							: 'Error ocurred'
-					);
+	<div class="max-h-[max(200px,60vh)] overflow-y-auto px-2">
+		<h5>Updating group</h5>
+		<Separator w="100%" h="1px" />
+		<Space gap={16} />
+		<form
+			method="POST"
+			action="?/updateGroup"
+			enctype="multipart/form-data"
+			use:enhanceUpdateGroup={{
+				onResult: ({ result }) => {
+					if (result['status'] === 200) {
+						toast.success('Group updated successfully!');
+						closeSettingsDialog();
+						isInvalidating = true;
+					} else if (result['type'] === 'failure') {
+						console.log(result);
+						toast.error(
+							result['data'] && result['data']['error']
+								? result['data']['error']
+								: 'Error ocurred'
+						);
+					}
+				},
+				onUpdated: () => {
+					isInvalidating = false;
 				}
-			},
-			onUpdated: () => {
-				isInvalidating = false;
-			}
-		}}
-	>
-		<input type="hidden" name="id" value={data.group.id} />
-		<ErrorEnhance
-			error={$errorsUpdateGroup.name ? $errorsUpdateGroup.name[0] : undefined}
-		>
-			<TextInputSimple
-				title="Group name"
-				titleName="name"
-				inputProperties={{ placeholder: 'Group name...' }}
-				validationSchema={groupNameSchema}
-				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
-				displayOutside={true}
-				bind:inputValue={$formUpdateGroup.name}
-			/>
-		</ErrorEnhance>
-		<ImageImportV2
-			bind:fileInput={fileInputRef}
-			inputId={'group'}
-			allowedImageTypes={ALLOWED_IMAGE_TYPES}
-			uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
-			onReset={() => {
-				uploadedImageUrl = '';
 			}}
-			{onImageUpload}
-		/>
-		<div class="flex justify-end gap-2 mt-2">
-			<SimpleButton variant="ghost" onClick={closeSettingsDialog}
-				>Cancel</SimpleButton
+		>
+			<input type="hidden" name="id" value={data.group.id} />
+			<ErrorEnhance
+				error={$errorsUpdateGroup.name ? $errorsUpdateGroup.name[0] : undefined}
 			>
-			<SimpleButton variant="filled" designType="primary" type="submit"
-				>Update Group</SimpleButton
-			>
-		</div>
-	</form>
+				<TextInputSimple
+					title="Group name"
+					titleName="name"
+					inputProperties={{ placeholder: 'Group name...' }}
+					validationSchema={groupNameSchema}
+					validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+					displayOutside={true}
+					bind:inputValue={$formUpdateGroup.name}
+				/>
+			</ErrorEnhance>
+			<ImageImportV2
+				bind:fileInput={fileInputRef}
+				inputId={'group'}
+				allowedImageTypes={ALLOWED_IMAGE_TYPES}
+				uploadedImageUrl={uploadedImageUrl || data.group.imageUrl}
+				onReset={() => {
+					uploadedImageUrl = '';
+				}}
+				{onImageUpload}
+			/>
+			<div class="flex justify-end gap-2 mt-2">
+				<SimpleButton variant="ghost" onClick={closeSettingsDialog}
+					>Cancel</SimpleButton
+				>
+				<SimpleButton
+					variant="filled"
+					designType="primary"
+					type="submit"
+					disabled={isInvalidating || !!$errorsUpdateGroup.name?.length}
+					>Update Group</SimpleButton
+				>
+			</div>
+		</form>
+		<h5>Group settings</h5>
+		<Separator w="100%" h="1px" />
+		<Space gap={16} />
+		<Popover.Root portal={null}>
+			<Popover.Trigger>
+				<SimpleButton
+					variant="filled"
+					designType="primary"
+					class="duration-100 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
+					type="button"
+					disabled={isInvalidating || !!$errorsUpdateGroup.name?.length}
+					>Delete Group</SimpleButton
+				>
+			</Popover.Trigger>
+			<Popover.Content class="w-[min(90vw,24rem)]">
+				<form
+					method="POST"
+					action="?/deleteGroup"
+					use:enhanceDeleteGroup={{
+						onResult: ({ result }) => {
+							if (result['status'] === 200) {
+								toast.success('Group deleted successfully!');
+								closeNewChannelDialog();
+								isInvalidating = true;
+							} else if (result['type'] === 'failure') {
+								toast.error(
+									result['data'] ? result['data']['error'] : 'Error ocurred'
+								);
+							}
+						},
+						onUpdated: () => {
+							isInvalidating = false;
+						}
+					}}
+				>
+					<p class="text-body2">
+						Please rewrite the name <span
+							class="font-semibold text-body1 text-light_text_black dark:text-dark_text_white"
+							>"{data.group.name}"</span
+						> if you want to delete this group
+					</p>
+					<input type="hidden" name="id" value={data.group.id} />
+					<TextInputSimple
+						displayTitle={false}
+						title="Group name"
+						titleName="validation_name"
+						class="py-2"
+						bind:inputValue={$formDeleteGroup.validation_name}
+					/>
+				</form>
+			</Popover.Content>
+		</Popover.Root>
+	</div>
 </Dialog>
 <Invalidating invalidating={isInvalidating} />
+<DisableFormBlocking />
 <div class="p-4">
 	<div class="flex justify-between">
 		<di class="mb-4">

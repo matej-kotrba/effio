@@ -6,6 +6,7 @@ import { DB_STRING_REGEX, MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
 import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { channelCreateSchema } from "~/routes/dashboard/my-groups/schemas"
 import { channelNameSchema } from "~schemas/testValidation"
+import { deleteImageFromCloudinary } from "~/lib/server/cloudinary/utils"
 
 function tranformString(text: string) {
   let transformedText = ""
@@ -120,9 +121,25 @@ export const groupsRouter = router({
     if (result) {
       throw result
     }
+    const group = await ctx.prisma.group.findFirst({
+      where: {
+        id: input.id,
+        ownerId: ctx.userId
+      }
+    })
+
+    if (!group) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
+    }
+
+    if (group.imageUrl) {
+      deleteImageFromCloudinary(group.imageUrl, "groups")
+    }
+
     const deletedGroup = await ctx.prisma.group.delete({
       where: {
-        id: input.id
+        id: input.id,
+        ownerId: ctx.userId
       }
     })
 
@@ -177,6 +194,39 @@ export const groupsRouter = router({
             }
           }
         } : false
+      }
+    })
+
+    return group
+  }),
+  getGroupById: loggedInProcedure.input(z.object({
+    id: z.string(),
+    includeSubcategories: z.boolean().optional(),
+    includeOwner: z.boolean().optional(),
+  })).query(async ({ ctx, input }) => {
+    // TODO: Think this through and try to find a way to store name as unique
+    const group = await ctx.prisma.group.findFirst({
+      where: {
+        id: input.id,
+      },
+      include: {
+        users: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                image: true,
+              }
+            }
+          },
+          orderBy: {
+            user: {
+              name: "asc"
+            }
+          }
+        },
+        groupsSubcategories: input.includeSubcategories || false,
+        owner: input.includeOwner || false,
       }
     })
 

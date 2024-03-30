@@ -41,6 +41,9 @@ export const actions = {
     let uploadStream: any;
 
     if (image instanceof File) {
+      if (image.size === 0 || image.name === "") {
+        return fail(400, { form, error: "Image is required" })
+      }
       if (image.size > IMAGE_IMPORT_SIZE_IN_MB * 1024 * 1024) {
         return fail(400, { form, error: "Image is too large" })
       }
