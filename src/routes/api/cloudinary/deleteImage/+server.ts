@@ -14,7 +14,7 @@ export const POST = async (event) => {
   const data = await request.json()
 
   if (!data) {
-    throw error(400, {
+    return json({
       message: "No body provided"
     })
   }
@@ -22,7 +22,7 @@ export const POST = async (event) => {
   const { imageUrl, folderPath } = data as { imageUrl: string | undefined, folderPath: string | undefined }
 
   if (!imageUrl) {
-    throw error(400, {
+    return json({
       message: "No image url provided"
     })
   }

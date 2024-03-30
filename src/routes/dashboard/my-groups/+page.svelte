@@ -19,7 +19,6 @@
 	import toast from 'svelte-french-toast';
 	import ImageImport from '~components/inputs/ImageImport.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
-	import DisableFormBlocking from '~components/navigation/DisableFormBlocking.svelte';
 
 	export let data;
 
@@ -44,7 +43,6 @@
 	let isInvalidating = false;
 </script>
 
-<DisableFormBlocking />
 <Invalidating invalidating={isInvalidating} />
 <div class="px-4 pt-6 md:px-8 xl:px-16">
 	<DashboardTitle

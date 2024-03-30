@@ -92,14 +92,12 @@ export const actions = {
 
     try {
       await (await trpcServer(event)).groups.deleteGroup(form.data)
-      throw redirect(304, "/dashboard/my-groups")
     }
     catch (e) {
       if (e instanceof TRPCError) {
         return fail(400, { form, error: e.message })
       }
     }
-
-    return { form }
+    throw redirect(304, "/dashboard/my-groups")
   },
 }

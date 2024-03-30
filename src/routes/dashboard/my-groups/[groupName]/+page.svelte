@@ -39,7 +39,6 @@
 	import ChannelAddNew from './ChannelAddNew.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
 	import * as Popover from '~/lib/components/ui/popover/index';
-	import DisableFormBlocking from '~components/navigation/DisableFormBlocking.svelte';
 
 	export let data;
 
@@ -381,13 +380,22 @@
 						class="py-2"
 						bind:inputValue={$formDeleteGroup.validation_name}
 					/>
+					<div class="flex justify-end">
+						<SimpleButton
+							variant="filled"
+							designType="primary"
+							class="duration-100 text-body2 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
+							type="submit"
+							disabled={isInvalidating || !!$errorsUpdateGroup.name?.length}
+							>Delete</SimpleButton
+						>
+					</div>
 				</form>
 			</Popover.Content>
 		</Popover.Root>
 	</div>
 </Dialog>
 <Invalidating invalidating={isInvalidating} />
-<DisableFormBlocking />
 <div class="p-4">
 	<div class="flex justify-between">
 		<di class="mb-4">
