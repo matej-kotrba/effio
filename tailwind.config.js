@@ -45,7 +45,7 @@ export default {
 				dark_light_grey: '#292929',
 				dark_grey: '#1f1f1f',
 				dark_black: '#111111',
-				dark_blacker: '#000000',
+				dark_blacker: '#0f0f0f',
 				dark_star: '#a16207',
 
 				success: '#5cb85c',

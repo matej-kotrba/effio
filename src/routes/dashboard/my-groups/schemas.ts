@@ -27,3 +27,9 @@ export const channelCreateSchema = z.object({
   name: channelNameSchema,
   newChannelType: channelTypeSchema
 })
+
+export const kickUserFromGroupSchema = z.object({
+  groupId: z.string(),
+  userId: z.string(),
+  shouldBan: z.boolean().optional()
+})

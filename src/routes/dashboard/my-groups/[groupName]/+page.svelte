@@ -25,6 +25,7 @@
 	import {
 		channelCreateSchema,
 		deleteGroupSchema,
+		kickUserFromGroupSchema,
 		updateGroupSchema
 	} from '../schemas.js';
 	import TypeRadioGroup from '~components/inputs/TypeRadioGroup.svelte';
@@ -96,11 +97,31 @@
 		validators: deleteGroupSchema
 	});
 
+	const {
+		form: formKickUserFromGroup,
+		errors: errorsKickUserFromGroup,
+		enhance: enhanceKickUserFromGroup,
+		submitting: submittingKickUserFromGroup,
+		reset: resetKickUserFromGroup
+	} = superForm(data.kickUserFromGroupForm, {
+		resetForm: true,
+		validators: kickUserFromGroupSchema
+	});
+
 	let isInvalidating = false;
 
-	let openDialog: () => void;
+	let openCodeDialog: () => void;
 	let openSettingsDialog: () => void;
 	let closeSettingsDialog: () => void;
+	let openKickOrBanDialog: () => void;
+	let closeKickOrBanDialog: () => void;
+
+	function onKickOrBanUser(userId: string | null, type: 'kick' | 'ban') {
+		if (userId === null) return;
+		openKickOrBanDialog();
+		$formKickUserFromGroup.userId = userId;
+		$formKickUserFromGroup.shouldBan = type === 'ban';
+	}
 
 	let fileInputRef: HTMLInputElement;
 	let uploadedImageUrl: string = '';
@@ -108,7 +129,7 @@
 	let code: string = '';
 
 	function onOpenInvite() {
-		openDialog();
+		openCodeDialog();
 		getOrCreateInviteCode();
 	}
 
@@ -220,7 +241,7 @@
 		</div>
 	</form>
 </Dialog>
-<Dialog bind:open={openDialog} title={'Group invitation code'}>
+<Dialog bind:open={openCodeDialog} title={'Group invitation code'}>
 	<h6 class="mt-4 font-bold text-center uppercase text-h5">Here's your code</h6>
 	<div class="flex items-center justify-center gap-1">
 		<input
@@ -396,6 +417,59 @@
 		</Popover.Root>
 	</div>
 </Dialog>
+<Dialog
+	bind:open={openKickOrBanDialog}
+	bind:close={closeKickOrBanDialog}
+	title={'User kicking'}
+	onDialogClose={() => {
+		resetKickUserFromGroup();
+	}}
+>
+	<form
+		method="POST"
+		action="?/kickUser"
+		use:enhanceCreate={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Channel created successfully!');
+					closeKickOrBanDialog();
+					isInvalidating = true;
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result['data'] ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			},
+			onUpdated: () => {
+				isInvalidating = false;
+			}
+		}}
+	>
+		<input type="hidden" name="groupId" value={data.group.id} />
+		<input
+			type="hidden"
+			name="userId"
+			bind:value={$formKickUserFromGroup.userId}
+		/>
+
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeKickOrBanDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={$formCreate['name'].length === 0 ||
+					!!$errorsCreate.id?.length ||
+					!!$errorsCreate.name?.length ||
+					!!$errorsCreate.newChannelType?.length ||
+					isInvalidating}>Create Channel</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
 <Invalidating invalidating={isInvalidating} />
 <div class="p-4">
 	<div class="flex justify-between">
@@ -439,7 +513,7 @@
 	<Space gap={16} />
 	<div class="user-grid__container">
 		{#each data.group.users as groupOnUser}
-			<User {groupOnUser} />
+			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} />
 		{/each}
 	</div>
 	<!-- <div class="grid grid-cols-2 gap-4 mt-12">

@@ -1,16 +1,18 @@
 import { fail, redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms/server'
-import { channelCreateSchema, deleteGroupSchema, updateGroupSchema } from '../schemas.js'
+import { channelCreateSchema, deleteGroupSchema, kickUserFromGroupSchema, updateGroupSchema } from '../schemas.js'
 import { trpcServer } from '~helpers/trpcServer.js'
 import { TRPCError } from '@trpc/server'
 
 export const load = async () => {
   const updateGroupForm = await superValidate(updateGroupSchema)
   const deleteGroupForm = await superValidate(deleteGroupSchema)
+  const kickUserFromGroupForm = await superValidate(kickUserFromGroupSchema)
 
   return {
     updateGroupForm,
-    deleteGroupForm
+    deleteGroupForm,
+    kickUserFromGroupForm
   }
 }
 
@@ -100,4 +102,31 @@ export const actions = {
     }
     throw redirect(304, "/dashboard/my-groups")
   },
+  kickUser: async (event) => {
+    const formData = await event.request.formData()
+    const form = await superValidate(formData, kickUserFromGroupSchema)
+
+    if (!form.valid) {
+      return fail(400, { form })
+    }
+
+    console.log(form.data)
+    // const group = await (await trpcServer(event)).groups.getGroupById({ id: form.data.id })
+    // console.log(group)
+
+    // if (group === null || group.name !== form.data.validation_name) {
+    //   return fail(400, { form, error: "Group name does not match" })
+    // }
+
+    // try {
+    //   await (await trpcServer(event)).groups.deleteGroup(form.data)
+    // }
+    // catch (e) {
+    //   if (e instanceof TRPCError) {
+    //     return fail(400, { form, error: e.message })
+    //   }
+    // }
+
+    return { form }
+  }
 }

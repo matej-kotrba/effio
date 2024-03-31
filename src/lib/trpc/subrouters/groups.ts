@@ -261,6 +261,7 @@ export const groupsRouter = router({
           include: {
             user: {
               select: {
+                id: true,
                 name: true,
                 image: true,
                 email: true,
