@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server"
 import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
 import { DB_STRING_REGEX, MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
 import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
-import { channelCreateSchema } from "~/routes/dashboard/my-groups/schemas"
+import { channelCreateSchema, channelDeleteSchema, channelUpdateSchema } from "~/routes/dashboard/my-groups/schemas"
 import { channelNameSchema } from "~schemas/testValidation"
 import { deleteImageFromCloudinary } from "~/lib/server/cloudinary/utils"
 
@@ -528,6 +528,11 @@ export const groupsRouter = router({
     userIds: z.array(z.string()),
     shouldBeBanned: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("groupKick", ctx.userId, "kicking users from group")
+    if (result) {
+      throw result
+    }
+
     if (input.userIds.includes(ctx.userId)) {
       throw new TRPCError({ code: "BAD_REQUEST", message: "You can't kick yourself" })
     }
@@ -614,6 +619,10 @@ export const groupsRouter = router({
   leaveGroup: loggedInProcedure.input(z.object({
     groupId: z.string(),
   })).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("groupLeave", ctx.userId, "leaving groups")
+    if (result) {
+      throw result
+    }
     const group = await ctx.prisma.groupOnUsers.deleteMany({
       where: {
         groupId: input.groupId,
@@ -632,6 +641,10 @@ export const groupsRouter = router({
   }),
 
   createChannel: loggedInProcedure.input(channelCreateSchema).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("channelCreate", ctx.userId, "creating channels")
+    if (result) {
+      throw result
+    }
     const groupPromise = ctx.prisma.group.findUnique({
       where: {
         id: input.id
@@ -669,5 +682,75 @@ export const groupsRouter = router({
     })
 
     return channel
+  }),
+
+  updateChannel: loggedInProcedure.input(channelUpdateSchema).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("channelUpdate", ctx.userId, "updating channels")
+    if (result) {
+      throw result
+    }
+
+    const channel = await ctx.prisma.groupSubcategory.findUniqueOrThrow({
+      where: {
+        id: input.id
+      },
+      include: {
+        group: {
+          select: {
+            ownerId: true
+          }
+        }
+      }
+    })
+
+    if (channel.group.ownerId !== ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to update this channel" })
+    }
+
+    await ctx.prisma.groupSubcategory.update({
+      where: {
+        id: input.id
+      },
+      data: {
+        name: input.name
+      }
+    })
+
+    return {
+      success: true
+    }
+  }),
+  deleteChannel: loggedInProcedure.input(channelDeleteSchema).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("channelDelete", ctx.userId, "deleting channels")
+    if (result) {
+      throw result
+    }
+
+    const channel = await ctx.prisma.groupSubcategory.findUniqueOrThrow({
+      where: {
+        id: input.id
+      },
+      include: {
+        group: {
+          select: {
+            ownerId: true
+          }
+        }
+      }
+    })
+
+    if (channel.group.ownerId !== ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to delete this channel" })
+    }
+
+    await ctx.prisma.groupSubcategory.delete({
+      where: {
+        id: input.id
+      }
+    })
+
+    return {
+      success: true
+    }
   })
 })

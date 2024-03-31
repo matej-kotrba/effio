@@ -7,11 +7,13 @@
 	} from '~helpers/constants';
 	import { onImageLoad } from '~use/onImageLoad';
 	import { getContrastRatio, type ColorRGB } from '~utils/color';
+	import * as DropdownMenu from '~components/ui/dropdown-menu/index';
 
 	export let name: string;
 	export let type: keyof typeof GROUP_SUBCATEGORY_TYPES;
 	export let imageUrl: string | null;
 	export let redirectLink: string;
+	export let isOwner = false;
 
 	let isImageFallback = imageUrl === null;
 
@@ -79,44 +81,60 @@
 	}
 </script>
 
-<a
-	href={redirectLink}
-	class="grid place-content-center relative aspect-[3/2] px-4 border bg-light_grey hover:bg-light_grey_dark duration-150 border-light_text_black_10 dark:border-dark_text_white_10 rounded-md shadow-sm dark:bg-dark_grey dark:hover:bg-dark_light_grey"
->
-	<div class="absolute left-1 top-1">
+<div class="relative">
+	<div class="absolute z-10 left-1 top-1">
 		<iconify-icon
 			class="grid p-2 border rounded-full bg-light_whiter dark:bg-dark_terciary place-content-center border-light_text_black_20 dark:border-dark_text_white_20"
 			icon={groupSubcategoryIcons[type]}
 		/>
 	</div>
-	<div
-		class="relative object-cover mx-auto overflow-hidden rounded-lg w-fit aspect-square"
+	{#if isOwner}
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger class="absolute z-10 right-1 top-1">
+				<iconify-icon icon="tabler:dots" class="text-xl" />
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content class="w-56">
+				<DropdownMenu.Group>
+					<DropdownMenu.Label>Channel options</DropdownMenu.Label>
+					<DropdownMenu.Separator />
+					<slot />
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	{/if}
+	<a
+		href={redirectLink}
+		class="grid place-content-center relative aspect-[3/2] px-4 border bg-light_grey hover:bg-light_grey_dark duration-150 border-light_text_black_10 dark:border-dark_text_white_10 rounded-md shadow-sm dark:bg-dark_grey dark:hover:bg-dark_light_grey"
 	>
-		{#if isImageFallback || imageUrl === null}
-			<div
-				bind:this={colorElement}
-				class="fallback w-[70px] h-full grid place-content-center font-semibold"
-				style={`--color: ${color};`}
-			>
-				{displayedWord}
-			</div>
-		{:else}
-			<img
-				src={imageUrl}
-				role="presentation"
-				alt=""
-				width="70"
-				use:onImageLoad
-				on:imageerror={(e) => {
-					isImageFallback = true;
-				}}
-			/>
-		{/if}
-	</div>
-	<p class="text-center line-clamp-3 overflow-x-clip hyphens-auto">
-		{name}
-	</p>
-</a>
+		<div
+			class="relative object-cover mx-auto overflow-hidden rounded-lg w-fit aspect-square"
+		>
+			{#if isImageFallback || imageUrl === null}
+				<div
+					bind:this={colorElement}
+					class="fallback w-[70px] h-full grid place-content-center font-semibold"
+					style={`--color: ${color};`}
+				>
+					{displayedWord}
+				</div>
+			{:else}
+				<img
+					src={imageUrl}
+					role="presentation"
+					alt=""
+					width="70"
+					use:onImageLoad
+					on:imageerror={(e) => {
+						isImageFallback = true;
+					}}
+				/>
+			{/if}
+		</div>
+		<p class="text-center line-clamp-3 overflow-x-clip hyphens-auto">
+			{name}
+		</p>
+	</a>
+</div>
 
 <style>
 	.fallback {

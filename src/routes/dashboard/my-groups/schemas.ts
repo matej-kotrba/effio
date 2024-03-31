@@ -28,6 +28,15 @@ export const channelCreateSchema = z.object({
   newChannelType: channelTypeSchema
 })
 
+export const channelUpdateSchema = z.object({
+  id: z.string(),
+  name: channelNameSchema,
+})
+
+export const channelDeleteSchema = z.object({
+  id: z.string(),
+})
+
 export const kickUserFromGroupSchema = z.object({
   groupId: z.string(),
   userId: z.string(),

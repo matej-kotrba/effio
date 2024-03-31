@@ -1,15 +1,21 @@
 import { fail, redirect } from '@sveltejs/kit'
 import { superValidate } from 'sveltekit-superforms/server'
-import { channelCreateSchema, deleteGroupSchema, kickUserFromGroupSchema, updateGroupSchema } from '../schemas.js'
+import { channelCreateSchema, channelDeleteSchema, channelUpdateSchema, deleteGroupSchema, kickUserFromGroupSchema, updateGroupSchema } from '../schemas.js'
 import { trpcServer } from '~helpers/trpcServer.js'
 import { TRPCError } from '@trpc/server'
 
 export const load = async () => {
-  const updateGroupForm = await superValidate(updateGroupSchema)
-  const deleteGroupForm = await superValidate(deleteGroupSchema)
-  const kickUserFromGroupForm = await superValidate(kickUserFromGroupSchema)
+  const createChannelForm = superValidate(channelCreateSchema)
+  const updateChannelForm = superValidate(channelUpdateSchema)
+  const deleteChannelForm = superValidate(channelDeleteSchema)
+  const updateGroupForm = superValidate(updateGroupSchema)
+  const deleteGroupForm = superValidate(deleteGroupSchema)
+  const kickUserFromGroupForm = superValidate(kickUserFromGroupSchema)
 
   return {
+    createChannelForm,
+    updateChannelForm,
+    deleteChannelForm,
     updateGroupForm,
     deleteGroupForm,
     kickUserFromGroupForm
@@ -27,6 +33,44 @@ export const actions = {
 
     try {
       await (await trpcServer(event)).groups.createChannel(form.data)
+    }
+    catch (e) {
+      if (e instanceof TRPCError) {
+        return fail(400, { form, error: e.message })
+      }
+    }
+
+    return { form }
+  },
+  updateChannel: async (event) => {
+    const formData = await event.request.formData()
+    const form = await superValidate(formData, channelUpdateSchema)
+
+    if (!form.valid) {
+      return fail(400, { form })
+    }
+
+    try {
+      await (await trpcServer(event)).groups.updateChannel(form.data)
+    }
+    catch (e) {
+      if (e instanceof TRPCError) {
+        return fail(400, { form, error: e.message })
+      }
+    }
+
+    return { form }
+  },
+  deleteChannel: async (event) => {
+    const formData = await event.request.formData()
+    const form = await superValidate(formData, channelDeleteSchema)
+
+    if (!form.valid) {
+      return fail(400, { form })
+    }
+
+    try {
+      await (await trpcServer(event)).groups.deleteChannel(form.data)
     }
     catch (e) {
       if (e instanceof TRPCError) {

@@ -24,6 +24,8 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import {
 		channelCreateSchema,
+		channelDeleteSchema,
+		channelUpdateSchema,
 		deleteGroupSchema,
 		kickUserFromGroupSchema,
 		updateGroupSchema
@@ -42,6 +44,7 @@
 	import * as Popover from '~/lib/components/ui/popover/index';
 	import User from './User.svelte';
 	import { Switch } from '~components/ui/switch/index';
+	import * as DropdownMenu from '~components/ui/dropdown-menu/index';
 
 	export let data;
 
@@ -68,6 +71,15 @@
 
 	let openNewChannelDialog: () => void;
 	let closeNewChannelDialog: () => void;
+	let openUpdateChannelDialog: () => void;
+	let closeUpdateChannelDialog: () => void;
+	let openDeleteChannelDialog: () => void;
+	let closeDeleteChannelDialog: () => void;
+	let openCodeDialog: () => void;
+	let openSettingsDialog: () => void;
+	let closeSettingsDialog: () => void;
+	let openKickOrBanDialog: () => void;
+	let closeKickOrBanDialog: () => void;
 
 	const {
 		form: formCreate,
@@ -78,6 +90,28 @@
 	} = superForm(data.createChannelForm, {
 		resetForm: true,
 		validators: channelCreateSchema
+	});
+
+	const {
+		form: formUpdateChannel,
+		errors: errorsUpdateChannel,
+		enhance: enhanceUpdateChannel,
+		submitting: submittingUpdateChannel,
+		reset: resetUpdateChannel
+	} = superForm(data.updateChannelForm, {
+		resetForm: true,
+		validators: channelUpdateSchema
+	});
+
+	const {
+		form: formDeleteChannel,
+		errors: errorsDeleteChannel,
+		enhance: enhanceDeleteChannel,
+		submitting: submittingDeleteChannel,
+		reset: resetDeleteChannel
+	} = superForm(data.deleteChannelForm, {
+		resetForm: true,
+		validators: channelDeleteSchema
 	});
 
 	const {
@@ -115,11 +149,10 @@
 
 	let isInvalidating = false;
 
-	let openCodeDialog: () => void;
-	let openSettingsDialog: () => void;
-	let closeSettingsDialog: () => void;
-	let openKickOrBanDialog: () => void;
-	let closeKickOrBanDialog: () => void;
+	function onUpdateChannel(channelId: string) {
+		openUpdateChannelDialog();
+		$formUpdateChannel.id = channelId;
+	}
 
 	function onKickOrBanUser(userId: string | null, type: 'kick' | 'ban') {
 		if (userId === null) return;
@@ -178,6 +211,69 @@
 	}
 </script>
 
+<Dialog
+	isSubmitting={$submittingUpdateChannel}
+	bind:modal={newChannelDialog}
+	bind:open={openUpdateChannelDialog}
+	bind:close={closeUpdateChannelDialog}
+	onDialogClose={() => {
+		resetUpdateChannel();
+	}}
+	title="Update channel"
+>
+	<form
+		method="POST"
+		action="?/updateChannel"
+		use:enhanceUpdateChannel={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Channel updated successfully!');
+					closeUpdateChannelDialog();
+					isInvalidating = true;
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			},
+			onUpdated: () => {
+				isInvalidating = false;
+			}
+		}}
+	>
+		<input type="hidden" name="id" bind:value={$formUpdateChannel.id} />
+		<ErrorEnhance
+			error={$errorsUpdateChannel.name
+				? $errorsUpdateChannel.name[0]
+				: undefined}
+		>
+			<TextInputSimple
+				title="Channel name"
+				titleName="name"
+				inputProperties={{ placeholder: 'Channel name...' }}
+				validationSchema={channelNameSchema}
+				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+				displayOutside={true}
+				bind:inputValue={$formUpdateChannel.name}
+			/>
+		</ErrorEnhance>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeUpdateChannelDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={$formUpdateChannel['name'].length === 0 ||
+					!!$errorsUpdateChannel.id?.length ||
+					!!$errorsUpdateChannel.name?.length ||
+					isInvalidating}>Create Channel</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
 <Dialog
 	isSubmitting={$submittingCreate}
 	bind:modal={newChannelDialog}
@@ -537,7 +633,29 @@
 				type={channel.type}
 				imageUrl={channel.image}
 				redirectLink={`${$page.url.href}/${channel.slug}`}
-			/>
+				isOwner={data.session?.user?.id === data.group.ownerId}
+			>
+				{#if data.session?.user?.id === data.group.ownerId}
+					<DropdownMenu.Item
+						class="cursor-pointer"
+						on:click={() => {
+							onUpdateChannel(channel.id);
+						}}
+					>
+						<iconify-icon icon="game-icons:boot-kick" class="mr-1 text-2xl" />
+						Edit
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						class="cursor-pointer"
+						on:click={() => {
+							onUpdateChannel(channel.id);
+						}}
+					>
+						<iconify-icon icon="game-icons:hammer-drop" class="mr-1 text-2xl" />
+						Delete
+					</DropdownMenu.Item>
+				{/if}
+			</Channel>
 		{/each}
 		<ChannelAddNew onClick={openNewChannelDialog} />
 	</div>
@@ -558,63 +676,6 @@
 			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} isOwner={false} />
 		{/each}
 	</div>
-	<!-- <div class="grid grid-cols-2 gap-4 mt-12">
-		<div>
-			<h4 class="text-h5">Users</h4>
-			<Separator w={'100%'} h={'2px'} />
-			<Space gap={10} />
-			<div class="flex flex-col gap-1">
-				<div class="grid grid-leader__container gap-x-1">
-					<iconify-icon
-						icon="akar-icons:crown"
-						class="h-8 mx-auto text-3xl text-yellow-500 tooltip tooltip-top"
-						data-tip="Group owner"
-					/>
-					<div
-						class="w-12 col-start-1 row-start-2 overflow-hidden rounded-lg aspect-square"
-					>
-						<img
-							src={data.group.owner.image || '/imgs/svgs/user-circle.svg'}
-							alt={data.group.owner.name}
-						/>
-					</div>
-					<span class="self-center col-start-2 row-start-2 font-semibold"
-						>{data.group.owner.name}</span
-					>
-				</div>
-				<Space gap={10} />
-				{#each data['group']['users'] as user}
-					{#if user.user && user.userId !== data.group.ownerId}
-						<div class="flex items-center gap-1">
-							<div class="w-12 overflow-hidden rounded-lg aspect-square">
-								<img
-									referrerpolicy="no-referrer"
-									src={user.user.image || '/imgs/svgs/user-circle.svg'}
-									alt={user.user.name}
-								/>
-							</div>
-							<span class="font-semibold">{user.user.name}</span>
-						</div>
-					{/if}
-				{/each}
-			</div>
-		</div>
-		{#if data.session?.user?.id === data.group.ownerId}
-			<div>
-				<h4 class="text-h5">Admin section</h4>
-				<Separator w={'100%'} h={'2px'} />
-				<Space gap={10} />
-				<div>
-					<a
-						href="/dashboard/my-groups/{data.group.slug}/admin-test-overview"
-						class="p-2 rounded-md w-[200px] grid place-content-center shadow-md aspect-square bg-light_whiter dark:bg-dark_terciary"
-					>
-						<h5 class="font-semibold">Test overview</h5>
-					</a>
-				</div>
-			</div>
-		{/if}
-	</div> -->
 </div>
 
 <style>

@@ -44,6 +44,31 @@ export const ratelimit = {
     prefix: "ratelimit:group:delete",
     limiter: Ratelimit.slidingWindow(2, "10s")
   }),
+  groupLeave: new Ratelimit({
+    redis,
+    prefix: "ratelimit:group:leave",
+    limiter: Ratelimit.slidingWindow(3, "10s")
+  }),
+  groupKick: new Ratelimit({
+    redis,
+    prefix: "ratelimit:group:kick",
+    limiter: Ratelimit.slidingWindow(3, "10s")
+  }),
+  channelCreate: new Ratelimit({
+    redis,
+    prefix: "ratelimit:channel:create",
+    limiter: Ratelimit.slidingWindow(2, "15s")
+  }),
+  channelUpdate: new Ratelimit({
+    redis,
+    prefix: "ratelimit:channel:update",
+    limiter: Ratelimit.slidingWindow(2, "10s")
+  }),
+  channelDelete: new Ratelimit({
+    redis,
+    prefix: "ratelimit:channel:delete",
+    limiter: Ratelimit.slidingWindow(2, "10s")
+  })
 }
 
 export async function trpcCheckForRateLimit(rateLimit: keyof typeof ratelimit, userId: string, stringToFill: string): Promise<TRPCError | void> {
