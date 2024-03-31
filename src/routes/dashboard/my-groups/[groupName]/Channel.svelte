@@ -90,7 +90,9 @@
 	</div>
 	{#if isOwner}
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="absolute z-10 right-1 top-1">
+			<DropdownMenu.Trigger
+				class="absolute z-10 grid right-1 top-1 place-content-center"
+			>
 				<iconify-icon icon="tabler:dots" class="text-xl" />
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-56">

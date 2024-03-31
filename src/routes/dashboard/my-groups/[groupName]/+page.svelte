@@ -52,7 +52,6 @@
 		(item) => item.userId === data.group.ownerId
 	);
 
-	let newChannelDialog: HTMLDialogElement;
 	const newChannelChoices: Choice[] = [
 		{
 			icon: groupSubcategoryIcons.CHAT,
@@ -149,9 +148,17 @@
 
 	let isInvalidating = false;
 
-	function onUpdateChannel(channelId: string) {
-		openUpdateChannelDialog();
-		$formUpdateChannel.id = channelId;
+	function onUpdateOrDeleteChannel(
+		channelId: string,
+		type: 'update' | 'delete'
+	) {
+		if (type === 'update') {
+			$formUpdateChannel.id = channelId;
+			openUpdateChannelDialog();
+		} else if (type === 'delete') {
+			$formDeleteChannel.id = channelId;
+			openDeleteChannelDialog();
+		}
 	}
 
 	function onKickOrBanUser(userId: string | null, type: 'kick' | 'ban') {
@@ -212,71 +219,7 @@
 </script>
 
 <Dialog
-	isSubmitting={$submittingUpdateChannel}
-	bind:modal={newChannelDialog}
-	bind:open={openUpdateChannelDialog}
-	bind:close={closeUpdateChannelDialog}
-	onDialogClose={() => {
-		resetUpdateChannel();
-	}}
-	title="Update channel"
->
-	<form
-		method="POST"
-		action="?/updateChannel"
-		use:enhanceUpdateChannel={{
-			onResult: ({ result }) => {
-				if (result['status'] === 200) {
-					toast.success('Channel updated successfully!');
-					closeUpdateChannelDialog();
-					isInvalidating = true;
-				} else if (result['type'] === 'failure') {
-					console.log(result);
-					toast.error(
-						result.data?.error ? result['data']['error'] : 'Error ocurred'
-					);
-				}
-			},
-			onUpdated: () => {
-				isInvalidating = false;
-			}
-		}}
-	>
-		<input type="hidden" name="id" bind:value={$formUpdateChannel.id} />
-		<ErrorEnhance
-			error={$errorsUpdateChannel.name
-				? $errorsUpdateChannel.name[0]
-				: undefined}
-		>
-			<TextInputSimple
-				title="Channel name"
-				titleName="name"
-				inputProperties={{ placeholder: 'Channel name...' }}
-				validationSchema={channelNameSchema}
-				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
-				displayOutside={true}
-				bind:inputValue={$formUpdateChannel.name}
-			/>
-		</ErrorEnhance>
-		<div class="flex justify-end gap-2 mt-1">
-			<SimpleButton variant="ghost" onClick={closeUpdateChannelDialog}
-				>Cancel</SimpleButton
-			>
-			<SimpleButton
-				variant="filled"
-				designType="primary"
-				type="submit"
-				disabled={$formUpdateChannel['name'].length === 0 ||
-					!!$errorsUpdateChannel.id?.length ||
-					!!$errorsUpdateChannel.name?.length ||
-					isInvalidating}>Create Channel</SimpleButton
-			>
-		</div>
-	</form>
-</Dialog>
-<Dialog
 	isSubmitting={$submittingCreate}
-	bind:modal={newChannelDialog}
 	bind:open={openNewChannelDialog}
 	bind:close={closeNewChannelDialog}
 	onDialogClose={() => {
@@ -338,6 +281,120 @@
 					!!$errorsCreate.name?.length ||
 					!!$errorsCreate.newChannelType?.length ||
 					isInvalidating}>Create Channel</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
+<Dialog
+	isSubmitting={$submittingUpdateChannel}
+	bind:open={openUpdateChannelDialog}
+	bind:close={closeUpdateChannelDialog}
+	onDialogClose={() => {
+		resetUpdateChannel();
+	}}
+	title="Update channel"
+>
+	<form
+		method="POST"
+		action="?/updateChannel"
+		use:enhanceUpdateChannel={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Channel updated successfully!');
+					closeUpdateChannelDialog();
+					isInvalidating = true;
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			},
+			onUpdated: () => {
+				isInvalidating = false;
+			}
+		}}
+	>
+		<input type="hidden" name="id" bind:value={$formUpdateChannel.id} />
+		<ErrorEnhance
+			error={$errorsUpdateChannel.name
+				? $errorsUpdateChannel.name[0]
+				: undefined}
+		>
+			<TextInputSimple
+				title="Channel name"
+				titleName="name"
+				inputProperties={{ placeholder: 'Channel name...' }}
+				validationSchema={channelNameSchema}
+				validator={{ query: DB_STRING_REGEX, message: DB_STRING_MESSAGE }}
+				displayOutside={true}
+				bind:inputValue={$formUpdateChannel.name}
+			/>
+		</ErrorEnhance>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeUpdateChannelDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={$formUpdateChannel['name'].length === 0 ||
+					!!$errorsUpdateChannel.id?.length ||
+					!!$errorsUpdateChannel.name?.length ||
+					isInvalidating}>Update Channel</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
+<Dialog
+	isSubmitting={$submittingDeleteChannel}
+	bind:open={openDeleteChannelDialog}
+	bind:close={closeDeleteChannelDialog}
+	onDialogClose={() => {
+		resetDeleteChannel();
+	}}
+	title="Delete channel"
+>
+	<form
+		method="POST"
+		action="?/deleteChannel"
+		use:enhanceDeleteChannel={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Channel deleted successfully!');
+					closeDeleteChannelDialog();
+					isInvalidating = true;
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			},
+			onUpdated: () => {
+				isInvalidating = false;
+			}
+		}}
+	>
+		<input type="hidden" name="id" bind:value={$formDeleteChannel.id} />
+		<p>
+			You are about to delete <span class="font-semibold"
+				>"{data.group.groupsSubcategories.find(
+					(item) => item.id === $formDeleteChannel.id
+				)?.name}"</span
+			> channel!
+		</p>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeDeleteChannelDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={!!$errorsDeleteChannel.id?.length || isInvalidating}
+				>Delete Channel</SimpleButton
 			>
 		</div>
 	</form>
@@ -553,9 +610,11 @@
 			bind:value={$formKickUserFromGroup.userId}
 		/>
 		<p>
-			You are about to kick user "{data?.group?.users?.find(
-				(item) => item.userId === $formKickUserFromGroup.userId
-			)?.user?.name || ''}" from the group!
+			You are about to kick user <span class="font-semibold"
+				>"{data?.group?.users?.find(
+					(item) => item.userId === $formKickUserFromGroup.userId
+				)?.user?.name || ''}"</span
+			> from the group!
 		</p>
 		<Separator w="100%" h="1px" class="my-2" />
 		<div class="flex flex-wrap gap-2">
@@ -639,19 +698,22 @@
 					<DropdownMenu.Item
 						class="cursor-pointer"
 						on:click={() => {
-							onUpdateChannel(channel.id);
+							onUpdateOrDeleteChannel(channel.id, 'update');
 						}}
 					>
-						<iconify-icon icon="game-icons:boot-kick" class="mr-1 text-2xl" />
+						<iconify-icon icon="iconamoon:edit-light" class="mr-1 text-2xl" />
 						Edit
 					</DropdownMenu.Item>
 					<DropdownMenu.Item
 						class="cursor-pointer"
 						on:click={() => {
-							onUpdateChannel(channel.id);
+							onUpdateOrDeleteChannel(channel.id, 'delete');
 						}}
 					>
-						<iconify-icon icon="game-icons:hammer-drop" class="mr-1 text-2xl" />
+						<iconify-icon
+							icon="fluent:delete-28-filled"
+							class="mr-1 text-2xl"
+						/>
 						Delete
 					</DropdownMenu.Item>
 				{/if}
