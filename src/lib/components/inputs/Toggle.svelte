@@ -20,6 +20,7 @@
 		>{title}</span
 	>
 	<button
+		type="button"
 		on:click={() => {
 			isChecked = !isChecked;
 			sendToggleEvent();

@@ -105,27 +105,23 @@ export const actions = {
   kickUser: async (event) => {
     const formData = await event.request.formData()
     const form = await superValidate(formData, kickUserFromGroupSchema)
-
+    console.log(form.data)
     if (!form.valid) {
       return fail(400, { form })
     }
 
-    console.log(form.data)
-    // const group = await (await trpcServer(event)).groups.getGroupById({ id: form.data.id })
-    // console.log(group)
-
-    // if (group === null || group.name !== form.data.validation_name) {
-    //   return fail(400, { form, error: "Group name does not match" })
-    // }
-
-    // try {
-    //   await (await trpcServer(event)).groups.deleteGroup(form.data)
-    // }
-    // catch (e) {
-    //   if (e instanceof TRPCError) {
-    //     return fail(400, { form, error: e.message })
-    //   }
-    // }
+    try {
+      await (await trpcServer(event)).groups.kickUsersFromGroup({
+        groupSlugOrId: form.data.groupId,
+        userIds: [form.data.userId],
+        shouldBeBanned: form.data.shouldBan
+      })
+    }
+    catch (e) {
+      if (e instanceof TRPCError) {
+        return fail(400, { form, error: e.message })
+      }
+    }
 
     return { form }
   }

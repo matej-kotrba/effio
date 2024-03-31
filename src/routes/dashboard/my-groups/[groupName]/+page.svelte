@@ -41,8 +41,13 @@
 	import Invalidating from '~components/portals/Invalidating.svelte';
 	import * as Popover from '~/lib/components/ui/popover/index';
 	import User from './User.svelte';
+	import { Switch } from '~components/ui/switch/index';
 
 	export let data;
+
+	$: ownerData = data.group.users.find(
+		(item) => item.userId === data.group.ownerId
+	);
 
 	let newChannelDialog: HTMLDialogElement;
 	const newChannelChoices: Choice[] = [
@@ -195,7 +200,7 @@
 				} else if (result['type'] === 'failure') {
 					console.log(result);
 					toast.error(
-						result['data'] ? result['data']['error'] : 'Error ocurred'
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
 					);
 				}
 			},
@@ -361,7 +366,7 @@
 				<SimpleButton
 					variant="filled"
 					designType="primary"
-					class="duration-100 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
+					class="text-white duration-100 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
 					type="button"
 					disabled={isInvalidating || !!$errorsUpdateGroup.name?.length}
 					>Delete Group</SimpleButton
@@ -379,7 +384,7 @@
 								isInvalidating = true;
 							} else if (result['type'] === 'failure') {
 								toast.error(
-									result['data'] ? result['data']['error'] : 'Error ocurred'
+									result.data?.error ? result['data']['error'] : 'Error ocurred'
 								);
 							}
 						},
@@ -406,7 +411,7 @@
 						<SimpleButton
 							variant="filled"
 							designType="primary"
-							class="duration-100 text-body2 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
+							class="text-white duration-100 text-body2 bg-error hover:brightness-90 dark:bg-dark_error hover:bg-error dark:hover:bg-dark_error"
 							type="submit"
 							disabled={isInvalidating || !!$errorsUpdateGroup.name?.length}
 							>Delete</SimpleButton
@@ -420,7 +425,7 @@
 <Dialog
 	bind:open={openKickOrBanDialog}
 	bind:close={closeKickOrBanDialog}
-	title={'User kicking'}
+	title={'Kicking user'}
 	onDialogClose={() => {
 		resetKickUserFromGroup();
 	}}
@@ -428,16 +433,15 @@
 	<form
 		method="POST"
 		action="?/kickUser"
-		use:enhanceCreate={{
+		use:enhanceKickUserFromGroup={{
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
 					toast.success('Channel created successfully!');
 					closeKickOrBanDialog();
 					isInvalidating = true;
 				} else if (result['type'] === 'failure') {
-					console.log(result);
 					toast.error(
-						result['data'] ? result['data']['error'] : 'Error ocurred'
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
 					);
 				}
 			},
@@ -452,7 +456,19 @@
 			name="userId"
 			bind:value={$formKickUserFromGroup.userId}
 		/>
-
+		<p>
+			You are about to kick user "{data?.group?.users?.find(
+				(item) => item.userId === $formKickUserFromGroup.userId
+			)?.user?.name || ''}" from the group!
+		</p>
+		<Separator w="100%" h="1px" class="my-2" />
+		<div class="flex flex-wrap gap-2">
+			<p>Should user be banned?</p>
+			<Switch
+				bind:checked={$formKickUserFromGroup.shouldBan}
+				name="shouldBan"
+			/>
+		</div>
 		<div class="flex justify-end gap-2 mt-1">
 			<SimpleButton variant="ghost" onClick={closeKickOrBanDialog}
 				>Cancel</SimpleButton
@@ -460,12 +476,10 @@
 			<SimpleButton
 				variant="filled"
 				designType="primary"
+				class="bg-error hover:brightness-90 hover:bg-error dark:bg-dark_error dark:hover:bg-dark_error"
 				type="submit"
-				disabled={$formCreate['name'].length === 0 ||
-					!!$errorsCreate.id?.length ||
-					!!$errorsCreate.name?.length ||
-					!!$errorsCreate.newChannelType?.length ||
-					isInvalidating}>Create Channel</SimpleButton
+				disabled={isInvalidating}
+				>Kick {$formKickUserFromGroup.shouldBan ? '& Ban' : ''} user</SimpleButton
 			>
 		</div>
 	</form>
@@ -512,7 +526,14 @@
 	<Separator w="100%" h="1px" />
 	<Space gap={16} />
 	<div class="user-grid__container">
-		{#each data.group.users as groupOnUser}
+		{#if ownerData}
+			<User
+				dispalyOptions={false}
+				onKickOrBanClick={onKickOrBanUser}
+				groupOnUser={ownerData}
+			/>
+		{/if}
+		{#each data.group.users.filter((item) => item['userId'] !== data.group.ownerId) as groupOnUser}
 			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} />
 		{/each}
 	</div>

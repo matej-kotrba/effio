@@ -524,18 +524,26 @@ export const groupsRouter = router({
   }),
 
   kickUsersFromGroup: loggedInProcedure.input(z.object({
-    groupSlug: z.string(),
+    groupSlugOrId: z.string(),
     userIds: z.array(z.string()),
+    shouldBeBanned: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     if (input.userIds.includes(ctx.userId)) {
       throw new TRPCError({ code: "BAD_REQUEST", message: "You can't kick yourself" })
     }
 
-    const group = await ctx.prisma.group.findUnique({
+    const group = (await ctx.prisma.group.findMany({
       where: {
-        slug: input.groupSlug
+        OR: [
+          {
+            slug: input.groupSlugOrId
+          },
+          {
+            id: input.groupSlugOrId
+          }
+        ]
       }
-    })
+    }))[0]
 
     if (!group) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" })
@@ -545,20 +553,62 @@ export const groupsRouter = router({
       throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to kick users from this group" })
     }
 
-    const users = await ctx.prisma.groupOnUsers.deleteMany({
-      where: {
-        group: {
-          slug: input.groupSlug
-        },
-        userId: {
-          in: input.userIds
+    if (input.userIds.includes(group.ownerId)) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You can't kick the owner of the group" })
+    }
+
+    console.log(input.shouldBeBanned)
+    if (input.shouldBeBanned) {
+      await ctx.prisma.$transaction([
+        ctx.prisma.groupOnUsers.deleteMany({
+          where: {
+            group: {
+              OR: [
+                {
+                  slug: input.groupSlugOrId
+                },
+                {
+                  id: input.groupSlugOrId
+                }
+              ]
+            },
+            userId: {
+              in: input.userIds
+            }
+          }
+        }),
+        ctx.prisma.userOnGroupBan.createMany({
+          data: input.userIds.map(userId => {
+            return {
+              userId: userId,
+              groupId: group.id
+            }
+          })
+        })
+      ])
+    }
+    else {
+      await ctx.prisma.groupOnUsers.deleteMany({
+        where: {
+          group: {
+            OR: [
+              {
+                slug: input.groupSlugOrId
+              },
+              {
+                id: input.groupSlugOrId
+              }
+            ]
+          },
+          userId: {
+            in: input.userIds
+          }
         }
-      }
-    })
+      })
+    }
 
     return {
       success: true,
-      users: users
     }
   }),
 

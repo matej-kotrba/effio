@@ -15,7 +15,7 @@ export const actions: Actions = {
     try {
 
       await (await trpcServer(event)).groups.kickUsersFromGroup({
-        groupSlug: event.params.name as string,
+        groupSlugOrId: event.params.name as string,
         userIds: users,
       })
       return {

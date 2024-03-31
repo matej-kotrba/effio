@@ -12,6 +12,8 @@
 		userId: string | null,
 		type: 'kick' | 'ban'
 	) => void;
+
+	export let dispalyOptions = true;
 </script>
 
 <div
@@ -44,38 +46,43 @@
 					{groupOnUser.user?.name}
 				</h5>
 			</div>
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					<iconify-icon icon="tabler:dots" class="text-xl" />
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content class="w-56">
-					<DropdownMenu.Group>
-						<DropdownMenu.Label>User settings</DropdownMenu.Label>
-						<DropdownMenu.Separator />
-						<DropdownMenu.Item
-							class="cursor-pointer"
-							on:click={() => {
-								onKickOrBanClick(groupOnUser.userId, 'kick');
-							}}
-						>
-							<iconify-icon icon="game-icons:boot-kick" class="mr-1 text-2xl" />
-							Kick
-						</DropdownMenu.Item>
-						<DropdownMenu.Item
-							class="cursor-pointer"
-							on:click={() => {
-								onKickOrBanClick(groupOnUser.userId, 'ban');
-							}}
-						>
-							<iconify-icon
-								icon="game-icons:hammer-drop"
-								class="mr-1 text-2xl"
-							/>
-							Kick & Ban
-						</DropdownMenu.Item>
-					</DropdownMenu.Group>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+			{#if dispalyOptions}
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger>
+						<iconify-icon icon="tabler:dots" class="text-xl" />
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Content class="w-56">
+						<DropdownMenu.Group>
+							<DropdownMenu.Label>User settings</DropdownMenu.Label>
+							<DropdownMenu.Separator />
+							<DropdownMenu.Item
+								class="cursor-pointer"
+								on:click={() => {
+									onKickOrBanClick(groupOnUser.userId, 'kick');
+								}}
+							>
+								<iconify-icon
+									icon="game-icons:boot-kick"
+									class="mr-1 text-2xl"
+								/>
+								Kick
+							</DropdownMenu.Item>
+							<DropdownMenu.Item
+								class="cursor-pointer"
+								on:click={() => {
+									onKickOrBanClick(groupOnUser.userId, 'ban');
+								}}
+							>
+								<iconify-icon
+									icon="game-icons:hammer-drop"
+									class="mr-1 text-2xl"
+								/>
+								Kick & Ban
+							</DropdownMenu.Item>
+						</DropdownMenu.Group>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
+			{/if}
 		</div>
 		<p
 			class="truncate text-body2 text-light_text_black_60 dark:text-dark_text_white_60"

@@ -51,7 +51,8 @@ model User {
   testRecords              TestRecord[]
   markSystems              MarkSystem[]
   groups                   GroupOnUsers[]
-  groupsOwned              Group[]
+  groupsOwned              UserOnGroupBan[]
+  bannedFromGroups         Group[]
   staredTests              TestStar[]
   GroupSubcategoreyMessage GroupSubcategoryMessage[]
   adminLogs                AdminLogs[]
@@ -241,11 +242,24 @@ model Group {
   ownerId             String
   imageUrl            String             @default("")
   users               GroupOnUsers[]
+  bannedUsers         UserOnGroupBan[]
   owner               User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   groupsSubcategories GroupSubcategory[]
   groupInvites        GroupInvite[]
 
   @@index([ownerId])
+}
+
+model UserOnGroupBan {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  groupId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([groupId])
 }
 
 model GroupInvite {
