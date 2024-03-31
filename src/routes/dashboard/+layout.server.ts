@@ -5,7 +5,6 @@ import { appRouter } from "~/lib/trpc/router";
 
 // TODO: Can be client, no .server needed
 export const load: ServerLoad = async (event) => {
-
   const context = await createContext(event)
 
   const questionsTypes = appRouter.createCaller(context).getQuestionsTypes();

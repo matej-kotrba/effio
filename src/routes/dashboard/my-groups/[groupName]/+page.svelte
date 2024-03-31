@@ -660,7 +660,7 @@
 		<Separator w="100%" h="1px" />
 		<Space gap={16} />
 		<div class="flex gap-2">
-			<a href="/dashboard/my-groups/{data.group.slug}/admin-test-overview">
+			<a href="{$page.url.pathname}/admin-test-overview">
 				<IconButton
 					icon="uis:graph-bar"
 					buttonClasses="text-5xl"
@@ -691,7 +691,7 @@
 				name={channel.name}
 				type={channel.type}
 				imageUrl={channel.image}
-				redirectLink={`${$page.url.href}/${channel.slug}/chat`}
+				redirectLink={`/dashboard/my-groups/${data.group.slug}/${channel.slug}/chat`}
 				isOwner={data.session?.user?.id === data.group.ownerId}
 			>
 				{#if data.session?.user?.id === data.group.ownerId}

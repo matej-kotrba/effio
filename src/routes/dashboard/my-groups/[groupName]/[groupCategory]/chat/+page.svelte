@@ -17,7 +17,7 @@
 	import Pusher from 'pusher-js';
 	import { PUBLIC_PUSHER_KEY, PUBLIC_PUSHER_CLUSTER } from '$env/static/public';
 	import ChatSkeleton from './ChatSkeleton.svelte';
-	import Tabs from '~components/navigation/Tabs.svelte';
+	import { browser } from '$app/environment';
 
 	export let data;
 
@@ -45,7 +45,7 @@
 	}
 
 	const categoryId = data.group.groupsSubcategories.find(
-		(item) => item.slug === $page.url.pathname.split('/').at(-1)
+		(item) => item.slug === $page.params.groupCategory
 	)?.id;
 
 	let tests: Awaited<
@@ -67,6 +67,9 @@
 	let chatRef: HTMLTextAreaElement;
 
 	let chatContainerRef: HTMLDivElement;
+	$: chatContainerOffsetTop = browser
+		? window.scrollY + chatContainerRef?.getBoundingClientRect().top
+		: 0;
 
 	let isScrollDownButtonVisible = false;
 	const DISTANCE_TO_APPEAR = 400;
@@ -218,9 +221,10 @@
 	});
 </script>
 
-<!-- <Tabs tabs= /> -->
 {#if messages === 'fetching'}
-	<div class="mx-auto max-w-[800px]">
+	<div
+		class="mx-auto max-w-[800px] mt-4 max-h-[calc(100vh-70px)] overflow-hidden"
+	>
 		<ChatSkeleton />
 	</div>
 {:else}
@@ -265,7 +269,8 @@
 		</div>
 	</Drawer>
 	<div
-		class="relative max-h-[calc(100vh-70px)] overflow-y-scroll px-1 flex flex-col gap-2 justify-between"
+		class="relative flex flex-col justify-between gap-2 px-1 overflow-y-scroll"
+		style="max-height: calc(100vh - {chatContainerOffsetTop || 0}px);"
 		bind:this={chatContainerRef}
 		on:scroll={(e) => onScroll(e)}
 	>

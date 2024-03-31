@@ -671,7 +671,7 @@ export const groupsRouter = router({
     const channel = await ctx.prisma.groupSubcategory.create({
       data: {
         name: input.name,
-        slug: tranformString(input.name),
+        slug: transformCategoryNameToSlug(input.name),
         type: input.newChannelType,
         group: {
           connect: {
