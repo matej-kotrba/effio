@@ -1,10 +1,12 @@
-<script lang="ts">
-	type Tab = {
+<script lang="ts" context="module">
+	export type Tab = {
 		readonly title: string;
 		readonly slug: string;
 		onTabSelect: (direction: -1 | 1) => void;
 	};
+</script>
 
+<script lang="ts">
 	export let tabs: Tab[];
 	export let activeTabSlug: (typeof tabs)[number]['slug'];
 

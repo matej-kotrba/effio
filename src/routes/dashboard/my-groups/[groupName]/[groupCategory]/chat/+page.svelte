@@ -16,6 +16,8 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import Pusher from 'pusher-js';
 	import { PUBLIC_PUSHER_KEY, PUBLIC_PUSHER_CLUSTER } from '$env/static/public';
+	import ChatSkeleton from './ChatSkeleton.svelte';
+	import Tabs from '~components/navigation/Tabs.svelte';
 
 	export let data;
 
@@ -66,12 +68,6 @@
 
 	let chatContainerRef: HTMLDivElement;
 
-	const subcategory = data.group.groupsSubcategories.find((item) => item.slug);
-
-	if (!subcategory) {
-		goto('/dashboard/my-groups/' + data.group.slug);
-	}
-
 	let isScrollDownButtonVisible = false;
 	const DISTANCE_TO_APPEAR = 400;
 
@@ -92,14 +88,15 @@
 		if (chatRef === undefined) return;
 		const parsedMessage = chatInputSchema.safeParse(messageContent);
 
-		if (parsedMessage.success === false || subcategory === undefined) return;
+		if (parsedMessage.success === false || data.subcategory === undefined)
+			return;
 
 		try {
 			trpc($page).groupMessages.postMessage.mutate({
 				type: 'MESSAGE',
 				groupId: data.group.id,
 				message: messageContent,
-				subcategoryId: subcategory.id
+				subcategoryId: data.subcategory.id
 			});
 
 			chatRef.value = '';
@@ -121,6 +118,7 @@
 	}
 
 	async function getMessages() {
+		if (isEndOfChat) return;
 		if (isFetchingNew) return;
 		if (categoryId === undefined) return;
 		isFetchingNew = true;
@@ -141,8 +139,8 @@
 			isFetchingNew = false;
 		}
 
-		const previousTop = chatContainerRef.scrollTop;
-		const previousHeight = chatContainerRef.scrollHeight;
+		const previousTop = chatContainerRef?.scrollTop;
+		const previousHeight = chatContainerRef?.scrollHeight;
 
 		messages =
 			messages === 'fetching'
@@ -151,8 +149,10 @@
 		isFetchingNew = false;
 
 		await tick();
-		chatContainerRef.scrollTop =
-			chatContainerRef.scrollHeight - previousHeight + previousTop;
+		if (chatContainerRef) {
+			chatContainerRef.scrollTop =
+				chatContainerRef.scrollHeight - previousHeight + previousTop;
+		}
 	}
 
 	let openDrawer = () => {};
@@ -163,7 +163,6 @@
 				entries.forEach(async (entry) => {
 					if (entry.isIntersecting) {
 						getMessages();
-
 						// observer.unobserve(entry.target);
 					}
 				});
@@ -197,7 +196,9 @@
 			cluster: PUBLIC_PUSHER_CLUSTER
 		});
 
-		const channel = pusher.subscribe(`group-${data.group.id}`);
+		const channel = pusher.subscribe(
+			`group-${data.group.id}-${data.subcategory.id}`
+		);
 
 		channel.bind('new-message', async (data: any) => {
 			try {
@@ -212,14 +213,19 @@
 
 	onDestroy(() => {
 		observer?.disconnect();
-		pusher?.unsubscribe(`group-${data.group.id}`);
+		pusher?.unsubscribe(`group-${data.group.id}-${data.subcategory.id}`);
 		pusher?.disconnect();
 	});
 </script>
 
-{#if subcategory}
+<!-- <Tabs tabs= /> -->
+{#if messages === 'fetching'}
+	<div class="mx-auto max-w-[800px]">
+		<ChatSkeleton />
+	</div>
+{:else}
 	<Drawer
-		title={`${subcategory.name}'s tests`}
+		title={`${data.subcategory.name}'s tests`}
 		side="right"
 		bind:open={openDrawer}
 	>
@@ -250,71 +256,39 @@
 						{/if}
 						<TestImageCard
 							test={test.test}
-							url="/dashboard/my-groups/{data.group
-								.slug}/{subcategory.slug}/tests/{test.testId}"
+							url="/dashboard/my-groups/{data.group.slug}/{data.subcategory
+								.slug}/tests/{test.testId}"
 						/>
-						<!-- <div class="flex flex-col overflow-hidden rounded-md shadow-md">
-						<a
-							href="/dashboard/my-groups/{data.group
-								.slug}/{subcategory.slug}/tests/{test.testId}"
-							class="relative w-full overflow-hidden aspect-video text-body2 group
-							before:content-[''] before:z-[1] before:w-full before:h-full before:bg-[#00000045] before:opacity-0
-							hover:before:opacity-100 before:absolute before:left-0 before:top-0 before:duration-150"
-						>
-							<img
-								src="/imgs/content_imgs/liska.avif"
-								alt="Test"
-								class="object-cover w-full h-full duration-200 group-hover:blur-md group-hover:scale-110"
-							/>
-							<div
-								class="z-[2] absolute left-0 w-full h-full p-2 duration-150 -bottom-full
-								group-hover:bottom-0 text-white opacity-0 group-hover:opacity-100
-								grid place-content-center text-center"
-							>
-								<p class="line-clamp-3">
-									{test.test.description}
-								</p>
-							</div>
-						</a>
-						<div
-							class="px-2 py-1 text-center bg-light_secondary dark:bg-dark_terciary text-body2 rounded-b-md"
-						>
-							<span
-								class="w-full text-light_whiter overflow-ellipsis line-clamp-1"
-								><abbr title={test.test.title} class="no-underline"
-									>{test.test.title}</abbr
-								></span
-							>
-						</div>
-					</div> -->
 					</div>
 				{/each}
 			{/if}
 		</div>
 	</Drawer>
 	<div
-		class="relative max-h-[calc(100vh-70px)] overflow-y-scroll px-1"
+		class="relative max-h-[calc(100vh-70px)] overflow-y-scroll px-1 flex flex-col gap-2 justify-between"
 		bind:this={chatContainerRef}
 		on:scroll={(e) => onScroll(e)}
 	>
-		{#if isEndOfChat}
-			<section class="flex flex-col items-center justify-center mb-4">
-				<img
-					aria-hidden="true"
-					src="/imgs/svgs/welcome.svg"
-					class=""
-					width="200"
-					alt="decorative"
-				/>
-				<p class="text-light_text_black_80 dark:text-dark_text_white_80">
-					This is the start of the <span
-						class="font-semibold text-light_text_black dark:text-dark_text_white"
-						>{data.group.name}</span
-					> channel.
-				</p>
-			</section>
-		{/if}
-		<div class="max-w-[800px] mx-auto">
+		<div>
+			{#if isEndOfChat}
+				<section class="flex flex-col items-center justify-center mb-4">
+					<img
+						aria-hidden="true"
+						src="/imgs/svgs/welcome.svg"
+						class=""
+						width="200"
+						alt="decorative"
+					/>
+					<p class="text-light_text_black_80 dark:text-dark_text_white_80">
+						This is the start of the <span
+							class="font-semibold text-light_text_black dark:text-dark_text_white"
+							>{data.group.name}</span
+						> channel.
+					</p>
+				</section>
+			{/if}
+		</div>
+		<div class="max-w-[800px] mx-auto w-full">
 			<div
 				class="fixed w-full max-w-[800px] z-10 bottom-36 flex justify-end pointer-events-none"
 			>
@@ -342,92 +316,83 @@
 			<!-- Backgroud layer to hide chat -->
 			<div class="fixed bottom-0 left-0 w-full h-32 z-[8] bg-layer" />
 			<div class="mb-32">
-				{#if messages === 'fetching'}
-					<p>Gettig messages</p>
-				{:else}
-					<div class="flex flex-col gap-8">
-						{#if isEndOfChat === false}
-							<div class="flex justify-center">
-								<span class="loading loading-bars loading-lg" />
-							</div>
-						{/if}
-						<div bind:this={fetchNewMessagesDiv} class="h-1" />
-						{#each messages as message}
-							<div>
-								<div class="flex items-center gap-1 mb-1">
-									<img
-										referrerpolicy="no-referrer"
-										src={message.sender.image}
-										alt="User"
-										class="w-8 rounded-lg aspect-square"
-									/>
-									<div class="flex flex-col">
-										<span class="text-body2">{message.sender.name}</span>
-										<span
-											class="text-body3 text-light_text_black_40 dark:text-dark_text_white_40"
-										>
-											{transformDate(message.createdAt, { time: true })}
-										</span>
-									</div>
+				<div class="flex flex-col gap-8">
+					{#if isEndOfChat === false}
+						<div class="flex justify-center">
+							<span class="loading loading-bars loading-lg" />
+						</div>
+					{/if}
+					<div bind:this={fetchNewMessagesDiv} class="h-1" />
+					{#each messages as message}
+						<div>
+							<div class="flex items-center gap-1 mb-1">
+								<img
+									referrerpolicy="no-referrer"
+									src={message.sender.image}
+									alt="User"
+									class="w-10 rounded-lg aspect-square"
+								/>
+								<div class="flex flex-col">
+									<span class="text-semiBody1">{message.sender.name}</span>
+									<span
+										class="text-body2 text-light_text_black_40 dark:text-dark_text_white_40"
+									>
+										{transformDate(message.createdAt, { time: true })}
+									</span>
 								</div>
-								<div
-									class="relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
-								>
-									{#if message.messageType === 'MESSAGE'}
-										<!-- <img
-							class="absolute w-10 translate-x-1/2 translate-y-1/2 rounded-full right-full bottom-full aspect-square"
-							src={message.sender.image}
-							alt="User image"
-							/> -->
-										{#if message.title}
-											<h5 class="text-body1">
-												{message.title}
-											</h5>
-										{/if}
-										{#if message.content}
-											<p class="text-body2">
-												{message.content}
-											</p>
-										{/if}
-										{#if message.testId && message.test}
-											<Space gap={10} />
-											<div
-												class="flex flex-col gap-2 p-2 bg-light_white dark:bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
-											>
-												<div>
-													<div class="overflow-hidden">
-														<img
-															src={message.test?.imageUrl
-																? message.test.imageUrl
-																: $applicationStates['darkMode']['isDarkMode']
-																? '/imgs/content_imgs/poly_dark.png'
-																: '/imgs/content_imgs/poly.png'}
-															alt="{message.test.title} cover"
-															class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
-															loading="lazy"
-														/>
-													</div>
-													<span>{message.test.title}</span>
-												</div>
-
-												<a
-													href="/dashboard/my-groups/{data.group
-														.slug}/{subcategory.slug}/tests/{message.testId}"
-													class="ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
-													>View</a
-												>
-											</div>
-										{:else if message.testId}
-											<div>Oops, this test can't be accessed anymore.</div>
-										{/if}
-									{:else if message.messageType === 'TEST'}
-										TEST
+							</div>
+							<div
+								class="relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
+							>
+								{#if message.messageType === 'MESSAGE'}
+									{#if message.title}
+										<h5 class="text-body1">
+											{message.title}
+										</h5>
 									{/if}
-								</div>
+									{#if message.content}
+										<p class="text-body2">
+											{message.content}
+										</p>
+									{/if}
+									{#if message.testId && message.test}
+										<Space gap={10} />
+										<div
+											class="flex flex-col gap-2 p-2 bg-light_white dark:bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
+										>
+											<div>
+												<div class="overflow-hidden">
+													<img
+														src={message.test?.imageUrl
+															? message.test.imageUrl
+															: $applicationStates['darkMode']['isDarkMode']
+															? '/imgs/content_imgs/poly_dark.png'
+															: '/imgs/content_imgs/poly.png'}
+														alt="{message.test.title} cover"
+														class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
+														loading="lazy"
+													/>
+												</div>
+												<span>{message.test.title}</span>
+											</div>
+
+											<a
+												href="/dashboard/my-groups/{data.group.slug}/{data
+													.subcategory.slug}/tests/{message.testId}"
+												class="ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
+												>View</a
+											>
+										</div>
+									{:else if message.testId}
+										<div>Oops, this test can't be accessed anymore.</div>
+									{/if}
+								{:else if message.messageType === 'TEST'}
+									TEST
+								{/if}
 							</div>
-						{/each}
-					</div>
-				{/if}
+						</div>
+					{/each}
+				</div>
 			</div>
 		</div>
 	</div>

@@ -85,7 +85,7 @@ export const groupMessagesRouter = router({
       useTLS: true,
     });
 
-    await pusher.trigger(`group-${group.id}`, "new-message", message);
+    await pusher.trigger(`group-${group.id}-${input.subcategoryId}`, "new-message", message);
 
     return message
   })

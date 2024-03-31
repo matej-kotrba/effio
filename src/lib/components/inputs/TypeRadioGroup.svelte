@@ -13,16 +13,10 @@
 	export let inputGroupName: string;
 	export let choices: Choice[];
 
-	export let selectedRadio: string = choices[0].value;
+	export let selectedRadio: string | undefined = undefined;
 
 	let classes = '';
 	export { classes as class };
-
-	$: {
-		if (selectedRadio === undefined) {
-			selectedRadio = choices[0].value;
-		}
-	}
 
 	function onButtonSelectRadio(value: string) {
 		selectedRadio = value;

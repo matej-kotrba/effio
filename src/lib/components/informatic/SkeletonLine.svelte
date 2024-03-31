@@ -5,20 +5,23 @@
 	export { classes as class };
 </script>
 
-<div class={twMerge('mx-auto h-6 w-6 rounded-md skeleton', classes)} />
+<div
+	class={twMerge(
+		'overflow-hidden relative mx-auto h-6 w-6 rounded-md skeleton',
+		classes
+	)}
+/>
 
 <style>
 	.skeleton {
 		@apply bg-zinc-200;
-		overflow: hidden;
-		position: relative;
 	}
 
 	:global(.dark) .skeleton {
 		@apply bg-dark_grey;
 	}
 
-	.skeleton::before {
+	/* .skeleton::before {
 		content: '';
 		position: absolute;
 		width: 15%;
@@ -29,7 +32,7 @@
 		animation: move-x 2.5s infinite linear;
 		rotate: 12deg;
 		filter: blur(20px);
-	}
+	} */
 
 	:global(.dark) .skeleton::before {
 		background-color: var(--dark-text-white-20);

@@ -691,7 +691,7 @@
 				name={channel.name}
 				type={channel.type}
 				imageUrl={channel.image}
-				redirectLink={`${$page.url.href}/${channel.slug}`}
+				redirectLink={`${$page.url.href}/${channel.slug}/chat`}
 				isOwner={data.session?.user?.id === data.group.ownerId}
 			>
 				{#if data.session?.user?.id === data.group.ownerId}
