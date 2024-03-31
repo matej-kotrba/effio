@@ -84,6 +84,17 @@ export const groupInvitesRouter = router({
       throw new TRPCError({ code: "FORBIDDEN", message: "You are already a member of this group." })
     }
 
+    const isBannedFromGroup = await ctx.prisma.userOnGroupBan.findFirst({
+      where: {
+        userId: ctx.userId,
+        groupId: invite.groupId
+      }
+    })
+
+    if (isBannedFromGroup) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are banned from this group." })
+    }
+
     await ctx.prisma.groupOnUsers.create({
       data: {
         groupId: invite.groupId,

@@ -8,6 +8,8 @@
 		user: Pick<User, 'email' | 'name' | 'image'> | null;
 	};
 
+	export let isOwner: boolean;
+
 	export let onKickOrBanClick: (
 		userId: string | null,
 		type: 'kick' | 'ban'
@@ -29,19 +31,21 @@
 		/>
 	</div>
 	<div class="relative w-full max-w-full overflow-hidden">
-		<div>
+		<div class="flex items-center justify-between">
 			<div class="flex items-center w-full max-w-full gap-1 overflow-hidden">
-				<Tooltip.Root openDelay={300}>
-					<Tooltip.Trigger class="grid cursor-auto place-content-center">
-						<iconify-icon
-							icon="akar-icons:crown"
-							class="text-2xl text-yellow-500"
-						/>
-					</Tooltip.Trigger>
-					<Tooltip.Content>
-						<span class="text-body2">Group owner</span>
-					</Tooltip.Content>
-				</Tooltip.Root>
+				{#if isOwner}
+					<Tooltip.Root openDelay={300}>
+						<Tooltip.Trigger class="grid cursor-auto place-content-center">
+							<iconify-icon
+								icon="akar-icons:crown"
+								class="text-2xl text-yellow-500"
+							/>
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							<span class="text-body2">Group owner</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
+				{/if}
 				<h5 class="truncate">
 					{groupOnUser.user?.name}
 				</h5>

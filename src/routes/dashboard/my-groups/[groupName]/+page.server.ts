@@ -105,7 +105,6 @@ export const actions = {
   kickUser: async (event) => {
     const formData = await event.request.formData()
     const form = await superValidate(formData, kickUserFromGroupSchema)
-    console.log(form.data)
     if (!form.valid) {
       return fail(400, { form })
     }

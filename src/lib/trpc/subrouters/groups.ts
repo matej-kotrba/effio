@@ -557,7 +557,6 @@ export const groupsRouter = router({
       throw new TRPCError({ code: "BAD_REQUEST", message: "You can't kick the owner of the group" })
     }
 
-    console.log(input.shouldBeBanned)
     if (input.shouldBeBanned) {
       await ctx.prisma.$transaction([
         ctx.prisma.groupOnUsers.deleteMany({

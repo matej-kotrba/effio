@@ -436,7 +436,7 @@
 		use:enhanceKickUserFromGroup={{
 			onResult: ({ result }) => {
 				if (result['status'] === 200) {
-					toast.success('Channel created successfully!');
+					toast.success('Successfully removed user from the group!');
 					closeKickOrBanDialog();
 					isInvalidating = true;
 				} else if (result['type'] === 'failure') {
@@ -493,20 +493,40 @@
 				<span class="font-semibold">{data.group.name}</span>
 			</h3>
 		</di>
-		{#if data.session?.user?.id === data.group.ownerId}
-			<div class="flex gap-2">
-				<IconButton icon="material-symbols:person-add" onClick={onOpenInvite} />
-				<IconButton
-					icon="fluent:settings-24-filled"
-					onClick={openSettingsDialog}
-				/>
-			</div>
-		{:else}
+		{#if data.session?.user?.id !== data.group.ownerId}
 			<div>
 				<IconButton icon="pepicons-pop:leave" onClick={leaveGroup} />
 			</div>
 		{/if}
 	</div>
+	{#if data.session?.user?.id === data.group.ownerId}
+		<Space gap={16} />
+		<h4 class="text-h5">Administration</h4>
+		<Separator w="100%" h="1px" />
+		<Space gap={16} />
+		<div class="flex gap-2">
+			<a href="/dashboard/my-groups/{data.group.slug}/admin-test-overview">
+				<IconButton
+					icon="uis:graph-bar"
+					buttonClasses="text-5xl"
+					tooltip="Tests overview and data"
+				/>
+			</a>
+			<IconButton
+				icon="material-symbols:person-add"
+				buttonClasses="text-5xl"
+				onClick={onOpenInvite}
+				tooltip="Invite code for people to join"
+			/>
+			<IconButton
+				icon="fluent:settings-24-filled"
+				buttonClasses="text-5xl"
+				onClick={openSettingsDialog}
+				tooltip="Group settings"
+			/>
+		</div>
+	{/if}
+	<Space gap={16} />
 	<h4 class="text-h5">Channels</h4>
 	<Separator w="100%" h="1px" />
 	<Space gap={16} />
@@ -531,10 +551,11 @@
 				dispalyOptions={false}
 				onKickOrBanClick={onKickOrBanUser}
 				groupOnUser={ownerData}
+				isOwner={true}
 			/>
 		{/if}
 		{#each data.group.users.filter((item) => item['userId'] !== data.group.ownerId) as groupOnUser}
-			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} />
+			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} isOwner={false} />
 		{/each}
 	</div>
 	<!-- <div class="grid grid-cols-2 gap-4 mt-12">

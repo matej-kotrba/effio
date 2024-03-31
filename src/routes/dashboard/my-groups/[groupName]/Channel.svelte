@@ -113,7 +113,7 @@
 			/>
 		{/if}
 	</div>
-	<p class="line-clamp-3 overflow-x-clip hyphens-auto">
+	<p class="text-center line-clamp-3 overflow-x-clip hyphens-auto">
 		{name}
 	</p>
 </a>

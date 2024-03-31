@@ -24,7 +24,7 @@
 			variant="outline"
 			on:click={onClick}
 			class={twMerge(
-				'grid h-fit p-2 aspect-square duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
+				'border-light_text_black_10 grid h-fit p-4 aspect-square duration-150 bg-transparent rounded-full hover:bg-light_grey dark:hover:bg-dark_text_white_20 place-content-center disabled:opacity-50',
 				classes
 			)}
 			{...attr}
