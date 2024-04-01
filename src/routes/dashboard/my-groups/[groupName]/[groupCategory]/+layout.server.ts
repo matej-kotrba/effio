@@ -1,28 +1,24 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
-import type { trpc } from "~/lib/trpc/client";
+import prisma from "~/lib/prisma";
 
-export const load: ServerLoad = async ({ params, parent }) => {
+export const load: ServerLoad = async (event) => {
+  const { params } = event
   const category = params.groupCategory
+  const groupSlug = params.groupName
 
-  const { group } = await parent() as {
-    group: Awaited<
-      ReturnType<
-        ReturnType<typeof trpc>['groups']['getGroupByName']['query']
-      >
-    >
+  const subcategories = await prisma.groupSubcategory.findMany({
+    where: {
+      slug: category,
+      group: {
+        slug: groupSlug
+      }
+    }
+  })
+
+  if (!category || !subcategories.length) {
+    throw redirect(307, `/dashboard/my-groups/${groupSlug}`)
   }
-
-  if (!group) {
-    throw redirect(307, "/dashboard/my-groups")
-  }
-
-  const subcategory = group.groupsSubcategories.find(subcategory => subcategory.slug === category)
-
-  if (!category || !subcategory) {
-    throw redirect(307, `/dashboard/my-groups/${group.slug}`)
-  }
-
   return {
-    subcategory
+    subcategory: subcategories[0]
   }
 }
