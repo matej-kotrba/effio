@@ -176,6 +176,8 @@
 		if (categoryId === undefined) {
 			goto('/dashboard/my-groups/' + data.group.slug);
 		} else {
+			getMessages();
+
 			const fetchedTests = await trpc(
 				$page
 			).groups.getSubcategoryTestsById.query({
@@ -184,8 +186,6 @@
 			});
 
 			tests = fetchedTests;
-
-			await getMessages();
 		}
 
 		setTimeout(() => {
@@ -217,8 +217,6 @@
 		pusher?.unsubscribe(`group-${data.group.id}-${data.subcategory.id}`);
 		pusher?.disconnect();
 	});
-
-	$: console.log(messages);
 </script>
 
 <div>

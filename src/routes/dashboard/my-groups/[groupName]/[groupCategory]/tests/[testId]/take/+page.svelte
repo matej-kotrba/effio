@@ -8,6 +8,7 @@
 
 <Space gap={10} />
 <Back
+	class="ml-2"
 	link={`/dashboard/my-groups/${data.group.slug}/${data.subcategory.slug}/`}
 />
 <TestTake

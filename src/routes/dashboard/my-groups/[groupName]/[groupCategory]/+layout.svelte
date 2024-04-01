@@ -2,16 +2,22 @@
 	import Tabs, { type Tab } from '~components/navigation/Tabs.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { beforeUpdate } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import { beforeNavigate } from '$app/navigation';
 
 	export let data;
 
-	$: slug = $page.url.pathname.split('/').at(-1);
-
 	const FLY_DISTANCE = 400;
 	const FLY_DURATION = 400;
-	let animateDirection: 1 | -1 = 1;
+	let animateDirection: 1 | -1 | 0 = 1;
+	let animationMultiplier: 0 | 1 = 1;
+
+	let slug: string | undefined;
+
+	$: {
+		slug = $page.url.pathname.split('/').at(-1);
+		animationMultiplier = 1;
+	}
 
 	const tabs: Tab[] = [
 		{
@@ -39,25 +45,36 @@
 			}
 		}
 	];
+
+	beforeNavigate((event) => {
+		const routes = tabs.map(
+			(tab) => '/dashboard/my-groups/[groupName]/[groupCategory]/' + tab.slug
+		);
+		if (!event.to?.route.id || !routes.includes(event.to?.route.id)) {
+			animationMultiplier = 0;
+		}
+	});
 </script>
 
 {#if slug && tabs.some((tab) => tab.slug === slug)}
 	<div class="p-2">
 		<Tabs {tabs} activeTabSlug={slug} />
 	</div>
+	{#key data.url}
+		<div
+			in:fly={{
+				x: FLY_DISTANCE * animateDirection,
+				duration: FLY_DURATION * animationMultiplier,
+				delay: FLY_DURATION * animationMultiplier
+			}}
+			out:fly={{
+				x: FLY_DISTANCE * animateDirection * -1,
+				duration: FLY_DURATION * animationMultiplier
+			}}
+		>
+			<slot />
+		</div>
+	{/key}
+{:else}
+	<slot />
 {/if}
-{#key data.url}
-	<div
-		in:fly={{
-			x: FLY_DISTANCE * animateDirection,
-			duration: FLY_DURATION,
-			delay: FLY_DURATION
-		}}
-		out:fly={{
-			x: FLY_DISTANCE * animateDirection * -1,
-			duration: FLY_DURATION
-		}}
-	>
-		<slot />
-	</div>
-{/key}
