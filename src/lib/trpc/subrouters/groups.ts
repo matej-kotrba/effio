@@ -332,7 +332,6 @@ export const groupsRouter = router({
   getSubcategoryTestsByIdWithRecords: loggedInProcedure.input(z.object({
     id: z.string(),
     orderByDate: z.union([z.literal("asc"), z.literal("desc")]).optional(),
-    excludeOwnersRecords: z.boolean().optional(),
   })).query(async ({ ctx, input }) => {
     const tests = await ctx.prisma.groupSubcategoryOnTests.findMany({
       where: {
@@ -349,13 +348,13 @@ export const groupsRouter = router({
               include: {
                 _count: {
                   select: {
-                    records: input.excludeOwnersRecords ? {
+                    records: {
                       where: {
                         userId: {
-                          not: ctx.userId
+                          not: ctx.userId,
                         }
                       }
-                    } : true
+                    }
                   }
                 }
 
@@ -368,7 +367,27 @@ export const groupsRouter = router({
         addedDate: input.orderByDate === "desc" ? "desc" : "asc"
       }
     })
-    return tests
+
+    const uniqueUsersCount = await ctx.prisma.$queryRaw`
+      SELECT 
+        COUNT(DISTINCT "userId") AS "uniqueUsersCount",
+        "TestVersion"."testId" as "testId" 
+      FROM 
+        "TestRecord" 
+      JOIN "TestVersion" ON "TestRecord"."testId" = "TestVersion"."id"
+      WHERE 
+        "subacategoryId" = ${input.id} AND "shouldCountToStatistics" = true 
+      GROUP BY  "TestVersion"."testId";
+    ` as { uniqueUsersCount: bigint, testId: string }[]
+
+    const resultData = tests.map(test => {
+      return {
+        ...test,
+        uniqueUsersCount: Number(uniqueUsersCount.find(item => item.testId === test.testId)?.uniqueUsersCount ?? 0)
+      }
+    })
+
+    return resultData
   }),
   getSubcategoryMessagesByGroupSubcategoryId: loggedInProcedure.input(z.object({
     id: z.string(),

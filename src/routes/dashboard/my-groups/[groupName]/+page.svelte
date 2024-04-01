@@ -735,7 +735,12 @@
 			/>
 		{/if}
 		{#each data.group.users.filter((item) => item['userId'] !== data.group.ownerId) as groupOnUser}
-			<User {groupOnUser} onKickOrBanClick={onKickOrBanUser} isOwner={false} />
+			<User
+				{groupOnUser}
+				onKickOrBanClick={onKickOrBanUser}
+				isOwner={false}
+				dispalyOptions={data.session?.user?.id === data.group.ownerId}
+			/>
 		{/each}
 	</div>
 </div>

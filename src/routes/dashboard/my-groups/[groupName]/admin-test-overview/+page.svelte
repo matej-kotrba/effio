@@ -10,6 +10,9 @@
 	import Space from '~components/separators/Space.svelte';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
+	import TestOverviewCard from './TestOverviewCard.svelte';
+	import { onMount } from 'svelte';
+	import SkeletonLine from '~components/informatic/SkeletonLine.svelte';
 
 	export let data;
 	export let form;
@@ -20,6 +23,8 @@
 				title: string;
 				description: string;
 				takenByPeopleCount: number;
+				takenByUniquePeopleCount: number;
+				addedAt: Date;
 				img?: string;
 		  }[];
 
@@ -28,13 +33,15 @@
 	let tests: TestOrFetching[] = data['group']['groupsSubcategories'].map(
 		() => undefined
 	);
+	let isCollapsed: boolean[] = Array(
+		data['group']['groupsSubcategories'].length
+	).fill(false);
 
 	async function setTestForSubcategory(id: string, index: number) {
 		const testsData = await trpc(
 			$page
 		).groups.getSubcategoryTestsByIdWithRecords.query({
-			id: id,
-			excludeOwnersRecords: true
+			id: id
 		});
 
 		tests[index] = testsData.map((test) => {
@@ -42,10 +49,25 @@
 				id: test.test.id,
 				title: test.test.title,
 				description: test.test.description,
-				takenByPeopleCount: test.test.testVersions[0]._count.records
+				takenByPeopleCount: test.test.testVersions[0]._count.records,
+				takenByUniquePeopleCount: test.uniqueUsersCount,
+				addedAt: test.addedDate,
+				img: test.test.imageUrl
 			};
 		});
 	}
+
+	function collapseChannelTests(index: number) {
+		const collapsible = document.querySelectorAll('.collapsible')[index];
+		collapsible.classList.toggle('collapsed');
+		isCollapsed[index] = collapsible.classList.contains('collapsed');
+	}
+
+	onMount(() => {
+		data.group.groupsSubcategories.forEach((item, index) => {
+			setTestForSubcategory(item.id, index);
+		});
+	});
 
 	// DIALOG
 	let selectedUsers: UserDataObject[] = [];
@@ -54,7 +76,76 @@
 	let revalidateUsers: () => void;
 </script>
 
-<Dialog
+<div class="p-4">
+	{#each data['group']['groupsSubcategories'] as channel, index}
+		{@const testArray = tests[index]}
+		<div class="flex flex-wrap justify-between">
+			<h4 class="text-h5">{channel.name}</h4>
+			<button
+				type="button"
+				class="grid p-2 duration-100 rounded-lg hover:bg-light_grey dark:hover:bg-dark_light_grey place-content-center"
+				on:click={() => collapseChannelTests(index)}
+			>
+				<iconify-icon
+					icon="iconamoon:arrow-down-2-duotone"
+					class="text-3xl duration-100 {isCollapsed[index]
+						? 'rotate-180'
+						: 'rotate-0'}"
+				/>
+			</button>
+		</div>
+		<Space gap={4} />
+		<Separator w={'100%'} h={'1px'} />
+		<Space gap={8} />
+		<div class="collapsible">
+			<div>
+				{#if testArray === undefined}
+					<div class="flex flex-col gap-1">
+						<SkeletonLine class="w-32 h-8 mx-0" />
+						<SkeletonLine class="w-full h-1 mx-0" />
+						<div class="grid__container">
+							<SkeletonLine class="w-full h-auto aspect-[3/2] mx-0" />
+							<SkeletonLine class="w-full h-auto aspect-[3/2] mx-0" />
+							<SkeletonLine class="w-full h-auto aspect-[3/2] mx-0" />
+						</div>
+					</div>
+				{:else if testArray.length === 0}
+					<div
+						class="mx-auto w-fit aspect-[3/2] flex flex-col gap-2 items-center justify-center"
+					>
+						<iconify-icon
+							icon="ep:folder-opened"
+							class="grid mx-auto text-5xl place-content-center text-light_text_black_60"
+						/>
+						<p class="text-h6 text-light_text_black_80">
+							There is no test in the channel
+						</p>
+					</div>
+				{:else}
+					<div class="grid__container">
+						{#each testArray as test}
+							<div>
+								<TestOverviewCard
+									data={{
+										name: test.title,
+										addedAt: test.addedAt,
+										imageUrl: test.img,
+										doneBy: test.takenByUniquePeopleCount,
+										totalNumberOfUsers: data.group.users.length - 1,
+										link: ''
+									}}
+								/>
+								<Space gap={16} />
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</div>
+	{/each}
+</div>
+
+<!-- <Dialog
 	bind:open={kickDialogOpen}
 	bind:close={kickDialogClose}
 	title={'Are you sure you want to kick these users from the group?'}
@@ -193,4 +284,26 @@
 			/>
 		</section>
 	</div>
-</div>
+</div> -->
+
+<style>
+	.grid__container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 1rem;
+	}
+
+	.collapsible {
+		display: grid;
+		grid-template-rows: 1fr;
+		transition: grid-template-rows 0.3s ease;
+	}
+
+	.collapsible > div {
+		overflow: hidden;
+	}
+
+	.collapsible:global(.collapsed) {
+		grid-template-rows: 0fr;
+	}
+</style>
