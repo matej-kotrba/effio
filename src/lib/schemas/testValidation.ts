@@ -99,4 +99,18 @@ export const programmingHintSchema = z.string().min(PROGRAMMING_TEST_MIN, `Input
 export const testInputRegexSchema = z.string().regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })
 export const channelNameSchema = z.string().min(CHANNEL_NAME_MIN, "Channel name has to be atleast 1 character long").max(CHANNEL_NAME_MAX, "Channel name has to be below 25 characters").regex(DB_STRING_REGEX, { message: DB_STRING_MESSAGE })
 type GroupSubcategoryUnion = keyof typeof GROUP_SUBCATEGORY_TYPES
-export const channelTypeSchema = z.enum<GroupSubcategoryUnion, [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]]>(Object.values(GROUP_SUBCATEGORY_TYPES) as [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]]) 
+export const channelTypeSchema = z.enum<GroupSubcategoryUnion, [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]]>(Object.values(GROUP_SUBCATEGORY_TYPES) as [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]])
+
+// Dynamic schemas
+export function getNumberInputSchema({ min, max, isDecimal, positive }: { min?: number, max?: number, isDecimal?: boolean, positive?: boolean }) {
+  let schema = z.number({ invalid_type_error: "Input has to be a valid number" })
+  if (min) schema = schema.min(min, `Number has to be bigger than ${min}`)
+  if (max) schema = schema.max(max, `Number has to be smaller than ${max}`)
+  if (positive) schema = schema.nonnegative("Number cannot be negative.")
+
+  const regexSchema = z.string().regex(isDecimal ? /^[0-9].$/ : /^[0-9]$/, { message: `Input can contain only digits${isDecimal ? " and dot" : ""}` })
+  return {
+    numberSchema: schema,
+    regexSchema
+  }
+}

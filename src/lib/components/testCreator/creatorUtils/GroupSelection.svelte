@@ -3,6 +3,11 @@
 	import { page } from '$app/stores';
 	import { trpc } from '~/lib/trpc/client';
 	import Collapsible from '~components/collapsibles/Collapsible.svelte';
+	import TextInputSimple from '~components/inputs/TextInputSimple.svelte';
+	import NumberInput from '~components/inputs/NumberInput.svelte';
+	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
+	import AddNew from './AddNew.svelte';
+	import Alert from '~components/ui/alert/alert.svelte';
 
 	// export let groupData: Prisma.GroupGetPayload<{
 	// 	include: {
@@ -21,7 +26,6 @@
 				>
 		  >
 		| 'fetching' = 'fetching';
-	let checkboxGroup: (string | 'public')[] = ['public'];
 
 	async function onInitialGroupDisplay() {
 		if (groups !== 'fetching') return;
@@ -43,37 +47,40 @@
 					return item.groupsSubcategories.map((item) => item.id);
 				})
 				.flat();
-			const newCategories: string[] = [];
+			const newCategories: GroupSelect[] = [];
 			usedSubcategories.map((item) => {
 				const id = ids.indexOf(item.subcategoryId);
 				if (id !== -1) {
-					newCategories[id] = item.subcategoryId;
+					newCategories[id] = {
+						id: item.subcategoryId,
+						numberOfTriesForUser: item.numberOfTries
+					};
 				}
 			});
-			checkboxGroup = ['public', ...newCategories];
+
+			newCategories;
+			// checkboxGroup = ['public', ...newCategories];
 		}
 
 		groups = userGroups;
 		// checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
 	}
-
-	$: $testObject.includedInGroups = checkboxGroup
-		.map((item) => {
-			return item;
-		})
-		.filter((item) => !!item);
+	let checkboxGroup;
 </script>
 
-<div class="flex items-center gap-2 mb-1">
+<ErrorEnhance error={''}>
+	<NumberInput inputTitle="s" />
+</ErrorEnhance>
+
+<!-- <div class="flex items-center gap-2 mb-1">
 	<label for="public">Should test be public?</label>
 	<input
 		type="checkbox"
-		bind:group={checkboxGroup}
 		class="checkbox checkbox-primary dark:checkbox-accent"
 		value="public"
 		name="public"
 	/>
-</div>
+</div> -->
 <Collapsible
 	class="w-full shadow-sm"
 	title="Add test to groups"
@@ -120,12 +127,33 @@
 									name={group.slug}
 									on:click={() => {
 										if (checked === true) {
-											checkboxGroup[index + 1] = '';
+											// checkboxGroup[index + 1] = '';
 										}
 									}}
 								/>
 							</div>
 						{/each}
+						<ErrorEnhance error={getGroupError(index)}>
+							<NumberInput
+								allowDecimal={false}
+								isPositive={true}
+								on:inputChange={(data) => {
+									if ($testObject.includedInGroups === undefined) return;
+									const group = $testObject.includedInGroups[index];
+									if (typeof group === 'string') return;
+									group.numberOfTriesForUser = data.detail;
+								}}
+								on:error={(data) => {
+									console.log($testObject.includedInGroups);
+									if ($testObject.includedInGroups === undefined) return;
+									const group = $testObject.includedInGroups[index];
+									if (typeof group === 'string') return;
+									console.log(data);
+									group.numberOfTriesForUserError = data.detail;
+								}}
+								inputTitle="s"
+							/>
+						</ErrorEnhance>
 					</Collapsible>
 				{/if}
 			{/each}

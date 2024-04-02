@@ -68,12 +68,6 @@
 			setTestForSubcategory(item.id, index);
 		});
 	});
-
-	// DIALOG
-	let selectedUsers: UserDataObject[] = [];
-	let kickDialogOpen: () => void;
-	let kickDialogClose: () => void;
-	let revalidateUsers: () => void;
 </script>
 
 <div class="p-4">
@@ -132,7 +126,7 @@
 										imageUrl: test.img,
 										doneBy: test.takenByUniquePeopleCount,
 										totalNumberOfUsers: data.group.users.length - 1,
-										link: ''
+										link: `admin-test-overview/${channel.slug}/${test.id}`
 									}}
 								/>
 								<Space gap={16} />

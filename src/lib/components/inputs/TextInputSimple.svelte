@@ -152,10 +152,10 @@
 					maxlength={doesLimit ? max : undefined}
 					class={twMerge(
 						`input_edit resize-none ${
-							displayOutside === false ? 'my-0' : 'mb-1'
+							displayOutside === false ? 'my-0 pb-4 pt-5' : 'mb-1 py-4'
 						} outline-none bg-white dark:bg-dark_light_grey
 			overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white
-			px-2 py-4 rounded-md shadow-lg w-full dark:placeholder:text-dark_text_white_40
+			px-2 rounded-md shadow-lg w-full dark:placeholder:text-dark_text_white_40
 			outline-1 outline-transparent outline group-focus-within:outline-light_primary
 			 dark:group-focus-within:outline-dark_primary input-specific-transition
 				

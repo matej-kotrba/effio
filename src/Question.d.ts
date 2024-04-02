@@ -185,7 +185,16 @@ type MarkSystemJSON = { [key: string]: never } | {
 
 type MarkSystemInputUse = undefined | MarkSystemJSON["marks"]
 
-type IncludedInGroups = (string | "public")[]
+type GroupSelect = {
+  id: string;
+  numberOfTriesForUser: number | null;
+  numberOfTriesForUserError?: string;
+}
+
+type IncludedInGroups = {
+  public: boolean;
+  subcategorySelect: GroupSelect[];
+}
 
 type TagIds = string[]
 

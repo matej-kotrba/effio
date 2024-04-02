@@ -72,6 +72,23 @@
 	if (browser) {
 		getTags();
 	}
+
+	let isTestPublic = testData?.isPublic || true;
+
+	$: {
+		if (!$testObject.includedInGroups) {
+			$testObject.includedInGroups = {
+				public: isTestPublic,
+				subcategorySelect: []
+			};
+		}
+	}
+
+	$: {
+		if ($testObject.includedInGroups) {
+			$testObject.includedInGroups.public = isTestPublic;
+		}
+	}
 </script>
 
 <div class="flex flex-col w-full gap-2">
@@ -143,6 +160,16 @@
 				}) || []}
 			/>
 			<Space gap={8} />
+			<div class="flex items-center gap-2 mb-1">
+				<label for="public">Should test be public?</label>
+				<input
+					type="checkbox"
+					class="checkbox checkbox-primary dark:checkbox-accent"
+					value="public"
+					name="public"
+					bind:checked={isTestPublic}
+				/>
+			</div>
 			<GroupSelection testId={testData?.id} />
 		</div>
 	</div>

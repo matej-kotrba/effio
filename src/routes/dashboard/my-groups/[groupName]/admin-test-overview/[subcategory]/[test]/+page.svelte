@@ -46,7 +46,7 @@
 </script>
 
 <!-- Title grid -->
-<div class="grid grid-cols-12 p-2 title-grid">
+<!-- <div class="grid grid-cols-12 p-2 title-grid">
 	<h5
 		class="col-span-5 font-semibold uppercase text-h5 border-b-[1px] border-solid border-light_text_black_20"
 	>
@@ -57,10 +57,10 @@
 	>
 		Questions
 	</h5>
-</div>
+</div> -->
 
 <!-- Content grid -->
-<div class="grid grid-cols-12 gap-2 px-2 main-grid @container">
+<!-- <div class="grid grid-cols-12 gap-2 px-2 main-grid @container">
 	<GraphContainer
 		class="flex flex-col items-center col-span-3 @6xl:col-span-2 gap-1"
 	>
@@ -101,17 +101,17 @@
 		{/each}
 	</div>
 </div>
-<Space gap={48} />
+<Space gap={48} /> -->
 <!-- Title grid -->
-<div class="grid grid-cols-12 p-2 title-grid">
+<!-- <div class="grid grid-cols-12 p-2 title-grid">
 	<h5
 		class="col-span-5 font-semibold uppercase text-h5 border-b-[1px] border-solid border-light_text_black_20"
 	>
 		Users
 	</h5>
-</div>
+</div> -->
 <!-- Content grid -->
-<div class="grid grid-cols-12 gap-2 px-2 main-grid">
+<!-- <div class="grid grid-cols-12 gap-2 px-2 main-grid">
 	<UserTable
 		ownerId={data.group.ownerId}
 		omitOwnerFromTable={true}
@@ -139,4 +139,4 @@
 	canvas {
 		max-height: 140px !important;
 	}
-</style>
+</style> -->
