@@ -5,6 +5,7 @@
 	import { getNumberInputSchema } from '~schemas/testValidation';
 
 	type $$Props = ButtonProps & {
+		inputValue: string;
 		inputTitle: string;
 		allowDecimal?: boolean;
 		isPositive?: boolean;
@@ -24,6 +25,7 @@
 	export let canBeNullable: $$Props['canBeNullable'] = false;
 
 	export let inputTitle: string;
+	export let inputValue: HTMLInputElement['value'] = '';
 
 	const dispatch = createEventDispatcher();
 
@@ -95,6 +97,7 @@
         before:scale-0 group-focus-within:before:scale-100"
 		>
 			<input
+				bind:value={inputValue}
 				on:input={dispatchInputChange}
 				on:focusout={() => {
 					checkInputValidatity();
