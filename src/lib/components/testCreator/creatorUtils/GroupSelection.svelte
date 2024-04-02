@@ -190,10 +190,11 @@
 								isPositive={true}
 								inputTitle="Number of tries (leave blank for infinite)"
 								on:inputChange={(data) => {
-									if (isNaN(data.detail)) {
+									console.log(data);
+									if (isNaN(Number(data.detail))) {
 										radioGroup[index].numberOfTries = null;
 									} else {
-										radioGroup[index].numberOfTries = data.detail;
+										radioGroup[index].numberOfTries = Number(data.detail);
 									}
 								}}
 								on:error={(data) => {

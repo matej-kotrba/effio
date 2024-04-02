@@ -1,7 +1,7 @@
 import type { TestFullType } from "~/Prisma";
 import type { TestObject } from "~stores/testObject";
 import { z } from "zod"
-import { descriptionSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, MAX_TEST_TAGS, testInputRegexSchema, titleSchema } from "~schemas/testValidation"
+import { descriptionSchema, getNumberInputSchema, includedInGroupsSchema, MARK_LIMIT_MAX_MARK_COUNT, markLimitSchema, markSchema, MAX_TEST_TAGS, testInputRegexSchema, titleSchema } from "~schemas/testValidation"
 import { enviromentFetch } from "../fetch";
 import type { CheckTestResponse } from "~/routes/api/checkTest/+server";
 import { trpc } from "../../trpc/client";
@@ -22,6 +22,10 @@ export function initializeNewTestToTestStore(testObject: Writable<TestObject>, t
     markSystem: {},
     randomizeQuestionOrder: true,
     tagIds: [],
+    includedInGroups: {
+      public: true,
+      subcategorySelect: []
+    }
   })
 }
 
@@ -41,6 +45,11 @@ export function initializeTestToTestStore(testObject: Writable<TestObject>, test
     } : {},
     errors: {},
     tagIds: testData.tags.map(item => item.tagId),
+    includedInGroups: {
+      public: testData.isPublic,
+      //TODO: Getting of all the subcategories is done in GroupSelection.svelte where it is dynamicly fetched and added to the store
+      subcategorySelect: []
+    },
     questions: testData.testVersions[0].questions.map((question) => {
       const type = question.type.slug as keyof QuestionTypeMap
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -66,7 +75,8 @@ export type IsTestValidProps = {
   description?: string
   questions?: QuestionClient[]
   markSystem?: MarkSystemJSON
-  tagIds?: string[]
+  tagIds?: string[],
+  includedInGroups?: IncludedInGroups
 }
 
 export type IsTestValidResponse = {
@@ -261,6 +271,25 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
           result.errors.tagIds[i] = parsedTagId.error.errors[0].message
         }
       }
+  }
+
+  if (inputsToValidate.includedInGroups) {
+    const isPublicBoolean = z.boolean().safeParse(inputsToValidate.includedInGroups.public)
+    if (isPublicBoolean.success === false) {
+      isError = true
+      message = isPublicBoolean.error.errors[0].message
+
+      //TODO: Add errors.includedGroups to push the errors back to client
+    }
+
+    const subcategorySelect = inputsToValidate.includedInGroups.subcategorySelect
+
+    const subcategorySelectResult = includedInGroupsSchema.safeParse(subcategorySelect)
+
+    if (subcategorySelectResult.success === false) {
+      isError = true
+      message = subcategorySelectResult.error.errors[0].message
+    }
   }
 
   // Check if error is true and message is not set, if so we set message to "Some inputs are incorrect", on client then navigate to them

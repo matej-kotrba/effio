@@ -11,7 +11,7 @@ export type TestObject = {
   markSystem: MarkSystemJSON;
   tagIds: TagIds;
   randomizeQuestionOrder?: boolean;
-  includedInGroups?: IncludedInGroups;
+  includedInGroups: IncludedInGroups;
   errors: ClientTest["errors"]
 };
 

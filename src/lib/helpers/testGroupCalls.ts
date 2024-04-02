@@ -68,6 +68,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     questions: props.data.questions,
     markSystem: props.data.markSystem,
     tagIds: props.data.tagIds,
+    includedInGroups: props.data.includedInGroups
   });
 
   if (result['isError']) {
@@ -86,6 +87,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
     questions: props.data.questions,
     markSystem: props.data.markSystem,
     tagIds: props.data.tagIds,
+    includedInGroups: props.data.includedInGroups
   });
 
   if (serverResponse.isError === true) {
@@ -139,6 +141,8 @@ export const validateTestAndRecordIt = async (props: Props) => {
       }
     }
 
+    console.log(props.data.includedInGroups)
+
     if (props.type === "create") {
       response = await trpc(get(page)).protected.saveTest.mutate({
         title: props.data.title,
@@ -159,7 +163,10 @@ export const validateTestAndRecordIt = async (props: Props) => {
             })
           }
           : undefined,
-        includedInGroups: currentStore.includedInGroups,
+        includedInGroups: {
+          isPublic: currentStore.includedInGroups.public,
+          subcategorySelect: currentStore.includedInGroups.subcategorySelect,
+        },
         isRandomized: props.data.isRandomized
       });
     }
@@ -167,7 +174,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
       const imageUrlToDeleteTest = await trpc(get(page)).getTestById.query({
         id: props.data.id,
       })
-
+      console.log(currentStore.includedInGroups.subcategorySelect)
       if (imageUrlToDeleteTest === null) return
       response = await trpc(get(page)).protected.updateTest.mutate({
         title: props.data.title,
@@ -187,7 +194,10 @@ export const validateTestAndRecordIt = async (props: Props) => {
             })
           }
           : undefined,
-        includedInGroups: currentStore.includedInGroups,
+        includedInGroups: {
+          isPublic: currentStore.includedInGroups.public,
+          subcategorySelect: currentStore.includedInGroups.subcategorySelect
+        },
         testGroupId: currentStore.id as string,
         isRandomized: props.data.isRandomized
       });

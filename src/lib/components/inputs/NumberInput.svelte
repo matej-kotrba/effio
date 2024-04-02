@@ -47,7 +47,7 @@
 			}
 			return;
 		}
-		const numberResult = numberSchema.safeParse(inputRef.valueAsNumber || null);
+		const numberResult = numberSchema.safeParse(inputRef.value || null);
 		if (!numberResult?.success) {
 			dispatch('error', numberResult?.error.errors[0].message);
 			if (typeof setError === 'function')
@@ -60,27 +60,28 @@
 	}
 
 	function dispatchInputChange() {
-		dispatch('inputChange', inputRef.valueAsNumber);
+		console.log(inputRef.value);
+		dispatch('inputChange', inputRef.value);
 	}
 
 	function addValue() {
 		if (inputRef === undefined) return;
-		if (typeof max === 'number' && inputRef.valueAsNumber === max) return;
-		if (isNaN(inputRef.valueAsNumber)) {
-			inputRef.valueAsNumber = 0;
+		if (typeof max === 'number' && Number(inputRef.value) === max) return;
+		if (isNaN(Number(inputRef.value))) {
+			inputRef.value = '0';
 		}
-		inputRef.valueAsNumber += 1;
+		inputRef.value = `${Number(inputRef.value) + 1}`;
 		dispatchInputChange();
 	}
 
 	function subtractValue() {
 		if (inputRef === undefined) return;
-		if (typeof min === 'number' && inputRef.valueAsNumber === min) return;
-		if (isPositive && inputRef.valueAsNumber === 0) return;
-		if (isNaN(inputRef.valueAsNumber)) {
-			inputRef.valueAsNumber = min ? min + 1 : 0;
+		if (typeof min === 'number' && Number(inputRef.value) === min) return;
+		if (isPositive && Number(inputRef.value) === 0) return;
+		if (isNaN(Number(inputRef.value))) {
+			inputRef.value = min ? `${min + 1}` : '0';
 		}
-		inputRef.valueAsNumber -= 1;
+		inputRef.value = `${Number(inputRef.value) - 1}`;
 		dispatchInputChange();
 	}
 </script>

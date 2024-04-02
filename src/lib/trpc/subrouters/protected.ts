@@ -5,6 +5,9 @@ import { TRPCError } from "@trpc/server"
 import { questionContentFunctions } from "~helpers/test/questionFunctions"
 import { ratelimit, trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { DB_STRING_REGEX } from "~helpers/constants"
+import { includedInGroupsSchema } from "~schemas/testValidation"
+
+const includedInGroupsInputSchema = z.object({ isPublic: z.boolean(), subcategorySelect: includedInGroupsSchema }).optional()
 
 export const protectedRouter = router({
   saveTest: loggedInProcedure.input(z.object({
@@ -20,7 +23,7 @@ export const protectedRouter = router({
     isPublished: z.boolean(),
     testType: z.enum(["REGULAR", "PROGRAMMING"]).default("REGULAR"),
     imageUrl: z.string().optional(),
-    includedInGroups: z.array(z.string()).optional(),
+    includedInGroups: includedInGroupsInputSchema,
     tagIds: z.array(z.string()).optional(),
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
@@ -39,13 +42,13 @@ export const protectedRouter = router({
       throw result
     }
 
-    const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
-    const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
+    const isPublic = input.includedInGroups ? input.includedInGroups.isPublic : true
+    const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect : []
 
     const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
       where: {
         id: {
-          in: includedInGroups
+          in: includedInGroups.map(item => item.id)
         },
         group: {
           users: {
@@ -113,20 +116,21 @@ export const protectedRouter = router({
 
     await ctx.prisma.$transaction([
       ctx.prisma.groupSubcategoryOnTests.createMany({
-        data: includedInGroups.map((subcategoryId) => {
+        data: includedInGroups.map((subcategory) => {
           return {
-            subcategoryId,
-            testId: testGroupData.id
+            subcategoryId: subcategory.id,
+            testId: testGroupData.id,
+            numberOfTries: subcategory.limit
           }
         })
       }),
       ctx.prisma.groupSubcategoryMessage.createMany({
-        data: includedInGroups.map((subcategoryId) => {
+        data: includedInGroups.map((subcategory) => {
           return {
             senderId: ctx.userId,
             messageType: "MESSAGE",
             title: "Added new test " + testGroupData.title,
-            groupSubcategoryId: subcategoryId,
+            groupSubcategoryId: subcategory.id,
             testId: testGroupData.id
           }
         })
@@ -155,7 +159,7 @@ export const protectedRouter = router({
       })),
     }).optional(),
     tagIds: z.array(z.string()).optional(),
-    includedInGroups: z.array(z.string()).optional(),
+    includedInGroups: includedInGroupsInputSchema,
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
     const result = await trpcCheckForRateLimit("testUpdate", ctx.userId, "updating tests")
@@ -189,8 +193,8 @@ export const protectedRouter = router({
         }
       })
 
-      const isPublic = input.includedInGroups ? input.includedInGroups.includes("public") : true
-      const includedInGroups = input.includedInGroups ? input.includedInGroups.filter(item => item !== "public") : []
+      const isPublic = input.includedInGroups ? input.includedInGroups.isPublic : true
+      const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect : []
 
       const linkedGroups = await ctx.prisma.groupSubcategoryOnTests.findMany({
         where: {
@@ -199,13 +203,13 @@ export const protectedRouter = router({
       })
 
       // Groups
-      const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.includes(item.subcategoryId))
-      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item))
+      const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.map(item => item.id).includes(item.subcategoryId))
+      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item.id))
 
       const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
         where: {
           id: {
-            in: linkedGroupsToCreate
+            in: linkedGroupsToCreate.map(item => item.id)
           },
           group: {
             users: {
@@ -230,25 +234,24 @@ export const protectedRouter = router({
             }
           })
         }),
-        ...linkedGroupsToCreate.map((subcategoryId) => {
+        ...linkedGroupsToCreate.map((subcategory) => {
           return ctx.prisma.groupSubcategoryOnTests.create({
             data: {
               testId: input.testGroupId,
-              subcategoryId
+              subcategoryId: subcategory.id,
+              numberOfTries: subcategory.limit
             }
           })
         }),
         ctx.prisma.groupSubcategoryMessage.createMany({
-          data: linkedGroupsToCreate.map((subcategoryId) => {
+          data: linkedGroupsToCreate.map((subcategory) => {
             return {
               senderId: ctx.userId,
               messageType: "MESSAGE",
               title: "Added new test: " + input.title,
-              groupSubcategoryId: subcategoryId,
+              groupSubcategoryId: subcategory.id,
               testId: input.testGroupId
             }
-
-
           })
         }),
         ctx.prisma.groupSubcategoryMessage.createMany({

@@ -48,8 +48,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: true,
-		constructingDone: true,
+		templateDone: false,
+		constructingDone: false,
 		detailsDone: false
 	};
 
@@ -100,7 +100,8 @@
 				testType: testType,
 				image: testImageFile || undefined,
 				tagIds: $testObject.tagIds,
-				isRandomized: !!$testObject.randomizeQuestionOrder
+				isRandomized: !!$testObject.randomizeQuestionOrder,
+				includedInGroups: $testObject.includedInGroups
 			},
 			callbacks: {
 				onSaveToDB(response) {

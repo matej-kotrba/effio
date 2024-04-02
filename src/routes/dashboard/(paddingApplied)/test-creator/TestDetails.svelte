@@ -146,7 +146,7 @@
 			<Space gap={8} />
 			<GroupSelection
 				testId={testData?.id}
-				isPublic={testData ? testData.published : true}
+				isPublic={testData ? testData.isPublic : true}
 			/>
 		</div>
 	</div>
