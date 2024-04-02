@@ -59,7 +59,8 @@
 				isPublished: $testObject.published,
 				image: testImageFile,
 				tagIds: $testObject.tagIds,
-				isRandomized: !!$testObject.randomizeQuestionOrder
+				isRandomized: !!$testObject.randomizeQuestionOrder,
+				includedInGroups: $testObject.includedInGroups
 			},
 			callbacks: {
 				onSaveToDB(response) {

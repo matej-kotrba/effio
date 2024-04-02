@@ -120,5 +120,5 @@ export function getNumberInputSchema({ min, max, isDecimal, positive, canBeNulla
 const { numberSchema, regexSchema } = getNumberInputSchema({ canBeNullable: true, min: 1, positive: true, isDecimal: false })
 export const includedInGroupsSchema = z.array(z.object({
   id: z.string(),
-  limit: numberSchema.and(regexSchema)
+  limit: numberSchema.refine((val) => regexSchema.safeParse(val))
 }))

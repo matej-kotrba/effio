@@ -218,6 +218,7 @@ model GroupSubcategoryOnTests {
   subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   numberOfTries Int?
 
+  @@unique([testId, subcategoryId])
   @@index([testId])
   @@index([subcategoryId])
 }

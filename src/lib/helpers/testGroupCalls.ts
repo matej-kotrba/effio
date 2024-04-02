@@ -141,8 +141,6 @@ export const validateTestAndRecordIt = async (props: Props) => {
       }
     }
 
-    console.log(props.data.includedInGroups)
-
     if (props.type === "create") {
       response = await trpc(get(page)).protected.saveTest.mutate({
         title: props.data.title,
@@ -165,7 +163,12 @@ export const validateTestAndRecordIt = async (props: Props) => {
           : undefined,
         includedInGroups: {
           isPublic: currentStore.includedInGroups.public,
-          subcategorySelect: currentStore.includedInGroups.subcategorySelect,
+          subcategorySelect: currentStore.includedInGroups.subcategorySelect.map(item => {
+            return {
+              id: item.id,
+              limit: item.numberOfTriesForUser || null
+            }
+          }),
         },
         isRandomized: props.data.isRandomized
       });
@@ -174,7 +177,7 @@ export const validateTestAndRecordIt = async (props: Props) => {
       const imageUrlToDeleteTest = await trpc(get(page)).getTestById.query({
         id: props.data.id,
       })
-      console.log(currentStore.includedInGroups.subcategorySelect)
+
       if (imageUrlToDeleteTest === null) return
       response = await trpc(get(page)).protected.updateTest.mutate({
         title: props.data.title,
@@ -196,7 +199,12 @@ export const validateTestAndRecordIt = async (props: Props) => {
           : undefined,
         includedInGroups: {
           isPublic: currentStore.includedInGroups.public,
-          subcategorySelect: currentStore.includedInGroups.subcategorySelect
+          subcategorySelect: currentStore.includedInGroups.subcategorySelect.map(item => {
+            return {
+              id: item.id,
+              limit: item.numberOfTriesForUser || null
+            }
+          })
         },
         testGroupId: currentStore.id as string,
         isRandomized: props.data.isRandomized

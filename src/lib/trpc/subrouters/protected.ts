@@ -234,9 +234,18 @@ export const protectedRouter = router({
             }
           })
         }),
-        ...linkedGroupsToCreate.map((subcategory) => {
-          return ctx.prisma.groupSubcategoryOnTests.create({
-            data: {
+        ...includedInGroups.map((subcategory) => {
+          return ctx.prisma.groupSubcategoryOnTests.upsert({
+            where: {
+              testId_subcategoryId: {
+                subcategoryId: subcategory.id,
+                testId: input.testGroupId
+              },
+            },
+            update: {
+              numberOfTries: subcategory.limit,
+            },
+            create: {
               testId: input.testGroupId,
               subcategoryId: subcategory.id,
               numberOfTries: subcategory.limit
@@ -254,6 +263,7 @@ export const protectedRouter = router({
             }
           })
         }),
+
         ctx.prisma.groupSubcategoryMessage.createMany({
           data: linkedGroupsToDelete.map((item) => {
             return {

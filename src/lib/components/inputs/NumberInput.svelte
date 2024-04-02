@@ -47,7 +47,7 @@
 			}
 			return;
 		}
-		const numberResult = numberSchema.safeParse(inputRef.value || null);
+		const numberResult = numberSchema.safeParse(Number(inputRef.value) || null);
 		if (!numberResult?.success) {
 			dispatch('error', numberResult?.error.errors[0].message);
 			if (typeof setError === 'function')
