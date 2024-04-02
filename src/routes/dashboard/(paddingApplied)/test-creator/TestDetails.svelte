@@ -25,6 +25,7 @@
 	import TagSelectionComponent from '~components/containers/tag/TagSelectionComponent.svelte';
 	import { DB_STRING_MESSAGE, DB_STRING_REGEX } from '~helpers/constants';
 	import Space from '~components/separators/Space.svelte';
+	import { onMount } from 'svelte';
 
 	export let testType: TestType;
 	export let testData:
@@ -71,23 +72,6 @@
 
 	if (browser) {
 		getTags();
-	}
-
-	let isTestPublic = testData?.isPublic || true;
-
-	$: {
-		if (!$testObject.includedInGroups) {
-			$testObject.includedInGroups = {
-				public: isTestPublic,
-				subcategorySelect: []
-			};
-		}
-	}
-
-	$: {
-		if ($testObject.includedInGroups) {
-			$testObject.includedInGroups.public = isTestPublic;
-		}
 	}
 </script>
 
@@ -160,17 +144,10 @@
 				}) || []}
 			/>
 			<Space gap={8} />
-			<div class="flex items-center gap-2 mb-1">
-				<label for="public">Should test be public?</label>
-				<input
-					type="checkbox"
-					class="checkbox checkbox-primary dark:checkbox-accent"
-					value="public"
-					name="public"
-					bind:checked={isTestPublic}
-				/>
-			</div>
-			<GroupSelection testId={testData?.id} />
+			<GroupSelection
+				testId={testData?.id}
+				isPublic={testData ? testData.published : true}
+			/>
 		</div>
 	</div>
 	{#if testType !== 'PROGRAMMING'}

@@ -102,13 +102,15 @@ type GroupSubcategoryUnion = keyof typeof GROUP_SUBCATEGORY_TYPES
 export const channelTypeSchema = z.enum<GroupSubcategoryUnion, [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]]>(Object.values(GROUP_SUBCATEGORY_TYPES) as [GroupSubcategoryUnion, ...GroupSubcategoryUnion[]])
 
 // Dynamic schemas
-export function getNumberInputSchema({ min, max, isDecimal, positive }: { min?: number, max?: number, isDecimal?: boolean, positive?: boolean }) {
-  let schema = z.number({ invalid_type_error: "Input has to be a valid number" })
+export function getNumberInputSchema({ min, max, isDecimal, positive, canBeNullable }: { min?: number, max?: number, isDecimal?: boolean, positive?: boolean, canBeNullable?: boolean }) {
+  let schema: z.ZodNumber | z.ZodOptional<z.ZodNullable<z.ZodNumber>> = z.number({ invalid_type_error: "Input has to be a valid number" })
   if (min) schema = schema.min(min, `Number has to be bigger than ${min}`)
   if (max) schema = schema.max(max, `Number has to be smaller than ${max}`)
   if (positive) schema = schema.nonnegative("Number cannot be negative.")
+  if (canBeNullable) schema = schema.nullish()
 
-  const regexSchema = z.string().regex(isDecimal ? /^[0-9].$/ : /^[0-9]$/, { message: `Input can contain only digits${isDecimal ? " and dot" : ""}` })
+  let regexSchema: z.ZodString | z.ZodOptional<z.ZodNullable<z.ZodString>> = z.string().regex(isDecimal ? /^[0-9].[0-9]*$/ : /^[0-9]*$/, { message: `Input can contain only digits${isDecimal ? " and dot" : ""}` })
+  if (canBeNullable) regexSchema = regexSchema.nullish()
   return {
     numberSchema: schema,
     regexSchema

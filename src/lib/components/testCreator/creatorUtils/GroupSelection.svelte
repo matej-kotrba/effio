@@ -8,14 +8,10 @@
 	import ErrorEnhance from '~components/inputs/ErrorEnhance.svelte';
 	import AddNew from './AddNew.svelte';
 	import Alert from '~components/ui/alert/alert.svelte';
-
-	// export let groupData: Prisma.GroupGetPayload<{
-	// 	include: {
-	// 		groupsSubcategories: true;
-	// 	};
-	// }>[];
+	import { onMount } from 'svelte';
 
 	export let testId: string = '';
+	export let isPublic: boolean;
 
 	const testObject = getTestObject();
 
@@ -27,12 +23,62 @@
 		  >
 		| 'fetching' = 'fetching';
 
+	let radioGroup: {
+		id: string;
+		numberOfTries: number | null;
+	}[] = [];
+
+	onMount(() => {
+		if ($testObject.includedInGroups === undefined) {
+			$testObject.includedInGroups = {
+				public: isPublic,
+				subcategorySelect: radioGroup.map((item) => {
+					return {
+						id: item.id,
+						numberOfTriesForUser: item.numberOfTries
+					};
+				})
+			};
+		} else {
+			$testObject.includedInGroups.public = isPublic;
+			$testObject.includedInGroups.subcategorySelect = radioGroup.map(
+				(item) => {
+					return {
+						id: item.id,
+						numberOfTriesForUser: item.numberOfTries
+					};
+				}
+			);
+		}
+	});
+
+	$: {
+		if ($testObject.includedInGroups) {
+			$testObject.includedInGroups.public = isPublic;
+			const newData = radioGroup.map((item, index) => {
+				return {
+					...$testObject.includedInGroups!.subcategorySelect[index],
+					id: item.id,
+					numberOfTriesForUser: item.numberOfTries
+				};
+			});
+			$testObject.includedInGroups.subcategorySelect = newData;
+		}
+	}
+
 	async function onInitialGroupDisplay() {
 		if (groups !== 'fetching') return;
 		const userGroups = await trpc($page).groups.getGroupsByUserId.query({
 			alsoUser: false,
 			includeSubcategories: true,
 			excludeEmptyGroups: true
+		});
+
+		radioGroup = userGroups.map((_) => {
+			return {
+				id: '',
+				numberOfTries: null
+			};
 		});
 
 		const usedSubcategories = testId
@@ -57,30 +103,30 @@
 					};
 				}
 			});
+			console.log(newCategories);
 
-			newCategories;
-			// checkboxGroup = ['public', ...newCategories];
+			radioGroup = newCategories.map((item) => {
+				return {
+					id: item.id,
+					numberOfTries: item.numberOfTriesForUser
+				};
+			});
 		}
 
 		groups = userGroups;
-		// checkboxGroup = ['public', ...groupData.map((item) => '#' + item.groupId)];
 	}
-	let checkboxGroup;
 </script>
 
-<ErrorEnhance error={''}>
-	<NumberInput inputTitle="s" />
-</ErrorEnhance>
-
-<!-- <div class="flex items-center gap-2 mb-1">
+<div class="flex items-center gap-2 mb-1">
 	<label for="public">Should test be public?</label>
 	<input
 		type="checkbox"
 		class="checkbox checkbox-primary dark:checkbox-accent"
 		value="public"
 		name="public"
+		bind:checked={isPublic}
 	/>
-</div> -->
+</div>
 <Collapsible
 	class="w-full shadow-sm"
 	title="Add test to groups"
@@ -110,48 +156,53 @@
 						title={group.name}
 						shouldWrap={false}
 						class="w-full mb-1 bg-gray-100"
-						buttonClasses={checkboxGroup[index + 1]
+						buttonClasses={radioGroup[index].id
 							? 'bg-light_quaternary dark:bg-dark_secondary'
 							: ''}
 					>
 						{#each group['groupsSubcategories'] as subcategory}
-							{@const checked = checkboxGroup[index + 1] === subcategory.id}
+							{@const checked = radioGroup[index]['id'] === subcategory.id}
 							<div class="mb-1 grid-input__container">
 								<label for={subcategory.slug}>{subcategory.name}</label>
 								<input
 									type="radio"
 									{checked}
-									bind:group={checkboxGroup[index + 1]}
+									bind:group={radioGroup[index].id}
 									class="radio radio-primary dark:radio-accent"
 									value={subcategory.id}
 									name={group.slug}
 									on:click={() => {
 										if (checked === true) {
-											// checkboxGroup[index + 1] = '';
+											radioGroup[index].id = '';
 										}
 									}}
 								/>
 							</div>
 						{/each}
-						<ErrorEnhance error={getGroupError(index)}>
+						<ErrorEnhance
+							error={$testObject.includedInGroups?.subcategorySelect[index]
+								.numberOfTriesForUserError}
+						>
 							<NumberInput
 								allowDecimal={false}
+								canBeNullable={true}
+								min={1}
 								isPositive={true}
+								inputTitle="Number of tries (leave blank for infinite)"
 								on:inputChange={(data) => {
-									if ($testObject.includedInGroups === undefined) return;
-									const group = $testObject.includedInGroups[index];
-									if (typeof group === 'string') return;
-									group.numberOfTriesForUser = data.detail;
+									if (isNaN(data.detail)) {
+										radioGroup[index].numberOfTries = null;
+									} else {
+										radioGroup[index].numberOfTries = data.detail;
+									}
 								}}
 								on:error={(data) => {
-									console.log($testObject.includedInGroups);
-									if ($testObject.includedInGroups === undefined) return;
-									const group = $testObject.includedInGroups[index];
-									if (typeof group === 'string') return;
-									console.log(data);
-									group.numberOfTriesForUserError = data.detail;
+									if ($testObject.includedInGroups?.subcategorySelect[index]) {
+										$testObject.includedInGroups.subcategorySelect[
+											index
+										].numberOfTriesForUserError = data.detail;
+									}
 								}}
-								inputTitle="s"
 							/>
 						</ErrorEnhance>
 					</Collapsible>
@@ -190,24 +241,24 @@
 						title={group.name}
 						shouldWrap={false}
 						class="w-full mb-1 bg-gray-100"
-						buttonClasses={checkboxGroup[index + 1]
+						buttonClasses={checkboxGroup[index]
 							? 'bg-light_quaternary dark:bg-dark_secondary'
 							: ''}
 					>
 						{#each group['groupsSubcategories'] as subcategory}
-							{@const checked = checkboxGroup[index + 1] === subcategory.id}
+							{@const checked = checkboxGroup[index] === subcategory.id}
 							<div class="mb-1 grid-input__container">
 								<label for={subcategory.slug}>{subcategory.name}</label>
 								<input
 									type="radio"
 									{checked}
-									bind:group={checkboxGroup[index + 1]}
+									bind:group={checkboxGroup[index]}
 									class="radio radio-primary dark:radio-accent"
 									value={subcategory.id}
 									name={group.slug}
 									on:click={() => {
 										if (checked === true) {
-											checkboxGroup[index + 1] = '';
+											checkboxGroup[index] = '';
 										}
 									}}
 								/>
