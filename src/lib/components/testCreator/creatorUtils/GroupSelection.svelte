@@ -188,7 +188,7 @@
 								min={1}
 								isPositive={true}
 								inputTitle="Number of tries (leave blank for infinite)"
-								inputValue={String(radioGroup[index].numberOfTries)}
+								inputValue={String(radioGroup[index].numberOfTries || '')}
 								on:inputChange={(data) => {
 									if (isNaN(Number(data.detail))) {
 										radioGroup[index].numberOfTries = null;

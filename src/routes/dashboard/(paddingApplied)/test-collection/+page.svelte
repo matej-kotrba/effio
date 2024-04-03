@@ -19,6 +19,7 @@
 	import { enviromentFetch } from '~helpers/fetch';
 	import { TRPCClientError } from '@trpc/client';
 	import { createTRPCErrorNotification } from '~utils/notification';
+	import Invalidating from '~components/portals/Invalidating.svelte';
 
 	export let data;
 
@@ -33,6 +34,7 @@
 	};
 
 	let isDeletingTest = false;
+	let isInvalidating = false;
 
 	let filterTestsFilter: (ids: string[]) => void;
 
@@ -113,6 +115,7 @@
 {#if isDeletingTest}
 	<ScreenCover />
 {/if}
+<Invalidating invalidating={isInvalidating} />
 <Dialog bind:open={$modalStore.openModal}>
 	<p class="text-center text-light_text_black dark:text-dark_text_white">
 		Are you sure you want to delete test<br /><span class="font-semibold"
@@ -138,7 +141,8 @@
 						}
 					}
 					if (response['success']) {
-						getRecentTests();
+						isInvalidating = true;
+						const promise = getRecentTests();
 						//TODO: Intentionally not refetching test collection, becuase if working properly it should not need to refetch
 						if (response['test']) filterTestsFilter([response['test']['id']]);
 						if (response['test']?.imageUrl) {
@@ -150,6 +154,7 @@
 								})
 							});
 						}
+						await promise;
 					}
 				} catch (e) {
 					if (e instanceof TRPCClientError) {
@@ -157,6 +162,7 @@
 					}
 				} finally {
 					isDeletingTest = false;
+					isInvalidating = false;
 				}
 			}}>Delete</button
 		>

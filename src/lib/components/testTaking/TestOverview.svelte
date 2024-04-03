@@ -15,12 +15,16 @@
 	} from '~components/containers/Carousel.svelte';
 	import { createTRPCErrorNotification } from '~utils/notification';
 	import { TRPCClientError } from '@trpc/client';
+	import * as Tooltip from '~components/ui/tooltip';
 
 	type TestContentRaw = NonNullable<
 		Awaited<ReturnType<ReturnType<typeof trpc>['getTestById']['query']>>
 	>;
 
 	export let testContent: ExcludePick<TestContentRaw, 'subcategories'>;
+	export let subcategoryConnection:
+		| TestContentRaw['subcategories'][number]
+		| undefined = undefined;
 
 	export let testLink: string;
 
@@ -92,59 +96,77 @@
 	<h3 class="text-h3 font-extralight">Test overview</h3>
 	<div class="grid gap-4 md:grid-cols-2">
 		<div>
-			<div class="p-2">
-				<p class="mb-3">
-					<span
-						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-						>Test name:</span
-					><br />{testContent.title}
+			<h4 class="font-semibold">General Info</h4>
+			<div
+				class="p-2 border rounded-md bg-light_whiter dark:bg-dark_grey border-light_text_black_20 dark:border-dark_text_white_20"
+			>
+				<div class="flex flex-wrap justify-between">
+					<h5 class="text-h5">{testContent.title}</h5>
+					<Tooltip.Root openDelay={300}>
+						<Tooltip.Trigger>
+							<div>
+								<img
+									src={testContent.owner.image}
+									class="w-8 border rounded-full border-light_text_black_20 dark:border-dark_text_white_20"
+									alt="Author"
+								/>
+							</div>
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							<span>Author: {testContent.owner.name}</span>
+						</Tooltip.Content>
+					</Tooltip.Root>
+				</div>
+				<p
+					class="text-light_text_black_80 dark:text-dark_text_white_60 text-semiBody1 line-clamp-3"
+				>
+					{testContent.description}
 				</p>
-				<p class="mb-3">
-					<span
-						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-						>Test description:</span
-					><br />{testContent.description}
-				</p>
-				<div class="flex items-center gap-2 mb-3">
-					<span
-						class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-						>Author:</span
-					><span class="font-semibold text-body1">{testContent.owner.name}</span
-					>
-					<div class="dropdown dropdown-hover dropdown-top">
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<!-- svelte-ignore a11y-label-has-associated-control -->
-						<label tabindex="0">
-							<img
-								src={testContent.owner.image}
-								class="w-12 rounded-full"
-								alt="Author"
-							/>
-						</label>
-						<div
-							class="dropdown-content z-[1] menu p-2 bg-base-100 dark:bg-dark_light_grey rounded-box w-52 shadow-md"
+				<Space gap={24} />
+
+				<div>
+					<div class="flex items-center gap-2">
+						<span> Test type: </span>
+						<span class="font-semibold"
+							>{testContent.type === 'REGULAR'
+								? 'Quiz'
+								: testContent.type === 'PROGRAMMING'
+								? 'Programming'
+								: ''}</span
 						>
-							<p class="text-light_text_black dark:text-dark_text_white">
-								{testContent.owner.name}
-							</p>
+					</div>
+					{#if testContent.type !== 'PROGRAMMING'}
+						<div class="flex items-center gap-2">
+							<span> Is randomly shuffled </span>
+							<iconify-icon
+								icon={isRandomShuffled ? 'charm:tick' : 'ic:round-close'}
+								class={`text-3xl grid place-content-center ${
+									isRandomShuffled
+										? 'text-success'
+										: 'text-error dark:text-dark_error'
+								}`}
+							/>
 						</div>
+					{/if}
+					<div class="flex items-center gap-2">
+						<span> Is anonymous: </span>
+						<iconify-icon
+							icon={subcategoryConnection ? 'charm:tick' : 'ic:round-close'}
+							class={`text-3xl grid place-content-center ${
+								subcategoryConnection
+									? 'text-success'
+									: 'text-error dark:text-dark_error'
+							}`}
+						/>
 					</div>
 				</div>
-				<div>
-					{#if testContent.type !== 'PROGRAMMING'}
-						<span
-							class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
-							>Is test randomly suhffled:</span
-						>
-						<span class="font-bold text-h6"
-							>{isRandomShuffled ? 'Yes' : 'No'}</span
-						>
-					{/if}
-				</div>
+				{#if subcategoryConnection}
+					<p>This test has limited number of attempts!</p>
+				{/if}
 				{#if testContent.tags.length > 0}
 					<div>
 						<span
-							class="font-semibold text-light_text_black_60 dark:text-dark_text_white_60"
+							class="font-light text-light_text_black_80 dark:text-dark_text_white_80"
 							>Test tags:</span
 						><br />
 						<div class="flex flex-wrap w-full gap-1">

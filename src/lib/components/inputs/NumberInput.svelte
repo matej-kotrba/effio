@@ -62,7 +62,6 @@
 	}
 
 	function dispatchInputChange() {
-		console.log(inputRef.value);
 		dispatch('inputChange', inputRef.value);
 	}
 

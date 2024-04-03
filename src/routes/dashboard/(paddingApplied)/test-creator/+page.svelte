@@ -176,7 +176,6 @@
 			const result = isTestValidAndSetErrorsToTestObject({
 				questions: $testObject.questions
 			});
-			console.log(result);
 
 			$testObject = $testObject;
 			if (result['isError']) {

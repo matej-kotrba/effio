@@ -304,6 +304,7 @@ export const appRouter = router({
           notIn: input.excludedTests || []
         },
         published: true,
+        isPublic: true,
         createdAt: dateRange ? {
           gte: dateRange
         } : undefined,
