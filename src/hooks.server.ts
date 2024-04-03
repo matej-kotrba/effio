@@ -15,7 +15,7 @@ import type { AdapterUser } from "@auth/core/adapters";
 const handleTRPCContext: Handle = createTRPCHandle({
   router: appRouter,
   createContext: createContext,
-  responseMeta() {
+  responseMeta(opts) {
     // if (opts.paths?.includes("getTags")) {
     //   return {
     //     headers: {
@@ -59,7 +59,7 @@ const handleAuth: Handle = SvelteKitAuth({
     Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
   ],
   secret: AUTH_SECRET,
-
+  debug: true,
   callbacks: {
     session: async ({ session, user }: { session: Session, user: User | AdapterUser }): Promise<UpdatedSession> => {
       const newSession: UpdatedSession = session
@@ -73,7 +73,7 @@ const handleAuth: Handle = SvelteKitAuth({
       }
       return newSession as UpdatedSession;
     },
-    signIn: async () => {
+    signIn: async ({ account }) => {
       return Promise.resolve(true)
     }
   },
