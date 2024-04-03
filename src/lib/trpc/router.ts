@@ -173,7 +173,7 @@ export const appRouter = router({
               include: {
                 type: true
               }
-            }
+            },
           },
           orderBy: {
             version: "desc"

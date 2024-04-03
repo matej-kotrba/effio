@@ -26,6 +26,13 @@
 		| TestContentRaw['subcategories'][number]
 		| undefined = undefined;
 	export let numberOfUserTries: number | undefined = undefined;
+	// export let previousAttempts: {
+	// 	percantage: number;
+	// 	mark: string;
+	// 	takenAt: string;
+	// 	maxPoints: number;
+	// 	userPoints: number;
+	// }[];
 
 	export let testLink: string;
 
@@ -34,7 +41,6 @@
 	export let isRandomShuffled: boolean = true;
 	export let relatedTests: IdCardAlternativeProps[] = [];
 	export let displayRelatedTests: boolean = true;
-
 	const testObject = getTestObject();
 
 	initializeTestToTestStore(testObject, testContent);
@@ -271,13 +277,12 @@
 					</p>
 				{/if}
 			</div>
-			<h4 class="font-semibold">Previous attempts</h4>
+			<!-- <h4 class="font-semibold">Previous attempts</h4>
 			<div
 				class="p-2 border rounded-md bg-light_whiter dark:bg-dark_grey border-light_text_black_20 dark:border-dark_text_white_20"
 			>
 				<div class="w-full overflow-x-auto">
 					<table class="table text-body2">
-						<!-- head -->
 						<thead>
 							<tr class="text-light_text_black_80 dark:text-dark_text_white_80">
 								<th class="text-body1">Percentage %</th>
@@ -285,11 +290,22 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!-- {#each testContent[''] as record}{/each} -->
+							{#each testContent['testVersions'][0]['records'] as record}
+								{@const mark = checkMarkSystem(
+									testContent['testVersions'][0]['markSystemJSON']
+								)}
+								{@const max = record['questionRecords'].reduce(
+									(acc, item) => {}
+								)}
+								<tr class="hover dark:hover:!bg-dark_light_grey">
+									<td class="font-semibold">{record}% - {mark.limit}%</td>
+									<td class="font-semibold">{mark.name}</td>
+								</tr>
+							{/each}
 						</tbody>
 					</table>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<Space gap={60} />

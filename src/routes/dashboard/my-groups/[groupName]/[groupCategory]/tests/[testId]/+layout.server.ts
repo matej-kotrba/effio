@@ -68,7 +68,7 @@ export const load: ServerLoad = async ({ params, locals }) => {
                 id: true,
                 createdAt: true,
                 userPoints: true,
-              }
+              },
             }
           },
           orderBy: {
@@ -99,18 +99,26 @@ export const load: ServerLoad = async ({ params, locals }) => {
       }
     })
 
+
     const [test, numberOfTriesCount] = await Promise.all([testPromise, numberOfTriesCountPromise])
 
     if (!test) {
       throw new Error("No test found")
     }
 
+    // Doing it here because typesafety of records on client does not work
+    // const maxPoints = test.testVersions[0].totalPoints
+    // const userPoints = test.testVersions[0].records.reduce((acc, record) => {
+    //   return acc + record.userPoints
+    // }, 0)
+    // const percantage = (userPoints / maxPoints) * 100
+
     return {
       testContent: {
         ...test,
         ...transformTestToTakeFormat(test)
       },
-      numberOfTriesCount
+      numberOfTriesCount,
     }
   }
   catch (e) {

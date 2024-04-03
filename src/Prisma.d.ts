@@ -15,7 +15,7 @@ type TestFullType = Prisma.TestGetPayload<{
             type: true
           }
         },
-        records?: true,
+        records?: true
       }
     }
   }

@@ -59,7 +59,6 @@ const handleAuth: Handle = SvelteKitAuth({
     Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
   ],
   secret: AUTH_SECRET,
-  debug: true,
   callbacks: {
     session: async ({ session, user }: { session: Session, user: User | AdapterUser }): Promise<UpdatedSession> => {
       const newSession: UpdatedSession = session
