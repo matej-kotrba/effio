@@ -6,6 +6,8 @@
 </script>
 
 <TestOverview
+	subcategoryConnection={data.testContent.subcategories[0]}
+	numberOfUserTries={data.numberOfTriesCount}
 	displayRelatedTests={false}
 	isRandomShuffled={data.testContent.randomQuestionOrder}
 	testContent={data.testContent}

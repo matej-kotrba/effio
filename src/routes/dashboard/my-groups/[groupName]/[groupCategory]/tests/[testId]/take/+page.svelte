@@ -11,8 +11,10 @@
 	class="ml-2"
 	link={`/dashboard/my-groups/${data.group.slug}/${data.subcategory.slug}/`}
 />
-<TestTake
-	subcategoryId={data.subcategory.id}
-	session={data.session}
-	testContent={data.testContent}
-/>
+<div class="p-2">
+	<TestTake
+		subcategoryId={data.subcategory.id}
+		session={data.session}
+		testContent={data.testContent}
+	/>
+</div>

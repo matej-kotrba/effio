@@ -39,23 +39,24 @@ model Session {
 }
 
 model User {
-  id                       String                    @id @default(cuid())
-  name                     String?
-  email                    String?
-  emailVerified            DateTime?
-  image                    String?
-  role                     UserRoles                 @default(USER)
-  accounts                 Account[]
-  sessions                 Session[]
-  tests                    Test[]
-  testRecords              TestRecord[]
-  markSystems              MarkSystem[]
-  groups                   GroupOnUsers[]
-  groupsOwned              UserOnGroupBan[]
-  bannedFromGroups         Group[]
-  staredTests              TestStar[]
-  GroupSubcategoreyMessage GroupSubcategoryMessage[]
-  adminLogs                AdminLogs[]
+  id                          String                        @id @default(cuid())
+  name                        String?
+  email                       String?
+  emailVerified               DateTime?
+  image                       String?
+  role                        UserRoles                     @default(USER)
+  accounts                    Account[]
+  sessions                    Session[]
+  tests                       Test[]
+  testRecords                 TestRecord[]
+  markSystems                 MarkSystem[]
+  groups                      GroupOnUsers[]
+  groupsOwned                 UserOnGroupBan[]
+  bannedFromGroups            Group[]
+  staredTests                 TestStar[]
+  GroupSubcategoreyMessage    GroupSubcategoryMessage[]
+  userSubcategoryTestStartLog UserSubcategoryTestStartLog[]
+  adminLogs                   AdminLogs[]
 
   @@index([name, id])
 }
@@ -85,24 +86,25 @@ model QuestionType {
 }
 
 model Test {
-  id                      String                    @id @default(uuid())
-  title                   String
-  description             String                    @db.Text
-  published               Boolean                   @default(false)
-  createdAt               DateTime                  @default(now())
-  updatedAt               DateTime                  @updatedAt
-  views                   Int                       @default(0)
-  ownerId                 String
-  isPublic                Boolean                   @default(false)
-  imageUrl                String                    @default("")
-  type                    TestType                  @default(REGULAR)
-  testVersions            TestVersion[]
-  tags                    TagOnTests[]
-  stars                   TestStar[]
-  owner                   User                      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  subcategories           GroupSubcategoryOnTests[]
-  groupSubcategoryMessage GroupSubcategoryMessage[]
-  randomQuestionOrder     Boolean                   @default(true)
+  id                            String                        @id @default(uuid())
+  title                         String
+  description                   String                        @db.Text
+  published                     Boolean                       @default(false)
+  createdAt                     DateTime                      @default(now())
+  updatedAt                     DateTime                      @updatedAt
+  views                         Int                           @default(0)
+  ownerId                       String
+  isPublic                      Boolean                       @default(false)
+  imageUrl                      String                        @default("")
+  type                          TestType                      @default(REGULAR)
+  testVersions                  TestVersion[]
+  tags                          TagOnTests[]
+  stars                         TestStar[]
+  owner                         User                          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  subcategories                 GroupSubcategoryOnTests[]
+  groupSubcategoryMessage       GroupSubcategoryMessage[]
+  userSubcategoryTestStartsLogs UserSubcategoryTestStartLog[]
+  randomQuestionOrder           Boolean                       @default(true)
 
   @@index([ownerId])
   @@index([title])
@@ -274,20 +276,22 @@ model GroupInvite {
 }
 
 model GroupSubcategory {
-  id          String                    @id @default(uuid())
-  name        String
-  slug        String
-  createdAt   DateTime                  @default(now())
-  updatedAt   DateTime                  @updatedAt
-  groupId     String
-  group       Group                     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  type        GroupSubcategoryType      @default(CHAT)
-  image       String?
-  tests       GroupSubcategoryOnTests[]
-  testRecords TestRecord[]
-  messages    GroupSubcategoryMessage[]
+  id                            String                        @id @default(uuid())
+  name                          String
+  slug                          String                        @unique
+  createdAt                     DateTime                      @default(now())
+  updatedAt                     DateTime                      @updatedAt
+  groupId                       String
+  group                         Group                         @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  type                          GroupSubcategoryType          @default(CHAT)
+  image                         String?
+  tests                         GroupSubcategoryOnTests[]
+  testRecords                   TestRecord[]
+  messages                      GroupSubcategoryMessage[]
+  userSubcategoryTestStartsLogs UserSubcategoryTestStartLog[]
 
   @@index([name])
+  @@index([slug])
   @@index([groupId])
 }
 
@@ -322,6 +326,21 @@ model TestStar {
   @@unique([testId, userId])
   @@index([testId])
   @@index([userId])
+}
+
+model UserSubcategoryTestStartLog {
+  id            String           @id @default(uuid())
+  userId        String
+  testId        String
+  subcategoryId String
+  createdAt     DateTime         @default(now())
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test          Test             @relation(fields: [testId], references: [id], onDelete: Cascade)
+  subcategory   GroupSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([testId])
+  @@index([subcategoryId])
 }
 
 model AdminLogs {

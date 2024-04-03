@@ -4,6 +4,7 @@ import { transformTestToTakeFormat } from "~/lib/utils/testTransform";
 
 export const load: ServerLoad = async ({ params, locals }) => {
   const id = params.testId
+  const subcategorySlug = params.groupCategory
   const session = (await locals.getSession()) as UpdatedSession
 
   if (!session) {
@@ -21,17 +22,7 @@ export const load: ServerLoad = async ({ params, locals }) => {
   }
 
   try {
-    // const parentData = await parent() as {
-    //   group: Awaited<
-    //     ReturnType<ReturnType<typeof trpc>["groups"]['getGroupByName']['query']>
-    //   >
-    // }
-
-    // if (!parentData || !parentData.group) {
-    //   throw new Error("No parent data")
-    // }
-
-    const test = await prisma.test.findUnique({
+    const testPromise = prisma.test.findUnique({
       where: {
         id: id,
         subcategories: {
@@ -40,7 +31,7 @@ export const load: ServerLoad = async ({ params, locals }) => {
               group: {
                 slug: params.name
               },
-              slug: params.category
+              slug: params.category,
             }
           }
         }
@@ -50,6 +41,15 @@ export const load: ServerLoad = async ({ params, locals }) => {
           select: {
             stars: true
           }
+        },
+        subcategories: {
+          where: {
+            testId: id,
+            subcategory: {
+              slug: subcategorySlug
+            }
+          },
+          take: 1,
         },
         tags: {
           include: {
@@ -63,10 +63,18 @@ export const load: ServerLoad = async ({ params, locals }) => {
                 type: true
               }
             },
+            records: {
+              select: {
+                id: true,
+                createdAt: true,
+                userPoints: true,
+              }
+            }
           },
           orderBy: {
             createdAt: "desc"
-          }
+          },
+          take: 1
         },
         stars: userId ? {
           select: {
@@ -81,6 +89,18 @@ export const load: ServerLoad = async ({ params, locals }) => {
       }
     })
 
+    const numberOfTriesCountPromise = prisma.userSubcategoryTestStartLog.count({
+      where: {
+        userId: userId,
+        testId: id,
+        subcategory: {
+          slug: subcategorySlug
+        }
+      }
+    })
+
+    const [test, numberOfTriesCount] = await Promise.all([testPromise, numberOfTriesCountPromise])
+
     if (!test) {
       throw new Error("No test found")
     }
@@ -89,7 +109,8 @@ export const load: ServerLoad = async ({ params, locals }) => {
       testContent: {
         ...test,
         ...transformTestToTakeFormat(test)
-      }
+      },
+      numberOfTriesCount
     }
   }
   catch (e) {

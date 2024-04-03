@@ -25,6 +25,7 @@
 	export let subcategoryConnection:
 		| TestContentRaw['subcategories'][number]
 		| undefined = undefined;
+	export let numberOfUserTries: number | undefined = undefined;
 
 	export let testLink: string;
 
@@ -93,7 +94,43 @@
 </script>
 
 <div class="max-w-[1200px] w-full mx-auto p-3 rounded-md">
-	<h3 class="text-h3 font-extralight">Test overview</h3>
+	<div class="flex items-center justify-between">
+		<h3 class="text-h3 font-extralight">Test overview</h3>
+		<div>
+			<div class="flex items-stretch justify-end gap-1">
+				<SimpleButton
+					onClick={starTest}
+					class={`${isStarred ? 'bg-light_star dark:bg-dark_star' : ''}`}
+				>
+					<div class="flex items-center gap-1">
+						<Star />
+						{testContent?._count.stars}
+					</div>
+				</SimpleButton>
+				<SimpleButton class="grid place-content-center">
+					<iconify-icon icon="emojione-monotone:exclamation-mark" />
+				</SimpleButton>
+			</div>
+			{#if viewCount >= 0}
+				<div class="flex items-center justify-end gap-1">
+					<span class="font-semibold text-h6">Total attempts: {viewCount}</span>
+					<div class="grid place-content-center">
+						<iconify-icon icon="lets-icons:view-alt-fill" class="text-2xl" />
+					</div>
+				</div>
+			{/if}
+			{#if userViewCount >= 0}
+				<div class="flex items-center justify-end gap-1">
+					<span class="font-semibold text-h6"
+						>Your attempts: {userViewCount}</span
+					>
+					<div class="grid place-content-center">
+						<iconify-icon icon="mdi:user" class="text-2xl" />
+					</div>
+				</div>
+			{/if}
+		</div>
+	</div>
 	<div class="grid gap-4 md:grid-cols-2">
 		<div>
 			<h4 class="font-semibold">General Info</h4>
@@ -151,17 +188,28 @@
 					<div class="flex items-center gap-2">
 						<span> Is anonymous: </span>
 						<iconify-icon
-							icon={subcategoryConnection ? 'charm:tick' : 'ic:round-close'}
+							icon={subcategoryConnection ? 'ic:round-close' : 'charm:tick'}
 							class={`text-3xl grid place-content-center ${
 								subcategoryConnection
-									? 'text-success'
-									: 'text-error dark:text-dark_error'
+									? 'text-error dark:text-dark_error'
+									: 'text-success'
 							}`}
 						/>
 					</div>
 				</div>
-				{#if subcategoryConnection}
-					<p>This test has limited number of attempts!</p>
+				{#if subcategoryConnection && subcategoryConnection.numberOfTries !== undefined && subcategoryConnection.numberOfTries !== null && numberOfUserTries !== undefined}
+					<div class="mt-2">
+						<p>This test has limited number of attempts!</p>
+						<p>
+							You have <span class="font-semibold text-h4"
+								>{subcategoryConnection.numberOfTries - numberOfUserTries}</span
+							><span
+								class="text-light_text_black_80 dark:text-dark_text_white_80"
+								>/</span
+							><span>{subcategoryConnection.numberOfTries}</span>
+							left
+						</p>
+					</div>
 				{/if}
 				{#if testContent.tags.length > 0}
 					<div>
@@ -188,41 +236,10 @@
 			</a>
 		</div>
 		<div>
-			<div class="flex items-stretch justify-end gap-1">
-				<SimpleButton
-					onClick={starTest}
-					class={`${isStarred ? 'bg-light_star dark:bg-dark_star' : ''}`}
-				>
-					<div class="flex items-center gap-1">
-						<Star />
-						{testContent?._count.stars}
-					</div>
-				</SimpleButton>
-				<SimpleButton class="grid place-content-center">
-					<iconify-icon icon="emojione-monotone:exclamation-mark" />
-				</SimpleButton>
-			</div>
-			{#if viewCount >= 0}
-				<div class="flex items-center justify-end gap-1">
-					<span class="font-semibold text-h6">Total attempts: {viewCount}</span>
-					<div class="grid place-content-center">
-						<iconify-icon icon="lets-icons:view-alt-fill" class="text-2xl" />
-					</div>
-				</div>
-			{/if}
-			{#if userViewCount >= 0}
-				<div class="flex items-center justify-end gap-1">
-					<span class="font-semibold text-h6"
-						>Your attempts: {userViewCount}</span
-					>
-					<div class="grid place-content-center">
-						<iconify-icon icon="mdi:user" class="text-2xl" />
-					</div>
-				</div>
-			{/if}
-			<h4 class="font-semibold text-h6">Marking</h4>
-			<Separator w={'100%'} h={'1px'} />
-			<div class="flex items-center gap-1">
+			<h4 class="font-semibold">Marking</h4>
+			<div
+				class="flex items-center gap-1 p-2 border rounded-md bg-light_whiter dark:bg-dark_grey border-light_text_black_20 dark:border-dark_text_white_20"
+			>
 				{#if markSystem}
 					<div class="w-full overflow-x-auto">
 						<table class="table text-body2">
@@ -253,6 +270,25 @@
 						<iconify-icon icon="fluent:info-24-regular" class="text-3xl" />
 					</p>
 				{/if}
+			</div>
+			<h4 class="font-semibold">Previous attempts</h4>
+			<div
+				class="p-2 border rounded-md bg-light_whiter dark:bg-dark_grey border-light_text_black_20 dark:border-dark_text_white_20"
+			>
+				<div class="w-full overflow-x-auto">
+					<table class="table text-body2">
+						<!-- head -->
+						<thead>
+							<tr class="text-light_text_black_80 dark:text-dark_text_white_80">
+								<th class="text-body1">Percentage %</th>
+								<th class="text-body1">Mark</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- {#each testContent[''] as record}{/each} -->
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
