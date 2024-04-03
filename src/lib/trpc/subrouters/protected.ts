@@ -467,5 +467,54 @@ export const protectedRouter = router({
     }
 
     return response
+  }),
+  createTestAttempt: loggedInProcedure.input(z.object({
+    testId: z.string(),
+    subcategoryId: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    //TODO: Add check if user is actually in the group
+
+    const subcategoryOnTest = await ctx.prisma.groupSubcategoryOnTests.findUnique({
+      where: {
+        testId_subcategoryId: {
+          subcategoryId: input.subcategoryId,
+          testId: input.testId
+        }
+      },
+      include: {
+        test: true
+      }
+    })
+
+    if (!subcategoryOnTest) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Test not found" })
+    }
+
+    if (subcategoryOnTest.test.ownerId === ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You cannot attempt your own test" })
+    }
+
+    const usersAttemptsCount = await ctx.prisma.userSubcategoryTestStartLog.count({
+      where: {
+        userId: ctx.userId,
+        testId: input.testId,
+        subcategoryId: input.subcategoryId
+      }
+    })
+
+    if (subcategoryOnTest.numberOfTries !== null && usersAttemptsCount >= subcategoryOnTest.numberOfTries) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You have reached the limit of attempts" })
+    }
+    const testAttempts = await ctx.prisma.userSubcategoryTestStartLog.create({
+      data: {
+        userId: ctx.userId,
+        testId: input.testId,
+        subcategoryId: input.subcategoryId
+      }
+    })
+
+    return {
+      success: true
+    }
   })
 })

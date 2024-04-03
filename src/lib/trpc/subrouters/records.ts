@@ -48,28 +48,71 @@ export const recordsRouter = router({
 
     let subcategoryOwnerId: string | undefined = undefined;
 
+    // Checking whether test is in subcategory and has limit, then check if user is in limit
     if (input.subcategoryId && ctx.user?.id) {
-      const subcategory = await ctx.prisma.groupSubcategory.findUnique({
+      const subcategory = await ctx.prisma.groupSubcategoryOnTests.findUnique({
         where: {
-          id: input.subcategoryId,
-          group: {
-            users: {
-              some: {
-                userId: ctx.user.id
+          testId_subcategoryId: {
+            testId: test.testId,
+            subcategoryId: input.subcategoryId
+          },
+          subcategory: {
+            group: {
+              users: {
+                some: {
+                  userId: ctx.user.id
+                }
               }
-            },
+            }
           }
         },
         include: {
-          group: true
+          subcategory: {
+            include: {
+              group: {
+                select: {
+                  ownerId: true
+                }
+              }
+            }
+          }
         }
       })
 
       if (!subcategory) {
-        throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to create a test record in group you are not part of" })
+        throw new TRPCError({ code: "NOT_FOUND", message: "This channel with this test does not exist" })
       }
 
-      subcategoryOwnerId = subcategory.group.ownerId
+      if (subcategory.numberOfTries && ctx.user.id !== subcategoryOwnerId) {
+        const createdLogsPromise = ctx.prisma.userSubcategoryTestStartLog.count({
+          where: {
+            userId: ctx.user.id,
+            subcategoryId: input.subcategoryId,
+            testId: test.testId
+          }
+        })
+
+        const createdRecordsPromise = ctx.prisma.testRecord.count({
+          where: {
+            userId: ctx.user.id,
+            subacategoryId: input.subcategoryId,
+            test: {
+              testId: test.testId
+            },
+            createdAt: subcategory.resetDate ? {
+              gte: subcategory.resetDate
+            } : undefined
+          }
+        })
+
+        const [createdLogs, createdRecords] = await Promise.all([createdLogsPromise, createdRecordsPromise])
+
+        if (createdRecords >= createdLogs) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "You have no attempt created to record this test" })
+        }
+      }
+
+      subcategoryOwnerId = subcategory.subcategory.group.ownerId
     }
 
     const createdTest = await ctx.prisma.testRecord.create({
