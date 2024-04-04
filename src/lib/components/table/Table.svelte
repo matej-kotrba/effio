@@ -26,6 +26,8 @@
 	export let columns: ColumnDef<any>[] = [];
 	export let isTableDisabled: boolean = false;
 
+	export let onRowClick: (row: any) => void = () => {};
+
 	$: {
 		options.update((options) => ({
 			...options,
@@ -107,7 +109,6 @@
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
 
 	onMount(() => {
-		console.log('ASDASD');
 		const { observer, addIntersection } = createObserver({
 			callback: (entry, observer) => {
 				if (entry.isIntersecting) {
@@ -142,7 +143,7 @@
 			</div>
 			<table class="w-full">
 				<thead
-					class="sticky top-0 z-10 w-full before:constent-[''] before:pointer-events-none before:inset-0 before:bg-gray-100 before:absolute isolate before:z-[-99]"
+					class="sticky top-0 z-10 w-full before:constent-[''] before:pointer-events-none before:inset-0 before:bg-gray-100 before:dark:bg-dark_light_grey before:absolute isolate before:z-[-99]"
 				>
 					{#each $table.getHeaderGroups() as headerGroup, index}
 						<tr class="outline-gray-300 outline outline-[1px] w-full">
@@ -187,10 +188,13 @@
 					{#each $table.getRowModel().rows as row, index}
 						{#if index === data.length - 1 && addIntersectionUse}
 							<tr
+								on:click={() => onRowClick(row)}
 								use:addIntersectionUse={{ shouldActive: true }}
-								class="border-gray-300 border-solid border-[1px] {isTableDisabled
-									? 'bg-gray-300 text-light_text_black_60'
-									: 'bg-slate-50 text-light_text_black'} {tableSelection[index]
+								class="border-gray-300 border-solid border-[1px] dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {isTableDisabled
+									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
+									: 'bg-slate-50 text-light_text_black dark:text-dark_text_white'} {tableSelection[
+									index
+								]
 									? 'bg-violet-200'
 									: ''}"
 							>
@@ -214,13 +218,14 @@
 							</tr>
 						{:else}
 							<tr
-								class="border-gray-300 border-solid border-[1px] bg-slate-50 {tableSelection[
+								on:click={() => onRowClick(row.getVisibleCells())}
+								class=" bg-slate-50 dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {tableSelection[
 									index
 								]
 									? 'bg-violet-200'
 									: ''} {isTableDisabled
-									? 'bg-gray-300 text-light_text_black_60'
-									: 'bg-slate-50 text-light_text_black'}"
+									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
+									: 'bg-slate-50 text-light_text_black dark:text-dark_text_white'}"
 							>
 								{#each row.getVisibleCells() as cell}
 									<td>
@@ -262,5 +267,21 @@
 	td,
 	th {
 		padding: 0.6rem;
+	}
+
+	tr::before {
+		content: '';
+		width: 100%;
+		height: 1px;
+		background-color: var(--light-text-black-20);
+		position: absolute;
+	}
+
+	:global(.dark) tr::before {
+		background-color: var(--dark-text-white-10);
+	}
+
+	tr:first-of-type::before {
+		opacity: 0;
 	}
 </style>

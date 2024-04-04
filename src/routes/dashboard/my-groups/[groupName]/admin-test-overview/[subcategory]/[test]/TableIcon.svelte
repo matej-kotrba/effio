@@ -6,7 +6,7 @@
 	let isFallback = false;
 </script>
 
-{#if isFallback === true}
+{#if isFallback === false && imageUrl !== ''}
 	<div class="w-12 aspect-square">
 		<img
 			src={imageUrl}
@@ -19,7 +19,7 @@
 		/>
 	</div>
 {:else}
-	<div class="grid place-content-center">
-		<iconify-icon icon="fa:user-circle" class="text-4xl" />
+	<div class="grid w-12 place-content-center aspect-square">
+		<iconify-icon icon="fa:user-circle" class="text-5xl" />
 	</div>
 {/if}

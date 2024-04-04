@@ -13,6 +13,7 @@
 	import Table from '~components/table/Table.svelte';
 	import TableIcon from './TableIcon.svelte';
 	import { transformDate } from '~utils/date';
+	import ShowIconDependingOnTakingTest from './ShowIconDependingOnTakingTest.svelte';
 
 	export let data;
 
@@ -45,7 +46,7 @@
 				if (value instanceof Date || typeof value === 'string') {
 					return value ? transformDate(value, { time: true }) : value;
 				}
-				return value;
+				return 'x';
 			}
 		},
 		{
@@ -58,13 +59,26 @@
 			id: 'bestPointsInPoints',
 			accessorKey: 'bestPointsInPoints',
 			header: 'Best result in points',
-			cell: (info) => info.getValue()
+			cell: (info) => {
+				return info.getValue() || 'x';
+			}
 		},
 		{
 			id: 'bestPointsInPercentage',
 			accessorKey: 'bestPointsInPercentage',
 			header: 'Best result in percentage',
-			cell: (info) => info.getValue()
+			cell: (info) => {
+				return info.getValue() || 'x';
+			}
+		},
+		{
+			id: 'didTakenTest',
+			accessorKey: 'didTakenTest',
+			header: 'Did take the test',
+			cell: (info) =>
+				renderComponent(ShowIconDependingOnTakingTest, {
+					didTakeTest: info.getValue() as boolean
+				})
 		}
 	];
 
@@ -75,6 +89,7 @@
 		bestPointsInPoints: number | undefined;
 		bestPointsInPercentage: number | undefined;
 		takenAt: Date | undefined;
+		didTakenTest: boolean;
 	};
 
 	const tableData: TableData[] = data.group.users.map((user) => {
@@ -96,9 +111,14 @@
 				maximalValue.length > 0 ? Math.max(...maximalValue) : undefined,
 			bestPointsInPercentage: maximalPercentage.length
 				? Math.max(...maximalPercentage)
-				: undefined
+				: undefined,
+			didTakenTest: usersTestRecords.length > 0
 		};
 	});
+
+	function onTableRowClick(row: TableData) {
+		console.log(row);
+	}
 
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
@@ -191,7 +211,7 @@
 		bind:tableSelection
 		bind:table -->
 		<div class="col-span-2">
-			<Table {columns} data={tableData} />
+			<Table {columns} data={tableData} onRowClick={onTableRowClick} />
 		</div>
 	</div>
 </div>
