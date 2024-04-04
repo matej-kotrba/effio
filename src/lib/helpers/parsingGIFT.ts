@@ -1,11 +1,25 @@
-import type { GIFTQuestion } from "gift-pegjs"
+import type { GIFTQuestion, TextFormat } from "gift-pegjs"
 import type { QuestionTemplate } from "../trpc/router"
+import { POINTS_PER_QUESTION_DEFAULT } from "~schemas/testValidation"
 
 const allowedTypes: GIFTQuestion["type"][] = ["MC", "Matching", "Short"]
 
+function removePartsOfString(input: string, type: TextFormat["format"]): string {
+  if (type === "plain") {
+    return input
+  }
+  else if (type === "html") {
+    return input.replaceAll(/<[^>]+>/g, '')
+  }
+  else if (type === "moodle") {
+    return input.replaceAll(/%[0-9]*%\[[a-z]*\]/g, '')
+  }
+  return input
+}
+
 export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questionTemplates: QuestionTemplate[]) {
-  const result = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
-    console.log(question)
+  const result: (QuestionClient | undefined)[] = data.filter(item => allowedTypes.includes(item.type)).map((question) => {
+    // console.log(question)
     try {
 
       if (question.type === "MC") {
@@ -15,7 +29,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
           return acc
         }, 0)
 
-        console.log(hasMoreCorrectAnswers)
+        // console.log(hasMoreCorrectAnswers)
         // Has more correct asnwers -> True/False
         if (hasMoreCorrectAnswers === 0 || hasMoreCorrectAnswers >= 2) {
           const template = questionTemplates.find(item => item.slug === "trueFalse")
@@ -25,24 +39,17 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             id: crypto.randomUUID(),
             questionType: "trueFalse",
             questionTypeId: template.id,
-            title: question.title,
+            title: question.title ?? "",
             errors: {},
             displayType: template.name,
+            points: POINTS_PER_QUESTION_DEFAULT,
             content: {
               type: "trueFalse",
               answers: question.choices.map((item, index) => {
 
-                let resultText = item.text.text
-
-                if (item.text.format === "html") {
-                  resultText = resultText.replaceAll(/<[^>]+>/g, '')
-                }
-
-                else if (item.text.format !== "plain" && item.text.format !== "moodle") throw new Error("Unsupported txt format")
-
                 return {
                   id: index,
-                  answer: resultText,
+                  answer: removePartsOfString(item.text.text, item.text.format),
                   isTrue: item.isCorrect || !!item.weight
                 }
               })
@@ -59,22 +66,16 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             id: crypto.randomUUID(),
             questionType: "pickOne",
             questionTypeId: template.id,
-            title: question.title,
+            title: question.title ?? "",
             errors: {},
             displayType: template.name,
+            points: POINTS_PER_QUESTION_DEFAULT,
             content: {
               type: "pickOne",
               answers: question.choices.map((item, index) => {
-
-                let resultText = item.text.text
-
-                if (item.text.format === "html") {
-                  resultText = resultText.replaceAll(/<[^>]+>/g, '')
-                }
-
                 return {
                   id: index,
-                  answer: resultText,
+                  answer: removePartsOfString(item.text.text, item.text.format),
                   // isTrue: item.isCorrect || item.weight !== undefined
                 }
               }),
@@ -101,14 +102,16 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
           questionType: "connect",
           questionTypeId: template.id,
           displayType: template.name,
+          points: POINTS_PER_QUESTION_DEFAULT,
           errors: {},
           content: {
             type: "connect",
             matchedAnswers: matchedPairs,
             answers: question.matchPairs.map((item, index) => {
+              console.log(item)
               return {
                 id: index,
-                answer: item.subquestion.format === "html" ? item.subquestion.text.replaceAll(/<[^>]+>/g, '') : item.subquestion.text,
+                answer: removePartsOfString(item.subquestion.text, item.subquestion.format),
                 matchedAnswerIndex: Object.entries(matchedPairs).find((entry) => {
                   return entry[1].answer === item.subanswer
                 })?.[0]
@@ -128,19 +131,13 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
           questionType: "write",
           questionTypeId: template.id,
           displayType: template.name,
+          points: POINTS_PER_QUESTION_DEFAULT,
           errors: {},
           content: {
             type: "write",
             answers: question.choices.map(item => {
-
-              let resultText = item.text.text
-
-              if (item.text.format === "html") {
-                resultText = resultText.replaceAll(/<[^>]+>/g, '')
-              }
-
               return {
-                answer: resultText,
+                answer: removePartsOfString(item.text.text, item.text.format),
               }
             })
           }
@@ -154,7 +151,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
 
   const filtered = result.filter(item => item !== undefined)
 
-  const resultArray: QuestionClient[] = (filtered.length !== 0 ? result : []) as QuestionClient[]
+  const resultArray: QuestionClient[] = (filtered.length !== 0 ? filtered : [])
 
   return resultArray
 }

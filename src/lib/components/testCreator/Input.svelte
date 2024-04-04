@@ -48,7 +48,7 @@ will be used in the test creator -->
 			$testObject.questions[index].points &&
 			$testObject.questions[index].points === undefined
 		) {
-			$testObject.questions[index].points = 2;
+			$testObject.questions[index].points = POINTS_PER_QUESTION_DEFAULT;
 		}
 	}
 </script>

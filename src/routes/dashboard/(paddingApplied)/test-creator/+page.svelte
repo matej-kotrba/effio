@@ -135,6 +135,8 @@
 				data.questionTemplates
 			);
 
+			console.log(questions);
+
 			if (questions.length === 0) {
 				toast.error('This import file seems empty or incorrect 😕');
 			}

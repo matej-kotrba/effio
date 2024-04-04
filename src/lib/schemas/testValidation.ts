@@ -4,7 +4,7 @@ import { DB_STRING_MESSAGE, DB_STRING_REGEX, GROUP_SUBCATEGORY_TYPES } from "~he
 // GENERAL ANSWER
 export const ANSWER_MIN = 1
 export const ANSWER_MAX = 150
-export const ANSWER_TITLE_MIN = 8
+export const ANSWER_TITLE_MIN = 1
 export const ANSWER_TITLE_MAX = 250
 export const DESCRIPTION_MIN = 15
 export const DESCRIPTION_MAX = 255
@@ -12,6 +12,8 @@ export const TITLE_MIN = 8
 export const TITLE_MAX = 150
 export const RESPONSE_MIN = 1
 export const RESPONSE_MAX = 255
+
+export const POINTS_PER_QUESTION_DEFAULT = 2
 
 // WRITE TYPE ANSWER SPECIFIC
 export const WRITE_ANSWER_MIN = 1
