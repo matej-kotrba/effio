@@ -8,12 +8,97 @@
 	import Space from '~components/separators/Space.svelte';
 	import UserTable from './UserTable.svelte';
 	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[testId]/+page.svelte';
+	import { renderComponent, type ColumnDef } from '@tanstack/svelte-table';
+	import CustomTableTile from '~components/table/CustomTableTile.svelte';
+	import Table from '~components/table/Table.svelte';
+	import TableIcon from './TableIcon.svelte';
+	import { transformDate } from '~utils/date';
 
 	export let data;
 
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		data.test.testVersions[0].markSystemJSON
 	);
+
+	const columns: ColumnDef<TableData>[] = [
+		{
+			id: 'userIcon',
+			accessorKey: 'userIcon',
+			header: 'User icon',
+			cell: (props) =>
+				renderComponent(TableIcon, {
+					imageUrl: props.row.original.userIcon
+				})
+		},
+		{
+			id: 'userName',
+			accessorKey: 'userName',
+			header: 'Username',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'takenAt',
+			accessorKey: 'takenAt',
+			header: 'Lastly taken at',
+			cell: (info) => {
+				const value = info.getValue();
+				if (value instanceof Date || typeof value === 'string') {
+					return value ? transformDate(value, { time: true }) : value;
+				}
+				return value;
+			}
+		},
+		{
+			id: 'numberOfTries',
+			accessorKey: 'numberOfTries',
+			header: 'Number of tries',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'bestPointsInPoints',
+			accessorKey: 'bestPointsInPoints',
+			header: 'Best result in points',
+			cell: (info) => info.getValue()
+		},
+		{
+			id: 'bestPointsInPercentage',
+			accessorKey: 'bestPointsInPercentage',
+			header: 'Best result in percentage',
+			cell: (info) => info.getValue()
+		}
+	];
+
+	type TableData = {
+		userName: string;
+		userIcon: string;
+		numberOfTries: number;
+		bestPointsInPoints: number | undefined;
+		bestPointsInPercentage: number | undefined;
+		takenAt: Date | undefined;
+	};
+
+	const tableData: TableData[] = data.group.users.map((user) => {
+		const usersTestRecords = data.testRecords.filter((item) => {
+			return item.userId === user.userId;
+		});
+
+		const maximalValue = usersTestRecords.map((item) => item.userPoints);
+		const maximalPercentage = usersTestRecords.map(
+			(item) => item.userPoints / data.totalPoints
+		);
+
+		return {
+			userName: user.user!.name || '',
+			userIcon: user.user!.image || '',
+			numberOfTries: usersTestRecords.length,
+			takenAt: usersTestRecords[0] ? usersTestRecords[0].createdAt : undefined,
+			bestPointsInPoints:
+				maximalValue.length > 0 ? Math.max(...maximalValue) : undefined,
+			bestPointsInPercentage: maximalPercentage.length
+				? Math.max(...maximalPercentage)
+				: undefined
+		};
+	});
 
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
@@ -52,23 +137,23 @@
 
 <div class="p-2 @container">
 	<h3 class="text-h4">{data.test.title}</h3>
-	<!-- <div class="grid gap-2 grid-cols-1 @3xl:grid-cols-2">
+	<div class="grid gap-2 grid-cols-1 @3xl:grid-cols-2">
 		<div>
 			<table class="table text-body2">
 				<tbody>
 					<tr>
 						<td>Maximal test points</td>
-						<td class="font-semibold">{data.totalPoints}</td>
+						<td class="font-semibold w-[30%]">{data.totalPoints}</td>
 					</tr>
 					<tr>
 						<td>Test finished by users</td>
-						<td class="font-semibold"
+						<td class="font-semibold w-[30%]"
 							>{data.count} / {data.group.users.length - 1}</td
 						>
 					</tr>
 					<tr>
 						<td>Test finished by users in %</td>
-						<td class="font-semibold"
+						<td class="font-semibold w-[30%]"
 							>{(100 * (data.count / (data.group.users.length - 1))).toFixed(
 								1
 							)}%</td
@@ -95,14 +180,20 @@
 										: (markSystem[index - 1].limit || 0) - 1}% -
 									{mark.limit}%</td
 								>
-								<td>{mark.name}</td>
+								<td class="w-[30%]">{mark.name}</td>
 							</tr>
 						{/each}
 					</tbody>
 				</table>
 			{/if}
 		</div>
-	</div> -->
+		<!-- on:sorting-change={onTableSortChange}
+		bind:tableSelection
+		bind:table -->
+		<div class="col-span-2">
+			<Table {columns} data={tableData} />
+		</div>
+	</div>
 </div>
 
 <!-- Title grid -->

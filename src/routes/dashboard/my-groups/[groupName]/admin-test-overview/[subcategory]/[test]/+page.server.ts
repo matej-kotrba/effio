@@ -70,6 +70,10 @@ export const load: ServerLoad = async ({ params }) => {
     select: {
       createdAt: true,
       userPoints: true,
+      userId: true
+    },
+    orderBy: {
+      createdAt: "desc"
     }
   })
 
@@ -90,6 +94,7 @@ export const load: ServerLoad = async ({ params }) => {
   const returnedCount = retypedCount[0].count > 0 ? Number(retypedCount[0].count) : 0
 
   return {
+    testRecords: testsUserRecords,
     avarage: testsUserRecords.reduce((acc, record) => acc + record.userPoints, 0) / testsUserRecords.length,
     count: returnedCount,
     totalPoints: test.testVersions[0].totalPoints,

@@ -35,7 +35,7 @@
 
 	let sorting: SortingState = [];
 
-	$: console.log(isTableDisabled);
+	// $: console.log(isTableDisabled);
 
 	$: {
 		if (isTableDisabled === true) {
@@ -107,6 +107,7 @@
 	let addIntersectionUse: CreateObserverReturn['addIntersection'];
 
 	onMount(() => {
+		console.log('ASDASD');
 		const { observer, addIntersection } = createObserver({
 			callback: (entry, observer) => {
 				if (entry.isIntersecting) {
@@ -184,7 +185,7 @@
 						: 'before:opacity-0'}"
 				>
 					{#each $table.getRowModel().rows as row, index}
-						{#if index === data.length - 1}
+						{#if index === data.length - 1 && addIntersectionUse}
 							<tr
 								use:addIntersectionUse={{ shouldActive: true }}
 								class="border-gray-300 border-solid border-[1px] {isTableDisabled
