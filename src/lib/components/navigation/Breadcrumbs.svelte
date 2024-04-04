@@ -15,7 +15,9 @@
 	const dynamicReplaces: Record<`[${string}]`, string> = {
 		'[testId]': 'Test',
 		'[groupName]': 'Group',
-		'[groupCategory]': 'Channel'
+		'[groupCategory]': 'Channel',
+		'[test]': 'Test',
+		'[subcategory]': 'Channel'
 	};
 
 	const modules: Record<string, () => unknown> = import.meta.glob(
@@ -172,7 +174,7 @@
 	});
 </script>
 
-<div {...$$props} class={twMerge('text-sm breadcrumbs', className)}>
+<div {...$$props} class={twMerge('text-sm breadcrumbs min-w-0', className)}>
 	<ul>
 		{#each crumbs as crumb}
 			{#if crumb}

@@ -53,10 +53,10 @@
 	]}
 >
 	<!-- Upper navbar -->
-	<div class="nav__flex__container max-w-[100vw]">
+	<div class="nav__flex__container">
 		<nav
 			style={`height: ${AUTHENTICATED_NAV_HEIGHT}px;`}
-			class="flex items-center max-w-[100vw] gap-2 px-4 py-2 border-b-2 border-light_text_black_10"
+			class="grid grid-cols-[auto_1fr_auto] md:grid-cols-[1fr_auto] items-center gap-2 px-4 py-2 border-b-2 border-light_text_black_10"
 		>
 			<!-- Hamburger menu -->
 			<button
@@ -71,39 +71,6 @@
 
 			<!-- Upper part navigation -->
 			<Breadcrumbs class="mr-auto" />
-			<!-- <div class="max-w-[70vw] md:max-w-[50vw] mr-auto text-sm breadcrumbs">
-				<ul>
-					{#each pathname as segment, index}
-						{@const routeSegment = route
-							? routeNameChanges[
-									route[index].substring(1, route[index].length - 1)
-							  ]
-							: undefined}
-						{#if !['', 'edit', 'delete'].includes(segment)}
-							<li>
-								<a
-									href={getBreadcrumbsPath(index)}
-									class={pathname[pathname.length - 1] === segment
-										? 'text-light_primary dark:text-dark_primary'
-										: ''}
-								>
-									{#if routeSegment}
-										{routeSegment}
-									{:else}
-										{segment.replace('-', ' ')[0].toUpperCase() +
-											segment.replaceAll('-', ' ').slice(1, segment.length)}
-									{/if}
-								</a>
-							</li>
-						{:else}
-							<li>
-								{segment.replace('-', ' ')[0].toUpperCase() +
-									segment.replaceAll('-', ' ').slice(1, segment.length)}
-							</li>
-						{/if}
-					{/each}
-				</ul>
-			</div> -->
 
 			<!-- Dark mode and account for large screens -->
 			<div class="items-center hidden gap-4 xs:flex">
@@ -152,7 +119,7 @@
 						alt="Icon"
 						width="50"
 						referrerpolicy="no-referrer"
-						class="object-cover rounded-full aspect-square"
+						class="object-cover rounded-full aspect-square min-w-[24px]"
 					/>
 					<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 					<ul

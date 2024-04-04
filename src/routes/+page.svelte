@@ -325,7 +325,7 @@
 
 <header class="z-[100] relative bg-light_white dark:bg-dark_black">
 	<section
-		class="container relative px-1 mx-auto min-h-[800px] xl:h-screen xl:max-h-screen xl:grid landing-section grid__container"
+		class="container relative px-2 lg:px-8 mx-auto min-h-[800px] xl:h-screen xl:max-h-screen xl:grid landing-section grid__container"
 	>
 		<Navbar includeSeparator={false} user={data.session} />
 		<div
@@ -472,7 +472,7 @@
 </header>
 
 <main class="">
-	<div class="container px-1 mx-auto" id="content">
+	<div class="container px-2 mx-auto lg:px-8" id="content">
 		<!-- About us section -->
 		<section class="grid-layout__about-us">
 			<div class="p-4 image">

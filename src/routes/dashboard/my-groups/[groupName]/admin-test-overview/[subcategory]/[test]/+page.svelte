@@ -7,43 +7,103 @@
 	import { createVerticalBarChartConfig } from './graphsMethods';
 	import Space from '~components/separators/Space.svelte';
 	import UserTable from './UserTable.svelte';
+	import { checkMarkSystem } from '~/routes/dashboard/(paddingApplied)/test-history/records/[testId]/+page.svelte';
 
 	export let data;
 
-	let questionAveragesCanvases: HTMLCanvasElement[] = [];
+	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
+		data.test.testVersions[0].markSystemJSON
+	);
 
-	let overallAverageGraph: HTMLCanvasElement;
+	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
-	onMount(() => {
-		if (!data.avarage) return;
+	// let overallAverageGraph: HTMLCanvasElement;
 
-		const overallConfig = createVerticalBarChartConfig(
-			data.totalPoints,
-			data.avarage,
-			$applicationStates.darkMode.isDarkMode
-		);
+	// onMount(() => {
+	// 	if (!data.avarage) return;
 
-		const ctx = overallAverageGraph.getContext('2d');
-		//@ts-ignore
-		let chart = new Chart(ctx, overallConfig);
+	// 	const overallConfig = createVerticalBarChartConfig(
+	// 		data.totalPoints,
+	// 		data.avarage,
+	// 		$applicationStates.darkMode.isDarkMode
+	// 	);
 
-		const questionAveragesConfigs: ReturnType<
-			typeof createVerticalBarChartConfig
-		>[] = data.pointsQuestionData.map((avarageData) => {
-			return createVerticalBarChartConfig(
-				avarageData.totalPoints,
-				avarageData.averagePoints,
-				$applicationStates.darkMode.isDarkMode
-			);
-		});
+	// 	const ctx = overallAverageGraph.getContext('2d');
+	// 	//@ts-ignore
+	// 	let chart = new Chart(ctx, overallConfig);
 
-		questionAveragesCanvases.forEach((item, index) => {
-			const ctx = item.getContext('2d');
-			//@ts-ignore
-			let chart = new Chart(ctx, questionAveragesConfigs[index]);
-		});
-	});
+	// 	const questionAveragesConfigs: ReturnType<
+	// 		typeof createVerticalBarChartConfig
+	// 	>[] = data.pointsQuestionData.map((avarageData) => {
+	// 		return createVerticalBarChartConfig(
+	// 			avarageData.totalPoints,
+	// 			avarageData.averagePoints,
+	// 			$applicationStates.darkMode.isDarkMode
+	// 		);
+	// 	});
+
+	// 	questionAveragesCanvases.forEach((item, index) => {
+	// 		const ctx = item.getContext('2d');
+	// 		//@ts-ignore
+	// 		let chart = new Chart(ctx, questionAveragesConfigs[index]);
+	// 	});
+	// });
 </script>
+
+<div class="p-2 @container">
+	<h3 class="text-h4">{data.test.title}</h3>
+	<!-- <div class="grid gap-2 grid-cols-1 @3xl:grid-cols-2">
+		<div>
+			<table class="table text-body2">
+				<tbody>
+					<tr>
+						<td>Maximal test points</td>
+						<td class="font-semibold">{data.totalPoints}</td>
+					</tr>
+					<tr>
+						<td>Test finished by users</td>
+						<td class="font-semibold"
+							>{data.count} / {data.group.users.length - 1}</td
+						>
+					</tr>
+					<tr>
+						<td>Test finished by users in %</td>
+						<td class="font-semibold"
+							>{(100 * (data.count / (data.group.users.length - 1))).toFixed(
+								1
+							)}%</td
+						>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			{#if markSystem}
+				<table class="table mt-1 text-body2">
+					<thead>
+						<tr class="text-light_text_black dark:text-dark_text_white">
+							<th class="text-body1">Percentage %</th>
+							<th class="text-body1">Mark</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each markSystem as mark, index}
+							<tr>
+								<td
+									>{index === 0
+										? '100'
+										: (markSystem[index - 1].limit || 0) - 1}% -
+									{mark.limit}%</td
+								>
+								<td>{mark.name}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+		</div>
+	</div> -->
+</div>
 
 <!-- Title grid -->
 <!-- <div class="grid grid-cols-12 p-2 title-grid">
