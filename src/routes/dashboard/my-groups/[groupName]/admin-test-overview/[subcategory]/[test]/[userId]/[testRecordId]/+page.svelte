@@ -27,6 +27,10 @@
 
 	let higlightedInputIndex: number | null = null;
 
+	const user = data.group.users.find(
+		(user) => user.userId === $page.params.userId
+	)?.user;
+
 	let testVersion: {
 		id: string;
 		createdAt: Date;
@@ -105,6 +109,7 @@
 		{@const marks = checkMarkSystem(testVersion['markSystemJSON'])}
 		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
 			<TestTakingNavigation
+				premarkText="{user?.name || 'User'}'s mark is: "
 				session={data.session}
 				{questionContainerRef}
 				result={questionData}

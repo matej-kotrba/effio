@@ -39,7 +39,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             id: crypto.randomUUID(),
             questionType: "trueFalse",
             questionTypeId: template.id,
-            title: question.title ?? "",
+            title: removePartsOfString(question.stem.text, question.stem.format) ?? "",
             errors: {},
             displayType: template.name,
             points: POINTS_PER_QUESTION_DEFAULT,
@@ -66,7 +66,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             id: crypto.randomUUID(),
             questionType: "pickOne",
             questionTypeId: template.id,
-            title: question.title ?? "",
+            title: removePartsOfString(question.stem.text, question.stem.format) ?? "",
             errors: {},
             displayType: template.name,
             points: POINTS_PER_QUESTION_DEFAULT,
@@ -98,7 +98,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
 
         return {
           id: crypto.randomUUID(),
-          title: question.title,
+          title: removePartsOfString(question.stem.text, question.stem.format),
           questionType: "connect",
           questionTypeId: template.id,
           displayType: template.name,
@@ -127,7 +127,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
 
         return {
           id: crypto.randomUUID(),
-          title: question.title,
+          title: removePartsOfString(question.stem.text, question.stem.format),
           questionType: "write",
           questionTypeId: template.id,
           displayType: template.name,

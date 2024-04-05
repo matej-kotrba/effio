@@ -128,14 +128,11 @@
 	}
 
 	function handleParsedData(e: CustomEvent) {
-		console.log(e.detail);
 		try {
 			const questions = transformParsedJSONIntoEffioObject(
 				e.detail,
 				data.questionTemplates
 			);
-
-			console.log(questions);
 
 			if (questions.length === 0) {
 				toast.error('This import file seems empty or incorrect 😕');
