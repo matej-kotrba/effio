@@ -224,7 +224,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="flex flex-col h-full max-h-full p-2 mt-3 overflow-hidden">
+		<div class="flex flex-col h-full max-h-full p-2 mt-4 overflow-hidden">
 			<abbr title={data.title} class="no-underline">
 				<h3
 					class="w-full overflow-hidden font-semibold text-center text-base @[13rem]:text-body1 overflow-ellipsis whitespace-nowrap"

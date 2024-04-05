@@ -467,10 +467,10 @@
 									: 'var(--light-text-black-20)'}
 							/>
 							<p class="py-4 text-center text-body1">
-								Your test named <span class="block font-semibold"
+								Your test named <span class="block font-semibold hyphens-auto"
 									>{$testObject['title']}</span
 								><Space gap={20} /> with a description:
-								<span class="block font-semibold"
+								<span class="block font-semibold hyphens-auto"
 									>{$testObject['description']}</span
 								><br />
 								<Separator

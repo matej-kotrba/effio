@@ -144,7 +144,7 @@
 				class="p-2 border rounded-md bg-light_whiter dark:bg-dark_grey border-light_text_black_20 dark:border-dark_text_white_20"
 			>
 				<div class="flex flex-wrap justify-between">
-					<h5 class="text-h5">{testContent.title}</h5>
+					<h5 class="hyphens-auto text-h5">{testContent.title}</h5>
 					<Tooltip.Root openDelay={300}>
 						<Tooltip.Trigger>
 							<div>
@@ -161,7 +161,7 @@
 					</Tooltip.Root>
 				</div>
 				<p
-					class="text-light_text_black_80 dark:text-dark_text_white_60 text-semiBody1 line-clamp-3"
+					class="text-light_text_black_80 dark:text-dark_text_white_60 text-semiBody1 line-clamp-3 hyphens-auto"
 				>
 					{testContent.description}
 				</p>
