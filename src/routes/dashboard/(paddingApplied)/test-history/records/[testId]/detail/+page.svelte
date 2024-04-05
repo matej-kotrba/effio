@@ -78,6 +78,7 @@
 			// @ts-ignore
 			questionContentFunctions[question['question']['type']['slug']][
 				'checkAnswerCorrectness'
+				//@ts-ignore
 			](question['content'], question['question']['content']),
 			question['question']['content'],
 			question['content']

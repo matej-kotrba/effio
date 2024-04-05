@@ -6,7 +6,7 @@ export const load = async ({ params }) => {
 
   const test = await prisma.test.findUnique({
     where: {
-      id: testId
+      id: testId,
     },
     include: {
       testVersions: {
@@ -14,6 +14,11 @@ export const load = async ({ params }) => {
           version: "desc"
         },
         take: 1,
+      },
+      tags: {
+        include: {
+          tag: true
+        }
       }
     }
   })

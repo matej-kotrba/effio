@@ -176,7 +176,7 @@
 	// });
 </script>
 
-<div class="p-2 @container">
+<div class="@container">
 	<h3 class="text-h4">{data.test.title}</h3>
 	<div class="grid gap-x-8 grid-cols-1 @3xl:grid-cols-2">
 		<div>

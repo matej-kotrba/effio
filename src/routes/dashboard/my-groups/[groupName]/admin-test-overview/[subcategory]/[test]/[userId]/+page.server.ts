@@ -17,11 +17,13 @@ export const load = async ({ params }) => {
       shouldCountToStatistics: true
     },
     select: {
+      id: true,
       createdAt: true,
       userPoints: true,
       userId: true,
       test: {
         select: {
+          id: true,
           totalPoints: true,
           markSystemJSON: true
         }

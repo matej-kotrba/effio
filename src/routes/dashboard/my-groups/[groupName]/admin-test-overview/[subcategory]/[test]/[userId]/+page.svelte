@@ -41,6 +41,7 @@
 	];
 
 	type TableData = {
+		id: string;
 		takenAt: Date | undefined;
 		points: string;
 		percentage: string;
@@ -57,7 +58,9 @@
 				record.test.totalPoints
 			);
 		}
+
 		return {
+			id: record.id,
 			takenAt: record.createdAt,
 			points: `${record.userPoints} / ${record.test.totalPoints}`,
 			percentage: `${(
@@ -69,40 +72,35 @@
 	});
 
 	function onRowClick(props: TableData) {
-		goto('');
+		goto(`${$page.url.pathname}/${props.id}`);
 	}
 </script>
 
-<div class="p-2">
-	{#if !user || user['id'] === data.group.ownerId}
-		<div class="grid mt-4 place-content-center">
-			<span class="text-h4">No user like this exists in this group!</span>
-			<a
-				href="/dashboard/my-groups/{data.group.slug}"
-				class="btn btn-outline dark:text-white dark:border-white"
-			>
-				Back to group
-			</a>
-		</div>
-	{:else}
-		<h3 class="flex items-center gap-1 text-h5">
-			<span>{data.test.title}</span>
-			<span
-				class="text-h4 text-light_text_black_20 dark:text-dark_text_white_20"
-				>/</span
-			>
-			<span>{user.name}</span>
-		</h3>
-		<div class="mt-4">
-			{#if tableData.length === 0}
-				<div class="grid place-content-center">
-					<span class="text-h4"
-						>Sorry, this user has not done the test yet.</span
-					>
-				</div>
-			{:else}
-				<Table {columns} data={tableData} {onRowClick} />
-			{/if}
-		</div>
-	{/if}
-</div>
+{#if !user || user['id'] === data.group.ownerId}
+	<div class="grid mt-4 place-content-center">
+		<span class="text-h4">No user like this exists in this group!</span>
+		<a
+			href="/dashboard/my-groups/{data.group.slug}"
+			class="btn btn-outline dark:text-white dark:border-white"
+		>
+			Back to group
+		</a>
+	</div>
+{:else}
+	<h3 class="flex items-center gap-1 text-h5">
+		<span>{data.test.title}</span>
+		<span class="text-h4 text-light_text_black_20 dark:text-dark_text_white_20"
+			>/</span
+		>
+		<span>{user.name}</span>
+	</h3>
+	<div class="mt-4">
+		{#if tableData.length === 0}
+			<div class="grid place-content-center">
+				<span class="text-h4">Sorry, this user has not done the test yet.</span>
+			</div>
+		{:else}
+			<Table {columns} data={tableData} {onRowClick} />
+		{/if}
+	</div>
+{/if}

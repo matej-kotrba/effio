@@ -188,7 +188,7 @@
 					{#each $table.getRowModel().rows as row, index}
 						{#if index === data.length - 1 && addIntersectionUse}
 							<tr
-								on:click={() => onRowClick && onRowClick(row)}
+								on:click={() => onRowClick && onRowClick(row.original)}
 								use:addIntersectionUse={{ shouldActive: true }}
 								class="dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {isTableDisabled
 									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
