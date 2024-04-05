@@ -66,7 +66,11 @@
 		position: absolute;
 		inset: 0;
 		background: transparent;
-		backdrop-filter: blur(30px);
-		mask-image: radial-gradient(circle at center, transparent, black);
+		mask-image: radial-gradient(circle at center, transparent 40%, black);
+		background-color: var(--light-grey);
+	}
+
+	:global(.dark) .mask-effect::after {
+		background-color: var(--dark_grey);
 	}
 </style>

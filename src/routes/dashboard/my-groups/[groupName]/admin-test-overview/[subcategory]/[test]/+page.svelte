@@ -14,6 +14,7 @@
 	import TableIcon from './TableIcon.svelte';
 	import { transformDate } from '~utils/date';
 	import ShowIconDependingOnTakingTest from './ShowIconDependingOnTakingTest.svelte';
+	import { goto } from '$app/navigation';
 
 	export let data;
 
@@ -83,6 +84,7 @@
 	];
 
 	type TableData = {
+		id: string;
 		userName: string;
 		userIcon: string;
 		numberOfTries: number;
@@ -103,6 +105,7 @@
 		);
 
 		return {
+			id: user.userId || '',
 			userName: user.user!.name || '',
 			userIcon: user.user!.image || '',
 			numberOfTries: usersTestRecords.length,
@@ -117,7 +120,7 @@
 	});
 
 	function onTableRowClick(row: TableData) {
-		console.log(row);
+		// goto(`${row.id}`);
 	}
 
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
@@ -157,9 +160,9 @@
 
 <div class="p-2 @container">
 	<h3 class="text-h4">{data.test.title}</h3>
-	<div class="grid gap-2 grid-cols-1 @3xl:grid-cols-2">
+	<div class="grid gap-x-8 grid-cols-1 @3xl:grid-cols-2">
 		<div>
-			<table class="table text-body2">
+			<table class="table text-body1">
 				<tbody>
 					<tr>
 						<td>Maximal test points</td>
@@ -184,7 +187,7 @@
 		</div>
 		<div>
 			{#if markSystem}
-				<table class="table mt-1 text-body2">
+				<table class="table mt-1 text-body1">
 					<thead>
 						<tr class="text-light_text_black dark:text-dark_text_white">
 							<th class="text-body1">Percentage %</th>

@@ -131,7 +131,7 @@
 <div class="p-2">
 	<div>
 		<div
-			class="relative overflow-y-auto border-collapse overscroll-contain"
+			class="relative overflow-y-auto overscroll-contain"
 			style="max-height: {maxHeight}"
 		>
 			<div
@@ -190,7 +190,7 @@
 							<tr
 								on:click={() => onRowClick(row)}
 								use:addIntersectionUse={{ shouldActive: true }}
-								class="border-gray-300 border-solid border-[1px] dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {isTableDisabled
+								class="dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {isTableDisabled
 									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
 									: 'bg-slate-50 text-light_text_black dark:text-dark_text_white'} {tableSelection[
 									index
@@ -218,8 +218,10 @@
 							</tr>
 						{:else}
 							<tr
-								on:click={() => onRowClick(row.getVisibleCells())}
-								class=" bg-slate-50 dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {tableSelection[
+								on:click={() => {
+									onRowClick(row.original);
+								}}
+								class="border-light_text_black_20 dark:border-dark_text_white_20 border-b-[1px] bg-slate-50 dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {tableSelection[
 									index
 								]
 									? 'bg-violet-200'
@@ -269,7 +271,7 @@
 		padding: 0.6rem;
 	}
 
-	tr::before {
+	/* tr::before {
 		content: '';
 		width: 100%;
 		height: 1px;
@@ -283,5 +285,5 @@
 
 	tr:first-of-type::before {
 		opacity: 0;
-	}
+	} */
 </style>
