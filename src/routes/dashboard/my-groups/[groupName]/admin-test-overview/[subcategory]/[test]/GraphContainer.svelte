@@ -7,7 +7,7 @@
 
 <div
 	class={twMerge(
-		'p-4 bg-light_whiter dark:bg-dark_grey shadow-md rounded-md',
+		'p-4 bg-light_whiter dark:bg-dark_grey border border-light_text_black_20 dark:border-dark_text_white_20 rounded-md',
 		classes
 	)}
 >

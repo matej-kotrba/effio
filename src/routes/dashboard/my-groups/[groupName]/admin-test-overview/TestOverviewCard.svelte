@@ -2,6 +2,7 @@
 	import { applicationStates } from '~stores/applicationStates';
 	import { onImageLoad } from '~use/onImageLoad';
 	import { transformDate } from '~utils/date';
+	import * as Tooltip from '~components/ui/tooltip/index';
 
 	type Data = {
 		name: string;
@@ -44,6 +45,7 @@
 			}}
 		/>
 	</a>
+
 	<div class="flex justify-between">
 		<div class="mt-1">
 			<h5 class="leading-4">{data.name}</h5>
@@ -51,12 +53,20 @@
 				>{transformDate(data.addedAt, { time: true })}</span
 			>
 		</div>
-		<div class="self-end">
-			<span class="font-semibold">{data.doneBy}</span>
-			<span> / </span><span class="font-semibold"
-				>{data.totalNumberOfUsers}</span
-			>
-		</div>
+		<Tooltip.Root openDelay={300}>
+			<Tooltip.Trigger class="self-end">
+				<div>
+					<span class="font-semibold">{data.doneBy}</span>
+					<span> / </span><span class="font-semibold"
+						>{data.totalNumberOfUsers}</span
+					>
+				</div>
+			</Tooltip.Trigger>
+			<Tooltip.Content>
+				Done by <span class="font-semibold">x</span> out of
+				<span class="font-semibold">y</span> users
+			</Tooltip.Content>
+		</Tooltip.Root>
 	</div>
 </div>
 

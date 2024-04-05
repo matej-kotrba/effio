@@ -41,7 +41,8 @@
 		const testsData = await trpc(
 			$page
 		).groups.getSubcategoryTestsByIdWithRecords.query({
-			id: id
+			id: id,
+			orderByDate: 'desc'
 		});
 
 		tests[index] = testsData.map((test) => {

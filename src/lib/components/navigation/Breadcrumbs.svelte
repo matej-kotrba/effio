@@ -76,7 +76,7 @@
 			// Finding if there is any dynamic segment
 			tokenPath += '/' + t;
 			t = t.charAt(0).toUpperCase() + t.slice(1);
-			t = t.replace('-', ' ');
+			t = t.replaceAll('-', ' ');
 			if (!checkLinkValidity(tokenPath, allowedLinks)) {
 				return undefined;
 			}

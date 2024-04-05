@@ -141,44 +141,60 @@
 		goto(`${$page.url.pathname}/${row.id}`);
 	}
 
+	function collapseUsersTable() {
+		isTableCollapsed = !isTableCollapsed;
+	}
+
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
-	// let overallAverageGraph: HTMLCanvasElement;
+	let overallAverageGraph: HTMLCanvasElement;
 
-	// onMount(() => {
-	// 	if (!data.avarage) return;
+	let isTableCollapsed: boolean = false;
 
-	// 	const overallConfig = createVerticalBarChartConfig(
-	// 		data.totalPoints,
-	// 		data.avarage,
-	// 		$applicationStates.darkMode.isDarkMode
-	// 	);
+	onMount(() => {
+		if (!data.avarage) return;
 
-	// 	const ctx = overallAverageGraph.getContext('2d');
-	// 	//@ts-ignore
-	// 	let chart = new Chart(ctx, overallConfig);
+		const overallConfig = createVerticalBarChartConfig(
+			data.totalPoints,
+			data.avarage,
+			$applicationStates.darkMode.isDarkMode
+		);
 
-	// 	const questionAveragesConfigs: ReturnType<
-	// 		typeof createVerticalBarChartConfig
-	// 	>[] = data.pointsQuestionData.map((avarageData) => {
-	// 		return createVerticalBarChartConfig(
-	// 			avarageData.totalPoints,
-	// 			avarageData.averagePoints,
-	// 			$applicationStates.darkMode.isDarkMode
-	// 		);
-	// 	});
+		const ctx = overallAverageGraph.getContext('2d');
+		//@ts-ignore
+		let chart = new Chart(ctx, overallConfig);
 
-	// 	questionAveragesCanvases.forEach((item, index) => {
-	// 		const ctx = item.getContext('2d');
-	// 		//@ts-ignore
-	// 		let chart = new Chart(ctx, questionAveragesConfigs[index]);
-	// 	});
-	// });
+		// 	const questionAveragesConfigs: ReturnType<
+		// 		typeof createVerticalBarChartConfig
+		// 	>[] = data.pointsQuestionData.map((avarageData) => {
+		// 		return createVerticalBarChartConfig(
+		// 			avarageData.totalPoints,
+		// 			avarageData.averagePoints,
+		// 			$applicationStates.darkMode.isDarkMode
+		// 		);
+		// 	});
+
+		// 	questionAveragesCanvases.forEach((item, index) => {
+		// 		const ctx = item.getContext('2d');
+		// 		//@ts-ignore
+		// 		let chart = new Chart(ctx, questionAveragesConfigs[index]);
+		// 	});
+	});
 </script>
 
 <div class="@container">
 	<h3 class="text-h4">{data.test.title}</h3>
 	<div class="grid gap-x-8 grid-cols-1 @3xl:grid-cols-2">
+		<div class="grid grid-cols-12 col-span-2">
+			<GraphContainer class="flex flex-col justify-between col-span-3">
+				<span class="font-semibold">Avarage achieved score</span>
+				<canvas
+					bind:this={overallAverageGraph}
+					width="400"
+					class="w-full max-h-[200px]"
+				/>
+			</GraphContainer>
+		</div>
 		<div>
 			<table class="table text-body1">
 				<tbody>
@@ -231,8 +247,25 @@
 		<!-- on:sorting-change={onTableSortChange}
 		bind:tableSelection
 		bind:table -->
-		<div class="col-span-2">
-			<Table {columns} data={tableData} onRowClick={onTableRowClick} />
+		<div class="flex items-center justify-between col-span-2 px-2 my-2">
+			<h6 class="font-semibold text-h6">User's test statistics</h6>
+			<button
+				type="button"
+				class="grid p-2 duration-100 rounded-lg hover:bg-light_grey dark:hover:bg-dark_light_grey place-content-center"
+				on:click={collapseUsersTable}
+			>
+				<iconify-icon
+					icon="iconamoon:arrow-down-2-duotone"
+					class="text-3xl duration-100 {isTableCollapsed
+						? 'rotate-180'
+						: 'rotate-0'}"
+				/>
+			</button>
+		</div>
+		<div class="col-span-2 collapsible {isTableCollapsed ? 'collapsed' : ''}">
+			<div>
+				<Table {columns} data={tableData} onRowClick={onTableRowClick} />
+			</div>
 		</div>
 	</div>
 </div>
@@ -302,33 +335,19 @@
 		Users
 	</h5>
 </div> -->
-<!-- Content grid -->
-<!-- <div class="grid grid-cols-12 gap-2 px-2 main-grid">
-	<UserTable
-		ownerId={data.group.ownerId}
-		omitOwnerFromTable={true}
-		displayData={{
-			image: true,
-			taken: true,
-			takenCount: true
-		}}
-		data={{
-			groupId: data.group.id,
-			subcategorySlug: data.subcategorySlug,
-			testId: data.testId
-		}}
-		class="col-span-12"
-	/>
-</div>
 
 <style>
-	.title-grid {
-		grid-template-rows: auto;
+	.collapsible {
+		display: grid;
+		grid-template-rows: 1fr;
+		transition: grid-template-rows 0.3s ease;
 	}
-	.main-grid {
-		grid-auto-rows: 14rem;
+
+	.collapsible > div {
+		overflow: hidden;
 	}
-	canvas {
-		max-height: 140px !important;
+
+	.collapsible:global(.collapsed) {
+		grid-template-rows: 0fr;
 	}
-</style> -->
+</style>
