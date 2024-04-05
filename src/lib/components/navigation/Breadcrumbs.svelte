@@ -17,7 +17,8 @@
 		'[groupName]': 'Group',
 		'[groupCategory]': 'Channel',
 		'[test]': 'Test',
-		'[subcategory]': 'Channel'
+		'[subcategory]': 'Channel',
+		'[userId]': 'User'
 	};
 
 	const modules: Record<string, () => unknown> = import.meta.glob(

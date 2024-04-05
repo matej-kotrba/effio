@@ -26,7 +26,7 @@
 	export let columns: ColumnDef<any>[] = [];
 	export let isTableDisabled: boolean = false;
 
-	export let onRowClick: (row: any) => void = () => {};
+	export let onRowClick: ((row: any) => void) | undefined = undefined;
 
 	$: {
 		options.update((options) => ({
@@ -181,14 +181,14 @@
 					{/each}
 				</thead>
 				<tbody
-					class="relative before:content-[''] before:pointer-events-none before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10 duration-100 {isTableDisabled
+					class="before:content-[''] before:pointer-events-none before:inset-0 before:bg-dark_text_white_40 before:absolute before:z-10 duration-100 {isTableDisabled
 						? 'before:opacity-100'
 						: 'before:opacity-0'}"
 				>
 					{#each $table.getRowModel().rows as row, index}
 						{#if index === data.length - 1 && addIntersectionUse}
 							<tr
-								on:click={() => onRowClick(row)}
+								on:click={() => onRowClick && onRowClick(row)}
 								use:addIntersectionUse={{ shouldActive: true }}
 								class="dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {isTableDisabled
 									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
@@ -196,7 +196,7 @@
 									index
 								]
 									? 'bg-violet-200'
-									: ''}"
+									: ''} {onRowClick ? 'cursor-pointer' : 'cursor-default'}"
 							>
 								{#each row.getVisibleCells() as cell}
 									<td>
@@ -219,7 +219,7 @@
 						{:else}
 							<tr
 								on:click={() => {
-									onRowClick(row.original);
+									onRowClick && onRowClick(row.original);
 								}}
 								class="border-light_text_black_20 dark:border-dark_text_white_20 border-b-[1px] bg-slate-50 dark:bg-dark_grey hover:bg-light_whiter dark:hover:bg-dark_light_grey {tableSelection[
 									index
@@ -227,7 +227,9 @@
 									? 'bg-violet-200'
 									: ''} {isTableDisabled
 									? 'bg-gray-300 text-light_text_black_60 dark:text-dark_text_white_60'
-									: 'bg-slate-50 text-light_text_black dark:text-dark_text_white'}"
+									: 'bg-slate-50 text-light_text_black dark:text-dark_text_white'} {onRowClick
+									? 'cursor-pointer'
+									: 'cursor-default'}"
 							>
 								{#each row.getVisibleCells() as cell}
 									<td>

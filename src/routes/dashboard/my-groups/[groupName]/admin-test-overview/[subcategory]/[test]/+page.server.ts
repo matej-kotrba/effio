@@ -1,31 +1,12 @@
 import { redirect, type ServerLoad } from "@sveltejs/kit";
 import prisma from "~/lib/prisma";
 
-export const load: ServerLoad = async ({ params }) => {
+export const load: ServerLoad = async ({ params, }) => {
+
   const testId = params.test as string
   const subacategorySlug = params.subcategory as string
 
   if (!testId || !subacategorySlug) throw redirect(307, "/dashboard/my-groups")
-
-  const test = await prisma.test.findUnique({
-    where: {
-      id: testId
-    },
-    include: {
-      testVersions: {
-        orderBy: {
-          version: "desc"
-        },
-        take: 1,
-      }
-    }
-  })
-
-  if (!test) {
-    throw redirect(307, "/dashboard/my-groups")
-  }
-
-  if (!test.testVersions[0].id) throw redirect(307, "/dashboard/my-groups")
 
   // const totalForEachQuestion = await prisma.question.findMany({
   //   where: {
@@ -70,7 +51,13 @@ export const load: ServerLoad = async ({ params }) => {
     select: {
       createdAt: true,
       userPoints: true,
-      userId: true
+      userId: true,
+      test: {
+        select: {
+          totalPoints: true,
+          markSystemJSON: true
+        }
+      }
     },
     orderBy: {
       createdAt: "desc"
@@ -97,9 +84,8 @@ export const load: ServerLoad = async ({ params }) => {
     testRecords: testsUserRecords,
     avarage: testsUserRecords.reduce((acc, record) => acc + record.userPoints, 0) / testsUserRecords.length,
     count: returnedCount,
-    totalPoints: test.testVersions[0].totalPoints,
     subcategorySlug: subacategorySlug,
     testId: testId,
-    test: test
+
   }
 }  

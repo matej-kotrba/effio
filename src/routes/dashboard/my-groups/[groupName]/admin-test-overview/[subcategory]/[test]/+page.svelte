@@ -15,6 +15,8 @@
 	import { transformDate } from '~utils/date';
 	import ShowIconDependingOnTakingTest from './ShowIconDependingOnTakingTest.svelte';
 	import { goto } from '$app/navigation';
+	import { getMarkBasedOnPoints } from '~helpers/test/test';
+	import { page } from '$app/stores';
 
 	export let data;
 
@@ -57,20 +59,10 @@
 			cell: (info) => info.getValue()
 		},
 		{
-			id: 'bestPointsInPoints',
-			accessorKey: 'bestPointsInPoints',
-			header: 'Best result in points',
-			cell: (info) => {
-				return info.getValue() || 'x';
-			}
-		},
-		{
-			id: 'bestPointsInPercentage',
-			accessorKey: 'bestPointsInPercentage',
-			header: 'Best result in percentage',
-			cell: (info) => {
-				return info.getValue() || 'x';
-			}
+			id: 'bestMark',
+			accessorKey: 'bestMark',
+			header: 'Best mark',
+			cell: (info) => info.getValue()
 		},
 		{
 			id: 'didTakenTest',
@@ -88,8 +80,7 @@
 		userName: string;
 		userIcon: string;
 		numberOfTries: number;
-		bestPointsInPoints: number | undefined;
-		bestPointsInPercentage: number | undefined;
+		bestMark: string | undefined;
 		takenAt: Date | undefined;
 		didTakenTest: boolean;
 	};
@@ -99,10 +90,27 @@
 			return item.userId === user.userId;
 		});
 
-		const maximalValue = usersTestRecords.map((item) => item.userPoints);
-		const maximalPercentage = usersTestRecords.map(
-			(item) => item.userPoints / data.totalPoints
-		);
+		const userResults = usersTestRecords.map((item) => {
+			return { userPoints: item.userPoints, maxPoints: item.test.totalPoints };
+		});
+
+		let bestRatio = 0;
+		let bestRatioResultIndex = 0;
+		let markSystem: ReturnType<typeof checkMarkSystem> | null = null;
+
+		if (userResults.length > 0) {
+			userResults.forEach((item, index) => {
+				const ratio = item.userPoints / item.maxPoints;
+				if (ratio > bestRatio) {
+					bestRatio = ratio;
+					bestRatioResultIndex = index;
+				}
+			});
+
+			markSystem = checkMarkSystem(
+				usersTestRecords[bestRatioResultIndex].test.markSystemJSON
+			);
+		}
 
 		return {
 			id: user.userId || '',
@@ -110,17 +118,20 @@
 			userIcon: user.user!.image || '',
 			numberOfTries: usersTestRecords.length,
 			takenAt: usersTestRecords[0] ? usersTestRecords[0].createdAt : undefined,
-			bestPointsInPoints:
-				maximalValue.length > 0 ? Math.max(...maximalValue) : undefined,
-			bestPointsInPercentage: maximalPercentage.length
-				? Math.max(...maximalPercentage)
-				: undefined,
+			bestMark:
+				markSystem === null
+					? 'x'
+					: getMarkBasedOnPoints(
+							markSystem,
+							userResults[bestRatioResultIndex].maxPoints,
+							userResults[bestRatioResultIndex].userPoints
+					  ).name,
 			didTakenTest: usersTestRecords.length > 0
 		};
 	});
 
 	function onTableRowClick(row: TableData) {
-		// goto(`${row.id}`);
+		goto(`${$page.url.pathname}/${row.id}`);
 	}
 
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
