@@ -85,50 +85,57 @@
 		didTakenTest: boolean;
 	};
 
-	const tableData: TableData[] = data.group.users.map((user) => {
-		const usersTestRecords = data.testRecords.filter((item) => {
-			return item.userId === user.userId;
-		});
-
-		const userResults = usersTestRecords.map((item) => {
-			return { userPoints: item.userPoints, maxPoints: item.test.totalPoints };
-		});
-
-		let bestRatio = 0;
-		let bestRatioResultIndex = 0;
-		let markSystem: ReturnType<typeof checkMarkSystem> | null = null;
-
-		if (userResults.length > 0) {
-			userResults.forEach((item, index) => {
-				const ratio = item.userPoints / item.maxPoints;
-				if (ratio > bestRatio) {
-					bestRatio = ratio;
-					bestRatioResultIndex = index;
-				}
+	const tableData: TableData[] = data.group.users
+		.filter((user) => user.userId !== data.group.ownerId)
+		.map((user) => {
+			const usersTestRecords = data.testRecords.filter((item) => {
+				return item.userId === user.userId;
 			});
 
-			markSystem = checkMarkSystem(
-				usersTestRecords[bestRatioResultIndex].test.markSystemJSON
-			);
-		}
+			const userResults = usersTestRecords.map((item) => {
+				return {
+					userPoints: item.userPoints,
+					maxPoints: item.test.totalPoints
+				};
+			});
 
-		return {
-			id: user.userId || '',
-			userName: user.user!.name || '',
-			userIcon: user.user!.image || '',
-			numberOfTries: usersTestRecords.length,
-			takenAt: usersTestRecords[0] ? usersTestRecords[0].createdAt : undefined,
-			bestMark:
-				markSystem === null
-					? 'x'
-					: getMarkBasedOnPoints(
-							markSystem,
-							userResults[bestRatioResultIndex].maxPoints,
-							userResults[bestRatioResultIndex].userPoints
-					  ).name,
-			didTakenTest: usersTestRecords.length > 0
-		};
-	});
+			let bestRatio = 0;
+			let bestRatioResultIndex = 0;
+			let markSystem: ReturnType<typeof checkMarkSystem> | null = null;
+
+			if (userResults.length > 0) {
+				userResults.forEach((item, index) => {
+					const ratio = item.userPoints / item.maxPoints;
+					if (ratio > bestRatio) {
+						bestRatio = ratio;
+						bestRatioResultIndex = index;
+					}
+				});
+
+				markSystem = checkMarkSystem(
+					usersTestRecords[bestRatioResultIndex].test.markSystemJSON
+				);
+			}
+
+			return {
+				id: user.userId || '',
+				userName: user.user!.name || '',
+				userIcon: user.user!.image || '',
+				numberOfTries: usersTestRecords.length,
+				takenAt: usersTestRecords[0]
+					? usersTestRecords[0].createdAt
+					: undefined,
+				bestMark:
+					markSystem === null
+						? 'x'
+						: getMarkBasedOnPoints(
+								markSystem,
+								userResults[bestRatioResultIndex].maxPoints,
+								userResults[bestRatioResultIndex].userPoints
+						  ).name,
+				didTakenTest: usersTestRecords.length > 0
+			};
+		});
 
 	function onTableRowClick(row: TableData) {
 		goto(`${$page.url.pathname}/${row.id}`);
