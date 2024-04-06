@@ -42,3 +42,8 @@ export const kickUserFromGroupSchema = z.object({
   userId: z.string(),
   shouldBan: z.boolean().optional()
 })
+
+export const resetUsersAttemptsSchema = z.object({
+  testId: z.string(),
+  subcategoryId: z.string()
+})

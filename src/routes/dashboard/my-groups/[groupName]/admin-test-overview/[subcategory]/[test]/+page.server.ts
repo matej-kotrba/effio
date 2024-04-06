@@ -1,5 +1,7 @@
-import { redirect, type ServerLoad } from "@sveltejs/kit";
+import { fail, redirect, type ServerLoad } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms/server";
 import prisma from "~/lib/prisma";
+import { resetUsersAttemptsSchema } from "~/routes/dashboard/my-groups/schemas";
 
 export const load: ServerLoad = async ({ params, }) => {
 
@@ -7,6 +9,8 @@ export const load: ServerLoad = async ({ params, }) => {
   const subacategorySlug = params.subcategory as string
 
   if (!testId || !subacategorySlug) throw redirect(307, "/dashboard/my-groups")
+
+  const resetUsersAttempts = superValidate(resetUsersAttemptsSchema)
 
   // const totalForEachQuestion = await prisma.question.findMany({
   //   where: {
@@ -83,11 +87,36 @@ export const load: ServerLoad = async ({ params, }) => {
   const avaragePercentageScore = testsUserRecords.reduce((acc, record) => acc + record.userPoints / record.test.totalPoints, 0) / testsUserRecords.length
 
   return {
+    resetUsersAttempts,
     testRecords: testsUserRecords,
     avarage: avaragePercentageScore * 100,
     count: returnedCount,
     subcategorySlug: subacategorySlug,
     testId: testId,
-
   }
-}  
+}
+
+export const actions = {
+  resetUsersAttempts: async (event) => {
+    const formData = await event.request.formData()
+    const form = await superValidate(formData, resetUsersAttemptsSchema)
+
+    if (!form.valid) {
+      return fail(400, { form })
+    }
+
+    await prisma.groupSubcategoryOnTests.update({
+      where: {
+        testId_subcategoryId: {
+          testId: form.data.testId,
+          subcategoryId: form.data.subcategoryId
+        }
+      },
+      data: {
+        resetDate: new Date()
+      }
+    })
+
+    return { form }
+  }
+}

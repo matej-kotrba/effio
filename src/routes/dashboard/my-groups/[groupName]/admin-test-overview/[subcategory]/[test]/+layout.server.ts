@@ -3,6 +3,7 @@ import prisma from '~/lib/prisma.js'
 
 export const load = async ({ params }) => {
   const testId = params.test as string
+  const subcategorySlug = params.subcategory as string
 
   const test = await prisma.test.findUnique({
     where: {
@@ -18,6 +19,17 @@ export const load = async ({ params }) => {
       tags: {
         include: {
           tag: true
+        }
+      },
+      subcategories: {
+        where: {
+          testId: testId,
+          subcategory: {
+            slug: subcategorySlug
+          }
+        },
+        select: {
+          addedDate: true
         }
       }
     }

@@ -17,8 +17,28 @@
 	import { goto } from '$app/navigation';
 	import { getIndexOfMark, getMarkBasedOnPoints } from '~helpers/test/test';
 	import { page } from '$app/stores';
+	import IconButton from '~components/buttons/IconButton.svelte';
+	import Dialog from '~components/portals/Dialog.svelte';
+	import { resetUsersAttemptsSchema } from '~/routes/dashboard/my-groups/schemas';
+	import { superForm } from 'sveltekit-superforms/client';
+	import toast from 'svelte-french-toast';
+	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 
 	export let data;
+
+	let openResetUsersAttemptsDialog: () => void;
+	let closeResetUsersAttemptsDialog: () => void;
+
+	const {
+		form: formUsersAttempts,
+		errors: errorsUsersAttempts,
+		enhance: enhanceUsersAttempts,
+		submitting: submittingUsersAttempts,
+		reset: resetUsersAttempts
+	} = superForm(data.resetUsersAttempts, {
+		resetForm: true,
+		validators: resetUsersAttemptsSchema
+	});
 
 	let markSystem: MarkSystemJSON['marks'] | null = checkMarkSystem(
 		data.test.testVersions[0].markSystemJSON
@@ -244,43 +264,13 @@
 			}
 		} satisfies ChartConfiguration;
 
-		const takenAtConfig = {
-			type: 'line',
-			data: {
-				labels: markSystem?.map((item) => item.name),
-				datasets: [
-					{
-						label: 'Count',
-						data: markData, // The actual value
-						backgroundColor: markData.map((item, index) => {
-							return `hsl(${(index * 360) / markData.length}, 80%, 50%)`;
-						})
-					}
-				]
-			},
-			options: {
-				indexAxis: 'y',
-				maintainAspectRatio: false,
-				plugins: {
-					legend: {
-						display: true,
-						align: 'center',
-						position: 'bottom'
-						// eslint-disable-next-line @typescript-eslint/no-empty-function
-					}
-				}
-			}
-		} satisfies ChartConfiguration;
-
 		const ctx = overallAverageGraph.getContext('2d');
 		const markCtx = markDistributionGraph.getContext('2d');
-		const takenAtCtx = markDistributionGraph.getContext('2d');
 		//@ts-ignore
 		let chart = new Chart(ctx, overallConfig);
 		//@ts-ignore
 		let markChart = new Chart(markCtx, markConfig);
 		//@ts-ignore
-		let takenAtChart = new Chart(takenAtCtx, takenAtConfig);
 
 		// 	const questionAveragesConfigs: ReturnType<
 		// 		typeof createVerticalBarChartConfig
@@ -300,11 +290,57 @@
 	});
 </script>
 
+<Dialog
+	isSubmitting={$submittingUsersAttempts}
+	bind:open={openResetUsersAttemptsDialog}
+	bind:close={closeResetUsersAttemptsDialog}
+	title="Reste users attempts"
+>
+	<form
+		method="POST"
+		action="?/resetUsersAttempts"
+		use:enhanceUsersAttempts={{
+			onResult: ({ result }) => {
+				if (result['status'] === 200) {
+					toast.success('Channel created successfully!');
+					closeResetUsersAttemptsDialog();
+				} else if (result['type'] === 'failure') {
+					console.log(result);
+					toast.error(
+						result.data?.error ? result['data']['error'] : 'Error ocurred'
+					);
+				}
+			}
+		}}
+	>
+		<input type="hidden" name="testId" value={data.testId} />
+		<input
+			type="hidden"
+			name="subcategoryId"
+			value={data.group.groupsSubcategories.find(
+				(subcategory) => subcategory.slug === data.subcategorySlug
+			)?.id}
+		/>
+		<p>You are about to reset all users attempts, do you want to continue?</p>
+		<div class="flex justify-end gap-2 mt-1">
+			<SimpleButton variant="ghost" onClick={closeResetUsersAttemptsDialog}
+				>Cancel</SimpleButton
+			>
+			<SimpleButton
+				variant="filled"
+				designType="primary"
+				type="submit"
+				disabled={!!$errorsUsersAttempts.testId?.length ||
+					!!$errorsUsersAttempts.subcategoryId?.length}>Reset</SimpleButton
+			>
+		</div>
+	</form>
+</Dialog>
 <div class="@container">
 	<h3 class="text-h4">{data.test.title}</h3>
 	<div class="grid gap-x-8 grid-cols-1 @3xl:grid-cols-2">
 		<div class="grid grid-cols-12 col-span-2 gap-2">
-			<GraphContainer class="flex flex-col justify-between col-span-3">
+			<GraphContainer class="flex flex-col justify-between col-span-5">
 				<span class="font-semibold">Avarage achieved score</span>
 				<canvas
 					bind:this={overallAverageGraph}
@@ -315,7 +351,7 @@
 			{#if markSystem}
 				{@const mark = getMarkBasedOnPoints(markSystem, data.avarage, 1)}
 				{@const markIndex = getIndexOfMark(markSystem, mark)}
-				<GraphContainer class="grid grid-rows-[auto_1fr] col-span-2">
+				<GraphContainer class="grid grid-rows-[auto_1fr] col-span-3">
 					<span class="font-semibold">Avarage mark</span>
 					<div class="grid place-content-center">
 						<span class="font-semibold leading-8 text-h4">{mark.name}</span>
@@ -329,7 +365,7 @@
 						>
 					</div>
 				</GraphContainer>
-				<GraphContainer class="flex flex-col justify-between col-span-3">
+				<GraphContainer class="flex flex-col justify-between col-span-4">
 					<span class="font-semibold">Mark distribution</span>
 					<canvas
 						bind:this={markDistributionGraph}
@@ -337,15 +373,14 @@
 						class="w-full max-h-[200px]"
 					/>
 				</GraphContainer>
-				<GraphContainer class="flex flex-col justify-between col-span-4">
-					<span class="font-semibold">Tests done on timeline</span>
-					<canvas
-						bind:this={takenAtGraph}
-						width="400"
-						class="w-full max-h-[200px]"
-					/>
-				</GraphContainer>
 			{/if}
+		</div>
+		<div class="col-span-2 my-4">
+			<IconButton
+				icon={'carbon:reset'}
+				tooltip="Reset attemps for all users"
+				onClick={openResetUsersAttemptsDialog}
+			/>
 		</div>
 		<div>
 			<table class="table text-body1">
@@ -399,8 +434,8 @@
 		<!-- on:sorting-change={onTableSortChange}
 		bind:tableSelection
 		bind:table -->
-		<div class="flex items-center justify-between col-span-2 px-2 my-2">
-			<h6 class="font-semibold text-h6">User's test statistics</h6>
+		<div class="flex items-center justify-between col-span-2 my-2">
+			<h5 class="font-semibold text-h6">User's test statistics</h5>
 			<button
 				type="button"
 				class="grid p-2 duration-100 rounded-lg hover:bg-light_grey dark:hover:bg-dark_light_grey place-content-center"
@@ -419,6 +454,11 @@
 				<Table {columns} data={tableData} onRowClick={onTableRowClick} />
 			</div>
 		</div>
+		<!-- <div class="col-span-2 mt-8">
+			<h5 class="font-semibold text-h6">Question statistics</h5>
+			{#each data.test as question}
+			{/each}
+		</div> -->
 	</div>
 </div>
 
