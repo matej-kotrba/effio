@@ -80,9 +80,11 @@ export const load: ServerLoad = async ({ params, }) => {
   const retypedCount = ((testUsersRecordsDistinctCount as { count: bigint }[]))
   const returnedCount = retypedCount[0].count > 0 ? Number(retypedCount[0].count) : 0
 
+  const avaragePercentageScore = testsUserRecords.reduce((acc, record) => acc + record.userPoints / record.test.totalPoints, 0) / testsUserRecords.length
+
   return {
     testRecords: testsUserRecords,
-    avarage: testsUserRecords.reduce((acc, record) => acc + record.userPoints, 0) / testsUserRecords.length,
+    avarage: avaragePercentageScore * 100,
     count: returnedCount,
     subcategorySlug: subacategorySlug,
     testId: testId,

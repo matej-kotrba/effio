@@ -468,3 +468,10 @@ export function getMarkBasedOnPoints(marks: MarkSystemJSON["marks"], userPoints:
 
   return marks[marks.length - 1]
 }
+
+export function getIndexOfMark(marks: MarkSystemJSON["marks"], mark: MarkSystemJSON["marks"][number]) {
+  for (let i = 0; i < marks.length; i++) {
+    if (marks[i].name === mark.name && marks[i].limit === mark.limit) return i
+  }
+  return -1
+}

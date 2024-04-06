@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Chart from 'chart.js/auto';
+	import Chart, { type ChartConfiguration } from 'chart.js/auto';
 	import { onMount } from 'svelte';
 	import Counter from '~components/informatic/Counter.svelte';
 	import { applicationStates } from '~stores/applicationStates.js';
@@ -15,7 +15,7 @@
 	import { transformDate } from '~utils/date';
 	import ShowIconDependingOnTakingTest from './ShowIconDependingOnTakingTest.svelte';
 	import { goto } from '$app/navigation';
-	import { getMarkBasedOnPoints } from '~helpers/test/test';
+	import { getIndexOfMark, getMarkBasedOnPoints } from '~helpers/test/test';
 	import { page } from '$app/stores';
 
 	export let data;
@@ -148,21 +148,139 @@
 	// let questionAveragesCanvases: HTMLCanvasElement[] = [];
 
 	let overallAverageGraph: HTMLCanvasElement;
+	let markDistributionGraph: HTMLCanvasElement;
+	let takenAtGraph: HTMLCanvasElement;
 
 	let isTableCollapsed: boolean = false;
 
 	onMount(() => {
 		if (!data.avarage) return;
 
-		const overallConfig = createVerticalBarChartConfig(
-			data.totalPoints,
-			data.avarage,
-			$applicationStates.darkMode.isDarkMode
-		);
+		const overallConfig = {
+			type: 'bar',
+			data: {
+				labels: [''],
+				datasets: [
+					{
+						label: 'Average',
+						data: [data.avarage], // The actual value
+
+						backgroundColor:
+							getComputedStyle(document.documentElement).getPropertyValue(
+								$applicationStates.darkMode.isDarkMode
+									? '--dark-primary'
+									: '--light-primary'
+							) || '#6722e6' // Maximum segment color with transparency // Actual Value segment color with transparency
+					}
+				]
+			},
+			options: {
+				indexAxis: 'y',
+				maintainAspectRatio: false,
+				scales: {
+					x: {
+						beginAtZero: true,
+						ticks: {
+							callback: function (value) {
+								return value + '%';
+							}
+						}
+					},
+					y: {
+						stacked: true
+					}
+				},
+				plugins: {
+					legend: {
+						display: false,
+						align: 'center',
+						position: 'bottom',
+						// eslint-disable-next-line @typescript-eslint/no-empty-function
+						onClick: () => {}
+					}
+				}
+			}
+		} satisfies ChartConfiguration;
+
+		const markData =
+			markSystem?.map((item) => {
+				const count = data.testRecords.filter((record) => {
+					if (!markSystem) return false;
+					const mark = getMarkBasedOnPoints(
+						markSystem,
+						record.userPoints,
+						record.test.totalPoints
+					);
+					return mark.name === item.name && mark.limit === item.limit;
+				}).length;
+				return count;
+			}) || [];
+
+		const markConfig = {
+			type: 'pie',
+			data: {
+				labels: markSystem?.map((item) => item.name),
+				datasets: [
+					{
+						label: 'Count',
+						data: markData, // The actual value
+						backgroundColor: markData.map((item, index) => {
+							return `hsl(${(index * 360) / markData.length}, 80%, 50%)`;
+						})
+					}
+				]
+			},
+			options: {
+				indexAxis: 'y',
+				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: true,
+						align: 'center',
+						position: 'bottom'
+						// eslint-disable-next-line @typescript-eslint/no-empty-function
+					}
+				}
+			}
+		} satisfies ChartConfiguration;
+
+		const takenAtConfig = {
+			type: 'line',
+			data: {
+				labels: markSystem?.map((item) => item.name),
+				datasets: [
+					{
+						label: 'Count',
+						data: markData, // The actual value
+						backgroundColor: markData.map((item, index) => {
+							return `hsl(${(index * 360) / markData.length}, 80%, 50%)`;
+						})
+					}
+				]
+			},
+			options: {
+				indexAxis: 'y',
+				maintainAspectRatio: false,
+				plugins: {
+					legend: {
+						display: true,
+						align: 'center',
+						position: 'bottom'
+						// eslint-disable-next-line @typescript-eslint/no-empty-function
+					}
+				}
+			}
+		} satisfies ChartConfiguration;
 
 		const ctx = overallAverageGraph.getContext('2d');
+		const markCtx = markDistributionGraph.getContext('2d');
+		const takenAtCtx = markDistributionGraph.getContext('2d');
 		//@ts-ignore
 		let chart = new Chart(ctx, overallConfig);
+		//@ts-ignore
+		let markChart = new Chart(markCtx, markConfig);
+		//@ts-ignore
+		let takenAtChart = new Chart(takenAtCtx, takenAtConfig);
 
 		// 	const questionAveragesConfigs: ReturnType<
 		// 		typeof createVerticalBarChartConfig
@@ -185,7 +303,7 @@
 <div class="@container">
 	<h3 class="text-h4">{data.test.title}</h3>
 	<div class="grid gap-x-8 grid-cols-1 @3xl:grid-cols-2">
-		<div class="grid grid-cols-12 col-span-2">
+		<div class="grid grid-cols-12 col-span-2 gap-2">
 			<GraphContainer class="flex flex-col justify-between col-span-3">
 				<span class="font-semibold">Avarage achieved score</span>
 				<canvas
@@ -194,6 +312,40 @@
 					class="w-full max-h-[200px]"
 				/>
 			</GraphContainer>
+			{#if markSystem}
+				{@const mark = getMarkBasedOnPoints(markSystem, data.avarage, 1)}
+				{@const markIndex = getIndexOfMark(markSystem, mark)}
+				<GraphContainer class="grid grid-rows-[auto_1fr] col-span-2">
+					<span class="font-semibold">Avarage mark</span>
+					<div class="grid place-content-center">
+						<span class="font-semibold leading-8 text-h4">{mark.name}</span>
+						<span
+							class="text-center text-light_text_black_60 text-body2 dark:text-dark_text_white_60"
+							>{(markIndex > 0
+								? markSystem[markIndex].limit + '% - '
+								: '100% - ') +
+								mark.limit +
+								'%'}</span
+						>
+					</div>
+				</GraphContainer>
+				<GraphContainer class="flex flex-col justify-between col-span-3">
+					<span class="font-semibold">Mark distribution</span>
+					<canvas
+						bind:this={markDistributionGraph}
+						width="400"
+						class="w-full max-h-[200px]"
+					/>
+				</GraphContainer>
+				<GraphContainer class="flex flex-col justify-between col-span-4">
+					<span class="font-semibold">Tests done on timeline</span>
+					<canvas
+						bind:this={takenAtGraph}
+						width="400"
+						class="w-full max-h-[200px]"
+					/>
+				</GraphContainer>
+			{/if}
 		</div>
 		<div>
 			<table class="table text-body1">
