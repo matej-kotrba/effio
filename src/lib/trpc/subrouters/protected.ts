@@ -8,6 +8,7 @@ import { DB_STRING_REGEX } from "~helpers/constants"
 import { includedInGroupsSchema } from "~schemas/testValidation"
 import { PUSHER_APP_ID, PUSHER_SECRET } from "$env/static/private"
 import { PUBLIC_PUSHER_CLUSTER, PUBLIC_PUSHER_KEY } from "$env/static/public"
+import Pusher from "pusher"
 
 const includedInGroupsInputSchema = z.object({ isPublic: z.boolean(), subcategorySelect: includedInGroupsSchema }).optional()
 
@@ -558,7 +559,7 @@ export const protectedRouter = router({
       throw new TRPCError({ code: "NOT_FOUND", message: "Channel not found" })
     }
 
-    const [a, b, c, d] = await ctx.prisma.$transaction([
+    const [_, __, ...messages] = await ctx.prisma.$transaction([
       ctx.prisma.groupSubcategoryOnTests.deleteMany({
         where: {
           id: {
@@ -575,38 +576,61 @@ export const protectedRouter = router({
           }
         })
       }),
-      ctx.prisma.groupSubcategoryMessage.createMany({
-        data: input.testsToConnect.map((test) => {
-          return {
+      ...input.testsToConnect.map((test) => {
+        return ctx.prisma.groupSubcategoryMessage.create({
+          data: {
             senderId: ctx.userId,
             messageType: "MESSAGE",
             title: "Added new test: " + test.title,
             groupSubcategoryId: subcategory.id,
             testId: test.id
+          },
+          include: {
+            sender: true,
+            test: {
+              select: {
+                title: true,
+                description: true,
+                imageUrl: true
+              }
+            },
           }
         })
       }),
-      ctx.prisma.groupSubcategoryMessage.createMany({
-        data: input.connectionsToDelete.map((item) => {
-          return {
+      ...input.connectionsToDelete.map((item) => {
+        return ctx.prisma.groupSubcategoryMessage.create({
+          data: {
             senderId: ctx.userId,
             messageType: "MESSAGE",
             title: "Removed test: " + item.testTitle,
             groupSubcategoryId: item.subcategoryId,
+          },
+          include: {
+            sender: true,
+            test: {
+              select: {
+                title: true,
+                description: true,
+                imageUrl: true
+              }
+            },
           }
         })
       })
     ])
 
-    // const pusher = new Pusher({
-    //   appId: PUSHER_APP_ID,
-    //   key: PUBLIC_PUSHER_KEY,
-    //   secret: PUSHER_SECRET,
-    //   cluster: PUBLIC_PUSHER_CLUSTER,
-    //   useTLS: true,
-    // });
+    const pusher = new Pusher({
+      appId: PUSHER_APP_ID,
+      key: PUBLIC_PUSHER_KEY,
+      secret: PUSHER_SECRET,
+      cluster: PUBLIC_PUSHER_CLUSTER,
+      useTLS: true,
+    });
 
-    // await pusher.trigger(`group-${input.groupId}-${input.subcategoryId}`, "new-message", message);
+    for (const message of messages) {
+      pusher.trigger(`group-${input.groupId}-${input.subcategoryId}`, "new-message", message);
+
+    }
 
     return { success: true }
   })

@@ -7,6 +7,8 @@
 	import Limit from '~components/informatic/Limit.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
 	import * as Popover from '~components/ui/popover/index';
+	import { cloneDeep } from 'lodash';
+	import Skewed from '~components/loaders/Skewed.svelte';
 
 	let classes = '';
 	export { classes as class };
@@ -28,8 +30,9 @@
 	export let tests: Test[] = [];
 	export let groupId: string;
 	export let subcategoryId: string;
+	export let isFetchingTests: boolean = false;
 
-	$: testsToEdit = tests;
+	let testsToEdit = cloneDeep(tests);
 
 	let closeSubcategoryPopover: () => void;
 	let isSavingSubcategories = false;
@@ -56,6 +59,7 @@
 	}
 
 	async function onSubcategoryOnTestsSave() {
+		if (isSavingSubcategories || isFetchingTests) return;
 		isSavingSubcategories = true;
 		try {
 			const testsToAdd = testsToEdit
@@ -73,24 +77,18 @@
 					};
 				});
 
-			console.log(testsToAdd, testsToDelete);
-
 			await trpc().protected.updateSubcategoryConnectionsToTest.mutate({
 				groupId: groupId,
 				subcategoryId: subcategoryId,
 				connectionsToDelete: testsToDelete,
 				testsToConnect: testsToAdd
 			});
+			dispatch('testSubmit');
 		} catch (error) {
 		} finally {
 			isSavingSubcategories = false;
-			closeSubcategoryPopover();
+			if (closeSubcategoryPopover) closeSubcategoryPopover();
 		}
-	}
-
-	function onSubcategoryOnTestsClose() {
-		closeSubcategoryPopover();
-		testsToEdit = tests;
 	}
 
 	onMount(() => {
@@ -126,7 +124,12 @@
 		on:input={onInput}
 		on:keydown={onKeyDown}
 	/>
-	<Popover.Root bind:closeFocus={closeSubcategoryPopover}>
+	<Popover.Root
+		bind:closeFocus={closeSubcategoryPopover}
+		onOutsideClick={() => {
+			testsToEdit = cloneDeep(tests);
+		}}
+	>
 		<Popover.Trigger>
 			<button
 				type="button"
@@ -142,6 +145,13 @@
 			</button>
 		</Popover.Trigger>
 		<Popover.Content>
+			{#if isFetchingTests || isSavingSubcategories}
+				<div
+					class="absolute inset-0 grid bg-light_text_black_20 dark:bg-dark_text_white_20 place-content-center"
+				>
+					<Skewed />
+				</div>
+			{/if}
 			{#if testsToEdit.length === 0}
 				<p>Sorry, no tests available to connect.</p>
 			{:else}
@@ -162,15 +172,12 @@
 				{/each}
 			{/if}
 			<div class="flex justify-end gap-2 mt-2">
-				<SimpleButton variant="ghost" onClick={onSubcategoryOnTestsClose}
-					>Cancel</SimpleButton
-				>
 				<SimpleButton
 					variant="filled"
 					designType="primary"
 					type="submit"
 					onClick={onSubcategoryOnTestsSave}
-					disabled={isSavingSubcategories}>Save</SimpleButton
+					disabled={isSavingSubcategories || isFetchingTests}>Save</SimpleButton
 				>
 			</div>
 		</Popover.Content>

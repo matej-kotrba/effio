@@ -40,6 +40,8 @@
 	let isFetchingNew = false;
 	let isEndOfChat = false;
 
+	let isFetchingTests = false;
+
 	// For owner of the group to share tests to the chat
 	let usersTests: Awaited<
 		ReturnType<ReturnType<typeof trpc>['protected']['getTestsOfUser']['query']>
@@ -164,9 +166,11 @@
 	}
 
 	async function getUsersTests() {
+		isFetchingTests = true;
 		usersTests = await trpc($page).protected.getTestsOfUser.query({
 			subcategoryId: data.subcategory.id
 		});
+		isFetchingTests = false;
 	}
 
 	onMount(async () => {
@@ -203,10 +207,7 @@
 			tests = fetchedTests;
 		}
 
-		setTimeout(() => {
-			scrollToBottom();
-			isFetchingNew = false;
-		}, 0);
+		isFetchingNew = false;
 
 		pusher = new Pusher(PUBLIC_PUSHER_KEY, {
 			cluster: PUBLIC_PUSHER_CLUSTER
@@ -225,6 +226,9 @@
 				scrollToBottom(false);
 			} catch {}
 		});
+
+		await tick();
+		scrollToBottom(false);
 	});
 
 	onDestroy(() => {
@@ -322,8 +326,12 @@
 					</button>
 				</div>
 				<ChatInput
+					on:testSubmit={() => {
+						getUsersTests();
+					}}
 					groupId={data.group.id}
 					subcategoryId={data.subcategory.id}
+					{isFetchingTests}
 					tests={usersTests.map((test) => {
 						return {
 							title: test.title,
