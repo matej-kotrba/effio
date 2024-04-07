@@ -40,6 +40,11 @@
 	let isFetchingNew = false;
 	let isEndOfChat = false;
 
+	// For owner of the group to share tests to the chat
+	let usersTests: Awaited<
+		ReturnType<ReturnType<typeof trpc>['protected']['getTestsOfUser']['query']>
+	> = [];
+
 	$: if (fetchNewMessagesDiv) {
 		addIntersection(fetchNewMessagesDiv);
 	}
@@ -158,6 +163,12 @@
 		}
 	}
 
+	async function getUsersTests() {
+		usersTests = await trpc($page).protected.getTestsOfUser.query({
+			subcategoryId: data.subcategory.id
+		});
+	}
+
 	onMount(async () => {
 		observer = new IntersectionObserver(
 			(entries) => {
@@ -172,6 +183,10 @@
 				threshold: 1
 			}
 		);
+
+		if (data.session.user?.id === data.group.ownerId) {
+			getUsersTests();
+		}
 
 		if (categoryId === undefined) {
 			goto('/dashboard/my-groups/' + data.group.slug);
@@ -307,6 +322,16 @@
 					</button>
 				</div>
 				<ChatInput
+					groupId={data.group.id}
+					subcategoryId={data.subcategory.id}
+					tests={usersTests.map((test) => {
+						return {
+							title: test.title,
+							testId: test.id,
+							isAdded: test.subcategories.length > 0,
+							subcategoryOnTestId: test.subcategories[0]?.id || undefined
+						};
+					})}
 					class="bottom-8 max-w-[800px]"
 					limit={{
 						min: CHAT_INPUT_MIN,
@@ -355,7 +380,7 @@
 											</h5>
 										{/if}
 										{#if message.content}
-											<p class="text-body2">
+											<p class="break-words text-body2">
 												{message.content}
 											</p>
 										{/if}

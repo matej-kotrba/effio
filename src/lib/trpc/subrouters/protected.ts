@@ -6,6 +6,8 @@ import { questionContentFunctions } from "~helpers/test/questionFunctions"
 import { ratelimit, trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { DB_STRING_REGEX } from "~helpers/constants"
 import { includedInGroupsSchema } from "~schemas/testValidation"
+import { PUSHER_APP_ID, PUSHER_SECRET } from "$env/static/private"
+import { PUBLIC_PUSHER_CLUSTER, PUBLIC_PUSHER_KEY } from "$env/static/public"
 
 const includedInGroupsInputSchema = z.object({ isPublic: z.boolean(), subcategorySelect: includedInGroupsSchema }).optional()
 
@@ -516,5 +518,96 @@ export const protectedRouter = router({
     return {
       success: true
     }
+  }),
+  getTestsOfUser: loggedInProcedure.input(z.object({
+    subcategoryId: z.string().optional()
+  })).query(async ({ ctx, input }) => {
+    return await ctx.prisma.test.findMany({
+      where: {
+        ownerId: ctx.userId
+      },
+      include: {
+        subcategories: {
+          where: {
+            subcategoryId: input.subcategoryId
+          },
+          select: {
+            id: true
+          }
+        }
+      }
+    })
+  }),
+  updateSubcategoryConnectionsToTest: loggedInProcedure.input(z.object({
+    groupId: z.string(),
+    subcategoryId: z.string(),
+    testsToConnect: z.array(z.object({ id: z.string(), title: z.string() })),
+    connectionsToDelete: z.array(z.object({ id: z.number(), testTitle: z.string(), subcategoryId: z.string() }))
+  })).mutation(async ({ ctx, input }) => {
+
+    const subcategory = await ctx.prisma.groupSubcategory.findUnique({
+      where: {
+        id: input.subcategoryId
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if (!subcategory) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Channel not found" })
+    }
+
+    const [a, b, c, d] = await ctx.prisma.$transaction([
+      ctx.prisma.groupSubcategoryOnTests.deleteMany({
+        where: {
+          id: {
+            in: input.connectionsToDelete.map(item => item.id)
+          }
+        },
+      }),
+
+      ctx.prisma.groupSubcategoryOnTests.createMany({
+        data: input.testsToConnect.map((item) => {
+          return {
+            testId: item.id,
+            subcategoryId: input.subcategoryId
+          }
+        })
+      }),
+      ctx.prisma.groupSubcategoryMessage.createMany({
+        data: input.testsToConnect.map((test) => {
+          return {
+            senderId: ctx.userId,
+            messageType: "MESSAGE",
+            title: "Added new test: " + test.title,
+            groupSubcategoryId: subcategory.id,
+            testId: test.id
+          }
+        })
+      }),
+      ctx.prisma.groupSubcategoryMessage.createMany({
+        data: input.connectionsToDelete.map((item) => {
+          return {
+            senderId: ctx.userId,
+            messageType: "MESSAGE",
+            title: "Removed test: " + item.testTitle,
+            groupSubcategoryId: item.subcategoryId,
+          }
+        })
+      })
+    ])
+
+    // const pusher = new Pusher({
+    //   appId: PUSHER_APP_ID,
+    //   key: PUBLIC_PUSHER_KEY,
+    //   secret: PUSHER_SECRET,
+    //   cluster: PUBLIC_PUSHER_CLUSTER,
+    //   useTLS: true,
+    // });
+
+    // await pusher.trigger(`group-${input.groupId}-${input.subcategoryId}`, "new-message", message);
+
+    return { success: true }
   })
 })

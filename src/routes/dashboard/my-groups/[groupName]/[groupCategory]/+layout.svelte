@@ -35,15 +35,15 @@
 				animateDirection = direction;
 				goto(`tests`);
 			}
-		},
-		{
-			title: 'Source',
-			slug: 'source',
-			onTabSelect: (direction) => {
-				animateDirection = direction;
-				goto(`source`);
-			}
 		}
+		// {
+		// 	title: 'Source',
+		// 	slug: 'source',
+		// 	onTabSelect: (direction) => {
+		// 		animateDirection = direction;
+		// 		goto(`source`);
+		// 	}
+		// }
 	];
 
 	beforeNavigate((event) => {
