@@ -51,11 +51,28 @@ export const groupMessagesRouter = router({
       })
     }
 
-    // const subcategory = await ctx.prisma.groupSubcategory.findUniqueOrThrow({
-    //   where: {
-    //     id: input.subcategoryId
-    //   }
-    // })
+    const subcategory = await ctx.prisma.groupSubcategory.findUnique({
+      where: {
+        id: input.subcategoryId
+      },
+      select: {
+        type: true
+      }
+    })
+
+    if (!subcategory) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Channel not found"
+      })
+    }
+
+    if (subcategory.type === "ANNOUCEMENT" && !isOwner) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not allowed to post in this channel"
+      })
+    }
 
     const message = await ctx.prisma.groupSubcategoryMessage.create({
       data: {

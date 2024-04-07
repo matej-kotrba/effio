@@ -68,6 +68,16 @@ export const ratelimit = {
     redis,
     prefix: "ratelimit:channel:delete",
     limiter: Ratelimit.slidingWindow(2, "10s")
+  }),
+  channelConnectionToTests: new Ratelimit({
+    redis,
+    prefix: "ratelimit:channel:connection:test",
+    limiter: Ratelimit.slidingWindow(2, "10s")
+  }),
+  testAttemptCreation: new Ratelimit({
+    redis,
+    prefix: "ratelimit:test:attempt",
+    limiter: Ratelimit.slidingWindow(2, "10s")
   })
 }
 

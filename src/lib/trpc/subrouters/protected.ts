@@ -476,6 +476,10 @@ export const protectedRouter = router({
     subcategoryId: z.string()
   })).mutation(async ({ ctx, input }) => {
     //TODO: Add check if user is actually in the group
+    const result = await trpcCheckForRateLimit("testAttemptCreation", ctx.userId, "attempting to take tests")
+    if (result) {
+      throw result
+    }
 
     const subcategoryOnTest = await ctx.prisma.groupSubcategoryOnTests.findUnique({
       where: {
@@ -545,18 +549,31 @@ export const protectedRouter = router({
     testsToConnect: z.array(z.object({ id: z.string(), title: z.string() })),
     connectionsToDelete: z.array(z.object({ id: z.number(), testTitle: z.string(), subcategoryId: z.string() }))
   })).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("channelConnectionToTests", ctx.userId, "connecting tests to channels")
+    if (result) {
+      throw result
+    }
 
     const subcategory = await ctx.prisma.groupSubcategory.findUnique({
       where: {
         id: input.subcategoryId
       },
       select: {
-        id: true
+        id: true,
+        group: {
+          select: {
+            ownerId: true
+          }
+        }
       }
     })
 
     if (!subcategory) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Channel not found" })
+    }
+
+    if (subcategory.group.ownerId !== ctx.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to connect tests to this channel" })
     }
 
     const [_, __, ...messages] = await ctx.prisma.$transaction([

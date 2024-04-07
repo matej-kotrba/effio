@@ -305,7 +305,7 @@
 						<p class="text-light_text_black_80 dark:text-dark_text_white_80">
 							This is the start of the <span
 								class="font-semibold text-light_text_black dark:text-dark_text_white"
-								>{data.group.name}</span
+								>{data.subcategory.name}</span
 							> channel.
 						</p>
 					</section>
@@ -329,6 +329,10 @@
 					on:testSubmit={() => {
 						getUsersTests();
 					}}
+					isDisabled={data.subcategory.type === 'ANNOUCEMENT'
+						? data.group.ownerId !== data.session.user?.id
+						: false}
+					isOwner={data.group.ownerId === data.session.user?.id}
 					groupId={data.group.id}
 					subcategoryId={data.subcategory.id}
 					{isFetchingTests}

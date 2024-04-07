@@ -31,6 +31,9 @@
 	export let groupId: string;
 	export let subcategoryId: string;
 	export let isFetchingTests: boolean = false;
+	export let isOwner: boolean;
+
+	export let isDisabled = false;
 
 	let testsToEdit = cloneDeep(tests);
 
@@ -120,72 +123,81 @@
 		rows="1"
 		minlength={limit?.min}
 		maxlength={limit?.max}
-		class="w-full dark:bg-dark_light_grey px-2 py-2 duration-150 rounded-l-md resize-none max-h-[380px] outline-none text-body1"
+		disabled={isDisabled}
+		class="w-full dark:bg-dark_light_grey px-2 py-2 duration-150 rounded-l-md resize-none max-h-[380px] outline-none text-body1 disabled:bg-light_grey dark:disabled:bg-dark_grey disabled:cursor-not-allowed"
 		on:input={onInput}
 		on:keydown={onKeyDown}
 	/>
-	<Popover.Root
-		bind:closeFocus={closeSubcategoryPopover}
-		onOutsideClick={() => {
-			testsToEdit = cloneDeep(tests);
-		}}
-	>
-		<Popover.Trigger>
-			<button
-				type="button"
-				on:click={(e) => {
-					e.preventDefault();
-				}}
-				class="grid h-[43px] bg-white dark:bg-dark_light_grey place-content-center group/container"
-			>
-				<iconify-icon
-					icon="fluent:form-new-20-filled"
-					class="text-3xl duration-100 text-light_text_black group-hover/container:text-light_primary dark:text-dark_text_white dark:group-hover/container:text-dark_primary"
-				/>
-			</button>
-		</Popover.Trigger>
-		<Popover.Content>
-			{#if isFetchingTests || isSavingSubcategories}
-				<div
-					class="absolute inset-0 grid bg-light_text_black_20 dark:bg-dark_text_white_20 place-content-center"
+	{#if isOwner}
+		<Popover.Root
+			bind:closeFocus={closeSubcategoryPopover}
+			onOutsideClick={() => {
+				testsToEdit = cloneDeep(tests);
+			}}
+		>
+			<Popover.Trigger>
+				<button
+					type="button"
+					on:click={(e) => {
+						e.preventDefault();
+					}}
+					class="grid h-[43px] bg-white dark:bg-dark_light_grey place-content-center group/container"
 				>
-					<Skewed />
-				</div>
-			{/if}
-			{#if testsToEdit.length === 0}
-				<p>Sorry, no tests available to connect.</p>
-			{:else}
-				{#each testsToEdit as test}
-					<div class="flex justify-between gap-4 max-h-[350px] overflow-y-auto">
-						<label
-							for={test.testId}
-							class="overflow-hidden whitespace-nowrap text-ellipsis"
-							>{test.title}</label
-						>
-						<input
-							class="checkbox checkbox-primary dark:checkbox-accent"
-							name={test.testId}
-							type="checkbox"
-							bind:checked={test.isAdded}
-						/>
+					<iconify-icon
+						icon="fluent:form-new-20-filled"
+						class="text-3xl duration-100 text-light_text_black group-hover/container:text-light_primary dark:text-dark_text_white dark:group-hover/container:text-dark_primary"
+					/>
+				</button>
+			</Popover.Trigger>
+			<Popover.Content>
+				{#if isFetchingTests || isSavingSubcategories}
+					<div
+						class="absolute inset-0 grid bg-light_text_black_20 dark:bg-dark_text_white_20 place-content-center"
+					>
+						<Skewed />
 					</div>
-				{/each}
-			{/if}
-			<div class="flex justify-end gap-2 mt-2">
-				<SimpleButton
-					variant="filled"
-					designType="primary"
-					type="submit"
-					onClick={onSubcategoryOnTestsSave}
-					disabled={isSavingSubcategories || isFetchingTests}>Save</SimpleButton
-				>
-			</div>
-		</Popover.Content>
-	</Popover.Root>
+				{/if}
+				{#if testsToEdit.length === 0}
+					<p>Sorry, no tests available to connect.</p>
+				{:else}
+					{#each testsToEdit as test}
+						<div
+							class="flex justify-between gap-4 max-h-[350px] overflow-y-auto"
+						>
+							<label
+								for={test.testId}
+								class="overflow-hidden whitespace-nowrap text-ellipsis"
+								>{test.title}</label
+							>
+							<input
+								class="checkbox checkbox-primary dark:checkbox-accent"
+								name={test.testId}
+								type="checkbox"
+								bind:checked={test.isAdded}
+							/>
+						</div>
+					{/each}
+				{/if}
+				<div class="flex justify-end gap-2 mt-2">
+					<SimpleButton
+						variant="filled"
+						designType="primary"
+						type="submit"
+						onClick={onSubcategoryOnTestsSave}
+						disabled={isSavingSubcategories || isFetchingTests}
+						>Save</SimpleButton
+					>
+				</div>
+			</Popover.Content>
+		</Popover.Root>
+	{/if}
 	<button
 		type="button"
+		disabled={isDisabled}
 		on:click={submitContent}
-		class="grid h-[43px] bg-white dark:bg-dark_light_grey place-content-center rounded-r-md px-2 group/container"
+		class="grid h-[43px] {isDisabled
+			? 'bg-light_grey dark:bg-dark_grey'
+			: 'bg-white dark:bg-dark_light_grey'} place-content-center rounded-r-md px-2 group/container disabled:cursor-not-allowed"
 	>
 		<iconify-icon
 			icon="mingcute:send-plane-fill"
