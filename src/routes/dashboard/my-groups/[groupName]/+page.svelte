@@ -719,7 +719,9 @@
 				{/if}
 			</Channel>
 		{/each}
-		<ChannelAddNew onClick={openNewChannelDialog} />
+		{#if data.group.ownerId === data.session?.user?.id}
+			<ChannelAddNew onClick={openNewChannelDialog} />
+		{/if}
 	</div>
 	<Space gap={16} />
 	<h4 class="text-h5">Users</h4>
