@@ -19,7 +19,7 @@
 </script>
 
 <div
-	class="w-full p-2 border rounded-lg border-light_text_black_20 bg-light_grey dark:bg-dark_grey dark:border-dark_text_white_20"
+	class="w-full h-full p-2 border rounded-lg border-light_text_black_20 bg-light_grey dark:bg-dark_grey dark:border-dark_text_white_20 grid grid-rows-[auto_auto_1fr_auto]"
 >
 	<a
 		href={data.link}
@@ -46,17 +46,16 @@
 		/>
 	</a>
 
+	<h5 class="mt-1 break-words break-all line-clamp-2">{data.name}</h5>
+	<div class="w-full h-full" />
 	<div class="flex justify-between">
-		<div class="mt-1">
-			<h5 class="leading-4">{data.name}</h5>
-			<span class="text-body2"
-				>{transformDate(data.addedAt, { time: true })}</span
-			>
-		</div>
+		<span class="self-end text-body2"
+			>{transformDate(data.addedAt, { time: true })}</span
+		>
 		<Tooltip.Root openDelay={300}>
 			<Tooltip.Trigger class="self-end">
 				<div>
-					<span class="font-semibold">{data.doneBy}</span>
+					<span class="self-end font-semibold">{data.doneBy}</span>
 					<span> / </span><span class="font-semibold"
 						>{data.totalNumberOfUsers}</span
 					>
