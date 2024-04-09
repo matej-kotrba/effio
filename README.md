@@ -31,23 +31,24 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
     - [x] Randomly ordered answers and questions
     - [x] Question navigation, showing marks and points earned
     - [x] Test overview page
-- [] Community place
-    - [] Showing tests
+- [ ] Community place
+    - [ ] Showing tests
         - [x] Infinite scrolling functionality
         - [x] Depending on release date and rating
         - [x] Showing relevant tests which were released recently
         - [ ] Showing user specific relevant tests    
 - [x] Test History
-- [ ] Groups
+- [x] Groups
     - [x] Creating of groups
     - [x] Inviting to groups
     - [x] Sharing tests in group
-    - [x] Graphs of tests taken by participants of group
+    - [x] Graphs of tests taken by participants of group and invidiual display of users results
     - [x] Group channel chat
-    - [ ] Editing, deleting groups and its channels
-    - [ ] Showing relevant information and overall better design
-- [x] Caching and security
+    - [x] Editing, deleting groups and its channels
+    - [x] Showing relevant information and overall better design
+- [ ] Caching and security
     - [x] Redis rate limitting
+    - [ ] Caching of the frequently used endpoints
 - [ ] Adding AI implementation
 
 ## Main goals
@@ -107,7 +108,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 <details>
   <summary><strong>Database and providers</strong></summary>
     
-- Planetscale - MySQL DB, connected via Prisma
+- Supabase - PostgreSQL, connected via Prisma
 - Vercel - application hosting, serverless function hosting (sort of), CDN distribution,
 - Cloudinary - image bucket
 - Pusher - takes care of web sockets needs
