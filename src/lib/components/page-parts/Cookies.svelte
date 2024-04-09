@@ -24,11 +24,11 @@
 {#if shouldDisplay}
 	<div
 		transition:fly={{ y: 100, duration: 200 }}
-		class="fixed -translate-x-1/2 bg-light_whiter bottom-8 left-1/2 z-[1000000] max-w-[32rem] p-4 rounded-2xl border border-light_text_black_20"
+		class="fixed -translate-x-1/2 bg-light_whiter bottom-8 left-1/2 z-[1000000] max-w-[32rem] p-4 rounded-2xl border border-light_text_black_20 dark:bg-dark_grey dark:border-dark_text_white_20"
 	>
 		<p>
 			This site uses cookies for it's functionality<span
-				class="text-light_text_black_60"
+				class="text-light_text_black_60 dark:text-dark_text_white_60"
 				>, if you disagree you cannot remain using this site.</span
 			>
 		</p>
