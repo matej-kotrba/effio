@@ -11,7 +11,10 @@ will be used in the test creator -->
 	import TrueFalseInput from '~components/testCreator/creatorInputs/TrueFalse.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { getTestObject } from '~stores/testObject';
-	import { titleSchema } from '~schemas/testValidation';
+	import {
+		POINTS_PER_QUESTION_DEFAULT,
+		titleSchema
+	} from '~schemas/testValidation';
 	import Connect from './creatorInputs/Connect.svelte';
 	import Write from './creatorInputs/Write.svelte';
 	import Fill from './creatorInputs/Fill.svelte';
@@ -64,7 +67,7 @@ will be used in the test creator -->
 		</p>
 		<div
 			class="justify-self-center hover:cursor-grab"
-			aria-label="drag-handle"
+			aria-label="Drag this element"
 			on:mousedown={dispatchDragEvent}
 			on:touchstart={dispatchDragEvent}
 		>

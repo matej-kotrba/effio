@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment';
 	import { applicationStates } from '~stores/applicationStates';
 	import { setTestObject } from '~stores/testObject';
+	import Cookies from '~components/page-parts/Cookies.svelte';
 	// import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
 
 	export let data;
@@ -54,5 +55,6 @@
 	<Toaster
 		containerStyle={'z-index: 10000000000000000000000000000; text-align: center;'}
 	/>
+	<Cookies />
 	<slot />
 </div>

@@ -200,6 +200,8 @@
 				scales: {
 					x: {
 						beginAtZero: true,
+						suggestedMax: 100,
+						suggestedMin: 0,
 						ticks: {
 							callback: function (value) {
 								return value + '%';

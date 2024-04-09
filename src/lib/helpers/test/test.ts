@@ -167,11 +167,14 @@ export function isTestValidAndSetErrorsToTestObject(inputsToValidate: IsTestVali
     result.errors.title = titleParse.error.errors[0].message
     isError = true
 
-    if (result.errors.title === "" && !titleRegexParse.success) {
+  }
+  else if (title !== undefined) {
+    if (!result.errors.title && !titleRegexParse.success) {
       result.errors.title = titleRegexParse.error.errors[0].message
       isError = true
     }
-  } else {
+  }
+  else {
     result.errors.title = ""
   }
 
