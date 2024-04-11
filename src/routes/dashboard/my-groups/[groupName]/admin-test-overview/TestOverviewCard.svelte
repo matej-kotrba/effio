@@ -46,7 +46,9 @@
 		/>
 	</a>
 
-	<h5 class="mt-1 break-words break-all line-clamp-2">{data.name}</h5>
+	<h5 class="mt-1 break-words break-all line-clamp-2 hyphens-auto">
+		{data.name}
+	</h5>
 	<div class="w-full h-full" />
 	<div class="flex justify-between">
 		<span class="self-end text-body2"

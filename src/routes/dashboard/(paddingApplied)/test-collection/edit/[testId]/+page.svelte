@@ -69,6 +69,9 @@
 						toast['success']('Test updated successfully');
 						goto('/dashboard/test-collection');
 					}
+					if (response['success'] === false) {
+						toast['error']('An error occurred while updating the test');
+					}
 				},
 				onErrorSaveToDB(e) {
 					if (e instanceof TRPCClientError) {

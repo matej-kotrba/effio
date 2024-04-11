@@ -3,7 +3,7 @@ import { loggedInProcedure, router } from "../setup"
 import type { Prisma, TagOnTests, TestType } from "@prisma/client"
 import { TRPCError } from "@trpc/server"
 import { questionContentFunctions } from "~helpers/test/questionFunctions"
-import { ratelimit, trpcCheckForRateLimit } from "~/lib/server/redis/redis"
+import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { DB_STRING_REGEX } from "~helpers/constants"
 import { includedInGroupsSchema } from "~schemas/testValidation"
 import { PUSHER_APP_ID, PUSHER_SECRET } from "$env/static/private"
@@ -46,7 +46,7 @@ export const protectedRouter = router({
     }
 
     const isPublic = input.includedInGroups ? input.includedInGroups.isPublic : true
-    const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect : []
+    const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect?.filter(item => item.id) : []
 
     const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
       where: {
@@ -197,7 +197,7 @@ export const protectedRouter = router({
       })
 
       const isPublic = input.includedInGroups ? input.includedInGroups.isPublic : true
-      const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect : []
+      const includedInGroups = input.includedInGroups ? input.includedInGroups.subcategorySelect?.filter(item => item.id) : []
 
       const linkedGroups = await ctx.prisma.groupSubcategoryOnTests.findMany({
         where: {
@@ -207,7 +207,7 @@ export const protectedRouter = router({
 
       // Groups
       const linkedGroupsToDelete = linkedGroups.filter(item => !includedInGroups.map(item => item.id).includes(item.subcategoryId))
-      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item.id))
+      const linkedGroupsToCreate = includedInGroups.filter(item => !linkedGroups.map(item => item.subcategoryId).includes(item.id) && item.id)
 
       const legitGroupsCount = await ctx.prisma.groupSubcategory.count({
         where: {
@@ -262,11 +262,10 @@ export const protectedRouter = router({
               messageType: "MESSAGE",
               title: "Added new test: " + input.title,
               groupSubcategoryId: subcategory.id,
-              testId: input.testGroupId
+              testId: input.testGroupId,
             }
           })
         }),
-
         ctx.prisma.groupSubcategoryMessage.createMany({
           data: linkedGroupsToDelete.map((item) => {
             return {

@@ -87,29 +87,20 @@
 			  })
 			: null;
 
-		if (usedSubcategories) {
-			const ids = userGroups
-				.map((item) => {
-					return item.groupsSubcategories.map((item) => item.id);
-				})
-				.flat();
-			const newCategories: GroupSelect[] = [];
-			usedSubcategories.map((item) => {
-				const id = ids.indexOf(item.subcategoryId);
-				if (id !== -1) {
-					newCategories[id] = {
-						id: item.subcategoryId,
-						numberOfTriesForUser: item.numberOfTries
-					};
+		if (usedSubcategories && usedSubcategories.length > 0) {
+			for (const i in userGroups) {
+				const subcategories = userGroups[i].groupsSubcategories;
+				for (const j in subcategories) {
+					const subcategory = subcategories[j];
+					const id = usedSubcategories.findIndex(
+						(item) => item.subcategoryId === subcategory.id
+					);
+					if (id !== -1) {
+						radioGroup[i].id = subcategory.id;
+						radioGroup[i].numberOfTries = usedSubcategories[id].numberOfTries;
+					}
 				}
-			});
-
-			radioGroup = newCategories.map((item) => {
-				return {
-					id: item.id,
-					numberOfTries: item.numberOfTriesForUser
-				};
-			});
+			}
 		}
 
 		groups = userGroups;
