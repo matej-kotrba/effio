@@ -51,7 +51,6 @@
 			null;
 
 		if (!testVersion) {
-			goto('/dashboard/my-groups');
 			return;
 		}
 
