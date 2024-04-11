@@ -150,8 +150,8 @@
 						? 'x'
 						: getMarkBasedOnPoints(
 								markSystem,
-								userResults[bestRatioResultIndex].maxPoints,
-								userResults[bestRatioResultIndex].userPoints
+								userResults[bestRatioResultIndex].userPoints,
+								userResults[bestRatioResultIndex].maxPoints
 						  ).name,
 				didTakenTest: usersTestRecords.length > 0
 			};
@@ -351,7 +351,7 @@
 				/>
 			</GraphContainer>
 			{#if markSystem}
-				{@const mark = getMarkBasedOnPoints(markSystem, data.avarage, 1)}
+				{@const mark = getMarkBasedOnPoints(markSystem, data.avarage, 100)}
 				{@const markIndex = getIndexOfMark(markSystem, mark)}
 				<GraphContainer class="grid grid-rows-[auto_1fr] col-span-3">
 					<span class="font-semibold">Avarage mark</span>
@@ -360,7 +360,7 @@
 						<span
 							class="text-center text-light_text_black_60 text-body2 dark:text-dark_text_white_60"
 							>{(markIndex > 0
-								? markSystem[markIndex].limit + '% - '
+								? (markSystem[markIndex - 1].limit || 0) - 1 + '% - '
 								: '100% - ') +
 								mark.limit +
 								'%'}</span

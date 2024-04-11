@@ -64,7 +64,7 @@
 			takenAt: record.createdAt,
 			points: `${record.userPoints} / ${record.test.totalPoints}`,
 			percentage: `${(
-				(record.test.totalPoints / record.userPoints) *
+				(record.userPoints / record.test.totalPoints) *
 				100
 			).toFixed(1)}%`,
 			mark: markSystem ? markSystem.name : 'x'
