@@ -26,18 +26,15 @@ export const load: ServerLoad = async (request) => {
 
   const viewCount = (await trpcServer(request)).getTestViewCount({ testId: id })
   const userViewCount = (await trpcServer(request)).getTestViewCount({ testId: id, userId: context.user?.id || undefined })
-  const relatedTests = (await trpcServer(request)).getPopularTests({ take: 6, timePeriod: "month", tags: returnedData.tags.map(tag => tag.tag.slug), shouldORtags: true, excludedTests: [id] })
 
   try {
     return {
       testContent: returnedData,
       viewCount: viewCount,
       userViewCount: userViewCount,
-      relatedTests: relatedTests
     }
   }
   catch (e) {
     throw redirect(307, "/?message=This test does not exist&type=error")
   }
-
 }

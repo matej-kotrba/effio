@@ -3,7 +3,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { UPSTASH_REDIS_URL, UPSTASH_REDIS_TOKEN } from "$env/static/private"
 import { TRPCError } from "@trpc/server";
 
-const redis = new Redis({
+export const redis = new Redis({
   url: UPSTASH_REDIS_URL,
   token: UPSTASH_REDIS_TOKEN,
 })

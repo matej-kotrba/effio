@@ -6,7 +6,8 @@ import { procedure, router } from "./setup";
 import { groupsRouter } from "./subrouters/groups";
 import { groupInvitesRouter } from "./subrouters/groupInvite";
 import { adminRouter } from "./subrouters/admin/router"
-import { QuestionTypeSlug, type QuestionType } from "@prisma/client"
+import { type Prisma, QuestionTypeSlug, type QuestionType } from "@prisma/client"
+import { redis } from "~/lib/server/redis/redis"
 
 type QuestionSlugs = keyof typeof QuestionTypeSlug
 
@@ -242,6 +243,40 @@ export const appRouter = router({
     excludedTests: z.array(z.string()).optional()
   })).query(async ({ ctx, input }) => {
 
+    type TestsType = Prisma.TestGetPayload<{
+      include: {
+        _count: {
+          select: {
+            stars: true
+          }
+        },
+        owner: true,
+        testVersions: true,
+        tags: {
+          include: {
+            tag: true
+          }
+        },
+        stars: {
+          select: {
+            userId: true,
+            testId: true
+          }
+        }
+      }
+    }>
+
+    const redisCacheString = `popular-tests${input.searchQuery || (input.tags && input.tags?.length > 0) ? "?" : ""}:${input.searchQuery ? input.searchQuery : ""}:${input.tags ? input.tags.join("&") : ""}:${input.cursor || 0}`
+
+    const cached = await redis.get(redisCacheString)
+
+    if (cached) {
+      return {
+        success: true,
+        tests: cached as TestsType[]
+      }
+    }
+
     const timeTable: {
       [key: string]: number
     } = {
@@ -323,10 +358,16 @@ export const appRouter = router({
       }
     })
 
+    console.log(tests)
+
     if (!tests) return {
       success: false,
       message: "No tests found"
     }
+
+    redis.set(redisCacheString, tests, {
+      ex: 20
+    })
 
     return {
       success: true,

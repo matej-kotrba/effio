@@ -2,8 +2,30 @@
 	import TestOverview from '~components/testTaking/TestOverview.svelte';
 	import { page } from '$app/stores';
 	import { NONAUTHENTICATED_NAV_HEIGHT } from '~components/page-parts/Navbar.svelte';
+	import { onMount } from 'svelte';
+	import { trpc } from '~/lib/trpc/client.js';
 
 	export let data;
+
+	let relatedTests: Awaited<
+		ReturnType<ReturnType<typeof trpc>['getPopularTests']['query']>
+	>['tests'] = [];
+
+	onMount(async () => {
+		const response = await trpc($page).getPopularTests.query({
+			take: 6,
+			timePeriod: 'month',
+			tags: data.testContent.tags.map((tag) => tag.tag.name),
+			shouldORtags: true,
+			excludedTests: [data.testContent.id]
+		});
+
+		console.log(response);
+
+		relatedTests = response.tests || [];
+
+		console.log(relatedTests);
+	});
 </script>
 
 <div
@@ -11,8 +33,8 @@
 	class="grid items-center"
 >
 	<TestOverview
-		relatedTests={data.relatedTests.tests
-			? data.relatedTests.tests.map((test) => {
+		relatedTests={relatedTests
+			? relatedTests.map((test) => {
 					return {
 						...test,
 						stars: test._count.stars,
