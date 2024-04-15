@@ -20,11 +20,7 @@
 			excludedTests: [data.testContent.id]
 		});
 
-		console.log(response);
-
 		relatedTests = response.tests || [];
-
-		console.log(relatedTests);
 	});
 </script>
 
