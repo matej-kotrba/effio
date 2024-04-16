@@ -74,7 +74,9 @@
 	let codeEditor: editor.IStandaloneCodeEditor;
 
 	let selectedTestIndex: number = 0;
-	let testsInfo: { result: string; passed: boolean }[] = [];
+	let testsInfo: { result: string; passed: boolean }[] = new Array(
+		($testObject.questions[0].content as ProgrammingQuestion).tests.length
+	).fill({ result: '', passed: false });
 
 	let testsCheckedCount = 0;
 	let activateConfetti: boolean = false;

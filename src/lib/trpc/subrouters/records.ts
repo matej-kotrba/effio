@@ -168,7 +168,15 @@ export const recordsRouter = router({
         userId: input.id
       },
       include: {
-        test: true
+        test: {
+          include: {
+            testGroup: {
+              select: {
+                type: true,
+              }
+            }
+          }
+        }
       },
       orderBy: {
         createdAt: "desc"

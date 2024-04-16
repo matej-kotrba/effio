@@ -199,6 +199,7 @@
 		<div class="w-full grid__container">
 			{#each recentTests.data as test}
 				<CardAlternative
+					type={test.type}
 					navigationLink={`/tests/${test.id}`}
 					data={{
 						id: test.id,

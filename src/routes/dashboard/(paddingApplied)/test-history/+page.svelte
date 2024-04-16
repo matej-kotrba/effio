@@ -9,9 +9,9 @@
 
 	export let data;
 
-	type RecordType = TestRecord & {
-		test: TestVersion;
-	};
+	type RecordType = Awaited<
+		ReturnType<ReturnType<typeof trpc>['records']['getUserRecords']['query']>
+	>['records'][number];
 
 	const RECODS_PER_PAGE = 10;
 	let currentPage = 0;
@@ -79,7 +79,12 @@
 							goto('/dashboard/test-history/records/' + record.id);
 						}}
 					>
-						<td>{record.title}</td>
+						<td>
+							{#if record.test.testGroup.type === 'PROGRAMMING'}
+								<iconify-icon icon="fa-solid:tools" class="" />
+							{/if}
+							{record.title}</td
+						>
 						<td>{transformDate(record.createdAt)}</td>
 						<td class="max-w-lg overflow-hidden text-ellipsis whitespace-nowrap"
 							>{record.description}</td
