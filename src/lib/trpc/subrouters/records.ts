@@ -218,7 +218,7 @@ export const recordsRouter = router({
                     tag: true
                   }
                 }
-              }
+              },
             }
           }
         },

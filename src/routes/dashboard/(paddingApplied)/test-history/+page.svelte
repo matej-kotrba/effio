@@ -79,7 +79,7 @@
 							goto('/dashboard/test-history/records/' + record.id);
 						}}
 					>
-						<td>
+						<td class="flex items-center gap-2">
 							{#if record.test.testGroup.type === 'PROGRAMMING'}
 								<iconify-icon icon="fa-solid:tools" class="" />
 							{/if}
