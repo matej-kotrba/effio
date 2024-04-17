@@ -91,6 +91,12 @@
 
 		try {
 			// Check if input is valid and not an expression
+			// Trying if the stringified input is valid JSON
+			JSON.parse(JSON.stringify(inputCode));
+			// Checking if '' are being used instead of ""
+			if (inputCode.at(0) === "'" && inputCode.at(-1) === "'") {
+				throw new Error('Use "" instead of \'\'');
+			}
 			const exec = sandbox.compile(`return ${inputCode}`);
 			const scriptResult = exec().run();
 			if (
