@@ -9,13 +9,12 @@
 - [About](#about)
 - [Features](#features)
 - [Goals](#goals)
-- [Author](#author)
 - [Consultants](#consultants)
 - [Techstack](#techstack)
 
 ## About
 
-Effio is an online tool for creating tests and quizes. Apart from only creating, Effio is designed to work as whole platform for taking tests, sharing them in groups and being able to export and import them to different formats with addition of few unique Effio question types
+Effio is an online tool for creating tests and quizes. Apart from only creating, Effio is designed to work as whole platform for taking tests, sharing them in groups and being able to export and import them to different formats with addition of few unique Effio question types. Whole project is being developed by Matěj Kotrba.
 
 ## Features
 
@@ -46,21 +45,16 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
     - [x] Group channel chat
     - [x] Editing, deleting groups and its channels
     - [x] Showing relevant information and overall better design
-- [ ] Caching and security
+- [x] Caching and security
     - [x] Redis rate limitting
-    - [ ] Caching of the frequently used endpoints
+    - [x] Caching of the frequently used endpoints
 - [ ] Adding AI implementation
 
-## Main goals
+## Goals
 - [x] Develop web application for creating, exporting and importing online tests in GIFT format
 - [x] Eneble users to take tests and view results
 - [x] Create community place where you can publish your own tests and browse tests of others
 - [x] Make fully scalable, typesafe and performant application
-
-
-## Author
-### Matěj Kotrba
-
 
 ## Consultants
 ### [Mgr. Marek Lučný](https://github.com/superucitelka)
@@ -68,7 +62,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 
 ## Techstack
 #### About techstack
-- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create typesafe serverless application using cloud based providers without need of own server
+- This techstack is inspired by [Theo's](https://www.youtube.com/@t3dotgg) T3 stack with replacement of Next with SvelteKit, main purpose of this techstack is to create typesafe serverless application using cloud based providers without need of self hosted (maintained) server
 
 > “The name is Sveltegen” - @ThePrimeagen
 
@@ -79,6 +73,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 
 - Svelte
     - Svelte French Toast
+    - Shadcn Svelte
 - Tailwind
     - Daisy UI
     - tailwind-merge
@@ -112,6 +107,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 - Vercel - application hosting, serverless function hosting (sort of), CDN distribution,
 - Cloudinary - image bucket
 - Pusher - takes care of web sockets needs
+- Upstash Redis - caching and rate limitting
 </details>
 
 <details>
@@ -133,6 +129,7 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 - August -> October - Creating more input types, darkmode, refactoring and leveling up quality of life in app
 - November -> December - Programming test, many bug fixes, refactoring, comments and making quality of live features
 - December -> January - bug fixes, polishing app and writing documentation
+- January -> Now - better group options and implementation, optimizations, refactoring, polishing and bug fixing
 
 ## Sources
 - Youtube
@@ -140,9 +137,22 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
   - [Theo Browne](https://www.youtube.com/@t3dotgg)
   - [Huntabyte](https://www.youtube.com/@Huntabyte)
   - [Matt Pocock](https://www.youtube.com/@mattpocockuk)
+  - [Josh](https://www.youtube.com/@joshtriedcoding)
 - Docs
   - [Svelte](https://svelte.dev/)
   - [SvelteKit](https://kit.svelte.dev/)
   - [tRPC](https://trpc.io/)
   - [Prisma](https://www.prisma.io/)
   - [Auth.js](https://authjs.dev/)
+
+## Try it yourself
+
+First thing you need to get started is to clone this repo and run
+```bash
+pnpm i
+```
+then there is file called `.env-sample`, rename it to `.env` and fill all the enviromental variables with your own keys.
+
+Also to push database schema to your own DB use `npx prisma migrate dev`
+
+You are good to go! 🥳🥳
