@@ -14,8 +14,6 @@ export async function POST(event: RequestEvent) {
     markSystem: data.markSystem || undefined,
   }
 
-  console.log(props)
-
   const response = isTestValidAndSetErrorsToTestObject(props)
 
   return json(response)

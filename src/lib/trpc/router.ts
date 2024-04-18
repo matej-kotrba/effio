@@ -358,8 +358,6 @@ export const appRouter = router({
       }
     })
 
-    console.log(tests)
-
     if (!tests) return {
       success: false,
       message: "No tests found"

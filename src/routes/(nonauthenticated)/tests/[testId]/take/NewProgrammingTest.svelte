@@ -206,6 +206,12 @@
 			window.removeEventListener('resize', () => codeEditor.layout());
 		}
 		codeEditor?.dispose();
+		if (worker) {
+			try {
+				worker.removeEventListener('message', onWorkerMessage);
+				worker.terminate();
+			} catch (e) {}
+		}
 	});
 </script>
 

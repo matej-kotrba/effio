@@ -757,7 +757,7 @@ export const questionContentFunctions: QuestionContentTransformation = {
       return question
     },
     "onActionWithDB": async (operation, question) => {
-      console.log(question, question.imageFile)
+      // console.log(question, question.imageFile)
       return uploadImageAction(operation, question)
     }
   },

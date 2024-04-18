@@ -46,6 +46,11 @@
 	import MarkSystemDropdown from '~components/collapsibles/markSystem/markSystemDropdown.svelte';
 
 	export let data;
+
+	function retypeProgrammingContent(content: unknown) {
+		if (!content) return null;
+		return content as ProgrammingQuestion;
+	}
 </script>
 
 <Back link={'/dashboard/test-history'} />
@@ -143,7 +148,19 @@
 					</a>
 				{/if}
 			{:else if res.record.test.testGroup.type === 'PROGRAMMING'}
-				aaa
+				<p>
+					Completed using {retypeProgrammingContent(
+						res.record.questionRecords[0].content
+					)?.code.length || 'unknown'} characters
+				</p>
+				<Space gap={10} />
+
+				<a
+					href={$page.url + '/detail'}
+					class="mt-2 btn btn-outline dark:text-dark_text_white dark:outline-dark_text_white"
+				>
+					Details
+				</a>
 			{/if}
 		</div>
 	{/if}
