@@ -15,6 +15,7 @@
 		checkMarkSystem,
 		isMarkSystemCorrect
 	} from '../+page.svelte';
+	import { test } from 'vitest';
 
 	export let data;
 
@@ -85,54 +86,62 @@
 		);
 	})}
 	{#if res.record}
-		{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
-		{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
-			{@const maxPoints = res.record['questionRecords'].reduce((acc, item) => {
-				return acc + item.question.points;
-			}, 0)}
-			{@const userPoints = res.record['questionRecords'].reduce((acc, item) => {
-				return acc + item.userPoints;
-			}, 0)}
-			<TestTakingNavigation
-				session={data.session}
-				{questionContainerRef}
-				result={questionData}
-				{maxPoints}
-				{userPoints}
-				mark={isMarkSystemCorrect(marks)
-					? getMarkBasedOnPoints(marks, userPoints, maxPoints).name
-					: undefined}
-				bind:markedIndex={higlightedInputIndex}
+		{#if res.record.test.testGroup.type === 'REGULAR'}
+			{@const marks = checkMarkSystem(res.record['test']['markSystemJSON'])}
+			{#if questionData !== undefined && questionData.some((item) => item === undefined) === false && marks !== undefined}
+				{@const maxPoints = res.record['questionRecords'].reduce(
+					(acc, item) => {
+						return acc + item.question.points;
+					},
+					0
+				)}
+				{@const userPoints = res.record['questionRecords'].reduce(
+					(acc, item) => {
+						return acc + item.userPoints;
+					},
+					0
+				)}
+				<TestTakingNavigation
+					session={data.session}
+					{questionContainerRef}
+					result={questionData}
+					{maxPoints}
+					{userPoints}
+					mark={isMarkSystemCorrect(marks)
+						? getMarkBasedOnPoints(marks, userPoints, maxPoints).name
+						: undefined}
+					bind:markedIndex={higlightedInputIndex}
+				/>
+			{/if}
+			<DashboardTitle
+				title={res.record.title}
+				subtitle={res.record.description}
 			/>
-		{/if}
-		<DashboardTitle
-			title={res.record.title}
-			subtitle={res.record.description}
-		/>
 
-		{#if $testObject && questionData}
-			<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
-				{#each res.record['questionRecords'] as question, index}
-					<Input
-						testObject={$testObject}
-						questionIndex={index}
-						class={`border-2 border-solid ${
-							$testObject.questions[index].errors.content
-								? ' border-error'
-								: 'border-transparent'
-						}`}
-						resultFormat={questionData[index]}
-						isHighlighted={index === higlightedInputIndex}
-						points={question.question.points
-							? {
-									got: question.userPoints,
-									max: question.question.points
-							  }
-							: undefined}
-					/>
-					<Space gap={20} />
-				{/each}
-			</div>
-		{/if}
+			{#if $testObject && questionData}
+				<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
+					{#each res.record['questionRecords'] as question, index}
+						<Input
+							testObject={$testObject}
+							questionIndex={index}
+							class={`border-2 border-solid ${
+								$testObject.questions[index].errors.content
+									? ' border-error'
+									: 'border-transparent'
+							}`}
+							resultFormat={questionData[index]}
+							isHighlighted={index === higlightedInputIndex}
+							points={question.question.points
+								? {
+										got: question.userPoints,
+										max: question.question.points
+								  }
+								: undefined}
+						/>
+						<Space gap={20} />
+					{/each}
+				</div>
+			{/if}
+		{:else if res.record.test.testGroup.type === 'PROGRAMMING'}{/if}
 	{/if}
 {/await}
