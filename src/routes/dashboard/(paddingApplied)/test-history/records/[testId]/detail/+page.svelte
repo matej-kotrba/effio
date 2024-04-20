@@ -1,5 +1,4 @@
 <script lang="ts">
-	import DashboardTitle from '~components/page-parts/DashboardTitle.svelte';
 	import {
 		getMarkBasedOnPoints,
 		initializeTestToTestStore
@@ -15,7 +14,11 @@
 		checkMarkSystem,
 		isMarkSystemCorrect
 	} from '../+page.svelte';
-	import { test } from 'vitest';
+	import ScrollToTop from '~components/buttons/ScrollToTop.svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import type { editor } from 'monaco-editor';
+	import { browser } from '$app/environment';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data;
 
@@ -24,6 +27,13 @@
 	let questionContainerRef: HTMLDivElement | null = null;
 
 	let higlightedInputIndex: number | null = null;
+
+	function retypedProgrammingTestContent(
+		res: Awaited<typeof data.streaming.record>['record']
+	) {
+		if (!res) return null;
+		return res.questionRecords[0].content as ProgrammingQuestion;
+	}
 
 	data.streaming.record.then((data) => {
 		if (!data.record) {
@@ -66,8 +76,68 @@
 			// questions: data.record.questionRecords.map((item) => item.content)
 		});
 	});
+
+	let monaco: typeof import('monaco-editor') | null;
+	let codeEditorContainer: HTMLDivElement;
+	let codeEditor: editor.IStandaloneCodeEditor;
+
+	$: {
+		if (codeEditorContainer && codeEditor) {
+			codeEditorContainer.style.height = `${
+				codeEditor.getScrollHeight() + 50
+			}px`;
+			codeEditor.layout();
+		}
+	}
+
+	$: {
+		if (codeEditor) {
+			codeEditor.updateOptions({
+				theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light'
+			});
+		}
+	}
+
+	onMount(async () => {
+		monaco = await import('monaco-editor');
+
+		await Promise.all([
+			import('monaco-editor/esm/vs/language/typescript/ts.worker?worker')
+		]).then(([javaScriptWorker]) => {
+			self.MonacoEnvironment = {
+				getWorker(_, label) {
+					return new javaScriptWorker.default();
+				}
+			};
+		});
+		codeEditor = monaco.editor.create(codeEditorContainer, {
+			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\treturn;\n}\n\nreturn solution(data)`,
+			language: 'javascript',
+			theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light',
+			contextmenu: false,
+			readOnly: true
+		});
+
+		codeEditor.onKeyUp(() => {
+			codeCharacterCount = codeEditor.getValue().length;
+		});
+
+		window.addEventListener('resize', () => {
+			codeEditor.layout();
+		});
+	});
+
+	$: codeCharacterCount = codeEditor?.getValue().length;
+
+	onDestroy(() => {
+		if (browser) {
+			window.removeEventListener('resize', () => codeEditor.layout());
+		}
+		codeEditor?.dispose();
+	});
 </script>
 
+<ScrollToTop />
 <Back link={'/dashboard/test-history'} />
 {#await data.streaming.record}
 	<div class="flex justify-center">
@@ -113,13 +183,12 @@
 					bind:markedIndex={higlightedInputIndex}
 				/>
 			{/if}
-			<DashboardTitle
-				title={res.record.title}
-				subtitle={res.record.description}
-			/>
 
 			{#if $testObject && questionData}
-				<div class="mx-auto max-w-[650px]" bind:this={questionContainerRef}>
+				<div class="mx-auto max-w-[750px]" bind:this={questionContainerRef}>
+					<h3 class="font-semibold text-h4">{res.record.title}</h3>
+					<p>{res.record.description}</p>
+					<Space gap={40} />
 					{#each res.record['questionRecords'] as question, index}
 						<Input
 							testObject={$testObject}
@@ -142,6 +211,20 @@
 					{/each}
 				</div>
 			{/if}
-		{:else if res.record.test.testGroup.type === 'PROGRAMMING'}{/if}
+		{:else if res.record.test.testGroup.type === 'PROGRAMMING'}
+			{@const content = retypedProgrammingTestContent(res.record)}
+			<div class="mx-auto max-w-[750px]">
+				<div>
+					<h3 class="font-semibold text-h4">
+						{res.record.questionRecords[0].question.title}
+					</h3>
+					<p>{content?.description}</p>
+				</div>
+				<div>
+					<div bind:this={codeEditorContainer} />
+					<p>Used characters: {content?.code.length}</p>
+				</div>
+			</div>
+		{/if}
 	{/if}
 {/await}

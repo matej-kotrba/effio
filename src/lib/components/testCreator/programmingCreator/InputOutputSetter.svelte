@@ -10,6 +10,7 @@
 	import Sandbox from '@nyariv/sandboxjs';
 	import { gsap } from 'gsap';
 	import { Flip } from 'gsap/dist/Flip';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let questionIndex: number;
 	export let title = '';
@@ -214,6 +215,22 @@
 		// });
 	}
 
+	$: {
+		if (inputEditor) {
+			inputEditor.updateOptions({
+				theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light'
+			});
+		}
+	}
+
+	$: {
+		if (outputEditor) {
+			outputEditor.updateOptions({
+				theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light'
+			});
+		}
+	}
+
 	onMount(async () => {
 		monaco = await import('monaco-editor');
 
@@ -229,13 +246,13 @@
 		inputEditor = monaco.editor.create(inputEditorContainer, {
 			value: '58',
 			language: 'json',
-			theme: 'vs-dark',
+			theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light',
 			contextmenu: false
 		});
 		outputEditor = monaco.editor.create(outputEditorContainer, {
 			value: '',
 			language: 'json',
-			theme: 'vs-dark',
+			theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light',
 			contextmenu: false
 		});
 

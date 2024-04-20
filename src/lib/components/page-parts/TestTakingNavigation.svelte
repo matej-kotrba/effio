@@ -4,6 +4,8 @@
 	import type { Session } from '@auth/core/types';
 	import Space from '~components/separators/Space.svelte';
 	import * as Tooltip from '~components/ui/tooltip/index';
+	import IconButton from '~components/buttons/IconButton.svelte';
+	import { goto } from '$app/navigation';
 
 	const testObject = getTestObject();
 
@@ -36,6 +38,28 @@
 
 {#if result}
 	<div class="mb-2">
+		<div class="flex gap-1" in:fade>
+			<IconButton
+				onClick={() => {
+					goto('/community');
+				}}
+				icon="fluent:people-community-24-filled"
+				buttonClasses="text-2xl"
+				class="p-3"
+				tooltip="Go to community"
+			/>
+			{#if session?.user}
+				<IconButton
+					onClick={() => {
+						goto('/dashboard');
+					}}
+					icon="foundation:graph-pie"
+					buttonClasses="text-2xl"
+					class="p-3"
+					tooltip="Go to dashboard"
+				/>
+			{/if}
+		</div>
 		{#if maxPoints !== null && userPoints !== null}
 			<h3 class="text-h4">
 				{premarkText}<span class="font-semibold">{mark || ''}</span>, {userPoints}/{maxPoints}
@@ -82,22 +106,6 @@
 				</Tooltip.Root>
 			{/each}
 		</div>
-	</div>
-	<div class="sticky left-0 z-[100] flex gap-2 top-2" in:fade>
-		<a href="/community">
-			<button
-				class="duration-100 shadow-md btn hover:bg-light_whiter hover:border-light_whiter dark:bg-dark_grey dark:border-dark_grey dark:text-dark_text_white dark:hover:bg-dark_light_grey"
-				>Back to community</button
-			>
-		</a>
-		{#if session?.user}
-			<a href="/dashboard">
-				<button
-					class="duration-100 shadow-md btn hover:bg-light_whiter hover:border-light_whiter dark:bg-dark_grey dark:border-dark_grey dark:text-dark_text_white dark:hover:bg-dark_light_grey"
-					>Back to dashboard</button
-				>
-			</a>
-		{/if}
 	</div>
 {/if}
 <Space gap={20} />

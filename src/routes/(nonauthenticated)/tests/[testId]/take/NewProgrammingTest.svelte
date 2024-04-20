@@ -17,6 +17,7 @@
 	import { handwrite } from '~use/handwrite';
 	import BasicButton from '~components/buttons/BasicButton.svelte';
 	import Confetti from 'svelte-confetti';
+	import { applicationStates } from '~stores/applicationStates';
 
 	export let data: {
 		testContent: Prisma.TestGetPayload<{
@@ -168,6 +169,14 @@
 		codeEditor.layout();
 	}
 
+	$: {
+		if (codeEditor) {
+			codeEditor.updateOptions({
+				theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light'
+			});
+		}
+	}
+
 	onMount(async () => {
 		monaco = await import('monaco-editor');
 
@@ -186,7 +195,7 @@
 		codeEditor = monaco.editor.create(codeEditorContainer, {
 			value: `/* Please keep the shape of the code like templated, \nfunction name is up to you and can be changed at any time but \nit has to be returned like that "return solution(data)"\ndata - has all the values from test cases */\n\n// !!!IMPORTANT!!! Due to the compiler limitations inline "if" statements\n// do NOT work as expected, use {} or ; at the end of line\n\nfunction solution(data) {\n\treturn;\n}\n\nreturn solution(data)`,
 			language: 'javascript',
-			theme: 'vs-dark',
+			theme: $applicationStates.darkMode.isDarkMode ? 'vs-dark' : 'vs-light',
 			contextmenu: false
 		});
 
