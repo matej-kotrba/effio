@@ -20,6 +20,7 @@
 	import { TRPCClientError } from '@trpc/client';
 	import { createTRPCErrorNotification } from '~utils/notification';
 	import Invalidating from '~components/portals/Invalidating.svelte';
+	import MetaTags from '~components/other/MetaTags.svelte';
 
 	export let data;
 
@@ -112,6 +113,7 @@
 	});
 </script>
 
+<MetaTags data={data.meta} />
 {#if isDeletingTest}
 	<ScreenCover />
 {/if}

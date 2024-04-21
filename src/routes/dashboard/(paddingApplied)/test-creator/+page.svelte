@@ -31,6 +31,7 @@
 	import Tabs from '~components/navigation/Tabs.svelte';
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
+	import MetaTags from '~components/other/MetaTags.svelte';
 
 	export let data;
 
@@ -240,6 +241,8 @@
 		</button>
 	</div>
 {/if}
+
+<MetaTags data={data.meta} />
 
 <div class="max-w-[98vw] text-sm breadcrumbs">
 	<ul class="">

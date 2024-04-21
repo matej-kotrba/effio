@@ -14,10 +14,10 @@
 	import Space from '~components/separators/Space.svelte';
 	import { browser } from '$app/environment';
 	import Counter from '~components/informatic/Counter.svelte';
-	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
 	import Carousel from '~components/containers/Carousel.svelte';
 	import Separator from '~components/separators/Separator.svelte';
 	import Star from '~components/globals/Star.svelte';
+	import MetaTags from '~components/other/MetaTags.svelte';
 
 	export let data;
 
@@ -426,6 +426,8 @@
 	}
 </script>
 
+<MetaTags data={data.meta} />
+
 {#if data.recentlyCompletedTests && data.recentlyCompletedTests.length > 0}
 	<h3 class="font-semibold text-h4">Recently taken tests</h3>
 	<Carousel
@@ -441,39 +443,7 @@
 			};
 		})}
 	/>
-	<!-- {#each data.recentlyCompletedTests as test} -->
-	<!-- <CardAlternative
-				isStarredDefault={test.test.testGroup.stars !== undefined &&
-					test.test.testGroup.stars.length > 0}
-				type={test.test.testGroup.type}
-				navigationLink={`/tests/${test.test.testGroup.id}`}
-				canStarTest={test.test.testGroup.stars !== undefined &&
-					!!$page.data.session?.user?.id &&
-					$page.data.session.user.id !== test.test.testGroup.ownerId}
-				data={{
-					...test.test.testGroup,
-
-					stars: test.test.testGroup._count.stars,
-					tags: test.test.testGroup.tags.map((item) => item.tag)
-				}}
-			/> -->
-	<!-- {/each} -->
 {/if}
-<!-- <div class="flex flex-wrap justify-center gap-4 xs:justify-start">
-	<OverviewLink
-		icon="gridicons:create"
-		title="Create a new test"
-		link="/dashboard/test-creator"
-		bgImage="/imgs/svgs/overview/test.png"
-	/>
-	<OverviewLink
-		icon="fluent:people-community-20-filled"
-		title="Visit community"
-		link="/community"
-		bgImage="/imgs/svgs/overview/community.png"
-	/>
-</div> -->
-
 <svelte:window on:mousemove={onMouseMove} />
 
 <Space gap={30} />

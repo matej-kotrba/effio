@@ -3,7 +3,6 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import type { TestRecord, TestVersion } from '@prisma/client';
 	import { goto } from '$app/navigation';
 	import { transformDate } from '~/lib/utils/date.js';
 
