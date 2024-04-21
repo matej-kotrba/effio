@@ -21,6 +21,7 @@
 	import { crossfade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { intersection } from '~use/dropdown.js';
+	import MetaTags from '~components/other/MetaTags.svelte';
 
 	const [send, receive] = crossfade({
 		duration: 150
