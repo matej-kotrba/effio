@@ -45,6 +45,7 @@
 	import User from './User.svelte';
 	import { Switch } from '~components/ui/switch/index';
 	import * as DropdownMenu from '~components/ui/dropdown-menu/index';
+	import MetaTags from '~components/other/MetaTags.svelte';
 
 	export let data;
 

@@ -206,6 +206,7 @@
 	}
 </script>
 
+<MetaTags data={data.meta} />
 <div
 	class="sticky top-[-1px] z-10 w-full py-2 isolate"
 	use:intersection={{
