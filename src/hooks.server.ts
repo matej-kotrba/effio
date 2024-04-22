@@ -38,14 +38,13 @@ const handleTRPCContext: Handle = createTRPCHandle({
 const prismaAdapter = PrismaAdapter(prisma)
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
-prismaAdapter.createUser = async (data) => {
-  const user = await prisma.user.create({ data })
-  await prisma.user.update({
-    where: {
-      id: user.id
-    },
+prismaAdapter.createUser = (data) => {
+  const randomUUID = crypto.randomUUID()
+  return prisma.user.create({
     data: {
-      slug: tranformString(user?.name || "")
+      ...data,
+      id: randomUUID,
+      slug: tranformString(`${data?.name || ""}#${randomUUID.split("-")[0]}`)
     }
   })
 }
