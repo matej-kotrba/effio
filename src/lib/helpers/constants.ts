@@ -1,7 +1,7 @@
 import type { GroupSubcategoryType } from "@prisma/client"
 
 // Matchers
-export const USER_SLUG_MATCHER = /^@[A-Za-z0-9-]+#[A-Za-z0-9]{4}$/
+export const USER_SLUG_MATCHER = /^[A-Za-z0-9-]+@[A-Za-z0-9]{4}$/
 
 // Image sizes
 export const IMAGE_IMPORT_SIZE_IN_MB = 2

@@ -373,14 +373,33 @@ export const appRouter = router({
       tests
     }
   }),
-  getUserBySlug: procedure.input(z.string().regex(USER_SLUG_MATCHER)).query(async ({ ctx }) => {
-    // Slug is in format of `@{string}`, spaces replaced by "-"
+  getUserBySlug: procedure.input(z.string().regex(USER_SLUG_MATCHER)).query(async ({ ctx, input }) => {
+    // Slug is in format of `{string}[n]@{string}[4]`, spaces replaced by "-"
 
-    // const user = await ctx.prisma.user.findUnique({
-    //   where: {
+    const user = await ctx.prisma.user.findUnique({
+      where: {
+        slug: input
+      },
+    })
 
-    //   }
-    // })
+    const testsCreated = ctx.prisma.test.count({
+      where: {
+        ownerId: user?.id,
+        published: true
+      }
+    })
+
+    const starsApplied = ctx.prisma.testStar.count({
+      where: {
+        userId: user?.id
+      }
+    })
+
+    return {
+      user,
+      testsCreated,
+      starsApplied
+    }
   }),
   protected: protectedRouter,
   records: recordsRouter,
