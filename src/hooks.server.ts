@@ -11,6 +11,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { GITHUB_ID, GITHUB_SECRET, AUTH_SECRET, GOOGLE_ID, GOOGLE_SECRET } from "$env/static/private"
 import type { Session, User } from "@auth/core/types";
 import type { AdapterUser } from "@auth/core/adapters";
+import { tranformString } from "~utils/string"
 
 const handleTRPCContext: Handle = createTRPCHandle({
   router: appRouter,
@@ -35,6 +36,19 @@ const handleTRPCContext: Handle = createTRPCHandle({
 })
 
 const prismaAdapter = PrismaAdapter(prisma)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+prismaAdapter.createUser = async (data) => {
+  const user = await prisma.user.create({ data })
+  await prisma.user.update({
+    where: {
+      id: user.id
+    },
+    data: {
+      slug: tranformString(user?.name || "")
+    }
+  })
+}
 // prismaAdapter.linkAccount = (data => {
 //   })
 //   return prisma.account.create({
@@ -74,7 +88,7 @@ const handleAuth: Handle = SvelteKitAuth({
     },
     signIn: async ({ account }) => {
       return Promise.resolve(true)
-    }
+    },
   },
 })
 

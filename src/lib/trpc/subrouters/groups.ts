@@ -7,19 +7,8 @@ import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { channelCreateSchema, channelDeleteSchema, channelUpdateSchema } from "~/routes/dashboard/my-groups/schemas"
 import { channelNameSchema } from "~schemas/testValidation"
 import { deleteImageFromCloudinary } from "~/lib/server/cloudinary/utils"
+import { tranformString } from "~utils/string"
 
-function tranformString(text: string) {
-  let transformedText = ""
-  for (const char of text.toLowerCase().replace(/ /g, "-")) {
-    if (char.match(/[a-zA-Z0-9-]/)) {
-      transformedText += char
-    }
-    else {
-      transformedText += char.charCodeAt(0)
-    }
-  }
-  return transformedText
-}
 
 function transformStringIntoSlug(text: string, username: string) {
   const transformedText = tranformString(text)

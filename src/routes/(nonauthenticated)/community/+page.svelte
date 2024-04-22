@@ -67,7 +67,7 @@
 	async function getPopularTests() {
 		const fetchedData = await trpc($page).getPopularTests.query({
 			take: REQUEST_AMOUNT,
-			timePeriod: 'two-weeks'
+			timePeriod: 'month'
 		});
 
 		if (fetchedData.success === true && fetchedData.tests !== undefined) {

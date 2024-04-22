@@ -8,6 +8,7 @@ import { groupInvitesRouter } from "./subrouters/groupInvite";
 import { adminRouter } from "./subrouters/admin/router"
 import { type Prisma, QuestionTypeSlug, type QuestionType } from "@prisma/client"
 import { redis } from "~/lib/server/redis/redis"
+import { USER_SLUG_MATCHER } from "~helpers/constants";
 
 type QuestionSlugs = keyof typeof QuestionTypeSlug
 
@@ -371,6 +372,15 @@ export const appRouter = router({
       success: true,
       tests
     }
+  }),
+  getUserBySlug: procedure.input(z.string().regex(USER_SLUG_MATCHER)).query(async ({ ctx }) => {
+    // Slug is in format of `@{string}`, spaces replaced by "-"
+
+    // const user = await ctx.prisma.user.findUnique({
+    //   where: {
+
+    //   }
+    // })
   }),
   protected: protectedRouter,
   records: recordsRouter,
