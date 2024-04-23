@@ -4,17 +4,31 @@
 	import Space from '~components/separators/Space.svelte';
 	import { optimistic } from '~utils/hooks.js';
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
 	export let data;
 
 	let isFollowed: boolean = false;
 
 	let userData: Awaited<typeof data.streaming.userData>;
-	let isCheckingData = false;
+	let isCheckingData = true;
 
-	data.streaming.userData.then((res) => {
-		userData = res;
-	});
+	if (browser) {
+		data.streaming.userData.then(async (res) => {
+			userData = res;
+			try {
+				const isFollowing = await trpc($page).protected.isUserFollowing.mutate({
+					userId: userData.user!.id
+				});
+				console.log(isFollowing);
+
+				isFollowed = isFollowing;
+			} catch {
+			} finally {
+				isCheckingData = false;
+			}
+		});
+	}
 
 	function onFollow() {
 		if (!userData?.user?.id) return;
@@ -44,7 +58,7 @@
 	}
 </script>
 
-<div class="grid__container max-w-[800px] mx-auto">
+<div class="grid__container max-w-[1200px] mx-auto">
 	{#await data.streaming.userData then res}
 		{#if res.user}
 			<div class="flex flex-col">
@@ -56,7 +70,7 @@
 				<Space gap={20} />
 				<h2 class="font-semibold text-h5">{res.user.name}</h2>
 				<span
-					class="font-light text-semiBody1 text-light_text_black_60 dark:text-dark_text_white_60"
+					class="font-light text-semiBody1 text-light_text_black_80 dark:text-dark_text_white_60"
 					>{res.user.slug}</span
 				>
 				<Space gap={10} />
@@ -64,8 +78,20 @@
 					onClick={onFollow}
 					variant="ghost"
 					class="border border-light_text_black_20 dark:border-dark_text_white_20"
-					>Follow</SimpleButton
+					disabled={isCheckingData}
 				>
+					{#if isCheckingData}
+						<span
+							class="grid mx-auto loading loading-spinner text-primary place-content-center"
+						/>
+					{:else}
+						{res.user.id === data.session.user?.id
+							? 'Edit profile'
+							: isFollowed
+							? 'Unfollow'
+							: 'Follow'}
+					{/if}
+				</SimpleButton>
 			</div>
 			<div />
 		{/if}

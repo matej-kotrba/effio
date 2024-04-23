@@ -700,5 +700,22 @@ export const protectedRouter = router({
     return {
       success: true
     }
+  }),
+  isUserFollowing: loggedInProcedure.input(z.object({
+    userId: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    const userFollow = await ctx.prisma.userFollow.findUnique({
+      where: {
+        followerId_followedId: {
+          followerId: ctx.userId,
+          followedId: input.userId
+        }
+      },
+      select: {
+        id: true
+      }
+    })
+
+    return !!userFollow
   })
 })
