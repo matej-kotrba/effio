@@ -649,5 +649,56 @@ export const protectedRouter = router({
     }
 
     return { success: true }
+  }),
+  toggleUserFollow: loggedInProcedure.input(z.object({
+    userId: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    const result = await trpcCheckForRateLimit("userToggleFollow", ctx.userId, "toggle users follows")
+    if (result) {
+      throw result
+    }
+
+    if (ctx.userId === input.userId) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "You cannot follow yourself" })
+    }
+
+    const userFollow = await ctx.prisma.userFollow.findUnique({
+      where: {
+        followerId_followedId: {
+          followerId: ctx.userId,
+          followedId: input.userId
+        }
+      },
+      select: {
+        id: true
+      }
+    })
+
+    try {
+      if (userFollow) {
+        await ctx.prisma.userFollow.delete({
+          where: {
+            id: userFollow.id
+          }
+        })
+      }
+      else {
+        await ctx.prisma.userFollow.create({
+          data: {
+            followerId: ctx.userId,
+            followedId: input.userId
+          }
+        })
+      }
+    }
+    catch {
+      return {
+        success: false
+      }
+    }
+
+    return {
+      success: true
+    }
   })
 })

@@ -1,8 +1,47 @@
 <script lang="ts">
+	import { trpc } from '~/lib/trpc/client.js';
 	import SimpleButton from '~components/buttons/SimpleButton.svelte';
 	import Space from '~components/separators/Space.svelte';
+	import { optimistic } from '~utils/hooks.js';
+	import { page } from '$app/stores';
 
 	export let data;
+
+	let isFollowed: boolean = false;
+
+	let userData: Awaited<typeof data.streaming.userData>;
+	let isCheckingData = false;
+
+	data.streaming.userData.then((res) => {
+		userData = res;
+	});
+
+	function onFollow() {
+		if (!userData?.user?.id) return;
+		optimistic(
+			() => {
+				isCheckingData = true;
+				isFollowed = !isFollowed;
+			},
+			{
+				initial: isFollowed,
+				request: async () => {
+					const followOnUser = await trpc(
+						$page
+					).protected.toggleUserFollow.mutate({
+						userId: userData.user!.id
+					});
+					return followOnUser;
+				},
+				onResponse: (data, initialData) => {
+					if (!data.success) {
+						isFollowed = initialData;
+					}
+					isCheckingData = false;
+				}
+			}
+		);
+	}
 </script>
 
 <div class="grid__container max-w-[800px] mx-auto">
@@ -22,6 +61,7 @@
 				>
 				<Space gap={10} />
 				<SimpleButton
+					onClick={onFollow}
 					variant="ghost"
 					class="border border-light_text_black_20 dark:border-dark_text_white_20"
 					>Follow</SimpleButton

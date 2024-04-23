@@ -78,6 +78,11 @@ export const ratelimit = {
     redis,
     prefix: "ratelimit:test:attempt",
     limiter: Ratelimit.slidingWindow(2, "10s")
+  }),
+  userToggleFollow: new Ratelimit({
+    redis,
+    prefix: "ratelimit:user:follow",
+    limiter: Ratelimit.slidingWindow(6, "10s"),
   })
 }
 
