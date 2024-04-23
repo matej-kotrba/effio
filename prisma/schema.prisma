@@ -42,6 +42,7 @@ model User {
   id                          String                        @id @default(cuid())
   name                        String?
   slug                        String?                       @unique
+  description                 String?                       @db.Text
   email                       String?                       @unique
   emailVerified               DateTime?
   image                       String?
@@ -57,9 +58,22 @@ model User {
   staredTests                 TestStar[]
   GroupSubcategoreyMessage    GroupSubcategoryMessage[]
   userSubcategoryTestStartLog UserSubcategoryTestStartLog[]
+  followingUsers              UserFollow[]                  @relation("following")
+  followedUsers               UserFollow[]                  @relation("followed")
   adminLogs                   AdminLogs[]
 
   @@index([name, id])
+}
+
+model UserFollow {
+  id         String   @id @default(uuid())
+  followerId String
+  followedId String
+  createdAt  DateTime @default(now())
+  follower   User     @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  followed   User     @relation("followed", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
 }
 
 model VerificationToken {

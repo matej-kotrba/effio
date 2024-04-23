@@ -43,7 +43,7 @@ prismaAdapter.createUser = (data) => {
   return prisma.user.create({
     data: {
       ...data,
-      slug: `${tranformString(data?.name || "")}@${randomUUID.split("-")[0]}`
+      slug: `${tranformString(data?.name || "")}@${randomUUID.split("-")[0].slice(0, 4)}`
     }
   })
 }
