@@ -1,22 +1,37 @@
 <script lang="ts">
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import type { ZodSchema } from 'zod';
-	import { createEventDispatcher, getContext } from 'svelte';
+	import {
+		beforeUpdate,
+		createEventDispatcher,
+		getContext,
+		onMount,
+		tick
+	} from 'svelte';
 	import { twMerge } from 'tailwind-merge';
 
 	export let title: string;
 	export let titleName: string;
 	export let customStyles: string = '';
 	export let customContainerStyles: string = '';
-	export let inputProperties: HTMLInputAttributes = {};
+	export let inputProperties: HTMLTextareaAttributes = {};
 	export let validationSchema: ZodSchema<any> | null = null;
+	export let doesAutoScale: boolean = true;
 
 	export let inputValue: HTMLInputElement['value'] = '';
-	let inputRef: HTMLInputElement;
+	let inputRef: HTMLTextAreaElement;
 
 	let setError = getContext('setError');
 
 	const dispatch = createEventDispatcher();
+
+	function onAutoScaleInput() {
+		inputRef.style.height = 'auto';
+		inputRef.style.height = inputRef.scrollHeight + 'px';
+		if (inputValue === 'Automatickou instalaci bezpečnostních aktualizací') {
+			console.log(inputRef.scrollHeight);
+		}
+	}
 
 	function validateInput() {
 		const result = validationSchema?.safeParse(inputValue);
@@ -29,6 +44,14 @@
 			if (typeof setError === 'function') setError('');
 		}
 	}
+
+	onMount(async () => {
+		if (doesAutoScale) {
+			setTimeout(() => {
+				onAutoScaleInput();
+			}, 0);
+		}
+	});
 </script>
 
 <div
@@ -40,16 +63,21 @@
 		customContainerStyles
 	)}
 >
-	<input
+	<textarea
 		bind:value={inputValue}
 		bind:this={inputRef}
 		name={titleName}
 		id={titleName}
-		type="text"
 		autocomplete="off"
+		rows="1"
 		on:focusout={validateInput}
+		on:input={() => {
+			if (doesAutoScale) {
+				onAutoScaleInput();
+			}
+		}}
 		class={twMerge(
-			'peer outline-none bg-white dark:bg-dark_light_grey overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white px-2 py-4 shadow-lg w-full',
+			'h-auto resize-none peer outline-none bg-white dark:bg-dark_light_grey overflow-hidden overflow-ellipsis text-light_text_black dark:text-dark_text_white px-2 py-4 shadow-lg w-full',
 			customStyles
 		)}
 		{...inputProperties}

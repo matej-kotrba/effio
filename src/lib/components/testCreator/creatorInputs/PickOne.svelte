@@ -121,9 +121,7 @@
 							</button>
 						</Tooltip.Trigger>
 						<Tooltip.Content>
-							<span>
-								{'Delete answer'}
-							</span>
+							<span> Mark as correct </span>
 						</Tooltip.Content>
 					</Tooltip.Root>
 				</div>

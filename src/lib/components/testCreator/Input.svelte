@@ -108,6 +108,7 @@ will be used in the test creator -->
 		<TextInput
 			title="Title"
 			titleName="title"
+			doesAutoScale={true}
 			bind:inputValue={$testObject.questions[index].title}
 			validationSchema={titleSchema}
 			on:error={(data) => {

@@ -242,7 +242,7 @@
 								<button
 									type="button"
 									on:click={() => deleteHint(hint.id)}
-									class="grid h-full px-1 btn btn-outline place-content-center group dark:border-dark_text_white_40 border-light_text_black_40"
+									class="grid h-full px-1 btn btn-outline place-content-center group hover:bg-light_grey dark:hover:bg-dark_light_grey dark:border-dark_text_white_40 border-light_text_black_40"
 								>
 									<iconify-icon
 										icon="fluent:delete-28-filled"

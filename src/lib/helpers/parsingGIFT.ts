@@ -24,14 +24,14 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
 
       if (question.type === "MC") {
 
-        const hasMoreCorrectAnswers = question.choices.reduce((acc, item,) => {
+        const correctAnswersCount = question.choices.reduce((acc, item,) => {
           if (item.isCorrect || item.weight) return acc + 1
           return acc
         }, 0)
 
         // console.log(hasMoreCorrectAnswers)
         // Has more correct asnwers -> True/False
-        if (hasMoreCorrectAnswers === 0 || hasMoreCorrectAnswers >= 2) {
+        if (correctAnswersCount === 0 || correctAnswersCount >= 2) {
           const template = questionTemplates.find(item => item.slug === "trueFalse")
           if (!template) throw new Error("Template not found")
 
@@ -58,7 +58,7 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
         }
 
         // Has only one correct answer -> Pick One
-        if (hasMoreCorrectAnswers === 1) {
+        if (correctAnswersCount === 1) {
           const template = questionTemplates.find(item => item.slug === "pickOne")
           if (!template) throw new Error("Template not found")
 
@@ -76,10 +76,9 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
                 return {
                   id: index,
                   answer: removePartsOfString(item.text.text, item.text.format),
-                  // isTrue: item.isCorrect || item.weight !== undefined
                 }
               }),
-              correctAnswerId: question.choices.findIndex(item => item.isCorrect || item.weight !== undefined)
+              correctAnswerId: question.choices.findIndex(item => item.isCorrect)
             } satisfies PickOneQuestion
           }
         }
@@ -108,7 +107,6 @@ export function transformParsedJSONIntoEffioObject(data: GIFTQuestion[], questio
             type: "connect",
             matchedAnswers: matchedPairs,
             answers: question.matchPairs.map((item, index) => {
-              console.log(item)
               return {
                 id: index,
                 answer: removePartsOfString(item.subquestion.text, item.subquestion.format),
