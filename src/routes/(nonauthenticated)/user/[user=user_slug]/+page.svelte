@@ -12,6 +12,7 @@
 
 	let userData: Awaited<typeof data.streaming.userData>;
 	let isCheckingData = true;
+	let initialLoad = true;
 
 	if (browser) {
 		data.streaming.userData.then(async (res) => {
@@ -20,18 +21,23 @@
 				const isFollowing = await trpc($page).protected.isUserFollowing.mutate({
 					userId: userData.user!.id
 				});
-				console.log(isFollowing);
 
 				isFollowed = isFollowing;
 			} catch {
 			} finally {
 				isCheckingData = false;
+				initialLoad = false;
 			}
 		});
 	}
 
 	function onFollow() {
 		if (!userData?.user?.id) return;
+		if (userData.user?.id === data.session.user?.id) {
+			return;
+		}
+		if (initialLoad) return;
+		if (isCheckingData) return;
 		optimistic(
 			() => {
 				isCheckingData = true;
@@ -80,7 +86,7 @@
 					class="border border-light_text_black_20 dark:border-dark_text_white_20"
 					disabled={isCheckingData}
 				>
-					{#if isCheckingData}
+					{#if initialLoad}
 						<span
 							class="grid mx-auto loading loading-spinner text-primary place-content-center"
 						/>

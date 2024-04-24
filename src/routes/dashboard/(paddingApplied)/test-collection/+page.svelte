@@ -213,6 +213,13 @@
 						createdAt: new Date(test.createdAt),
 						stars: test._count.stars,
 						tags: test.tags.map((tag) => tag.tag),
+						user:
+							test.owner.name && test.owner.slug
+								? {
+										name: test.owner.name,
+										slug: test.owner.slug
+								  }
+								: undefined,
 						options: modalTabsGenerator(test)
 					}}
 				/>

@@ -83,7 +83,14 @@
 					type: item.type,
 					ownerId: item.ownerId,
 					tags: item.tags.filter((tag) => tag !== null).map((tag) => tag.tag),
-					isStarred: item.stars?.length > 0
+					isStarred: item.stars?.length > 0,
+					user:
+						item.owner.name && item.owner.slug
+							? {
+									name: item.owner.name,
+									slug: item.owner.slug
+							  }
+							: undefined
 				} satisfies IdCardAlternativeProps;
 			});
 		} else {
@@ -350,6 +357,10 @@
 									icon: test?.owner?.image || 'error',
 									createdAt: test.createdAt,
 									stars: test._count.stars,
+									user: {
+										name: test.owner.name || '',
+										slug: test.owner.slug || ''
+									},
 									tags: getTypesafeTags(test.tags)
 								}}
 								type={test.type}
@@ -372,6 +383,10 @@
 								icon: test?.owner?.image || 'error',
 								createdAt: test.createdAt,
 								stars: test._count.stars,
+								user: {
+									name: test.owner.name || '',
+									slug: test.owner.slug || ''
+								},
 								tags: getTypesafeTags(test.tags)
 							}}
 							type={test.type}

@@ -5,8 +5,13 @@
 		id: string;
 		title: string;
 		description?: string;
+		slug?: string;
 		img?: string | null;
 		icon?: string | null;
+		user?: {
+			name: string;
+			slug: string;
+		};
 		createdAt?: Date;
 		stars?: number;
 		views?: number;
@@ -33,6 +38,7 @@
 	import { trpc } from '~/lib/trpc/client';
 	import { TRPCClientError } from '@trpc/client';
 	import { createTRPCErrorNotification } from '~utils/notification';
+	import * as Tooltip from '~components/ui/tooltip';
 
 	let isIconFallback = false;
 	let isImageFallback = false;
@@ -145,30 +151,39 @@
 						<Star />
 					</button>
 				{/if}
-				<div
-					class="absolute w-12 text-white -translate-x-1/2 -translate-y-1/2 border-4 border-solid rounded-full aspect-square top-full left-1/2 bg-light_secondary border-light_secondary z-[2]"
-				>
-					{#if isIconFallback === false}
-						<img
-							src={data.icon}
-							alt=""
-							loading="lazy"
-							referrerpolicy="no-referrer"
-							use:onImageLoad
-							on:imageerror={(e) => {
-								isIconFallback = true;
-								// e.target.src = '/imgs/svgs/user-circle.svg';
-							}}
-							class="object-cover w-full h-full rounded-full"
-						/>
-					{:else}
-						<div
-							class="absolute grid -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 place-content-center"
-						>
-							<iconify-icon icon="fa:user-circle" class="text-4xl" />
-						</div>
+				<Tooltip.Root openDelay={300}>
+					<Tooltip.Trigger
+						class="absolute w-12 -translate-x-1/2 -translate-y-1/2 aspect-square top-full left-1/2 z-[2] border-4 border-solid text-white rounded-full bg-light_secondary border-light_secondary"
+					>
+						<a href={data.user ? `/user/${data.user.slug}` : ''}>
+							{#if isIconFallback === false}
+								<img
+									src={data.icon}
+									alt=""
+									loading="lazy"
+									referrerpolicy="no-referrer"
+									use:onImageLoad
+									on:imageerror={(e) => {
+										isIconFallback = true;
+										// e.target.src = '/imgs/svgs/user-circle.svg';
+									}}
+									class="object-cover w-full h-full rounded-full"
+								/>
+							{:else}
+								<div
+									class="absolute grid -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 place-content-center"
+								>
+									<iconify-icon icon="fa:user-circle" class="text-4xl" />
+								</div>
+							{/if}
+						</a>
+					</Tooltip.Trigger>
+					{#if data.user}
+						<Tooltip.Content>
+							{data.user.name}
+						</Tooltip.Content>
 					{/if}
-				</div>
+				</Tooltip.Root>
 			</div>
 			{#if type === 'PROGRAMMING'}
 				<div

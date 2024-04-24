@@ -179,7 +179,13 @@
 								navigationLink={'/tests/' + item.id}
 								type={item.type}
 								data={{
-									...item
+									...item,
+									user: item.user
+										? {
+												name: item.user.name,
+												slug: item.user.slug
+										  }
+										: undefined
 								}}
 							/>
 						</div>

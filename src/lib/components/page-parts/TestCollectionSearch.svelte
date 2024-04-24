@@ -209,6 +209,13 @@
 							tags: getTestTags(index),
 							views: test.views,
 							published: test.published,
+							user:
+								test.owner.name && test.owner.slug
+									? {
+											name: test.owner.name,
+											slug: test.owner.slug
+									  }
+									: undefined,
 							options: TypesafeTabs(test)
 						}}
 					/>

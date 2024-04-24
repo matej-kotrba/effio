@@ -38,7 +38,14 @@
 						type: test.type,
 						icon: test.owner.image,
 						img: test.imageUrl,
-						isStarred: test.stars.length > 0
+						isStarred: test.stars.length > 0,
+						user:
+							test.owner.name && test.owner.slug
+								? {
+										name: test.owner.name,
+										slug: test.owner.slug
+								  }
+								: undefined
 					};
 			  })
 			: []}
