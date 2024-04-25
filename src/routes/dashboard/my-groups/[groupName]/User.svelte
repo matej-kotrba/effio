@@ -5,7 +5,7 @@
 	import * as DropdownMenu from '~components/ui/dropdown-menu/index';
 
 	export let groupOnUser: GroupOnUsers & {
-		user: Pick<User, 'email' | 'name' | 'image'> | null;
+		user: Pick<User, 'name' | 'slug' | 'image'> | null;
 	};
 
 	export let isOwner: boolean;
@@ -88,11 +88,14 @@
 				</DropdownMenu.Root>
 			{/if}
 		</div>
-		<p
-			class="truncate text-body2 text-light_text_black_60 dark:text-dark_text_white_60"
-			title={groupOnUser.user?.email}
-		>
-			{groupOnUser.user?.email}
-		</p>
+		{#if groupOnUser.user}
+			<a
+				class="truncate duration-75 text-body2 text-light_text_black_60 dark:text-dark_text_white_60 hover:text-light_primary dark:hover:text-dark_primary"
+				href="/user/{groupOnUser.user?.slug}"
+				title={groupOnUser.user?.slug}
+			>
+				{groupOnUser.user?.slug}
+			</a>
+		{/if}
 	</div>
 </div>

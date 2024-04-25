@@ -254,6 +254,7 @@ export const groupsRouter = router({
                 name: true,
                 image: true,
                 email: true,
+                slug: true,
               }
             }
           },

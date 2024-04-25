@@ -95,7 +95,8 @@ export const appRouter = router({
 
     const groupTests = await ctx.prisma.test.findMany({
       where: {
-        published: input.isPublished,
+        published: input.isPublished === false && input.id !== ctx.user?.id ? false : true,
+        isPublic: input.id === ctx.user?.id ? undefined : true,
         ownerId: input.id,
         title: {
           contains: input.searchQuery ? input.searchQuery : undefined

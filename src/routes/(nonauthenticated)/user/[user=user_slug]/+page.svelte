@@ -5,6 +5,7 @@
 	import { optimistic } from '~utils/hooks.js';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
+	import Carousel from '~components/containers/Carousel.svelte';
 
 	export let data;
 
