@@ -316,6 +316,7 @@ export const protectedRouter = router({
           isPublic,
           imageUrl: input.imageUrl,
           randomQuestionOrder: !!input.isRandomized,
+          published: input.isPublished
         }
       })
 
