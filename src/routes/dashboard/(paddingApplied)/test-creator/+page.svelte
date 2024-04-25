@@ -49,8 +49,8 @@
 	});
 
 	let testCreationProgress = {
-		templateDone: false,
-		constructingDone: false,
+		templateDone: true,
+		constructingDone: true,
 		detailsDone: false
 	};
 
@@ -85,6 +85,12 @@
 		testImageFile?: File
 	) {
 		if (isSubmitting) return;
+
+		if (isDraftBlocked() && !isPublished) {
+			toast.error('Test added to groups cannout be draft');
+			return;
+		}
+
 		isSubmitting = true;
 
 		// Programming tests should not have marking system
@@ -215,6 +221,20 @@
 
 	// Function to scroll on error to specific input
 	let scrollToInput: ((index: number) => void) | undefined = undefined;
+
+	$: isDraftBlocked = () => {
+		if (
+			$testObject.includedInGroups.subcategorySelect.some((item) => {
+				if (item.id !== '') {
+					return true;
+				}
+				return false;
+			})
+		) {
+			return true;
+		}
+		return false;
+	};
 </script>
 
 <DashboardTitle
@@ -435,6 +455,7 @@
 								<Alert.Description>{rateLimitError}</Alert.Description>
 							</Alert.Root>
 						{/if}
+
 						<div class="flex justify-center gap-6 my-4">
 							<BasicButton
 								onClick={() => {
@@ -456,58 +477,60 @@
 								title={'Finish'}
 							/>
 						</div>
-						<Dialog
-							bind:open={finishModalOpen}
-							{isSubmitting}
-							isSuccessOpen={isSuccess}
-							title="Finishing your test"
-						>
-							<Separator
-								w={'80%'}
-								h={'1px'}
-								color={$applicationStates['darkMode']
-									? 'var(--dark-text-white-20)'
-									: 'var(--light-text-black-20)'}
-							/>
-							<p class="py-4 text-center text-body1">
-								Your test named <span class="block font-semibold hyphens-auto"
-									>{$testObject['title']}</span
-								><Space gap={20} /> with a description:
-								<span class="block font-semibold hyphens-auto"
-									>{$testObject['description']}</span
-								><br />
+						<div class="flex justify-center gap-3">
+							<Dialog
+								bind:open={finishModalOpen}
+								{isSubmitting}
+								isSuccessOpen={isSuccess}
+								title="Finishing your test"
+							>
 								<Separator
-									w={'50%'}
+									w={'80%'}
 									h={'1px'}
 									color={$applicationStates['darkMode']
 										? 'var(--dark-text-white-20)'
 										: 'var(--light-text-black-20)'}
 								/>
-								should be
-							</p>
-							<div class="flex justify-center gap-3">
-								<button
-									type="button"
-									disabled={isSubmitting}
-									class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey"
-									on:click={() =>
-										checkTestOnClientAndServerAndPostTestToDB(
-											false,
-											testImageFile
-										)}>Saved as draft</button
-								>
-								<button
-									type="button"
-									disabled={isSubmitting}
-									class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_dark"
-									on:click={() =>
-										checkTestOnClientAndServerAndPostTestToDB(
-											true,
-											testImageFile
-										)}>Published</button
-								>
-							</div>
-						</Dialog></TestDetails
+								<p class="py-4 text-center text-body1">
+									Your test named <span class="block font-semibold hyphens-auto"
+										>{$testObject['title']}</span
+									><Space gap={20} /> with a description:
+									<span class="block font-semibold hyphens-auto"
+										>{$testObject['description']}</span
+									><br />
+									<Separator
+										w={'50%'}
+										h={'1px'}
+										color={$applicationStates['darkMode']
+											? 'var(--dark-text-white-20)'
+											: 'var(--light-text-black-20)'}
+									/>
+									should be
+								</p>
+								<div class="flex justify-center gap-3">
+									<button
+										type="button"
+										disabled={isSubmitting || isDraftBlocked()}
+										class="btn btn-outline text-light_secondary dark:text-dark_primary outline-light_primary dark:outline-dark_primary hover:text-light_primary dark:hover:text-dark_primary hover:bg-gray-200 dark:hover:bg-dark_light_grey disabled:bg-light_grey disabled:border-light_text_black_40 disabled:text-light_text_black_40 dark:disabled:bg-dark_grey dark:disabled:border-dark_text_white_20 dark:disabled:text-dark_text_white_40"
+										on:click={() =>
+											checkTestOnClientAndServerAndPostTestToDB(
+												false,
+												testImageFile
+											)}>Saved as draft</button
+									>
+									<button
+										type="button"
+										disabled={isSubmitting}
+										class="btn bg-light_primary dark:bg-dark_primary text-light_whiter hover:bg-light_secondary dark:hover:bg-dark_primary_dark"
+										on:click={() =>
+											checkTestOnClientAndServerAndPostTestToDB(
+												true,
+												testImageFile
+											)}>Published</button
+									>
+								</div>
+							</Dialog>
+						</div></TestDetails
 					>
 				</div>
 			{:else if activeTab === 'preview'}

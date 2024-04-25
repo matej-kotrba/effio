@@ -30,6 +30,11 @@ export const protectedRouter = router({
     tagIds: z.array(z.string()).optional(),
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
+    // Check whether test is draft and is connected to groups at the same time
+    if (input.isPublished === false && input.includedInGroups?.subcategorySelect?.some(item => item.id !== "")) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot connect draft test to groups" })
+    }
+
     let questions;
     try {
       questions = JSON.parse(input.questionContent) as QuestionClient[]
@@ -165,6 +170,10 @@ export const protectedRouter = router({
     includedInGroups: includedInGroupsInputSchema,
     isRandomized: z.boolean().optional()
   })).mutation(async ({ ctx, input }) => {
+    if (input.isPublished === false && input.includedInGroups?.subcategorySelect?.some(item => item.id !== "")) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "You cannot connect draft test to groups" })
+    }
+
     const result = await trpcCheckForRateLimit("testUpdate", ctx.userId, "updating tests")
     if (result) {
       throw result

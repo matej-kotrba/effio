@@ -439,7 +439,14 @@
 				type: item.test.testGroup.type,
 				icon: item.test.testGroup.owner.image,
 				img: item.test.testGroup.imageUrl,
-				isStarred: item.test.testGroup.stars.length > 0
+				isStarred: item.test.testGroup.stars.length > 0,
+				user:
+					item.test.testGroup.owner?.name && item.test.testGroup.owner?.slug
+						? {
+								name: item.test.testGroup.owner.name,
+								slug: item.test.testGroup.owner.slug
+						  }
+						: undefined
 			};
 		})}
 	/>

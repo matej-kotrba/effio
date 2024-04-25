@@ -56,6 +56,11 @@ export const validateTestAndRecordIt = async (props: Props) => {
 
   // General checks for the test
   // Setting mark system of programming test to empty object hence it is not needed
+  if (props.data.isPublished === false && props.data.includedInGroups.subcategorySelect.some(item => item.id !== "")) {
+    toast.error("You can't include a test in a group if it is not published")
+    return
+  }
+
   if (props.type === "create" && props.data.testType === "PROGRAMMING") props.data.markSystem = {}
 
   const { testObject } = props.data

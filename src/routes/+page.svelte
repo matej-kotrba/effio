@@ -511,7 +511,7 @@
 					</p>
 					<a
 						href={'/about'}
-						class="px-8 py-2 duration-150 border-4 border-solid rounded-lg h-fit whitespace-nowrap text-body1 2xl:text-h6 bg-light_primary text-light_white dark:text-dark_text_white border-light_primary hover:bg-light_white hover:text-light_primary"
+						class="px-8 py-2 duration-150 border-4 border-solid rounded-lg h-fit whitespace-nowrap text-body1 2xl:text-h6 bg-light_primary text-light_white border-light_primary hover:bg-light_white hover:text-light_primary"
 					>
 						About us
 					</a>
