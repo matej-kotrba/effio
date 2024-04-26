@@ -19,6 +19,7 @@
 	import Input from '~components/testTaking/Input.svelte';
 	import { get } from 'svelte/store';
 	import Separator from '~components/separators/Separator.svelte';
+	import * as Tooltip from '~components/ui/tooltip';
 
 	export let data;
 
@@ -90,23 +91,51 @@
 		animateDirection = direction;
 		activeTab = tab;
 	}
+
+	$: isDraftBlocked = () => {
+		if (
+			$testObject.includedInGroups.subcategorySelect.some((item) => {
+				if (item.id !== '') {
+					return true;
+				}
+				return false;
+			})
+		) {
+			return true;
+		}
+		return false;
+	};
 </script>
 
 {#if isSubmitting}
 	<ScreenCover />
 {/if}
 
-<FlexConfirm onClick={postEditedTest}>
+<FlexConfirm
+	onClick={postEditedTest}
+	disabled={$testObject.published === false && isDraftBlocked()}
+	buttonTooltip={$testObject.published === false && isDraftBlocked()
+		? 'Draft test cannot be added to group'
+		: ''}
+>
 	<iconify-icon
 		icon="charm:tick"
-		class="text-3xl text-white duration-150 group-hover:text-light_text_black dark:group-hover:text-dark_text_white"
+		class="text-3xl text-white duration-150 group-hover:text-light_text_black group-disabled:text-light_text_black_40 dark:group-disabled:text-dark_text_white_40 dark:group-hover:text-dark_text_white"
 	/>
 </FlexConfirm>
 
-<div class="block">
-	<DashboardTitle
-		title="Test Editor"
-		subtitle="Here you can edit your previously created test"
+<div class="flex items-start justify-between">
+	<div>
+		<DashboardTitle
+			title="Test Editor"
+			subtitle="Here you can edit your previously created test"
+		/>
+	</div>
+	<Toggle
+		title="Is Published"
+		isChecked={$testObject.published}
+		class="items-center justify-end mb-2"
+		on:toggle={(e) => ($testObject.published = e.detail)}
 	/>
 </div>
 <Tabs
@@ -147,12 +176,6 @@
 		in:fly={{ x: -200, duration: TAB_FLY_DURATION, delay: TAB_FLY_DURATION }}
 		out:fly={{ x: -200, duration: TAB_FLY_DURATION }}
 	>
-		<Toggle
-			title="Is Published"
-			isChecked={$testObject.published}
-			class="items-center justify-end mb-2"
-			on:toggle={(e) => ($testObject.published = e.detail)}
-		/>
 		<TestDetails
 			testType={data.testData.type}
 			testData={data.testData}
