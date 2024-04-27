@@ -315,7 +315,6 @@ model GroupSubcategoryMessage {
   id                 String           @id @default(uuid())
   groupSubcategoryId String
   senderId           String
-  messageType        MessageTypes
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   title              String?
@@ -392,11 +391,6 @@ enum AdminLogsActions {
   BLOCKED_USERS
   CHANGE_USER_ROLE
   DELETE_TESTS
-}
-
-enum MessageTypes {
-  MESSAGE
-  TEST
 }
 
 enum TestType {

@@ -103,7 +103,6 @@
 
 		try {
 			trpc($page).groupMessages.postMessage.mutate({
-				type: 'MESSAGE',
 				groupId: data.group.id,
 				message: messageContent,
 				subcategoryId: data.subcategory.id
@@ -383,40 +382,37 @@
 									</div>
 								</div>
 								<div
-									class="relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
+									class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
 								>
-									{#if message.messageType === 'MESSAGE'}
-										{#if message.title}
-											<h5 class="text-body1">
-												{message.title}
-											</h5>
-										{/if}
-										{#if message.content}
-											<p class="break-words text-body2">
-												{message.content}
-											</p>
-										{/if}
-										{#if message.testId && message.test}
-											<Space gap={10} />
-											<div
-												class="flex flex-col gap-2 p-2 bg-light_white dark:bg-dark_terciary rounded-md w-fit max-w-[300px] shadow-md group"
-											>
-												<div>
-													<div class="overflow-hidden">
-														<img
-															src={message.test?.imageUrl
-																? message.test.imageUrl
-																: $applicationStates['darkMode']['isDarkMode']
-																? '/imgs/content_imgs/poly_dark.png'
-																: '/imgs/content_imgs/poly.png'}
-															alt="{message.test.title} cover"
-															class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
-															loading="lazy"
-														/>
-													</div>
-													<span>{message.test.title}</span>
-												</div>
-
+									{#if message.title}
+										<h5 class="text-body1">
+											{message.title}
+										</h5>
+									{/if}
+									{#if message.content}
+										<p class="break-words text-body2">
+											{message.content}
+										</p>
+									{/if}
+									{#if message.testId && message.test}
+										<Space gap={10} />
+										<div
+											class="flex flex-col w-full gap-2 p-2 rounded-md shadow-md @md:flex-row bg-light_white dark:bg-dark_terciary group"
+										>
+											<div class="overflow-hidden @md:max-w-[50%]">
+												<img
+													src={message.test?.imageUrl
+														? message.test.imageUrl
+														: $applicationStates['darkMode']['isDarkMode']
+														? '/imgs/content_imgs/poly_dark.png'
+														: '/imgs/content_imgs/poly.png'}
+													alt="{message.test.title} cover"
+													class="object-cover w-full duration-150 rounded-sm aspect-video group-hover:scale-110"
+													loading="lazy"
+												/>
+											</div>
+											<div class="flex flex-col justify-between">
+												<p class="hyphens-auto">{message.test.title}</p>
 												<a
 													href="/dashboard/my-groups/{data.group.slug}/{data
 														.subcategory.slug}/tests/{message.testId}"
@@ -424,11 +420,9 @@
 													>View</a
 												>
 											</div>
-										{:else if message.testId}
-											<div>Oops, this test can't be accessed anymore.</div>
-										{/if}
-									{:else if message.messageType === 'TEST'}
-										TEST
+										</div>
+									{:else if message.testId}
+										<div>Oops, this test can't be accessed anymore.</div>
 									{/if}
 								</div>
 							</div>
