@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { loggedInProcedure, router } from "../setup"
 import { TRPCError } from "@trpc/server"
-import { transformCategoryNameToSlug } from "~/lib/utils/groupTransform"
+import { transformCategoryNameToSlug } from "~utils/group"
 import { DB_STRING_REGEX, MAX_GROUP_OWNER_COUNT } from "~helpers/constants"
 import { trpcCheckForRateLimit } from "~/lib/server/redis/redis"
 import { channelCreateSchema, channelDeleteSchema, channelUpdateSchema } from "~/routes/dashboard/my-groups/schemas"
@@ -393,7 +393,7 @@ export const groupsRouter = router({
           select: {
             title: true,
             description: true,
-            imageUrl: true
+            imageUrl: true,
           }
         },
         sender: true,

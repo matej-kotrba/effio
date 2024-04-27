@@ -69,7 +69,8 @@ export const groupMessagesRouter = router({
       data: {
         content: input.message,
         senderId: ctx.userId,
-        groupSubcategoryId: input.subcategoryId
+        groupSubcategoryId: input.subcategoryId,
+        senderType: "USER"
       },
       include: {
         test: {

@@ -312,17 +312,18 @@ model GroupSubcategory {
 }
 
 model GroupSubcategoryMessage {
-  id                 String           @id @default(uuid())
+  id                 String                       @id @default(uuid())
   groupSubcategoryId String
   senderId           String
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  senderType         SubcategoryMessageSenderType @default(USER)
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
   title              String?
-  content            String?          @db.Text()
+  content            String?                      @db.Text()
   testId             String?
-  groupSubcategory   GroupSubcategory @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
-  sender             User             @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  test               Test?            @relation(fields: [testId], references: [id])
+  groupSubcategory   GroupSubcategory             @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
+  sender             User                         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  test               Test?                        @relation(fields: [testId], references: [id])
 
   @@index([senderId])
   @@index([groupSubcategoryId])
@@ -384,6 +385,11 @@ enum QuestionTypeSlug {
   image
   programming
   bitmap
+}
+
+enum SubcategoryMessageSenderType {
+  USER
+  AUTOMATED
 }
 
 enum AdminLogsActions {

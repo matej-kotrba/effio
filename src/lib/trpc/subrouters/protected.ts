@@ -139,7 +139,8 @@ export const protectedRouter = router({
             messageType: "MESSAGE",
             title: "Added new test " + testGroupData.title,
             groupSubcategoryId: subcategory.id,
-            testId: testGroupData.id
+            testId: testGroupData.id,
+            senderType: "AUTOMATED"
           }
         })
       })
@@ -272,6 +273,7 @@ export const protectedRouter = router({
               title: "Added new test: " + input.title,
               groupSubcategoryId: subcategory.id,
               testId: input.testGroupId,
+              senderType: "AUTOMATED"
             }
           })
         }),
@@ -282,6 +284,7 @@ export const protectedRouter = router({
               messageType: "MESSAGE",
               title: "Removed test: " + input.title,
               groupSubcategoryId: item.subcategoryId,
+              senderType: "AUTOMATED"
             }
           })
         })
@@ -534,11 +537,13 @@ export const protectedRouter = router({
     }
   }),
   getTestsOfUser: loggedInProcedure.input(z.object({
-    subcategoryId: z.string().optional()
+    subcategoryId: z.string().optional(),
+    includeDrafts: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
     return await ctx.prisma.test.findMany({
       where: {
-        ownerId: ctx.userId
+        ownerId: ctx.userId,
+        published: input.includeDrafts ? undefined : true,
       },
       include: {
         subcategories: {
@@ -606,10 +611,10 @@ export const protectedRouter = router({
         return ctx.prisma.groupSubcategoryMessage.create({
           data: {
             senderId: ctx.userId,
-            messageType: "MESSAGE",
             title: "Added new test: " + test.title,
             groupSubcategoryId: subcategory.id,
-            testId: test.id
+            testId: test.id,
+            senderType: "AUTOMATED"
           },
           include: {
             sender: true,
@@ -627,9 +632,9 @@ export const protectedRouter = router({
         return ctx.prisma.groupSubcategoryMessage.create({
           data: {
             senderId: ctx.userId,
-            messageType: "MESSAGE",
             title: "Removed test: " + item.testTitle,
             groupSubcategoryId: item.subcategoryId,
+            senderType: "AUTOMATED"
           },
           include: {
             sender: true,
