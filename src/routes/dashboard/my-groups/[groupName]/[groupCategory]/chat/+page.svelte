@@ -174,6 +174,7 @@
 			includeDrafts: false
 		});
 		isFetchingTests = false;
+		console.log(usersTests)
 	}
 
 	onMount(async () => {
@@ -329,7 +330,24 @@
 					</button>
 				</div>
 				<ChatInput
-					on:testSubmit={() => {
+					on:testSubmit={({ detail }) => {
+						if (
+							detail.deletedTestsId &&
+							messages &&
+							typeof messages !== 'string'
+						) {
+							messages = messages.map((message) => {
+								return {
+									...message,
+									test: detail.deletedTestsId.includes(message.testId)
+										? null
+										: message.test,
+									testId: detail.deletedTestsId.includes(message.testId)
+										? null
+										: message.testId
+								};
+							});
+						}
 						getUsersTests();
 					}}
 					isDisabled={data.subcategory.type === 'ANNOUCEMENT'
@@ -369,81 +387,83 @@
 						<div bind:this={fetchNewMessagesDiv} class="h-1" />
 						{#each messages as message}
 							{@const isBotMessage = message.senderType === 'AUTOMATED'}
-							<div>
-								<div class="flex items-center gap-1 mb-1">
-									<img
-										referrerpolicy="no-referrer"
-										src={isBotMessage ? botInfo.image : message.sender.image}
-										alt="User"
-										class="w-10 rounded-lg aspect-square"
-									/>
-									<div class="flex flex-col">
-										<div>
-											<span class="text-semiBody1"
-												>{isBotMessage
-													? botInfo.name
-													: message.sender.name}</span
-											>
-											{#if isBotMessage}
-												<span class="font-semibold badge dark:badge-neutral"
-													>Bot</span
+							{#if message.sender}
+								<div>
+									<div class="flex items-center gap-1 mb-1">
+										<img
+											referrerpolicy="no-referrer"
+											src={isBotMessage ? botInfo.image : message.sender.image}
+											alt="User"
+											class="w-10 rounded-lg aspect-square"
+										/>
+										<div class="flex flex-col">
+											<div>
+												<span class="text-semiBody1"
+													>{isBotMessage
+														? botInfo.name
+														: message.sender.name}</span
 												>
-											{/if}
+												{#if isBotMessage}
+													<span class="font-semibold badge dark:badge-neutral"
+														>Bot</span
+													>
+												{/if}
+											</div>
+											<span
+												class="text-body2 text-light_text_black_40 dark:text-dark_text_white_40"
+											>
+												{transformDate(message.createdAt, { time: true })}
+											</span>
 										</div>
-										<span
-											class="text-body2 text-light_text_black_40 dark:text-dark_text_white_40"
-										>
-											{transformDate(message.createdAt, { time: true })}
-										</span>
+									</div>
+									<div
+										class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
+									>
+										{#if message.title}
+											<h5 class="text-body1">
+												{message.title}
+											</h5>
+										{/if}
+										{#if message.content}
+											<p class="break-words text-body2">
+												{message.content}
+											</p>
+										{/if}
+										{#if message.testId && message.test}
+											<Space gap={10} />
+											<div
+												class="flex flex-col w-full gap-2 p-2 rounded-md shadow-md @md:flex-row bg-light_white dark:bg-dark_terciary group"
+											>
+												<div
+													class="overflow-hidden @md:max-w-[50%] min-w-[150px]"
+												>
+													<img
+														src={message.test?.imageUrl
+															? message.test.imageUrl
+															: $applicationStates['darkMode']['isDarkMode']
+															? '/imgs/content_imgs/poly_dark.png'
+															: '/imgs/content_imgs/poly.png'}
+														alt="{message.test.title} cover"
+														class="object-cover w-full duration-150 rounded-sm group-hover:scale-110 h-[200px]"
+														loading="lazy"
+													/>
+												</div>
+												<div class="flex flex-col justify-between w-full">
+													<p class="hyphens-auto">{message.test.title}</p>
+													<a
+														href="/dashboard/my-groups/{data.group.slug}/{data
+															.subcategory.slug}/tests/{message.testId}"
+														class="object-cover ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
+														>View</a
+													>
+												</div>
+											</div>
+											<!-- {:else if message.testId}
+											<div>Oops, this test can't be accessed anymore.</div> -->
+										{/if}
 									</div>
 								</div>
-								<div
-									class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
-								>
-									{#if message.title}
-										<h5 class="text-body1">
-											{message.title}
-										</h5>
-									{/if}
-									{#if message.content}
-										<p class="break-words text-body2">
-											{message.content}
-										</p>
-									{/if}
-									{#if message.testId && message.test}
-										<Space gap={10} />
-										<div
-											class="flex flex-col w-full gap-2 p-2 rounded-md shadow-md @md:flex-row bg-light_white dark:bg-dark_terciary group"
-										>
-											<div
-												class="overflow-hidden @md:max-w-[50%] min-w-[150px]"
-											>
-												<img
-													src={message.test?.imageUrl
-														? message.test.imageUrl
-														: $applicationStates['darkMode']['isDarkMode']
-														? '/imgs/content_imgs/poly_dark.png'
-														: '/imgs/content_imgs/poly.png'}
-													alt="{message.test.title} cover"
-													class="object-cover w-full duration-150 rounded-sm group-hover:scale-110 h-[200px]"
-													loading="lazy"
-												/>
-											</div>
-											<div class="flex flex-col justify-between w-full">
-												<p class="hyphens-auto">{message.test.title}</p>
-												<a
-													href="/dashboard/my-groups/{data.group.slug}/{data
-														.subcategory.slug}/tests/{message.testId}"
-													class="object-cover ml-auto btn w-fit dark:bg-dark_light_grey dark:text-dark_text_white dark:outline-dark_light_grey"
-													>View</a
-												>
-											</div>
-										</div>
-									{:else if message.testId}
-										<div>Oops, this test can't be accessed anymore.</div>
-									{/if}
-								</div>
-							</div>
+							{/if}
 						{/each}
 					</div>
 				</div>

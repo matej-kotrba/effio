@@ -287,6 +287,18 @@ export const protectedRouter = router({
               senderType: "AUTOMATED"
             }
           })
+        }),
+        ctx.prisma.groupSubcategoryMessage.updateMany({
+          where: {
+            testId: {
+              in: linkedGroupsToDelete.map((item) => {
+                return item.testId
+              })
+            }
+          },
+          data: {
+            testId: null
+          }
         })
       ])
 
@@ -561,7 +573,7 @@ export const protectedRouter = router({
     groupId: z.string(),
     subcategoryId: z.string(),
     testsToConnect: z.array(z.object({ id: z.string(), title: z.string() })),
-    connectionsToDelete: z.array(z.object({ id: z.number(), testTitle: z.string(), subcategoryId: z.string() }))
+    connectionsToDelete: z.array(z.object({ id: z.number(), testId: z.string(), testTitle: z.string(), subcategoryId: z.string() }))
   })).mutation(async ({ ctx, input }) => {
     const result = await trpcCheckForRateLimit("channelConnectionToTests", ctx.userId, "connecting tests to channels")
     if (result) {
@@ -590,7 +602,7 @@ export const protectedRouter = router({
       throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to connect tests to this channel" })
     }
 
-    const [_, __, ...messages] = await ctx.prisma.$transaction([
+    const [_, __, ___, ...messages] = await ctx.prisma.$transaction([
       ctx.prisma.groupSubcategoryOnTests.deleteMany({
         where: {
           id: {
@@ -606,6 +618,19 @@ export const protectedRouter = router({
             subcategoryId: input.subcategoryId
           }
         })
+      }),
+
+      ctx.prisma.groupSubcategoryMessage.updateMany({
+        where: {
+          testId: {
+            in: input.connectionsToDelete.map((item) => {
+              return item.testId
+            })
+          }
+        },
+        data: {
+          testId: null
+        }
       }),
       ...input.testsToConnect.map((test) => {
         return ctx.prisma.groupSubcategoryMessage.create({
@@ -647,7 +672,7 @@ export const protectedRouter = router({
             },
           }
         })
-      })
+      }),
     ])
 
     const pusher = new Pusher({

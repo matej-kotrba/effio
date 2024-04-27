@@ -37,7 +37,7 @@
 
 	let testsToEdit = cloneDeep(tests);
 
-	let closeSubcategoryPopover: () => void;
+	let isPopoverOpen: boolean;
 	let isSavingSubcategories = false;
 
 	const dispatch = createEventDispatcher();
@@ -61,6 +61,8 @@
 		dispatch('chatSubmit', textAreaRef.value);
 	}
 
+	// Po přidání/odsranění testu ten stejný test nejde hned znovu přidat/odebrat, až po jednom pokusu to zase začne fungovat, tak zjistit proč
+
 	async function onSubcategoryOnTestsSave() {
 		if (isSavingSubcategories || isFetchingTests) return;
 		isSavingSubcategories = true;
@@ -75,6 +77,7 @@
 				.map((test) => {
 					return {
 						id: test.subcategoryOnTestId as number,
+						testId: test.testId,
 						testTitle: test.title,
 						subcategoryId: subcategoryId
 					};
@@ -86,11 +89,13 @@
 				connectionsToDelete: testsToDelete,
 				testsToConnect: testsToAdd
 			});
-			dispatch('testSubmit');
+			dispatch('testSubmit', {
+				deletedTestsId: testsToDelete.map((test) => test.testId)
+			});
 		} catch (error) {
 		} finally {
 			isSavingSubcategories = false;
-			if (closeSubcategoryPopover) closeSubcategoryPopover();
+			isPopoverOpen = false;
 		}
 	}
 
@@ -130,7 +135,7 @@
 	/>
 	{#if isOwner}
 		<Popover.Root
-			bind:closeFocus={closeSubcategoryPopover}
+			bind:open={isPopoverOpen}
 			onOutsideClick={() => {
 				testsToEdit = cloneDeep(tests);
 			}}
