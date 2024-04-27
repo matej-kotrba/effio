@@ -6,6 +6,8 @@
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import Carousel from '~components/containers/Carousel.svelte';
+	import CardAlternative from '~components/containers/card/CardAlternative.svelte';
+	import CardGridContainer from '~components/containers/card/CardGridContainer.svelte';
 
 	export let data;
 
@@ -100,7 +102,39 @@
 					{/if}
 				</SimpleButton>
 			</div>
-			<div />
+			<div>
+				{#await data.streaming.userTests then tests}
+					<CardGridContainer>
+						{#each tests as test}
+							<CardAlternative
+								data={{
+									id: test.id,
+									title: test.title,
+									description: test.description,
+									createdAt: test.createdAt,
+									img: test['imageUrl'],
+									icon: test?.owner?.image || 'error',
+									stars: test._count.stars,
+									user: {
+										name: test.owner.name || '',
+										slug: test.owner.slug || ''
+									},
+									tags: test.tags.map((tag) => {
+										return {
+											id: tag.tag.id,
+											name: tag.tag.name,
+											slug: tag.tag.slug,
+											color: tag.tag.color,
+											createdAt: tag.tag.createdAt,
+											updatedAt: tag.tag.updatedAt
+										};
+									})
+								}}
+							/>
+						{/each}
+					</CardGridContainer>
+				{/await}
+			</div>
 		{/if}
 	{/await}
 </div>

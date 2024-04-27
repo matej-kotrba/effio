@@ -13,7 +13,8 @@ export const load = async (event) => {
 
   return {
     streaming: {
-      userData
+      userData,
+      userTests
     }
   }
 }

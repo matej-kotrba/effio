@@ -1,4 +1,5 @@
 <script lang="ts">
+	import CardGridContainer from '~components/containers/card/CardGridContainer.svelte';
 	import SearchBar from '~components/inputs/SearchBar.svelte';
 	import OrderButton from '~components/inputs/OrderButton.svelte';
 	import Space from '~components/separators/Space.svelte';
@@ -170,11 +171,11 @@
 <Space />
 <div class="@container max-w-[1400px]">
 	{#if isInitialFetch}
-		<div class="grid__container">
+		<CardGridContainer>
 			<CardSkeleton />
 			<CardSkeleton />
 			<CardSkeleton />
-		</div>
+		</CardGridContainer>
 	{:else if tests.length === 0}
 		<div class="flex flex-col items-center gap-1">
 			<iconify-icon
@@ -191,7 +192,7 @@
 			>
 		</div>
 	{:else}
-		<div class="grid__container">
+		<CardGridContainer>
 			{#each tests as test, index}
 				<div use:addIntersection={{ shouldActive: index === tests.length - 1 }}>
 					<CardAlternative
@@ -221,21 +222,7 @@
 					/>
 				</div>
 			{/each}
-		</div>
+		</CardGridContainer>
 	{/if}
 </div>
 <Space />
-
-<style>
-	.grid__container {
-		display: grid;
-		gap: 12px;
-		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-		place-content: center;
-	}
-	@media screen and (min-width: 768px) {
-		.grid__container {
-			place-content: start;
-		}
-	}
-</style>
