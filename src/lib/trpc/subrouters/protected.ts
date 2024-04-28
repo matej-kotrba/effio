@@ -552,7 +552,7 @@ export const protectedRouter = router({
     subcategoryId: z.string().optional(),
     includeDrafts: z.boolean().optional()
   })).query(async ({ ctx, input }) => {
-    return await ctx.prisma.test.findMany({
+    const data = await ctx.prisma.test.findMany({
       where: {
         ownerId: ctx.userId,
         published: input.includeDrafts ? undefined : true,
@@ -568,6 +568,7 @@ export const protectedRouter = router({
         }
       }
     })
+    return data
   }),
   updateSubcategoryConnectionsToTest: loggedInProcedure.input(z.object({
     groupId: z.string(),
@@ -602,7 +603,7 @@ export const protectedRouter = router({
       throw new TRPCError({ code: "FORBIDDEN", message: "You are not allowed to connect tests to this channel" })
     }
 
-    const [_, __, ___, ...messages] = await ctx.prisma.$transaction([
+    const [, , , ...messages] = await ctx.prisma.$transaction([
       ctx.prisma.groupSubcategoryOnTests.deleteMany({
         where: {
           id: {

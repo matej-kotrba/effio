@@ -174,7 +174,6 @@
 			includeDrafts: false
 		});
 		isFetchingTests = false;
-		console.log(usersTests)
 	}
 
 	onMount(async () => {

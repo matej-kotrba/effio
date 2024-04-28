@@ -35,7 +35,11 @@
 
 	export let isDisabled = false;
 
-	let testsToEdit = cloneDeep(tests);
+	let testsToEdit: Test[] = [];
+
+	$: {
+		testsToEdit = [...tests];
+	}
 
 	let isPopoverOpen: boolean;
 	let isSavingSubcategories = false;
@@ -60,8 +64,6 @@
 	function submitContent() {
 		dispatch('chatSubmit', textAreaRef.value);
 	}
-
-	// Po přidání/odsranění testu ten stejný test nejde hned znovu přidat/odebrat, až po jednom pokusu to zase začne fungovat, tak zjistit proč
 
 	async function onSubcategoryOnTestsSave() {
 		if (isSavingSubcategories || isFetchingTests) return;
@@ -89,6 +91,7 @@
 				connectionsToDelete: testsToDelete,
 				testsToConnect: testsToAdd
 			});
+
 			dispatch('testSubmit', {
 				deletedTestsId: testsToDelete.map((test) => test.testId)
 			});
@@ -134,12 +137,7 @@
 		on:keydown={onKeyDown}
 	/>
 	{#if isOwner}
-		<Popover.Root
-			bind:open={isPopoverOpen}
-			onOutsideClick={() => {
-				testsToEdit = cloneDeep(tests);
-			}}
-		>
+		<Popover.Root bind:open={isPopoverOpen}>
 			<Popover.Trigger>
 				<button
 					type="button"
