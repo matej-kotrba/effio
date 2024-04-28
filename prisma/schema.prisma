@@ -39,28 +39,29 @@ model Session {
 }
 
 model User {
-  id                          String                        @id @default(cuid())
-  name                        String?
-  slug                        String?                       @unique
-  description                 String?                       @db.Text
-  email                       String?                       @unique
-  emailVerified               DateTime?
-  image                       String?
-  role                        UserRoles                     @default(USER)
-  accounts                    Account[]
-  sessions                    Session[]
-  tests                       Test[]
-  testRecords                 TestRecord[]
-  markSystems                 MarkSystem[]
-  groups                      GroupOnUsers[]
-  groupsOwned                 UserOnGroupBan[]
-  bannedFromGroups            Group[]
-  staredTests                 TestStar[]
-  GroupSubcategoreyMessage    GroupSubcategoryMessage[]
-  userSubcategoryTestStartLog UserSubcategoryTestStartLog[]
-  followingUsers              UserFollow[]                  @relation("following")
-  followedUsers               UserFollow[]                  @relation("followed")
-  adminLogs                   AdminLogs[]
+  id                           String                         @id @default(cuid())
+  name                         String?
+  slug                         String?                        @unique
+  description                  String?                        @db.Text
+  email                        String?                        @unique
+  emailVerified                DateTime?
+  image                        String?
+  role                         UserRoles                      @default(USER)
+  accounts                     Account[]
+  sessions                     Session[]
+  tests                        Test[]
+  testRecords                  TestRecord[]
+  markSystems                  MarkSystem[]
+  groups                       GroupOnUsers[]
+  groupsOwned                  UserOnGroupBan[]
+  bannedFromGroups             Group[]
+  staredTests                  TestStar[]
+  GroupSubcategoreyMessage     GroupSubcategoryMessage[]
+  userSubcategoryTestStartLog  UserSubcategoryTestStartLog[]
+  followingUsers               UserFollow[]                   @relation("following")
+  followedUsers                UserFollow[]                   @relation("followed")
+  adminLogs                    AdminLogs[]
+  GroupSubcategoryMessageReply GroupSubcategoryMessageReply[]
 
   @@index([name, id])
 }
@@ -312,23 +313,40 @@ model GroupSubcategory {
 }
 
 model GroupSubcategoryMessage {
-  id                 String                       @id @default(uuid())
-  groupSubcategoryId String
-  senderId           String
-  senderType         SubcategoryMessageSenderType @default(USER)
-  createdAt          DateTime                     @default(now())
-  updatedAt          DateTime                     @updatedAt
-  title              String?
-  content            String?                      @db.Text()
-  testId             String?
-  groupSubcategory   GroupSubcategory             @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
-  sender             User                         @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  test               Test?                        @relation(fields: [testId], references: [id])
+  id                           String                         @id @default(uuid())
+  groupSubcategoryId           String
+  senderId                     String
+  senderType                   SubcategoryMessageSenderType   @default(USER)
+  createdAt                    DateTime                       @default(now())
+  updatedAt                    DateTime                       @updatedAt
+  title                        String?
+  content                      String?                        @db.Text()
+  testId                       String?
+  groupSubcategory             GroupSubcategory               @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
+  sender                       User                           @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  test                         Test?                          @relation(fields: [testId], references: [id])
+  GroupSubcategoryMessageReply GroupSubcategoryMessageReply[]
 
   @@index([senderId])
   @@index([groupSubcategoryId])
   @@index([testId])
   @@map("GroupSubcategoreyMessage")
+}
+
+model GroupSubcategoryMessageReply {
+  id                        String                       @id @default(uuid())
+  senderId                  String
+  senderType                SubcategoryMessageSenderType @default(USER)
+  createdAt                 DateTime                     @default(now())
+  updatedAt                 DateTime                     @updatedAt
+  title                     String?
+  content                   String?                      @db.Text()
+  sender                    User                         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  GroupSubcategoryMessage   GroupSubcategoryMessage      @relation(fields: [groupSubcategoryMessageId], references: [id])
+  groupSubcategoryMessageId String
+
+  @@index([senderId])
+  @@index([groupSubcategoryMessageId])
 }
 
 model TestStar {

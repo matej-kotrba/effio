@@ -19,6 +19,7 @@
 	import ChatSkeleton from './ChatSkeleton.svelte';
 	import { browser } from '$app/environment';
 	import { getBotChannelUser } from '~utils/group';
+	import ChatMessageMenu from './ChatMessageMenu.svelte';
 
 	export let data;
 
@@ -416,8 +417,11 @@
 										</div>
 									</div>
 									<div
-										class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary"
+										class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary group"
 									>
+										<ChatMessageMenu
+											class="absolute opacity-0 translate-y-1/4 bottom-full right-4 group-hover:opacity-100"
+										/>
 										{#if message.title}
 											<h5 class="text-body1">
 												{message.title}
