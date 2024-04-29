@@ -20,6 +20,7 @@
 	import { browser } from '$app/environment';
 	import { getBotChannelUser } from '~utils/group';
 	import ChatMessageMenu from './ChatMessageMenu.svelte';
+	import type { ReplyData } from '~components/inputs/ChatInput.svelte';
 
 	export let data;
 
@@ -52,6 +53,9 @@
 	$: if (fetchNewMessagesDiv) {
 		addIntersection(fetchNewMessagesDiv);
 	}
+
+	// Replay data
+	let replyData: ReplyData | null = null;
 
 	const categoryId = data.group.groupsSubcategories.find(
 		(item) => item.slug === $page.params.groupCategory
@@ -176,6 +180,8 @@
 		});
 		isFetchingTests = false;
 	}
+
+	function setupReplyToMessage(messageId: string) {}
 
 	onMount(async () => {
 		observer = new IntersectionObserver(

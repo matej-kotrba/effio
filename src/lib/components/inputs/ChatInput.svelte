@@ -1,3 +1,11 @@
+<script context="module" lang="ts">
+	export type ReplyData = {
+		messageId: string;
+		respondingTo: string;
+		content: string;
+	};
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -32,7 +40,7 @@
 	export let subcategoryId: string;
 	export let isFetchingTests: boolean = false;
 	export let isOwner: boolean;
-
+	export let replyData: ReplyData | null = null;
 	export let isDisabled = false;
 
 	let testsToEdit: Test[] = [];
@@ -111,6 +119,7 @@
 <div
 	class={twMerge(
 		'group fixed w-full max-w-full shadow z-10 flex items-start bg-white dark:bg-dark_light_grey duration-100 outline-2 outline outline-transparent rounded-l-md rounded-br-md rounded-tr-none',
+		`${replyData ? 'rounded-tl-none' : ''}`,
 		classes
 	)}
 >
@@ -124,6 +133,13 @@
 				max={limit.max}
 				current={textAreaRef.value.length}
 			/>
+		</div>
+	{/if}
+	{#if replyData}
+		<div
+			class="absolute p-1 bg-white whitespace-nowrap bottom-full text-body2 rounded-t-md"
+		>
+			Replying to {replyData.respondingTo}
 		</div>
 	{/if}
 	<textarea
