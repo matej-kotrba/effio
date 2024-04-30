@@ -2,6 +2,8 @@
 	import ChatMessageMenuButton from './ChatMessageMenuButton.svelte';
 	import { twMerge } from 'tailwind-merge';
 
+	export let onReply: () => void;
+
 	let classes = '';
 	export { classes as class };
 </script>
@@ -12,7 +14,7 @@
 		classes
 	)}
 >
-	<ChatMessageMenuButton title="Reply" onClick={() => {}}>
+	<ChatMessageMenuButton title="Reply" onClick={onReply}>
 		<iconify-icon icon="bi:reply-fill" class="text-xl" />
 	</ChatMessageMenuButton>
 	<ChatMessageMenuButton title="Edit" onClick={() => {}}>
