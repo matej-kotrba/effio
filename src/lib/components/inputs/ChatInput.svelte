@@ -15,7 +15,6 @@
 	import Limit from '~components/informatic/Limit.svelte';
 	import Invalidating from '~components/portals/Invalidating.svelte';
 	import * as Popover from '~components/ui/popover/index';
-	import { cloneDeep } from 'lodash';
 	import Skewed from '~components/loaders/Skewed.svelte';
 
 	let classes = '';
@@ -115,6 +114,13 @@
 	});
 </script>
 
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') {
+			isPopoverOpen = false;
+		}
+	}}
+/>
 <Invalidating invalidating={isSavingSubcategories} />
 <div
 	class={twMerge(

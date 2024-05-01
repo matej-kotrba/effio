@@ -78,6 +78,7 @@
 		| 'fetching' = 'fetching';
 
 	let chatRef: HTMLTextAreaElement;
+	let focusChatInput = () => chatRef.focus();
 
 	let chatContainerRef: HTMLDivElement;
 	$: chatContainerOffsetTop = browser
@@ -109,16 +110,30 @@
 		if (parsedMessage.success === false || data.subcategory === undefined)
 			return;
 
-		try {
-			trpc($page).groupMessages.postMessage.mutate({
-				groupId: data.group.id,
-				message: messageContent,
-				subcategoryId: data.subcategory.id
-			});
+		if (replyData !== null) {
+			try {
+				trpc($page).groupMessages.postMessageReply.mutate({
+					message: messageContent,
+					messageId: replyData.messageId
+				});
 
-			chatRef.value = '';
-		} catch (e) {
-			console.log(e);
+				chatRef.value = '';
+			} catch (e) {
+				console.log(e);
+			}
+			clearReplyToMessage();
+		} else {
+			try {
+				trpc($page).groupMessages.postMessage.mutate({
+					groupId: data.group.id,
+					message: messageContent,
+					subcategoryId: data.subcategory.id
+				});
+
+				chatRef.value = '';
+			} catch (e) {
+				console.log(e);
+			}
 		}
 	}
 
@@ -195,6 +210,11 @@
 			respondingTo: message.sender?.name || '',
 			content: message.content || ''
 		};
+		focusChatInput();
+	}
+
+	function clearReplyToMessage() {
+		replyData = null;
 	}
 
 	onMount(async () => {
@@ -251,6 +271,16 @@
 			} catch {}
 		});
 
+		channel.bind('message-reply', async (data: any) => {
+			try {
+				data.createdAt = new Date(data.createdAt);
+				data.updatedAt = new Date(data.createdAt);
+				messages = [...messages, data];
+				await tick();
+				scrollToBottom(false);
+			} catch {}
+		});
+
 		await tick();
 		scrollToBottom(false);
 	});
@@ -262,6 +292,13 @@
 	});
 </script>
 
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') {
+			clearReplyToMessage();
+		}
+	}}
+/>
 <div>
 	{#if messages === 'fetching'}
 		<div
@@ -408,8 +445,13 @@
 						<div bind:this={fetchNewMessagesDiv} class="h-1" />
 						{#each messages as message}
 							{@const isBotMessage = message.senderType === 'AUTOMATED'}
+							{@const isReplyingTo = replyData?.messageId === message.id}
 							{#if message.sender}
-								<div>
+								<div
+									class="rounded-sm {isReplyingTo
+										? 'bg-indigo-200 border-l-4 border-indigo-500'
+										: ''}"
+								>
 									<div class="flex items-center gap-1 mb-1">
 										<img
 											referrerpolicy="no-referrer"
@@ -438,7 +480,7 @@
 										</div>
 									</div>
 									<div
-										class="@container relative p-4 rounded-sm shadow bg-light_whiter dark:bg-dark_quaternary group"
+										class="@container relative p-4 rounded-sm dark:bg-dark_quaternary group"
 									>
 										<ChatMessageMenu
 											onReply={() => setupReplyToMessage(message)}
@@ -487,6 +529,9 @@
 											<div>Oops, this test can't be accessed anymore.</div> -->
 										{/if}
 									</div>
+									{#each message['replies'] as reply}
+										{reply.content}
+									{/each}
 								</div>
 							{/if}
 						{/each}

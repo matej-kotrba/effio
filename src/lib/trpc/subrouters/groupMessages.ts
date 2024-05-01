@@ -96,5 +96,66 @@ export const groupMessagesRouter = router({
     await pusher.trigger(`group-${group.id}-${input.subcategoryId}`, "new-message", message);
 
     return message
+  }),
+  postMessageReply: loggedInProcedure.input(z.object({
+    messageId: z.string(),
+    message: z.string()
+  })).mutation(async ({ ctx, input }) => {
+    const parsedMessage = chatInputSchema.safeParse(input.message)
+    if (!parsedMessage.success) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Message is not valid"
+      })
+    }
+
+    const message = await ctx.prisma.groupSubcategoryMessage.findUniqueOrThrow({
+      where: {
+        id: input.messageId
+      },
+      select: {
+        groupSubcategoryId: true,
+        groupSubcategory: {
+          select: {
+            groupId: true
+          }
+        }
+      }
+    })
+
+    const user = await ctx.prisma.groupOnUsers.findFirst({
+      where: {
+        userId: ctx.userId,
+        groupId: message.groupSubcategory.groupId
+      }
+    })
+
+    if (!user) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not in part of this group"
+      })
+    }
+
+    const reply = await ctx.prisma.groupSubcategoryMessageReply.create({
+      data: {
+        content: input.message,
+        senderId: ctx.userId,
+        groupSubcategoryMessageId: input.messageId,
+      }
+    })
+
+    // Post message with pusher
+    const pusher = new Pusher({
+      appId: PUSHER_APP_ID,
+      key: PUBLIC_PUSHER_KEY,
+      secret: PUSHER_SECRET,
+      cluster: PUBLIC_PUSHER_CLUSTER,
+      useTLS: true,
+    });
+
+    await pusher.trigger(`group-${message.groupSubcategory.groupId}-${message.groupSubcategoryId}`, "message-reply", message);
+
+    return message
   })
 })

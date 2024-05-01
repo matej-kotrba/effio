@@ -313,19 +313,19 @@ model GroupSubcategory {
 }
 
 model GroupSubcategoryMessage {
-  id                           String                         @id @default(uuid())
-  groupSubcategoryId           String
-  senderId                     String
-  senderType                   SubcategoryMessageSenderType   @default(USER)
-  createdAt                    DateTime                       @default(now())
-  updatedAt                    DateTime                       @updatedAt
-  title                        String?
-  content                      String?                        @db.Text()
-  testId                       String?
-  groupSubcategory             GroupSubcategory               @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
-  sender                       User                           @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  test                         Test?                          @relation(fields: [testId], references: [id])
-  GroupSubcategoryMessageReply GroupSubcategoryMessageReply[]
+  id                 String                         @id @default(uuid())
+  groupSubcategoryId String
+  senderId           String
+  senderType         SubcategoryMessageSenderType   @default(USER)
+  createdAt          DateTime                       @default(now())
+  updatedAt          DateTime                       @updatedAt
+  title              String?
+  content            String?                        @db.Text()
+  testId             String?
+  groupSubcategory   GroupSubcategory               @relation(fields: [groupSubcategoryId], references: [id], onDelete: Cascade)
+  sender             User                           @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  test               Test?                          @relation(fields: [testId], references: [id])
+  replies            GroupSubcategoryMessageReply[]
 
   @@index([senderId])
   @@index([groupSubcategoryId])

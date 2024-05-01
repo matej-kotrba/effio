@@ -397,6 +397,7 @@ export const groupsRouter = router({
           }
         },
         sender: true,
+        replies: true
       },
       orderBy: {
         createdAt: "desc"
