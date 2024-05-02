@@ -397,7 +397,11 @@ export const groupsRouter = router({
           }
         },
         sender: true,
-        replies: true
+        replies: {
+          include: {
+            sender: true
+          }
+        }
       },
       orderBy: {
         createdAt: "desc"

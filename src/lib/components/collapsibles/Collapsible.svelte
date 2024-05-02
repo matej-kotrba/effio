@@ -39,23 +39,21 @@
 		on:click={toggleCollapsible}
 		type={'button'}
 		class={twMerge(
-			`${positionsClasses[position]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_light_grey duration-150`,
+			`${positionsClasses[position]} rounded-md px-4 py-2 w-full flex items-center gap-2 bg-gray-200 dark:bg-dark_light_grey duration-150 text-light_text_black dark:text-dark_text_white`,
 			buttonClasses
 		)}
 	>
 		<iconify-icon
 			icon="bxs:left-arrow"
 			rotate={2}
-			class="{isOpen
-				? 'rotate-90'
-				: 'rotate-0'} duration-300 text-light_text_black dark:text-dark_text_white"
+			class="{isOpen ? 'rotate-90' : 'rotate-0'} duration-300"
 		/>
 		<abbr
 			title={isOpen && openedTitle ? openedTitle : title}
 			class="overflow-hidden no-underline text-ellipsis"
 		>
 			<span
-				class={`text-body3 md:text-body1 min-h-[1.2em] text-light_text_black dark:text-dark_text_white text-left ${
+				class={`text-body3 md:text-body1 min-h-[1.2em] text-left ${
 					shouldWrap === false ? 'whitespace-nowrap  ' : ''
 				}`}>{isOpen && openedTitle ? openedTitle : title}</span
 			></abbr

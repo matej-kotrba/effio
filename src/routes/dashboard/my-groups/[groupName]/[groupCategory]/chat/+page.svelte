@@ -21,6 +21,7 @@
 	import { getBotChannelUser } from '~utils/group';
 	import ChatMessageMenu from './ChatMessageMenu.svelte';
 	import type { ReplyData } from '~components/inputs/ChatInput.svelte';
+	import Collapsible from '~components/collapsibles/Collapsible.svelte';
 
 	export let data;
 
@@ -528,10 +529,42 @@
 											<!-- {:else if message.testId}
 											<div>Oops, this test can't be accessed anymore.</div> -->
 										{/if}
+										{#if message['replies'].length > 0}
+											<Collapsible
+												title="Replies {message['replies'].length}"
+												class="bg-transparent"
+												buttonClasses="bg-transparent p-0 text-light_primary duration-100 mt-4"
+											>
+												{#each message['replies'] as reply}
+													<div class="flex items-center gap-1 mb-1">
+														<img
+															referrerpolicy="no-referrer"
+															src={reply.sender.image}
+															alt="User"
+															class="w-8 rounded-full aspect-square"
+														/>
+														<div>
+															<div class="flex items-end gap-2">
+																<div>
+																	<span class="text-semiBody1"
+																		>{reply.sender.name}</span
+																	>
+																</div>
+																<span
+																	class="text-body2 text-light_text_black_40 dark:text-dark_text_white_40"
+																>
+																	{transformDate(message.createdAt, {
+																		time: true
+																	})}
+																</span>
+															</div>
+															{reply.content}
+														</div>
+													</div>
+												{/each}
+											</Collapsible>
+										{/if}
 									</div>
-									{#each message['replies'] as reply}
-										{reply.content}
-									{/each}
 								</div>
 							{/if}
 						{/each}
