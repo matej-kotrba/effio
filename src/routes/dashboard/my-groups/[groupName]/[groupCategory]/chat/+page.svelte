@@ -462,7 +462,7 @@
 										/>
 										<div class="flex flex-col">
 											<div>
-												<span class="text-semiBody1"
+												<span class="font-medium text-semiBody1"
 													>{isBotMessage
 														? botInfo.name
 														: message.sender.name}</span
@@ -536,7 +536,7 @@
 												buttonClasses="bg-transparent p-0 text-light_primary duration-100 mt-4"
 											>
 												{#each message['replies'] as reply}
-													<div class="flex items-center gap-1 mb-1">
+													<div class="flex items-start gap-1 mb-1">
 														<img
 															referrerpolicy="no-referrer"
 															src={reply.sender.image}
@@ -546,7 +546,7 @@
 														<div>
 															<div class="flex items-end gap-2">
 																<div>
-																	<span class="text-semiBody1"
+																	<span class="font-medium text-semiBody1"
 																		>{reply.sender.name}</span
 																	>
 																</div>
@@ -558,7 +558,9 @@
 																	})}
 																</span>
 															</div>
-															{reply.content}
+															<p class="text-body2">
+																{reply.content}
+															</p>
 														</div>
 													</div>
 												{/each}
