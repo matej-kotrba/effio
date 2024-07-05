@@ -1,0 +1,14 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: '0 0 * * 0,3' # Runs every Sunday and Wednesday
+  workflow_dispatch:
+
+jobs:
+  send-http-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send HTTP Request To Prevent Supabase Project Pause
+        run: curl https://effio.vercel.app/api/supabase/keep-alive
