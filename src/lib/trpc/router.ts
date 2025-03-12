@@ -273,6 +273,7 @@ export const appRouter = router({
     const cached = await redis.get(redisCacheString)
 
     if (cached) {
+      console.log("CACHED", cached)
       return {
         success: true,
         tests: cached as TestsType[]
@@ -365,9 +366,10 @@ export const appRouter = router({
       message: "No tests found"
     }
 
-    redis.set(redisCacheString, tests, {
-      ex: 20
-    })
+    // TODO: Currently the caching does not work correctly
+    // redis.set(redisCacheString, tests, {
+    //   ex: 20
+    // })
 
     return {
       success: true,
