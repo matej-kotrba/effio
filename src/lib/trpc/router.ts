@@ -326,15 +326,15 @@ export const appRouter = router({
           }
         },
         owner: true,
-        stars: ctx.user?.id ? {
+        stars: {
           select: {
             userId: true,
             testId: true
           },
           where: {
-            userId: ctx.user?.id
+            userId: ctx.user?.id ?? undefined
           }
-        } : undefined
+        }
       },
       where: {
         id: {
