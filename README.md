@@ -120,17 +120,6 @@ Effio is an online tool for creating tests and quizes. Apart from only creating,
 - Package manager - PNPM
 </details>
 
-
-## Timeline
-- January -> April - Learning stack and testing it separatly
-- April -> May - Designing and building frontend for Effio
-- May -> June - Building forentend, creating type definitions, routers, auth, DB and Prisma connection as well as building the test creation functionality 
-- June -> July - Displaying tests, taking them and being able to visit previously taken ones, implemented drag and drop input creation in test creator
-- August -> October - Creating more input types, darkmode, refactoring and leveling up quality of life in app
-- November -> December - Programming test, many bug fixes, refactoring, comments and making quality of live features
-- December -> January - bug fixes, polishing app and writing documentation
-- January -> Now - better group options and implementation, optimizations, refactoring, polishing and bug fixing
-
 ## Sources
 - Youtube
   - [Joy of Code](https://www.youtube.com/@JoyofCodeDev)
