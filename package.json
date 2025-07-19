@@ -81,5 +81,8 @@
 		"tailwind-variants": "^0.2.0",
 		"trpc-sveltekit": "^3.5.7",
 		"zod": "^3.21.4"
+	},
+	"engines": {
+		"node": ">=22.16.0"
 	}
 }
