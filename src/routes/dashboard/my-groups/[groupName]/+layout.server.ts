@@ -6,7 +6,7 @@ export const load = async (event) => {
   const id = ((await event.locals.getSession()) as UpdatedSession)?.user?.id
 
   if (!id) {
-    throw redirect(301, "/login")
+    redirect(301, "/login");
   }
 
   const groupFullData = await (await trpcServer(event)).groups.getGroupByName({
@@ -17,7 +17,7 @@ export const load = async (event) => {
   })
 
   if (!groupFullData) {
-    throw redirect(301, "/dashboard/my-groups")
+    redirect(301, "/dashboard/my-groups");
   }
 
   return {

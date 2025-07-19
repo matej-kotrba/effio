@@ -144,7 +144,7 @@ export const actions = {
         return fail(400, { form, error: e.message })
       }
     }
-    throw redirect(304, "/dashboard/my-groups")
+    redirect(304, "/dashboard/my-groups");
   },
   kickUser: async (event) => {
     const formData = await event.request.formData()

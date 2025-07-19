@@ -9,13 +9,13 @@ export const load: ServerLoad = async (request) => {
 
   const id = request.params.testId;
 
-  if (!id) throw redirect(307, "/?message=This test does not exist&type=error")
+  if (!id) redirect(307, "/?message=This test does not exist&type=error");
 
   const context = await createContext(request)
 
   const test = await appRouter.createCaller(context).getTestById({ id: id });
 
-  if (!test) throw redirect(307, "/?message=This test does not exist&type=error")
+  if (!test) redirect(307, "/?message=This test does not exist&type=error");
 
   const transformed = transformTestToTakeFormat(test)
 
@@ -35,6 +35,6 @@ export const load: ServerLoad = async (request) => {
     }
   }
   catch (e) {
-    throw redirect(307, "/?message=This test does not exist&type=error")
+    redirect(307, "/?message=This test does not exist&type=error");
   }
 }

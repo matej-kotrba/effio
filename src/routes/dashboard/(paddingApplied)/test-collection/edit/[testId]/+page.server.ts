@@ -18,7 +18,7 @@ export const load: ServerLoad = async (event) => {
   const [data, programmingTemplates, questionTemplates] = await Promise.all([dataPromise, programmingTemplatesPromise, questionTemplatesPromise])
 
   if (data === null) {
-    throw redirect(307, "/dashboard/test-collection")
+    redirect(307, "/dashboard/test-collection");
   }
   else {
     return {

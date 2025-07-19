@@ -94,15 +94,15 @@ const handleRedirectBasedOnAuthStatus: Handle = async ({ event, resolve }) => {
 
   const session = await event.locals.getSession()
   if (event.url.pathname.startsWith("/dashboard") && !(session?.user)) {
-    throw redirect(303, "/login")
+    redirect(303, "/login");
   }
 
   if (event.url.pathname.startsWith("/login") && (session?.user)) {
-    throw redirect(303, "/dashboard")
+    redirect(303, "/dashboard");
   }
 
   if (event.url.pathname.startsWith("/admin") && (!(session?.user) || session?.user?.role !== "ADMIN")) {
-    throw redirect(303, "/")
+    redirect(303, "/");
   }
 
   return resolve(event)

@@ -3,7 +3,7 @@ import type { RequestEvent } from "../../dashboard/$types"
 import { isTestValidAndSetErrorsToTestObject, type IsTestValidProps } from "~helpers/test/test"
 
 export async function POST(event: RequestEvent) {
-  if (!(await event.locals.getSession())?.user?.name) throw error(401, "Unauthorized")
+  if (!(await event.locals.getSession())?.user?.name) error(401, "Unauthorized");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = await event.request.json() as { [key: string]: any }
 

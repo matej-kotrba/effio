@@ -16,7 +16,7 @@ export const load: ServerLoad = async (event) => {
   })
 
   if (!category || !subcategories.length) {
-    throw redirect(307, `/dashboard/my-groups/${groupSlug}`)
+    redirect(307, `/dashboard/my-groups/${groupSlug}`);
   }
   return {
     subcategory: subcategories[0]

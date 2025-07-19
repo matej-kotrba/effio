@@ -36,10 +36,10 @@ export const load = async ({ params }) => {
   })
 
   if (!test) {
-    throw redirect(307, "/dashboard/my-groups")
+    redirect(307, "/dashboard/my-groups");
   }
 
-  if (!test.testVersions[0].id) throw redirect(307, "/dashboard/my-groups")
+  if (!test.testVersions[0].id) redirect(307, "/dashboard/my-groups");
 
   return {
     totalPoints: test.testVersions[0].totalPoints,

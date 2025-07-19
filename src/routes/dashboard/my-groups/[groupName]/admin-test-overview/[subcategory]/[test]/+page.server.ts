@@ -8,7 +8,7 @@ export const load: ServerLoad = async ({ params, }) => {
   const testId = params.test as string
   const subacategorySlug = params.subcategory as string
 
-  if (!testId || !subacategorySlug) throw redirect(307, "/dashboard/my-groups")
+  if (!testId || !subacategorySlug) redirect(307, "/dashboard/my-groups");
 
   const resetUsersAttempts = superValidate(resetUsersAttemptsSchema)
 

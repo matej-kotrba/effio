@@ -8,17 +8,17 @@ export const load: ServerLoad = async ({ params, locals }) => {
   const session = (await locals.getSession()) as UpdatedSession
 
   if (!session) {
-    throw redirect(307, "/login")
+    redirect(307, "/login");
   }
 
   if (!id) {
-    throw redirect(307, "/dashboard/my-groups")
+    redirect(307, "/dashboard/my-groups");
   }
 
   const userId = session.user?.id
 
   if (!userId) {
-    throw redirect(307, "/login")
+    redirect(307, "/login");
   }
 
   try {
@@ -122,6 +122,6 @@ export const load: ServerLoad = async ({ params, locals }) => {
     }
   }
   catch (e) {
-    throw redirect(307, "/dashboard/my-groups")
+    redirect(307, "/dashboard/my-groups");
   }
 }

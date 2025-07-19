@@ -4,7 +4,7 @@ import prisma from '~/lib/prisma.js';
 export const load = async ({ params }) => {
   const testRecordId = params.testRecordId as string;
 
-  if (!testRecordId) throw redirect(307, "/dashboard/my-groups");
+  if (!testRecordId) redirect(307, "/dashboard/my-groups");
 
   const testRecord = prisma.testRecord.findUnique({
     where: {
