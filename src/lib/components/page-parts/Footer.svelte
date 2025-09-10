@@ -3,6 +3,7 @@
 	import Space from '~components/separators/Space.svelte';
 	import { fly } from 'svelte/transition';
 	import { intersect } from '~use/intersectionObserver';
+	import Seal from '~components/effects/Seal.svelte';
 
 	let displayName = false;
 </script>
@@ -75,6 +76,9 @@
 		</div>
 	</div>
 	<div class="w-full px-2 py-4 text-center text-light_whiter">
+		<div class="w-48">
+			<Seal />
+		</div>
 		<h6>Created with <span class="text-h3">🦭</span> by</h6>
 		<div
 			class="flex justify-center gap-1 overflow-hidden font-bold text-center text-h4"
